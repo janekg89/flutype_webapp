@@ -3,9 +3,7 @@ Script for creating and filling database.
 """
 from __future__ import print_function, absolute_import, division
 
-import re
 import os
-import warnings
 from flutype_analysis import utils
 import sys
 
