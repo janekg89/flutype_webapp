@@ -59,67 +59,63 @@ class Incubating(Treatment):
     washing = models.ManyToManyField(Treatment)
     drying = models.ManyToManyField(Treatment)
 
+class Substance(models.Model):
+    name = models.CharField(max_length=50)
+    concentration = models.FloatField(validators=[MinValueValidator(0)],
+                                      blank=True)
 
 """
 class User(models.Model):
     name = models.CharField(max_length=50)
 
 class Peptide(models.Model):
-    name = models.CharField(max_length=50,blank=True)
-    linker = models.CharField(max_length=50,blank=True)
-    spacer = models.CharField(max_length=50,blank=True)
-    sequence = models.CharField(max_length=50,blank=True)
-    c_terminus = models.CharField(max_length=50,blank=True)
+    id_pep = models.CharField(max_length=15, null=True)
+    name = models.CharField(max_length=50,blank=True, null=True)
+    linker = models.CharField(max_length=50,blank=True, null=True)
+    spacer = models.CharField(max_length=50,blank=True, null=True)
+    sequence = models.CharField(max_length=50,blank=True, null=True)
+    c_terminus = models.CharField(max_length=50,blank=True, null=True)
+    pep_type =models.ForeignKey("Peptide_type",blank=True, null=True)
 
-    ####### there is probably better way, one of these has to be True########
-    #blank = models.BooleanField()
-    #reference = models.BooleanField()
-    #antibody = models.BooleanField()
-    ##########################################################################
-class Peptite_type(models.Model):
+class Peptide_type(models.Model):
     p_types = models.CharField(max_length=30)
 
 class Virus(models.Model):
-    subgroup = models.CharField(max_length=50)
-    country = models.CharField(max_length=50)
-    date = models.DateField()
-    strain = models.CharField(max_length=50)
+    subgroup = models.CharField(max_length=50,blank=True, null=True)
+    country = models.CharField(max_length=50,blank=True, null=True)
+    date_of_appearance = models.CharField(max_length=10,blank=True, null=True)
+    strain = models.CharField(max_length=50,blank=True, null=True)
+    tax_id = models.CharField(max_length=15,blank=True, null=True)
 
 
 class Buffer(models.Model):
     name = models.CharField(max_length=50)
 
 
-class Substance(models.Model):
-    name = models.CharField(max_length=50)
-    concentration = models.FloatField(validators=[MinValueValidator(0)],
-                                      blank=True)
-
-
-
 class Batch(models.Model):
     concentration = models.FloatField(validators=[MinValueValidator(0)],
-                                      blank=True)
-    buffer = models.ForeignKey("Buffer", blank=True)
+                                      blank=True, null=True)
+    buffer = models.ForeignKey("Buffer", blank=True, null=True)
     pH = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(14)],
-                            blank=True)
+                            blank=True, null=True)
     purity = models.FloatField(validators=[MinValueValidator(0)],
-                               blank=True)
-    produced_by = models.ManyToManyField("User", blank=True)
-    production_date = models.DateField(blank=True)
-    comment = models.TextField(blank=True)
+                               blank=True, null=True)
+    produced_by = models.ForeignKey("User", blank=True, null=True)
+    production_date = models.DateField(blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
 
 
 
 class Peptide_batch(models.Model):
-    batch = models.OneToOneField("Batch")
-    peptide = models.ForeignKey("Peptide")
+    batch = models.ForeignKey("Batch",blank=True, null=True)
+    peptide = models.ForeignKey("Peptide", blank=True, null=True)
 
 class Virus_batch(Batch):
-    virus = models.ForeignKey("Virus")
-    passage_history = models.CharField(max_length=50)
-    active = models.BooleanField(blank=True)
-    labeling = models.CharField(max_length=50,blank=True)
+    virus = models.ForeignKey("Virus",blank=True, null=True)
+    batch = models.ForeignKey("Batch",blank=True, null=True,related_name="batch_of_virus")
+    passage_history = models.CharField(max_length=50, blank= True ,null=True )
+    active = models.NullBooleanField(blank=True, null=True)
+    labeling = models.CharField(max_length=50,blank=True,null=True)
 
 
 
