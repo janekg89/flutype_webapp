@@ -4,7 +4,7 @@ Script for creating and filling database.
 from __future__ import print_function, absolute_import, division
 
 import os
-from flutype_analysis import utils
+from flutype_analysis import utils, analysis
 from IPython.display import display, HTML
 import sys
 
@@ -23,7 +23,7 @@ import pyexcel as pe
 import math
 django.setup()
 
-from flutype.models import (Peptide_type, Peptide, Peptide_batch, Virus, Virus_batch, Batch,Buffer,User)  #import models
+from flutype.models import (Peptide_type, Peptide, Peptide_batch, Virus, Virus_batch,Buffer,User,Substance,Holder_type,Manufacturer,Sample_holder,Spot)  #import models
 
 
 class DBCreator(object):
@@ -108,6 +108,29 @@ class DBCreator(object):
         name_data.replace([np.NaN], [None], inplace=True)
         return name_data
 
+    @staticmethod
+    def load_procedure_data(directory):
+        f_formular = os.path.join(directory, "form_0.1.ods")
+        formular = pe.get_book(file_name=f_formular, start_row=5, start_column=3)
+        name = formular["Procedure"]
+        name_array = name.to_array()
+        name_array = np.array(name_array)
+        dic_a={"S ID":name_array[0,1],"Charge":name_array[1,1],"Surface Substance":name_array[2,1],
+             "manfacturer":name_array[3,1]}
+        dic_b={"S ID":name_array[0,7],"Charge":name_array[1,6],"Surface Substance":name_array[2,7],
+             "manfacturer":name_array[3,7]}
+        if any(dic_a.values()):
+            print("Sample Holder is a microarray.")
+            dic_a["Holder Type"]= "microarray"
+            return dic_a
+
+        elif any(dic_b.values()):
+            print("Sample Holder is a microwell plate.")
+            dic_b["Holder Type"]="microwell"
+            return dic_b
+
+
+
 
 
 
@@ -150,36 +173,62 @@ class DBCreator(object):
                 created_bu.append(created)
             except:
                 Buffer_in_db = None
-            '''
-            
-            
+            """
 
             try:
-                #todo: ich glaube hier ist der fehler
-                
                 Batch_in_db, created = Batch.objects.get_or_create(concentration=virus_batch["Concentration [mg/ml]"],
-                                                                   pH=virus_batch["pH"],
-                                                                   buffer=Buffer_in_db,
-                                                                   production_date=virus_batch["Production Date"],
-                                                                   comment=virus_batch["Comment"]
-                                                                   )
+                                                               pH=virus_batch["pH"],
+                                                               buffer=Buffer_in_db,
+                                                               production_date=virus_batch["Production Date"],
+                                                               comment=virus_batch["Comment"]
+                                                               )
             except:
-                Batch_in_db = None
-            '''
+                pass
+            """
+
 
             created_ba.append(created)
             try:
-
-                #todo: das macht viele null enthaltende batches problem nicht mehr unigue
-                virus_batch, created = Virus_batch.objects.get_or_create(passage_history=virus_batch["Passage History"],
-                                                             active=virus_batch["Active"],
-                                                             labeling=virus_batch["Labeling"],
-                                                             virus=Virus.objects.get(tax_id=virus_batch["Taxonomy ID"]),
-                                                             batch=Batch_in_db
-                                                             )
-                created_vb.append(created)
+                virus = Virus.objects.get(tax_id=virus_batch["Taxonomy ID"])
             except:
-                pass
+                virus = None
+                print(virus_batch["Batch ID"])
+
+            virus_batch, created = Virus_batch.objects.get_or_create(v_batch_id=virus_batch["Batch ID"],
+                                                                     passage_history=virus_batch["Passage History"],
+                                                                     active=virus_batch["Active"],
+                                                                     labeling=virus_batch["Labeling"],
+                                                                     virus=virus,
+                                                                     concentration=virus_batch["Concentration [mg/ml]"],
+                                                                     pH=virus_batch["pH"],
+                                                                     buffer=Buffer_in_db,
+                                                                     production_date=virus_batch["Production Date"],
+                                                                     comment=virus_batch["Comment"]
+                                                                     )
+
+
+
+
+
+            
+            """  
+        for row in Batch.objects.all():
+            if Batch.objects.filter(concentration=row.concentration,
+                                        pH=row.pH,
+                                        buffer=row.buffer,
+                                        production_date=row.production_date,
+                                        comment=row.comment,
+                                        produced_by=row.produced_by).count() > 1:
+
+                row.delete()
+            """
+
+
+
+            created_vb.append(created)
+
+
+        #das ist zeimlicher hack.
 
 
         print("Updated any viruses batches in the database:", any(created_v))
@@ -234,6 +283,9 @@ class DBCreator(object):
                 created_bu.append(created)
             except:
                 Buffer_in_db = None
+            '''
+            
+            
 
             Batch_in_db, created = Batch.objects.get_or_create(concentration=ligand["Concentration [mg/ml]"],
                                                                 pH=ligand["pH"],
@@ -244,17 +296,25 @@ class DBCreator(object):
                                                                 comment=ligand["Comment"]
                                                                 )
             created_ba.append(created)
+            '''
 
 
 
 
-            try:
-                Petide_batch_in_db, created = Peptide_batch.objects.get_or_create(p_batch=Batch_in_db,
-                                                                                    peptide=Peptide.objects.get(id_pep=ligand["Peptide ID"])
-                                                                                    )
-                created_l.append(created)
-            except:
-                pass
+
+            Petide_batch_in_db, created = Peptide_batch.objects.get_or_create(p_batch_id = ligand["Ligand id"],
+                                                                              #batch=Batch_in_db,
+                                                                              peptide=Peptide.objects.get(id_pep=ligand["Peptide ID"]),
+                                                                              concentration = ligand["Concentration [mg/ml]"],
+                                                                              pH = ligand["pH"],
+                                                                              purity = ligand["Purity (MS)"],
+                                                                              buffer = Buffer_in_db,
+                                                                              produced_by = ligand["Synthesized by"],
+                                                                              production_date = ligand["Synthesization Date"],
+                                                                              comment = ligand["Comment"]
+                                                                              )
+            created_l.append(created)
+
         print("Updated any batches in the database:", any(created_ba))
 
         print("Updated any buffer in the database:", any(created_bu))
@@ -263,10 +323,51 @@ class DBCreator(object):
 
 
 
+        ###############################
+        #must go through a loop all ids
+        proces_dic=DBCreator.load_procedure_data(directory)
+        data = utils.load_data(data_id, directory)
 
 
+        holder_type, _ = Holder_type.objects.get_or_create(holder_type=proces_dic["Holder Type"])
+        if not proces_dic['Surface Substance']:
+            name = None
+        else:
+            name = proces_dic['Surface Substance']
+        surf_substance, _ = Substance.objects.get_or_create(name=name)
+        if not proces_dic['manfacturer']:
+            name = None
+        else:
+            name = proces_dic['manfacturer']
+        manufacturer, _ = Manufacturer.objects.get_or_create(name=name)
+        sample_holder, _ = Sample_holder.objects.get_or_create(s_id=proces_dic["S ID"],
+                                                               charge=proces_dic["Charge"],
+                                                               holder_type=holder_type,
+                                                               manufacturer=manufacturer,
+                                                               functionalization=surf_substance
+                                                               )
+        ana = analysis.Analysis(data)
+        spots=ana.spot
+        for k, spot in spots.iterrows():
 
-        #data = utils.load_data(data_id,directory)
+            try:
+                intensity=spot["Intensity"]
+                replica=spot["Replica"]
+            except:
+                intensity=None
+                replica=None
+            #todo: change NAN to None ? or leave
+            print(spot["Peptide"])
+            _,_ = Spot.objects.get_or_create(peptide_batch=Peptide_batch.objects.get(p_batch_id=spot["Peptide"]),
+                                             virus_batch=Virus_batch.objects.get(v_batch_id=spot["Virus"]),
+                                             sample_holder=sample_holder,
+                                             column=spot["Column"],
+                                             row= spot["Row"],
+                                             intensity=intensity,
+                                             replica=replica
+                                             )
+
+
         print("-" * 80)
         print("Finished loading database")
         print("-" * 80)
@@ -283,10 +384,12 @@ if __name__ == "__main__":
 
 
     pep_data = DBCreator().fill_db(data_id,directory)
+    #a = DBCreator.load_virus_batch_data(directory)
 
 
-    #a=DBCreator.load_virus_data(directory)
-    #print(a["Taxonomy ID"])
+    #a=DBCreator.load_procedure_data(directory)
+    #print(a)
+
 
 
 

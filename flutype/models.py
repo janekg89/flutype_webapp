@@ -11,29 +11,6 @@ class Process(models.Model):
     quenching = models.OneToOneField("Quenching",blank=True)
     incubating = models.OneToOneField("Incubating", blank=True)
     result = models.OneToOneField("Result", blank=True)
-
-class Sample_holder(models.Model):
-    id = models.CharField()
-    holder_type = models.ForeignKey("Holder_type")
-    functionalization = models.ForeignKey("Substance")
-    manufacturer = models.ForeignKey("Manufacturer")
-    spot = models.ManyToManyField("Spot", through="Grid")
-
-class Grid(models.Model):
-    column = models.IntegerField()
-    row = models.IntegerField()
-
-
-class Holder_type():
-    holder_type=models.CharField()
-
-class Manufacturer():
-    name = models.CharField()
-
-
-class Spot(models.Model):
-    peptide = models.ForeignKey("Peptide")
-    virus = models.ForeignKey("Virus")
     
 class Treatment(models.Model):
     name = models.CharField()
@@ -59,12 +36,9 @@ class Incubating(Treatment):
     washing = models.ManyToManyField(Treatment)
     drying = models.ManyToManyField(Treatment)
 
-class Substance(models.Model):
-    name = models.CharField(max_length=50)
-    concentration = models.FloatField(validators=[MinValueValidator(0)],
-                                      blank=True)
 
 """
+###################################################################
 class User(models.Model):
     name = models.CharField(max_length=50)
 
@@ -93,6 +67,7 @@ class Buffer(models.Model):
 
 
 class Batch(models.Model):
+    #should this be an abstract class?
     concentration = models.FloatField(validators=[MinValueValidator(0)],
                                       blank=True, null=True)
     buffer = models.ForeignKey("Buffer", blank=True, null=True)
@@ -103,28 +78,57 @@ class Batch(models.Model):
     produced_by = models.ForeignKey("User", blank=True, null=True)
     production_date = models.DateField(blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
+    class Meta:
+        abstract = True
 
-
-
-class Peptide_batch(models.Model):
-    batch = models.ForeignKey("Batch",blank=True, null=True)
-    peptide = models.ForeignKey("Peptide", blank=True, null=True)
 
 class Virus_batch(Batch):
-    virus = models.ForeignKey("Virus",blank=True, null=True)
-    batch = models.ForeignKey("Batch",blank=True, null=True,related_name="batch_of_virus")
-    passage_history = models.CharField(max_length=50, blank= True ,null=True )
+    v_batch_id = models.CharField(max_length=20,blank=True, null=True)
+    #batch = models.ForeignKey("Batch",blank=True, null=True)
+    virus = models.ForeignKey("Virus",blank=True,null=True)
+    passage_history = models.CharField(max_length=50, blank= True ,null=True)
     active = models.NullBooleanField(blank=True, null=True)
     labeling = models.CharField(max_length=50,blank=True,null=True)
 
+class Peptide_batch(Batch):
+    p_batch_id = models.CharField(max_length=20)
+    #batch = models.ForeignKey("Batch",blank=True, null=True)
+    peptide = models.ForeignKey("Peptide", blank=True, null=True)
+
+
+######################################################################
+
+class Substance(models.Model):
+    name = models.CharField(max_length=50,blank=True,null=True)
+
+class Holder_type(models.Model):
+    holder_type=models.CharField(max_length=30,blank=True,null=True)
+
+class Manufacturer(models.Model):
+    name = models.CharField(max_length=30, null=True , blank=True)
+
+class Spot(models.Model):
+    peptide_batch = models.ForeignKey("Peptide_batch")
+    virus_batch = models.ForeignKey("Virus_batch")
+    sample_holder = models.ForeignKey("Sample_holder")
+    column = models.IntegerField()
+    row = models.IntegerField()
+    ############in results#########################
+    intensity = models.FloatField(null=True, blank=True)
+    std = models.FloatField(null=True, blank=True)
+    replica = models.IntegerField(null=True, blank=True)
+
+class Sample_holder(models.Model):
+    s_id = models.CharField(max_length=20)
+    charge = models.CharField(max_length=20, null=True, blank=True)
+    holder_type = models.ForeignKey("Holder_type")
+    functionalization = models.ForeignKey("Substance")
+    manufacturer = models.ForeignKey("Manufacturer")
+    image= models.ImageField(blank=True,null=True)
 
 
 
-
-
-
-
-
+######################################################################
 
 
 
