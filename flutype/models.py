@@ -117,6 +117,7 @@ class Spot(models.Model):
     intensity = models.FloatField(null=True, blank=True)
     std = models.FloatField(null=True, blank=True)
     replica = models.IntegerField(null=True, blank=True)
+    image2numeric_version = models.FloatField(default=0.1)
 
 class Sample_holder(models.Model):
     s_id = models.CharField(max_length=20)
