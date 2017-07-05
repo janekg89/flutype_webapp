@@ -1,3 +1,7 @@
+"""
+Django models for the flutype webapp.
+"""
+
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, print_function, unicode_literals
 
@@ -7,6 +11,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 # FIXME: NOT -> NA
 # FIXME: Rename spreadsheets in accordance with model name
 # FIXME: use classes in ForeignKeys instead of strings
+
 
 class User(models.Model):
     """
@@ -136,6 +141,8 @@ class Manufacturer(models.Model):
     """
     name = models.CharField(max_length=30, null=True , blank=True)
 
+#########################
+ # TODO: class Gal File or many2many through
 
 class Spot(models.Model):
     """
@@ -143,7 +150,7 @@ class Spot(models.Model):
     """
     peptide_batch = models.ForeignKey(Peptide_batch)
     virus_batch = models.ForeignKey("Virus_batch")
-    sample_holder = models.ForeignKey("Sample_holder")
+    sample_holder = models.ForeignKey("Sample_holder")  # FIXME: via SpotCollection
     column = models.IntegerField()
     row = models.IntegerField()
     replica = models.IntegerField(null=True, blank=True)
@@ -152,7 +159,18 @@ class Spot(models.Model):
     std = models.FloatField(null=True, blank=True)
 
 
-# FIXME: better name, SpotCollection
+class SpotCollection(models.Model):
+    """ Processed collection for spot intesities.
+        Somehow intensities created from RawCollection.
+    """
+    pass
+    #  # image2numeric_version = models.FloatField(default=0.1)  # FIXME: enum field
+    # RawCollection
+    # Many2Many(Spot)
+
+
+
+# FIXME: better name, RawCollection
 # FIXME: charge -> batch
 class Sample_holder(models.Model):
     """
@@ -164,7 +182,7 @@ class Sample_holder(models.Model):
     functionalization = models.ForeignKey("Substance")
     manufacturer = models.ForeignKey("Manufacturer")
     image = models.ImageField(blank=True, null=True)  #todo: how to save ?
-    image2numeric_version = models.FloatField(default=0.1)
+    image2numeric_version = models.FloatField(default=0.1)  # FIXME: enum field and move to SpotCollection
     process = models.OneToOneField("Process", blank=True, null=True)
 
 ##########################################################
@@ -193,7 +211,8 @@ class Drying(Treatment):
 
 
 class Spotting(Treatment):
-    order = models.IntegerField(default=0,blank=True, null=True)
+    """ Spotting method and data related to spotting. """
+    order = models.IntegerField(default=0, blank=True, null=True)
 
 
 class Incubating(Treatment):
@@ -213,6 +232,3 @@ class Process(models.Model):
     quenching = models.ManyToManyField("Quenching")
 
 ######################################################################
-
-
-

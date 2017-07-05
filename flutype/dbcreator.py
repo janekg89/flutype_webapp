@@ -113,6 +113,7 @@ class DBCreator(object):
         virus_array.dropna(0, how="all", inplace=True)
         #replaces NaN with None -> Django Querysets take None as Null.
         virus_array.replace([np.NaN], [None], inplace=True)
+
         #change to binary format
         virus_array["Active"].replace("no", False, inplace=True)
         return virus_array
@@ -184,21 +185,19 @@ class DBCreator(object):
 
     @staticmethod
     def load_procedure_data(directory):
-        '''
-        loads procedure data from template.
+        """ Loads procedure data from template.
         :param directory:
         :return: Dictonary with process data
-        '''
-
+        """
         f_formular = os.path.join(directory, "form_0.1.ods")
         formular = pe.get_book(file_name=f_formular, start_row=5, start_column=3)
         name = formular["Procedure"]
         name_array = name.to_array()
         name_array = np.array(name_array)
-        dic_a={"S ID":name_array[0,1],"Charge":name_array[1,1],"Surface Substance":name_array[2,1],
-             "manfacturer":name_array[3,1]}
-        dic_b={"S ID":name_array[0,7],"Charge":name_array[1,6],"Surface Substance":name_array[2,7],
-             "manfacturer":name_array[3,7]}
+        dic_a = {"S ID": name_array[0,1],"Charge":name_array[1,1],"Surface Substance":name_array[2,1],
+             "manfacturer": name_array[3,1]}
+        dic_b = {"S ID": name_array[0,7],"Charge":name_array[1,6],"Surface Substance":name_array[2,7],
+             "manfacturer": name_array[3,7]}
         if any(dic_a.values()):
             print("Sample Holder is a microarray.")
             dic_a["Holder Type"]= "microarray"
@@ -206,17 +205,8 @@ class DBCreator(object):
 
         elif any(dic_b.values()):
             print("Sample Holder is a microwell plate.")
-            dic_b["Holder Type"]="microwell"
+            dic_b["Holder Type"] = "microwell"  # FIXME: use enums
             return dic_b
-
-
-
-
-
-
-
-
-
 
     @staticmethod
     def fromdata2db(directory):
@@ -231,17 +221,15 @@ class DBCreator(object):
         print("-"*80)
         print("Filling database with fromdata2db")
         print("-" * 80)
-        #loads data from template
+        # loads data from template
         virus_data = DBCreator.load_virus_data(directory)
         virus_batch_data = DBCreator.load_virus_batch_data(directory)
         peptide_data = DBCreator.load_peptide_data(directory)
         peptide__batch_data = DBCreator.load_peptide_batch_data(directory)
         user_data = DBCreator.load_user_data(directory)
-        spotting_data = DBCreator.load_treatment_data("Spotting",directory)
-        quenching_data = DBCreator.load_treatment_data("Quenching",directory)
-        incubating_data = DBCreator.load_treatment_data("Incubating",directory)
-
-
+        spotting_data = DBCreator.load_treatment_data("Spotting", directory)
+        quenching_data = DBCreator.load_treatment_data("Quenching", directory)
+        incubating_data = DBCreator.load_treatment_data("Incubating", directory)
 
         # Stores informations if any new data was loaded.
         created_u = []
@@ -263,8 +251,6 @@ class DBCreator(object):
             created_v.append(created)
 
         print("Updated any viruses in the database:", any(created_v))
-
-
 
         print("-" * 80)
         print("Virus batches without foreignkey to a virus in the database")
@@ -372,20 +358,12 @@ class DBCreator(object):
 
         #_, created = Spotting.objects.get_or_create()
 
-
-
-
-
-
-
-
         print("-" * 80)
         print("Finished loading fromdata2db.")
         print("-" * 80)
 
 
     @staticmethod
-
     def process2db(directory, data_id):
         """
         :param directory: directory containing data
@@ -431,8 +409,6 @@ class DBCreator(object):
                                                                )
         for k, spot in spots.iterrows():
 
-
-
             #print(spot["Peptide"])
 
             #gets or creates spots
@@ -452,6 +428,8 @@ class DBCreator(object):
 ###################################################################################
 if __name__ == "__main__":
 
+    # requires the flutype_analysis in same directory as flutype_webapp
+
     PATTERN_DIR_MICROARRAY = "../../flutype_analysis/data/{}/"
     PATTERN_DIR_MICROWELL = "../../flutype_analysis/data/MTP/"
 
@@ -461,21 +439,23 @@ if __name__ == "__main__":
     # viruses, virus batches, users, buffers, peptide types.
     DBCreator().fromdata2db(PATTERN_DIR_MICROARRAY.format(data_id))
 
-    microarray_data_ids = ["2017-05-19_E5_X31",
-              "2017-05-19_E6_untenliegend_X31",
-              "2017-05-19_N5_X31",
-              "2017-05-19_N6_Pan",
-              "2017-05-19_N9_X31",
-              "2017-05-19_N10_Pan",
-              "2017-05-19_N11_Cal",
-              "flutype_test"
-                ]
-    #fills microarrray_data
-    for id in microarray_data_ids:
-        DBCreator().process2db(PATTERN_DIR_MICROARRAY.format(id), id)
+    microarray_data_ids = [
+        "2017-05-19_E5_X31",
+        "2017-05-19_E6_untenliegend_X31",
+        "2017-05-19_N5_X31",
+        "2017-05-19_N6_Pan",
+        "2017-05-19_N9_X31",
+        "2017-05-19_N10_Pan",
+        "2017-05-19_N11_Cal",
+        "flutype_test"
+        ]
+
+    # fills microarrray_data
+    for mid in microarray_data_ids:
+        DBCreator().process2db(PATTERN_DIR_MICROARRAY.format(mid), mid)
 
     microwell_data_ids = ["2017-05-12_MTP_R1"]
 
-    #fills_microwell_data
-    for id in microwell_data_ids:
-        DBCreator().process2db(PATTERN_DIR_MICROWELL, id)
+    # fills_microwell_data
+    for mid in microwell_data_ids:
+        DBCreator().process2db(PATTERN_DIR_MICROWELL, mid)
