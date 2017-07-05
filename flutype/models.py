@@ -4,45 +4,20 @@ from __future__ import absolute_import, print_function, unicode_literals
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 # Create your models here.
-"""
-class Process(models.Model):
-    sample_holder = models.OneToOneField("Sample_holder")
-    spotting = models.OneToOneField("Spotting", blank=True)
-    quenching = models.OneToOneField("Quenching",blank=True)
-    incubating = models.OneToOneField("Incubating", blank=True)
-    result = models.OneToOneField("Result", blank=True)
-    
-class Treatment(models.Model):
-    name = models.CharField()
-    substance = models.CharField(blank = True)
-    method = models.CharField()
-    date_time = models.DateTimeField()
-    duration = models.DurationField()
-    comment = models.TextField()
-    #order = models.IntegerField(blank =True)
 
 
-class Spotting(Treatment):
-    #todo: make a through relation with when and maybe kind of treatment
-    washing = models.ManyToManyField(Treatment)
-    drying = models.ManyToManyField(Treatment)
 
-
-class Quenching(Treatment):
-    washing = models.ManyToManyField(Treatment)
-    drying = models.ManyToManyField(Treatment)
-
-class Incubating(Treatment):
-    washing = models.ManyToManyField(Treatment)
-    drying = models.ManyToManyField(Treatment)
-
-
-"""
 ###################################################################
 class User(models.Model):
+    """
+    User model
+    """
     name = models.CharField(max_length=50)
 
 class Peptide(models.Model):
+    """
+    Pepide model
+    """
     id_pep = models.CharField(max_length=15, null=True)
     name = models.CharField(max_length=50,blank=True, null=True)
     linker = models.CharField(max_length=50,blank=True, null=True)
@@ -52,9 +27,15 @@ class Peptide(models.Model):
     pep_type =models.ForeignKey("Peptide_type",blank=True, null=True)
 
 class Peptide_type(models.Model):
+    """
+    peptide type model
+    """
     p_types = models.CharField(max_length=30)
 
 class Virus(models.Model):
+    """
+    virus model
+    """
     subgroup = models.CharField(max_length=50,blank=True, null=True)
     country = models.CharField(max_length=50,blank=True, null=True)
     date_of_appearance = models.CharField(max_length=10,blank=True, null=True)
@@ -63,11 +44,16 @@ class Virus(models.Model):
 
 
 class Buffer(models.Model):
+    """
+    buffer model
+    """
     name = models.CharField(max_length=50)
 
 
 class Batch(models.Model):
-    #should this be an abstract class?
+    """
+    Batch model as abstract class not stored in the database
+    """
     concentration = models.FloatField(validators=[MinValueValidator(0)],
                                       blank=True, null=True)
     buffer = models.ForeignKey("Buffer", blank=True, null=True)
@@ -83,51 +69,104 @@ class Batch(models.Model):
 
 
 class Virus_batch(Batch):
+    """
+    Virus batch model
+    """
     v_batch_id = models.CharField(max_length=20,blank=True, null=True)
-    #batch = models.ForeignKey("Batch",blank=True, null=True)
     virus = models.ForeignKey("Virus",blank=True,null=True)
     passage_history = models.CharField(max_length=50, blank= True ,null=True)
     active = models.NullBooleanField(blank=True, null=True)
     labeling = models.CharField(max_length=50,blank=True,null=True)
 
 class Peptide_batch(Batch):
+    """
+    peptide batch model
+    """
     p_batch_id = models.CharField(max_length=20)
-    #batch = models.ForeignKey("Batch",blank=True, null=True)
     peptide = models.ForeignKey("Peptide", blank=True, null=True)
 
-
-######################################################################
-
 class Substance(models.Model):
+    """
+    substance model
+    """
     name = models.CharField(max_length=50,blank=True,null=True)
 
 class Holder_type(models.Model):
+    """
+    holder type model
+    """
     holder_type=models.CharField(max_length=30,blank=True,null=True)
 
 class Manufacturer(models.Model):
+    """
+    manufacturer model
+    """
     name = models.CharField(max_length=30, null=True , blank=True)
 
 class Spot(models.Model):
+    """
+    spot model
+    """
     peptide_batch = models.ForeignKey("Peptide_batch")
     virus_batch = models.ForeignKey("Virus_batch")
     sample_holder = models.ForeignKey("Sample_holder")
     column = models.IntegerField()
     row = models.IntegerField()
+    replica = models.IntegerField(null=True, blank=True)
     ############in results#########################
     intensity = models.FloatField(null=True, blank=True)
     std = models.FloatField(null=True, blank=True)
-    replica = models.IntegerField(null=True, blank=True)
-    image2numeric_version = models.FloatField(default=0.1)
 
 class Sample_holder(models.Model):
+    """
+    sample holder model
+    """
     s_id = models.CharField(max_length=20)
     charge = models.CharField(max_length=20, null=True, blank=True)
     holder_type = models.ForeignKey("Holder_type")
     functionalization = models.ForeignKey("Substance")
     manufacturer = models.ForeignKey("Manufacturer")
-    image= models.ImageField(blank=True,null=True)
+    image= models.ImageField(blank=True,null=True)  #todo: how to save ?
+    image2numeric_version = models.FloatField(default=0.1)
+    process = models.OneToOneField("Process", blank=True, null=True)
+
+##########################################################
 
 
+class Treatment(models.Model):
+    treatment_id=models.CharField(max_length=10,null=True, blank=True)
+    method = models.CharField(max_length=50, null=True, blank=True)
+    order = models.IntegerField(blank=True, null=True)
+    date_time = models.DateTimeField(null=True, blank=True)
+    user = models.ForeignKey("User",null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
+    class Meta:
+        abstract = True
+
+class Washing(Treatment):
+    substance = models.CharField(max_length=50, null=True, blank=True)
+    duration = models.DurationField(null=True, blank=True)
+
+class Drying(Treatment):
+    substance = models.CharField(max_length=50, null=True, blank=True)
+    duration = models.DurationField(null=True, blank=True)
+
+class Spotting(Treatment):
+    order = models.IntegerField(default=0,blank=True, null=True)
+
+class Incubating(Treatment):
+    duration = models.DurationField(null=True, blank=True)
+
+class Quenching(Treatment):
+    duration = models.DurationField(null=True, blank=True)
+    substance = models.CharField(max_length=50, null=True, blank=True)
+
+class Process(models.Model):
+    washing = models.ManyToManyField("Washing")
+    drying = models.ManyToManyField("Drying")
+    spotting = models.ManyToManyField("Spotting")
+    incubating = models.ManyToManyField("Incubating")
+    quenching = models.ManyToManyField("Quenching")
 
 ######################################################################
 
