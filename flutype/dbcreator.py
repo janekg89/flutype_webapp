@@ -1,5 +1,7 @@
 """
 Script for creating and filling database.
+
+Reads the data from given excel template forms.
 """
 from __future__ import print_function, absolute_import, division
 
@@ -11,8 +13,8 @@ import pyexcel as pe
 
 from flutype_analysis import utils, analysis
 
-# setup django
-path = '/home/janekg89/Develop/Pycharm_Projects/flutype_webapp'
+# setup django (add current path to sys.path)
+path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..'))
 if path not in sys.path:
     sys.path.append(path)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flutype_webapp.settings")
@@ -20,6 +22,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flutype_webapp.settings")
 import django
 django.setup()
 
+# import models
 from flutype.models import (Peptide_type,
                             Peptide,
                             Peptide_batch,
@@ -34,7 +37,8 @@ from flutype.models import (Peptide_type,
                             Spot,
                             Spotting,
                             Quenching,
-                            Incubating)  #import models
+                            Incubating)
+
 
 class DBCreator(object):
     """ 
@@ -42,12 +46,12 @@ class DBCreator(object):
     """
     @staticmethod
     def load_peptide_data(directory):
-        '''
+        """
         loads peptide data from template
 
         :param directory:
         :return: Pandas DataFrame with peptides
-        '''
+        """
 
         f_formular = os.path.join(directory, "form_0.1.ods")
 
@@ -57,20 +61,21 @@ class DBCreator(object):
         pep_array = pep.to_array()
         pep_array = np.array(pep_array)
         peptide_data = pd.DataFrame(pep_array[1:, :], columns=pep_array[0, :])
-        #replaces empty strings tith NaN and drops completely empty rows
+        # replaces empty strings tith NaN and drops completely empty rows
         peptide_data.replace("", np.NaN, inplace=True)
         peptide_data.dropna(0, how="all", inplace=True)
-        #replaces NaN with None -> Django Querysets take None as Null.
-        peptide_data.replace([np.NaN],[None], inplace=True)
+        # replaces NaN with None -> Django Querysets take None as Null.
+        peptide_data.replace([np.NaN], [None], inplace=True)
         return peptide_data
 
     @staticmethod
     def load_peptide_batch_data(directory):
-        """
-        loads peptide batch Information from template
+        """ Loads peptide batch Information from template.
         :param directory:
         :return: Pandas DataFrame with peptide batches (ligands)
         """
+
+        # read in DataFrame
         f_formular = os.path.join(directory, "form_0.1.ods")
         formular = pe.get_book(file_name=f_formular, start_row=5,row_limit=69, start_column=2)
         pep = formular["Ligand"]
@@ -79,20 +84,22 @@ class DBCreator(object):
         pep_array = np.array(pep_array)
         #replaces empty strings tith NaN and drops completely empty rows
         ligand_data = pd.DataFrame(pep_array[1:, :], columns=pep_array[0, :])
+
+        # DataFrane processing
+        # FIXME: refactor in processing function and call in all data loading
         ligand_data.replace("", np.NaN, inplace=True)
         ligand_data.replace(0, np.NaN, inplace=True)
         ligand_data.dropna(0, how="all", inplace=True)
         #replaces NaN with None -> Django Querysets take None as Null.
-        ligand_data.replace([np.NaN],[None], inplace=True)
+        ligand_data.replace([np.NaN], [None], inplace=True)
         return ligand_data
 
     @staticmethod
     def load_virus_batch_data(directory):
-        '''
-        loads virus batch Information from template
+        """ Loads virus batch Information from template.
         :param directory:
         :return: Pandas DataFrame with virus batches
-        '''
+        """
         f_formular = os.path.join(directory, "form_0.1.ods")
         formular = pe.get_book(file_name=f_formular, start_row=4, row_limit=68, start_column=2)
         virus = formular["Influenza"]
@@ -447,19 +454,18 @@ class DBCreator(object):
         print("-" * 80)
         print("Finished filling data with process2db for id <{}>".format(data_id))
         print("-" * 80)
+
+###################################################################################
 if __name__ == "__main__":
 
-   
     PATTERN_DIR_MICROARRAY = "../../flutype_analysis/data/{}/"
     PATTERN_DIR_MICROWELL = "../../flutype_analysis/data/MTP/"
 
     data_id = "2017-05-19_E5_X31"
 
-
     # fills database from one form with peptides, peptide batches,
     # viruses, virus batches, users, buffers, peptide types.
     DBCreator().fromdata2db(PATTERN_DIR_MICROARRAY.format(data_id))
-
 
     microarray_data_ids = ["2017-05-19_E5_X31",
               "2017-05-19_E6_untenliegend_X31",
@@ -479,30 +485,3 @@ if __name__ == "__main__":
     #fills_microwell_data
     for id in microwell_data_ids:
         DBCreator().process2db(PATTERN_DIR_MICROWELL, id)
-     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
