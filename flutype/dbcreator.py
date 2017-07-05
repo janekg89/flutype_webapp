@@ -120,12 +120,11 @@ class DBCreator(object):
 
     @staticmethod
     def load_virus_data(directory):
-        '''
-        loads virus data from template
+        """ Loads virus data from template.
 
         :param directory:
         :return: Pandas DataFrame with virus data
-        '''
+        """
         f_formular = os.path.join(directory, "form_0.1.ods")
         formular = pe.get_book(file_name=f_formular, start_row=4, row_limit=68, start_column=2)
         virus = formular["Influenza db"]
@@ -144,11 +143,10 @@ class DBCreator(object):
 
     @staticmethod
     def load_user_data(directory):
-        '''
-        loads user data from template
+        """ Loads user data from template.
         :param directory:
         :return: Pandas DataFrame with user data
-        '''
+        """
         f_formular = os.path.join(directory, "form_0.1.ods")
         formular = pe.get_book(file_name=f_formular, start_row=3, row_limit=5, start_column=2, column_limit=1)
         name = formular["User , Washing,surface, Buffer"]
@@ -166,11 +164,10 @@ class DBCreator(object):
 
     @staticmethod
     def load_treatment_data(treatment,directory):
-        '''
-                loads user data from template
-                :param directory:
-                :return: Pandas DataFrame with user data
-                '''
+        """ Loads user data from template.
+        :param directory:
+        :return: Pandas DataFrame with user data
+        """
         f_formular = os.path.join(directory, "form_0.1.ods")
         formular = pe.get_book(file_name=f_formular, start_row=4, start_column=2, )
         name = formular[treatment]
@@ -184,9 +181,6 @@ class DBCreator(object):
         # replaces NaN with None -> Django Querysets take None as Null.
         name_data.replace([np.NaN], [None], inplace=True)
         return name_data
-
-
-
 
     @staticmethod
     def load_procedure_data(directory):
