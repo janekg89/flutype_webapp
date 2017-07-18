@@ -1,0 +1,35 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="Flutype Webdatabase">
+    <meta name="author" content="Janek">
+
+    <link rel="icon" href="_report/images/sbml.ico">
+    <title>flutype</title>
+
+    <!-- Bootstrap & datatables -->
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'flutype/css/bootstrap.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'flutype/css/dataTables.bootstrap.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'flutype/css/custom.css' %}"/>
+
+    <!-- JS -->
+    <script type="text/javascript" src="{% static 'flutype/js/jquery-1.12.4.js' %}"></script>
+    <script type="text/javascript" src="{% static 'flutype/js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'flutype/js/jquery.dataTables.js' %}"></script>
+    <script type="text/javascript" src="{% static 'flutype/js/dataTables.bootstrap.js' %}"></script>
+
+</head>
+<body>
+
+
+{% block content %}{% endblock %}
+{% block javascript %}{% endblock %}
+</body>
+</html>

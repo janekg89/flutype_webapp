@@ -1,0 +1,22 @@
+{% extends "expdata_interface/base.html" %}
+{% block content %}
+<h4>
+    [{{ publication.pmid }}] {{ publication.title }}
+</h4>
+<h6>Abstract:</h6>
+{{publication.abstract}}
+<h6>Authors:</h6>
+<p>
+{% for author in publication.author.all %}
+     <a href="{% url 'expdata_interface:author' author.id %}">{{author}} </a>  &nbsp;
+{% endfor %}
+</p>
+
+<p>
+<h6>MeSH Terms:</h6>
+
+{% for mesh in publication.mesh.all %}
+    <a href="{% url 'expdata_interface:mesh' mesh.id %}"> {{ mesh}} </a> &nbsp;
+{% endfor %}
+</p>
+{% endblock %}

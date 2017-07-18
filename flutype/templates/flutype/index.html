@@ -1,0 +1,50 @@
+{% extends "expdata_interface/base.html" %}
+{% block content %}
+{% if publication_list %}
+
+<table id="publications" class="table table-striped">
+     <caption>List of Publications</caption>
+<thead>
+  <tr>
+      <th>PMID</th>
+      <th>Title</th>
+      <th>Author</th>
+      <th>MeSH terms</th>
+  </tr>
+</thead>
+<tbody>
+     {% for publication in publication_list %}
+         <tr>
+             <td>
+                 <a href="https://www.ncbi.nlm.nih.gov/pubmed/{{ publication.pmid }}" target="_blank">PMID:{{ publication.pmid }}</a>
+             </td>
+             <td>
+                 <a href="/expdata_interface/{{publication.id}}/">{{publication.title}}</a></td>
+             <td>
+                {% for author in publication.author.all %}
+                   <a href="{% url 'expdata_interface:author' author.id %}">{{author}} </a>  &nbsp;
+                {% endfor %}
+             </td>
+
+            <td>
+                {% for mesh in publication.mesh.all %}
+                    <a href="{% url 'expdata_interface:mesh' mesh.id %}">{{mesh}} </a>  &nbsp;
+                {% endfor %}
+            </td>
+         </tr>
+     {% endfor %}
+</tbody>
+</table>
+
+{% else %}
+    <p>No publictions in database.</p>
+{% endif %}
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript" charset="utf-8">
+   $(document).ready(function() {
+    $('#publications').DataTable();
+} );
+</script>
+{% endblock %}
