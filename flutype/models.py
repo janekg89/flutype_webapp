@@ -7,10 +7,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
-
-# FIXME: NOT -> NA
-# FIXME: Rename spreadsheets in accordance with model name
-# FIXME: use classes in ForeignKeys instead of strings
+from django.contrib.auth.models import User as DUser
+from djchoices import DjangoChoices, ChoiceItem
+from django.core.files.storage import FileSystemStorage
+fs = FileSystemStorage(location='../data')
 
 
 class User(models.Model):
@@ -20,180 +20,127 @@ class User(models.Model):
     # FIXME: use the django user model: see https://docs.djangoproject.com/en/1.11/topics/auth/
     name = models.CharField(max_length=50)
 
+class PeptideType(DjangoChoices):
+    """
+    peptide type model
+    """
+    #p_types = models.CharField(max_length=30)
+    peptide = ChoiceItem("PEP")
+    buffer = ChoiceItem("BUF")
+    empty = ChoiceItem("EMP")
+    refrence = ChoiceItem("REF")
+    antibody =ChoiceItem("AB")
+
+
+class Buffer(DjangoChoices):
+    """
+    buffer model
+    """
+    #name = models.CharField(max_length=50)
+    na = ChoiceItem("NA")
+    pbst = ChoiceItem("PBST")
+    natriumhydrogencarbonat = ChoiceItem("Natriumhydrogencarbonat")
+
+class Substance(DjangoChoices):
+    """
+    substance model
+    """
+    #name = models.CharField(max_length=50,blank=True,null=True)
+    nhs_3d=ChoiceItem("3D-NHS")
+
+class HolderType(DjangoChoices):
+    """
+    holder type model
+    """
+    #holder_type=models.CharField(max_length=30,blank=True,null=True)
+
+    microarray = ChoiceItem("microarray")
+    microwell = ChoiceItem("microwell")
+
+class Manufacturer(DjangoChoices):
+    """
+    manufacturer model
+    """
+    #name = models.CharField(max_length=30, null=True , blank=True)
+    polyan= ChoiceItem("PolyAn")
+
+
+class ProcessingType(DjangoChoices):
+    substract_buffer= ChoiceItem("sub_buf")
 
 class Peptide(models.Model):
     """
     Pepide model
     """
-    # FIXME: name ids for models similar, i.e. id_pep, id_tax, better one name like sid
-    # FIXME: list sid as first field
-    id_pep = models.CharField(max_length=15, null=True)
-    name = models.CharField(max_length=50, blank=True, null=True)
+    sid= models.CharField(max_length=15, null=True)
     linker = models.CharField(max_length=50, blank=True, null=True)
     spacer = models.CharField(max_length=50, blank=True, null=True)
     sequence = models.CharField(max_length=50, blank=True, null=True)
     c_terminus = models.CharField(max_length=50, blank=True, null=True)
-    pep_type = models.ForeignKey("Peptide_type", blank=True, null=True)
-    # FIXME: comment missing
-
-
-class Peptide_type(models.Model):
-    """
-    peptide type model
-    """
-    p_types = models.CharField(max_length=30)
-
+    name = models.CharField(max_length=50, blank=True, null=True)
+    pep_type = models.CharField(max_length=5,choices=PeptideType.choices, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
 
 class Virus(models.Model):
     """
     virus model
+
+    sid is the taxonomy id
     """
+    sid = models.CharField(max_length=15, blank=True, null=True)
     subgroup = models.CharField(max_length=50, blank=True, null=True)
     country = models.CharField(max_length=50, blank=True, null=True)
     date_of_appearance = models.CharField(max_length=10, blank=True, null=True)
     strain = models.CharField(max_length=50, blank=True, null=True)
-    tax_id = models.CharField(max_length=15, blank=True, null=True)
 
-
-class Buffer(models.Model):
-    """
-    buffer model
-    """
-    name = models.CharField(max_length=50)
-
-
-# FIXME: pH -> ph
 class Batch(models.Model):
     """
     Batch model as abstract class not stored in the database
     """
     concentration = models.FloatField(validators=[MinValueValidator(0)],
                                       blank=True, null=True)
-    buffer = models.ForeignKey("Buffer", blank=True, null=True)
-    pH = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(14)],
+    buffer = models.CharField(max_length=20,choices=Buffer.choices, blank=True, null=True)
+    ph = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(14)],
                            blank=True, null=True)
     purity = models.FloatField(validators=[MinValueValidator(0)],
                                blank=True, null=True)
-    produced_by = models.ForeignKey("User", blank=True, null=True)
+    produced_by = models.ForeignKey(User, blank=True, null=True)
     production_date = models.DateField(blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
     class Meta:
         abstract = True
 
 
-# FIXME: classes as camelcase: -> VirusBatch
-class Virus_batch(Batch):
+class VirusBatch(Batch):
     """
     Virus batch model
     """
-    v_batch_id = models.CharField(max_length=20, blank=True, null=True)
-    virus = models.ForeignKey("Virus",blank=True, null=True)
+    sid = models.CharField(max_length=20, blank=True, null=True)
+    virus = models.ForeignKey(Virus,blank=True, null=True)
     passage_history = models.CharField(max_length=50, blank= True ,null=True)
     active = models.NullBooleanField(blank=True, null=True)
     labeling = models.CharField(max_length=50, blank=True,null=True)
 
 
-class Peptide_batch(Batch):
+class PeptideBatch(Batch):
     """
     peptide batch model
     """
-    p_batch_id = models.CharField(max_length=20)
-    peptide = models.ForeignKey("Peptide", blank=True, null=True)
-
-
-class Substance(models.Model):
-    """
-    substance model
-    """
-    name = models.CharField(max_length=50,blank=True,null=True)
-
-
-# FIXME: create enum with allowed values
-'''
-class ParameterType(enum.Enum):
-    GLOBAL_PARAMETER = 1
-    BOUNDARY_INIT = 2
-    FLOATING_INIT = 3
-    NONE_SBML_PARAMETER = 4
-    labels = {
-        GLOBAL_PARAMETER: 'GLOBAL_PARAMETER',
-        BOUNDARY_INIT: 'BOUNDARY_INIT',
-        FLOATING_INIT: 'FLOATING_INIT',
-        NONE_SBML_PARAMETER: 'NONE_SBML_PARAMETER'
-    }    
-
-class Parameter(models.Model):
-    key = models.CharField(max_length=50)
-    value = models.FloatField()
-    unit = models.CharField(max_length=50)
-    parameter_type = enum.EnumField(ParameterType)
-
-'''
-class Holder_type(models.Model):
-    """
-    holder type model
-    """
-    holder_type=models.CharField(max_length=30,blank=True,null=True)
-
-class Manufacturer(models.Model):
-    """
-    manufacturer model
-    """
-    name = models.CharField(max_length=30, null=True , blank=True)
-
-#########################
- # TODO: class Gal File or many2many through
-
-class Spot(models.Model):
-    """
-    spot model
-    """
-    peptide_batch = models.ForeignKey(Peptide_batch)
-    virus_batch = models.ForeignKey("Virus_batch")
-    sample_holder = models.ForeignKey("Sample_holder")  # FIXME: via SpotCollection
-    column = models.IntegerField()
-    row = models.IntegerField()
-    replica = models.IntegerField(null=True, blank=True)
-    ############in results#########################
-    intensity = models.FloatField(null=True, blank=True)
-    std = models.FloatField(null=True, blank=True)
-
-
-class SpotCollection(models.Model):
-    """ Processed collection for spot intesities.
-        Somehow intensities created from RawCollection.
-    """
-    pass
-    #  # image2numeric_version = models.FloatField(default=0.1)  # FIXME: enum field
-    # RawCollection
-    # Many2Many(Spot)
+    sid = models.CharField(max_length=20)
+    peptide = models.ForeignKey(Peptide, blank=True, null=True)
 
 
 
-# FIXME: better name, RawCollection
-# FIXME: charge -> batch
-class Sample_holder(models.Model):
-    """
-    sample holder model
-    """
-    s_id = models.CharField(max_length=20)
-    charge = models.CharField(max_length=20, null=True, blank=True)
-    holder_type = models.ForeignKey("Holder_type")
-    functionalization = models.ForeignKey("Substance")
-    manufacturer = models.ForeignKey("Manufacturer")
-    image = models.ImageField(blank=True, null=True)  #todo: how to save ?
-    image2numeric_version = models.FloatField(default=0.1)  # FIXME: enum field and move to SpotCollection
-    process = models.OneToOneField("Process", blank=True, null=True)
 
 ##########################################################
 
 
 class Treatment(models.Model):
-    treatment_id = models.CharField(max_length=10,null=True, blank=True)
+    sid = models.CharField(max_length=10,null=True, blank=True)
     method = models.CharField(max_length=50, null=True, blank=True)
     order = models.IntegerField(blank=True, null=True)
     date_time = models.DateTimeField(null=True, blank=True)
-    user = models.ForeignKey("User", null=True, blank=True)
+    user = models.ForeignKey(User, null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
 
     class Meta:
@@ -223,12 +170,70 @@ class Quenching(Treatment):
     duration = models.DurationField(null=True, blank=True)
     substance = models.CharField(max_length=50, null=True, blank=True)
 
-
+# TODO: list view (with links to RawCollections)
 class Process(models.Model):
-    washing = models.ManyToManyField("Washing")
-    drying = models.ManyToManyField("Drying")
-    spotting = models.ManyToManyField("Spotting")
-    incubating = models.ManyToManyField("Incubating")
-    quenching = models.ManyToManyField("Quenching")
+    washing = models.ForeignKey(Washing,null=True, blank=True)
+    drying = models.ForeignKey(Drying,null=True, blank=True)
+    spotting = models.ForeignKey(Spotting,null=True, blank=True)
+    incubating = models.ForeignKey(Incubating,null=True, blank=True)
+    quenching = models.ForeignKey(Quenching,null=True, blank=True)
 
 ######################################################################
+
+
+# TODO: view (list view & individual/detail entry)
+class RawSpotCollection(models.Model):
+    """
+    A collection of raw spots: Information for a Collection of Spots collected at once for one microarray, one microwellplate
+    """
+    sid = models.CharField(max_length=20)
+    batch = models.CharField(max_length=20, null=True, blank=True)
+    holder_type = models.CharField(max_length=20, choices=HolderType.choices)
+    functionalization = models.CharField(max_length=20,choices=Substance.choices)
+    manufacturer = models.CharField(max_length=20,choices=Manufacturer.choices)
+    image = models.FilePathField("../data/scan",null=True, blank=True)
+    gal_virus = models.FilePathField("../data/gal_pep",null=True, blank=True)
+    gal_peptide =models.FilePathField("../data/gal_vir",null=True, blank=True)
+    process = models.ForeignKey(Process,blank=True, null=True)
+
+
+
+# FIXME: it must be easy to get for one RawCollection entry all SpotCollections
+# which belong to the RawCollection
+
+
+    #raw_spots = models.ManyToManyField(RawSpot,through='Grid')
+class RawSpot(models.Model):
+    """
+    spot model
+    """
+    peptide_batch = models.ForeignKey(PeptideBatch)
+    virus_batch = models.ForeignKey(VirusBatch)
+    raw_spot_collection = models.ForeignKey(RawSpotCollection)
+    column = models.IntegerField()
+    row = models.IntegerField()
+    replica = models.IntegerField(null=True, blank=True)
+
+
+    class Meta:
+        unique_together = ('column', 'row', 'raw_spot_collection')
+
+
+class Spot(models.Model):
+    """
+    spot model
+    """
+    raw_spot = models.ForeignKey(RawSpot)
+    ############in results#########################
+    intensity = models.FloatField(null=True, blank=True)
+    std = models.FloatField(null=True, blank=True)
+    image2numeric_version = models.FloatField(default=0.1)
+    processing_type = models.CharField(max_length=30,
+                                       choices=ProcessingType.choices,
+                                       blank=True,
+                                       null=True)
+
+
+
+
+

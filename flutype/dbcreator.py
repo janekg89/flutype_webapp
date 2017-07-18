@@ -10,6 +10,9 @@ import sys
 import numpy as np
 import pandas as pd
 import pyexcel as pe
+import re
+import cv2
+from django.core.files import File
 
 from flutype_analysis import utils, analysis
 
@@ -23,21 +26,18 @@ import django
 django.setup()
 
 # import models
-from flutype.models import (Peptide_type,
-                            Peptide,
-                            Peptide_batch,
+from flutype.models import (Peptide,
+                            PeptideBatch,
                             Virus,
-                            Virus_batch,
-                            Buffer,
+                            VirusBatch,
                             User,
-                            Substance,
-                            Holder_type,
-                            Manufacturer,
-                            Sample_holder,
+                            RawSpotCollection,
+                            RawSpot,
                             Spot,
                             Spotting,
                             Quenching,
-                            Incubating)
+                            Incubating,
+                            Process)
 
 
 class DBCreator(object):
@@ -56,7 +56,7 @@ class DBCreator(object):
         f_formular = os.path.join(directory, "form_0.1.ods")
 
         formular = pe.get_book(file_name=f_formular, start_row=4, start_column=4)
-        pep = formular["Peptide db"]
+        pep = formular["Peptide"]
         pep.name_columns_by_row(0)
         pep_array = pep.to_array()
         pep_array = np.array(pep_array)
@@ -78,7 +78,7 @@ class DBCreator(object):
         # read in DataFrame
         f_formular = os.path.join(directory, "form_0.1.ods")
         formular = pe.get_book(file_name=f_formular, start_row=5,row_limit=69, start_column=2)
-        pep = formular["Ligand"]
+        pep = formular["PeptideBatch"]
         pep.name_columns_by_row(0)
         pep_array = pep.to_array()
         pep_array = np.array(pep_array)
@@ -102,7 +102,7 @@ class DBCreator(object):
         """
         f_formular = os.path.join(directory, "form_0.1.ods")
         formular = pe.get_book(file_name=f_formular, start_row=4, row_limit=68, start_column=2)
-        virus = formular["Influenza"]
+        virus = formular["VirusBatch"]
         virus.name_columns_by_row(0)
         virus_array = virus.to_array()
         virus_array = np.array(virus_array)
@@ -128,7 +128,7 @@ class DBCreator(object):
         """
         f_formular = os.path.join(directory, "form_0.1.ods")
         formular = pe.get_book(file_name=f_formular, start_row=4, row_limit=68, start_column=2)
-        virus = formular["Influenza db"]
+        virus = formular["Virus"]
         virus.name_columns_by_row(0)
         virus_array = virus.to_array()
         virus_array = np.array(virus_array)
@@ -194,19 +194,81 @@ class DBCreator(object):
         name = formular["Procedure"]
         name_array = name.to_array()
         name_array = np.array(name_array)
-        dic_a = {"S ID": name_array[0,1],"Charge":name_array[1,1],"Surface Substance":name_array[2,1],
+        dic_all={"Spotting": name_array[9,0],"Quenching":name_array[21,0],"Incubating":name_array[33,0]}
+        dic_microarray = {"S ID": name_array[0,1],"Charge":name_array[1,1],"Surface Substance":name_array[2,1],
              "manfacturer": name_array[3,1]}
-        dic_b = {"S ID": name_array[0,7],"Charge":name_array[1,6],"Surface Substance":name_array[2,7],
+        dic_microwell = {"S ID": name_array[0,7],"Charge":name_array[1,6],"Surface Substance":name_array[2,7],
              "manfacturer": name_array[3,7]}
-        if any(dic_a.values()):
+        if any(dic_microarray.values()):
             print("Sample Holder is a microarray.")
-            dic_a["Holder Type"]= "microarray"
-            return dic_a
+            dic_microarray["Holder Type"]= "microarray"
+            dic_microarray.update(dic_all)
+            return dic_microarray
 
-        elif any(dic_b.values()):
+        elif any(dic_microwell.values()):
             print("Sample Holder is a microwell plate.")
-            dic_b["Holder Type"] = "microwell"  # FIXME: use enums
-            return dic_b
+            dic_microwell["Holder Type"] = "microwell"
+            dic_microwell.update(dic_all)
+            return dic_microwell
+
+    @staticmethod
+    def get_or_create_gal_pep(directory,data):
+        max_name = 0
+        created = False
+        for fn in os.listdir(directory):
+            result = re.search('pep(.*).gal', fn)
+            if int(result.group(1)) > max_name:
+                max_name = int(result.group(1))
+
+            file_path = os.path.join(directory, fn)
+            pep_gal = pd.read_csv(file_path, sep='\t', index_col="ID")
+
+            if data["gal_pep"].equals(pep_gal):
+                pep_path_true = file_path
+                break
+        else:
+            created = True
+            pep_path_true = os.path.join(directory, 'pep' + '{:03}'.format(max_name + 1) + '.gal')
+            data["gal_pep"].to_csv(pep_path_true, sep='\t')
+
+        return pep_path_true, created
+
+    @staticmethod
+    def get_or_create_gal_vir(directory, data):
+        max_name = 0
+        created = False
+        for fn in os.listdir(directory):
+            result = re.search('vir(.*).gal', fn)
+            if int(result.group(1)) > max_name:
+                max_name = int(result.group(1))
+
+            file_path = os.path.join(directory, fn)
+            pep_gal = pd.read_csv(file_path, sep='\t', index_col="ID")
+
+            if data["gal_vir"].equals(pep_gal):
+                pep_path_true = file_path
+                break
+        else:
+            created = True
+            pep_path_true = os.path.join(directory, 'vir' + '{:03}'.format(max_name + 1) + '.gal')
+            data["gal_vir"].to_csv(pep_path_true, sep='\t')
+
+        return pep_path_true, created
+
+    @staticmethod
+    def get_or_create_image(directory,data):
+        PATTERN_TIF = "{}_600_100_635.tif"
+        created = False
+        for fn in os.listdir(directory):
+            if fn==PATTERN_TIF.format(data["data_id"]):
+                tif_path = fn
+                break
+        else:
+            tif_path = os.path.join(directory,PATTERN_TIF.format(data["data_id"]))
+            cv2.imwrite(tif_path,data["tif"])
+            created = True
+        return tif_path, created
+
 
     @staticmethod
     def fromdata2db(directory):
@@ -236,9 +298,7 @@ class DBCreator(object):
         created_l = []
         created_p = []
         created_v = []
-        created_pt = []
         created_vb = []
-        created_bu = []
 
         # fills viruses
         for k, virus in virus_data.iterrows():
@@ -246,7 +306,7 @@ class DBCreator(object):
                                                          country=virus["Country"],
                                                          date_of_appearance=virus["Date"],
                                                          strain=virus["Strain Name"],
-                                                         tax_id=virus["Taxonomy ID"]
+                                                         sid=virus["Taxonomy ID"]
                                                          )
             created_v.append(created)
 
@@ -256,58 +316,64 @@ class DBCreator(object):
         print("Virus batches without foreignkey to a virus in the database")
         print("-" * 80)
         for k, virus_batch in virus_batch_data.iterrows():
-
-            try:
+            """
+              try:
                 # fills buffer
                 Buffer_in_db, created = Buffer.objects.get_or_create(name=virus_batch["Buffer"])
                 created_bu.append(created)
             except:
                 Buffer_in_db = None
-
-            created_bu.append(created)
-
+            
+            """
             try:
-                virus = Virus.objects.get(tax_id=virus_batch["Taxonomy ID"])
+                virus = Virus.objects.get(sid=virus_batch["Taxonomy ID"])
+                print("**"+virus_batch["Batch ID"])
+
             except:
                 virus = None
                 #prints all virus batches without foreignkey to a virus in the database
                 print(virus_batch["Batch ID"])
             #fills virus batches
-            virus_batch, created = Virus_batch.objects.get_or_create(v_batch_id=virus_batch["Batch ID"],
-                                                                     passage_history=virus_batch["Passage History"],
-                                                                     active=virus_batch["Active"],
-                                                                     labeling=virus_batch["Labeling"],
-                                                                     virus=virus,
-                                                                     concentration=virus_batch["Concentration [mg/ml]"],
-                                                                     pH=virus_batch["pH"],
-                                                                     buffer=Buffer_in_db,
-                                                                     production_date=virus_batch["Production Date"],
-                                                                     comment=virus_batch["Comment"]
-                                                                     )
+            virus_batch, created = VirusBatch.objects.get_or_create(sid=virus_batch["Batch ID"],
+                                                                    passage_history=virus_batch["Passage History"],
+                                                                    active=virus_batch["Active"],
+                                                                    labeling=virus_batch["Labeling"],
+                                                                    virus=virus,
+                                                                    concentration=virus_batch["Concentration [mg/ml]"],
+                                                                    ph=virus_batch["pH"],
+                                                                    buffer=virus_batch["Buffer"],
+                                                                    production_date=virus_batch["Production Date"],
+                                                                    comment=virus_batch["Comment"]
+                                                                    )
             created_vb.append(created)
         print("-" * 80)
         print("Updated any viruses batches in the database:", any(created_v))
 
         for k, peptide in peptide_data.iterrows():
+            """
+            
+            
+            
 
             #fills peptide types
-            pep_type , created = Peptide_type.objects.get_or_create(p_types=peptide["Types"])
+            pep_type , created = PeptideType.objects.get_or_create(p_types=peptide["Types"])
             created_pt.append(created)
+            """
 
             #fills peptides
-            peptide, created = Peptide.objects.get_or_create(id_pep=peptide["Peptide ID"],
+            peptide, created = Peptide.objects.get_or_create(sid=peptide["Peptide ID"],
                                                              name=peptide["Name"],
                                                              linker=peptide["Linker"],
                                                              spacer=peptide["Spacer"],
                                                              sequence=peptide["Sequence"],
                                                              c_terminus=peptide["C-terminus"],
-                                                             pep_type=pep_type
+                                                             pep_type=peptide["Types"],
+                                                             comment=peptide["Comment"]
                                                              )
             created_p.append(created)
 
         print("Updated any peptides in the database:",any(created_p))
-        print("Updated any peptide types in the database:",any(created_pt))
-
+        #print("Updated any peptide types in the database:",any(created_pt))
 
         for k, user in user_data.iterrows():
             #fills users
@@ -316,19 +382,25 @@ class DBCreator(object):
 
         print("Updated any user in the database:",any(created_u))
         print("-" * 80)
+
+
+
+
+
         print("Peptide batches without foreignkey to a peptide in the database")
         print("-" * 80)
 
         for k, ligand in peptide__batch_data.iterrows():
+            """
             try:
                 #fills buffer
                 Buffer_in_db, created = Buffer.objects.get_or_create(name=ligand["Buffer"])
                 created_bu.append(created)
             except:
                 Buffer_in_db = None
-
+            """
             try:
-                peptide = Peptide.objects.get(id_pep = ligand["Peptide ID"])
+                peptide = Peptide.objects.get(sid = ligand["Peptide ID"])
             except:
                 peptide = None
 
@@ -338,29 +410,51 @@ class DBCreator(object):
 
             #fills peptide_batches
             #print(ligand["Peptide ID"])
-            _ , created = Peptide_batch.objects.get_or_create(p_batch_id = ligand["Ligand id"],
-                                                                              peptide=peptide,
-                                                                              concentration = ligand["Concentration [mg/ml]"],
-                                                                              pH = ligand["pH"],
-                                                                              purity = ligand["Purity (MS)"],
-                                                                              buffer = Buffer_in_db,
-                                                                              produced_by = ligand["Synthesized by"],
-                                                                              production_date = ligand["Synthesization Date"],
-                                                                              comment = ligand["Comment"]
-                                                                              )
+            _ , created = PeptideBatch.objects.get_or_create( sid = ligand["Ligand id"],
+                                                              peptide=peptide,
+                                                              concentration = ligand["Concentration [mg/ml]"],
+                                                              ph = ligand["pH"],
+                                                              purity = ligand["Purity (MS)"],
+                                                              buffer = ligand["Buffer"],
+                                                              produced_by = ligand["Synthesized by"],
+                                                              production_date = ligand["Synthesization Date"],
+                                                              comment = ligand["Comment"]
+                                                              )
 
             created_l.append(created)
 
         print("-" * 80)
-        print("Updated any buffer in the database:", any(created_bu))
+        #print("Updated any buffer in the database:", any(created_bu))
 
         print("Updated any ligands in the database:",any(created_l))
 
-        #_, created = Spotting.objects.get_or_create()
+        for k, spotting in spotting_data.iterrows():
+            _, created = Spotting.objects.get_or_create(sid=spotting["Spotting ID"],
+                                                        method=spotting["Spotting Method"],
+                                                        date_time=None,
+                                                        user=None,
+                                                        comment=spotting["Comment"])
+
+        for k, quenching in quenching_data.iterrows():
+            _, created = Quenching.objects.get_or_create(sid=quenching["Queching ID"],
+                                                        method=quenching["Quenching Method"],
+                                                        date_time=None,
+                                                        user=None,
+                                                        comment=quenching["Comment"])
+
+        for k, incubating in incubating_data.iterrows():
+            _, created = Incubating.objects.get_or_create(sid=incubating["Incubating ID"],
+                                                         method=incubating["Incubation Method"],
+                                                         date_time=None,
+                                                         user=None,
+                                                         comment=incubating["Comment"])
+
+
 
         print("-" * 80)
         print("Finished loading fromdata2db.")
         print("-" * 80)
+
 
 
     @staticmethod
@@ -382,45 +476,76 @@ class DBCreator(object):
         spots["Replica"].replace([np.NaN], [None], inplace=True)
         spots["Std"].replace([np.NaN], [None], inplace=True)
 
-        #gets or creates folder type
-        holder_type, _ = Holder_type.objects.get_or_create(holder_type=proces_dic["Holder Type"])
-
-        if not proces_dic['Surface Substance']:
-            name = None
-        else:
-            name = proces_dic['Surface Substance']
-        #gets or creates substance if filled out in form
-        surf_substance, _ = Substance.objects.get_or_create(name=name)
 
 
-        if not proces_dic['manfacturer']:
-            name = None
-        else:
-            name = proces_dic['manfacturer']
-        #gets or creates manufacturer if filled out in form
-        manufacturer, _ = Manufacturer.objects.get_or_create(name=name)
 
-        #gets or creates sample_holder
-        sample_holder, _ = Sample_holder.objects.get_or_create(s_id=proces_dic["S ID"],
-                                                               charge=proces_dic["Charge"],
-                                                               holder_type=holder_type,
-                                                               manufacturer=manufacturer,
-                                                               functionalization=surf_substance
-                                                               )
+
+
+        try:
+            spotting = Spotting.objects.get(sid=proces_dic["Spotting"])
+        except:
+            spotting = None
+        try:
+            incubating = Incubating.objects.get(sid=proces_dic["Incubating"])
+        except:
+            incubating = None
+        try:
+            quenching = Quenching.objects.get(sid=proces_dic["Quenching"])
+        except:
+            quenching = None
+
+        process, _ = Process.objects.get_or_create(spotting=spotting,
+                                                   incubating=incubating,
+                                                   quenching=quenching)
+
+
+
+        # checks if peptide gal file exits in directory.
+        pep_path = '../data/gal_pep/'
+        vir_path = '../data/gal_vir/'
+        scan_path = '../data/scan/'
+
+        pep_path_true, _ = DBCreator.get_or_create_gal_pep(pep_path, data)
+        vir_path_true, _ = DBCreator.get_or_create_gal_vir(vir_path, data)
+        try:
+            scan_path_true, _ = DBCreator.get_or_create_image(scan_path, data)
+        except:
+            scan_path_true = None
+
+
+        # gets or creates raw_spot_collection
+        raw_spot_collection, _ = RawSpotCollection.objects.get_or_create(sid=proces_dic["S ID"],
+                                                                         batch=proces_dic["Charge"],
+                                                                         holder_type=proces_dic["Holder Type"],
+                                                                         functionalization=proces_dic[
+                                                                             'Surface Substance'],
+                                                                         manufacturer=proces_dic['manfacturer'],
+                                                                         gal_peptide=pep_path_true,
+                                                                         gal_virus=vir_path_true,
+                                                                         image=scan_path_true,
+                                                                         process=process
+                                                                         )
         for k, spot in spots.iterrows():
+            # print(spot["Peptide"])
 
-            #print(spot["Peptide"])
+            # gets or creates spots
+            raw_spot, _ = RawSpot.objects.get_or_create(peptide_batch=PeptideBatch.objects.get(sid=spot["Peptide"]),
+                                                        virus_batch=VirusBatch.objects.get(sid=spot["Virus"]),
+                                                        raw_spot_collection=raw_spot_collection,
+                                                        column=spot["Column"],
+                                                        row=spot["Row"],
+                                                        replica=spot["Replica"]
+                                                        )
 
-            #gets or creates spots
-            _,_ = Spot.objects.get_or_create(peptide_batch=Peptide_batch.objects.get(p_batch_id=spot["Peptide"]),
-                                             virus_batch=Virus_batch.objects.get(v_batch_id=spot["Virus"]),
-                                             sample_holder=sample_holder,
-                                             column=spot["Column"],
-                                             row= spot["Row"],
-                                             intensity=spot["Intensity"],
-                                             replica=spot["Replica"],
-                                             std=spot["Std"]
-                                             )
+            _, _ = Spot.objects.get_or_create(raw_spot=raw_spot,
+                                              intensity=spot["Intensity"],
+                                              std=spot["Std"]
+                                              )
+
+
+
+
+
         print("-" * 80)
         print("Finished filling data with process2db for id <{}>".format(data_id))
         print("-" * 80)
@@ -428,12 +553,14 @@ class DBCreator(object):
 ###################################################################################
 if __name__ == "__main__":
 
+
     # requires the flutype_analysis in same directory as flutype_webapp
 
     PATTERN_DIR_MICROARRAY = "../../flutype_analysis/data/{}/"
     PATTERN_DIR_MICROWELL = "../../flutype_analysis/data/MTP/"
 
     data_id = "2017-05-19_E5_X31"
+
 
     # fills database from one form with peptides, peptide batches,
     # viruses, virus batches, users, buffers, peptide types.
@@ -454,8 +581,15 @@ if __name__ == "__main__":
     for mid in microarray_data_ids:
         DBCreator().process2db(PATTERN_DIR_MICROARRAY.format(mid), mid)
 
+
+
+
+
     microwell_data_ids = ["2017-05-12_MTP_R1"]
 
-    # fills_microwell_data
+    ## fills_microwell_data
     for mid in microwell_data_ids:
         DBCreator().process2db(PATTERN_DIR_MICROWELL, mid)
+
+
+
