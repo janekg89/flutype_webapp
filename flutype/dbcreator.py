@@ -12,7 +12,9 @@ import pandas as pd
 import pyexcel as pe
 import re
 import cv2
+import urllib2
 from django.core.files import File
+from django.core.files.temp import NamedTemporaryFile
 
 from flutype_analysis import utils, analysis
 
@@ -37,7 +39,9 @@ from flutype.models import (Peptide,
                             Spotting,
                             Quenching,
                             Incubating,
-                            Process)
+                            Process,
+                            GalPeptide,
+                            GalVirus)
 
 
 class DBCreator(object):
@@ -47,7 +51,7 @@ class DBCreator(object):
     @staticmethod
     def load_peptide_data(directory):
         """
-        loads peptide data from template
+        loads peptide media from template
 
         :param directory:
         :return: Pandas DataFrame with peptides
@@ -86,7 +90,7 @@ class DBCreator(object):
         ligand_data = pd.DataFrame(pep_array[1:, :], columns=pep_array[0, :])
 
         # DataFrane processing
-        # FIXME: refactor in processing function and call in all data loading
+        # FIXME: refactor in processing function and call in all media loading
         ligand_data.replace("", np.NaN, inplace=True)
         ligand_data.replace(0, np.NaN, inplace=True)
         ligand_data.dropna(0, how="all", inplace=True)
@@ -121,10 +125,10 @@ class DBCreator(object):
 
     @staticmethod
     def load_virus_data(directory):
-        """ Loads virus data from template.
+        """ Loads virus media from template.
 
         :param directory:
-        :return: Pandas DataFrame with virus data
+        :return: Pandas DataFrame with virus media
         """
         f_formular = os.path.join(directory, "form_0.1.ods")
         formular = pe.get_book(file_name=f_formular, start_row=4, row_limit=68, start_column=2)
@@ -144,9 +148,9 @@ class DBCreator(object):
 
     @staticmethod
     def load_user_data(directory):
-        """ Loads user data from template.
+        """ Loads user media from template.
         :param directory:
-        :return: Pandas DataFrame with user data
+        :return: Pandas DataFrame with user media
         """
         f_formular = os.path.join(directory, "form_0.1.ods")
         formular = pe.get_book(file_name=f_formular, start_row=3, row_limit=5, start_column=2, column_limit=1)
@@ -165,9 +169,9 @@ class DBCreator(object):
 
     @staticmethod
     def load_treatment_data(treatment,directory):
-        """ Loads user data from template.
+        """ Loads user media from template.
         :param directory:
-        :return: Pandas DataFrame with user data
+        :return: Pandas DataFrame with user media
         """
         f_formular = os.path.join(directory, "form_0.1.ods")
         formular = pe.get_book(file_name=f_formular, start_row=4, start_column=2, )
@@ -185,9 +189,9 @@ class DBCreator(object):
 
     @staticmethod
     def load_procedure_data(directory):
-        """ Loads procedure data from template.
+        """ Loads procedure media from template.
         :param directory:
-        :return: Dictonary with process data
+        :return: Dictonary with process media
         """
         f_formular = os.path.join(directory, "form_0.1.ods")
         formular = pe.get_book(file_name=f_formular, start_row=5, start_column=3)
@@ -224,14 +228,16 @@ class DBCreator(object):
             pep_gal = pd.read_csv(file_path, sep='\t', index_col="ID")
 
             if data["gal_pep"].equals(pep_gal):
-                pep_path_true = file_path
+                fname = fn
+                fpath = os.path.join(directory, fname)
                 break
         else:
             created = True
-            pep_path_true = os.path.join(directory, 'pep' + '{:03}'.format(max_name + 1) + '.gal')
-            data["gal_pep"].to_csv(pep_path_true, sep='\t')
+            fname = 'pep' + '{:03}'.format(max_name + 1) + '.gal'
+            fpath = os.path.join(directory,fname)
+            data["gal_pep"].to_csv(fpath, sep='\t')
 
-        return pep_path_true, created
+        return fname,fpath, created
 
     @staticmethod
     def get_or_create_gal_vir(directory, data):
@@ -246,44 +252,51 @@ class DBCreator(object):
             pep_gal = pd.read_csv(file_path, sep='\t', index_col="ID")
 
             if data["gal_vir"].equals(pep_gal):
-                pep_path_true = file_path
+                fname = fn
+                fpath = os.path.join(directory, fname)
+
                 break
         else:
             created = True
-            pep_path_true = os.path.join(directory, 'vir' + '{:03}'.format(max_name + 1) + '.gal')
-            data["gal_vir"].to_csv(pep_path_true, sep='\t')
+            fname = 'vir' + '{:03}'.format(max_name + 1) + '.gal'
+            fpath = os.path.join(directory,fname)
+            data["gal_vir"].to_csv(fpath, sep='\t')
 
-        return pep_path_true, created
+
+        return fname,fpath, created
 
     @staticmethod
     def get_or_create_image(directory,data):
-        PATTERN_TIF = "{}_600_100_635.tif"
+        PATTERN_TIF = "{}_600_100_635.jpg"
         created = False
         for fn in os.listdir(directory):
             if fn==PATTERN_TIF.format(data["data_id"]):
-                tif_path = fn
+                fname = fn
+                fpath = os.path.join(directory, fname)
                 break
         else:
-            tif_path = os.path.join(directory,PATTERN_TIF.format(data["data_id"]))
-            cv2.imwrite(tif_path,data["tif"])
+            fname = PATTERN_TIF.format(data["data_id"])
+            fpath = os.path.join(directory,fname)
+            cv2.imwrite(fpath,data["tif"])
             created = True
-        return tif_path, created
+
+        return fname, fpath, created
 
 
     @staticmethod
     def fromdata2db(directory):
         """ fills database from one form with peptides, peptide batches, viruses, virus batches, users, buffers, peptide types.
-            Convention: None (Null): data not present.
-                        Not for Text: data has no value.
+            Convention: None (Null): media not present.
+                        Not for Text: media has no value.
 
-        :param: directory: directory containing data
+        :param: directory: directory containing media
 
         :return:
         """
         print("-"*80)
         print("Filling database with fromdata2db")
         print("-" * 80)
-        # loads data from template
+        # loads media from template
         virus_data = DBCreator.load_virus_data(directory)
         virus_batch_data = DBCreator.load_virus_batch_data(directory)
         peptide_data = DBCreator.load_peptide_data(directory)
@@ -293,7 +306,7 @@ class DBCreator(object):
         quenching_data = DBCreator.load_treatment_data("Quenching", directory)
         incubating_data = DBCreator.load_treatment_data("Incubating", directory)
 
-        # Stores informations if any new data was loaded.
+        # Stores informations if any new media was loaded.
         created_u = []
         created_l = []
         created_p = []
@@ -460,19 +473,19 @@ class DBCreator(object):
     @staticmethod
     def process2db(directory, data_id):
         """
-        :param directory: directory containing data
+        :param directory: directory containing media
         :param data_id: id of dataset
         :return:
         """
-        #loads data from datafolder
+        #loads media from datafolder
         print("-" * 80)
-        print("Filling data with process2db for id <{}>".format(data_id))
+        print("Filling media with process2db for id <{}>".format(data_id))
 
         proces_dic=DBCreator.load_procedure_data(directory)
         data = utils.load_data(data_id, directory)
         ana = analysis.Analysis(data)
         spots = ana.spot
-        #stick to convetion if data not present -> None
+        #stick to convetion if media not present -> None
         spots["Replica"].replace([np.NaN], [None], inplace=True)
         spots["Std"].replace([np.NaN], [None], inplace=True)
 
@@ -501,53 +514,79 @@ class DBCreator(object):
 
 
         # checks if peptide gal file exits in directory.
-        pep_path = '../data/gal_pep/'
-        vir_path = '../data/gal_vir/'
-        scan_path = '../data/scan/'
+        pep_path = '../db_create_buffer/gal_pep/'
+        vir_path = '../db_create_buffer/gal_vir/'
+        scan_path = '../db_create_buffer/scan/'
 
-        pep_path_true, _ = DBCreator.get_or_create_gal_pep(pep_path, data)
-        vir_path_true, _ = DBCreator.get_or_create_gal_vir(vir_path, data)
+        pep_name,pep_path_true, _ = DBCreator.get_or_create_gal_pep(pep_path, data)
         try:
-            scan_path_true, _ = DBCreator.get_or_create_image(scan_path, data)
+            galpep=GalPeptide.objects.get(sid=pep_name)
         except:
-            scan_path_true = None
+            galpep,_=GalPeptide.objects.get_or_create(sid=pep_name)
+            galpep.gal_file.save(pep_name, File(open(pep_path_true, "r")))
+
+
+        vir_name,vir_path_true,_= DBCreator.get_or_create_gal_vir(vir_path, data)
+        try:
+            galvir=GalVirus.objects.get(sid=vir_name)
+        except:
+            galvir,_=GalVirus.objects.get_or_create(sid=vir_name)
+            galvir.gal_file.save(vir_name,File(open(vir_path_true,"r")))
+
+
+
+        try:
+            scan_name, scan_path_true, _ = DBCreator.get_or_create_image(scan_path, data)
+        except:
+            scan_name = False
+
+        #gets or gcreates pepgal
+
 
 
         # gets or creates raw_spot_collection
-        raw_spot_collection, _ = RawSpotCollection.objects.get_or_create(sid=proces_dic["S ID"],
-                                                                         batch=proces_dic["Charge"],
-                                                                         holder_type=proces_dic["Holder Type"],
-                                                                         functionalization=proces_dic[
-                                                                             'Surface Substance'],
-                                                                         manufacturer=proces_dic['manfacturer'],
-                                                                         gal_peptide=pep_path_true,
-                                                                         gal_virus=vir_path_true,
-                                                                         image=scan_path_true,
-                                                                         process=process
-                                                                         )
-        for k, spot in spots.iterrows():
-            # print(spot["Peptide"])
+        try:
+            RawSpotCollection.objects.get(sid=proces_dic["S ID"])
+        except:
+            raw_spot_collection, _ = RawSpotCollection.objects.get_or_create(sid=proces_dic["S ID"],
+                                                                             batch=proces_dic["Charge"],
+                                                                             holder_type=proces_dic["Holder Type"],
+                                                                             functionalization=proces_dic[
+                                                                                 'Surface Substance'],
+                                                                             manufacturer=proces_dic['manfacturer'],
+                                                                             gal_peptide=galpep,
+                                                                             gal_virus=galvir,
+                                                                             #image=scan_path_true,
+                                                                             process=process)
+            #raw_spot_collection.gal_peptide.
+            if scan_name:
+                raw_spot_collection.image.save(scan_name,File(open(scan_path_true,"r")))
 
-            # gets or creates spots
-            raw_spot, _ = RawSpot.objects.get_or_create(peptide_batch=PeptideBatch.objects.get(sid=spot["Peptide"]),
-                                                        virus_batch=VirusBatch.objects.get(sid=spot["Virus"]),
-                                                        raw_spot_collection=raw_spot_collection,
-                                                        column=spot["Column"],
-                                                        row=spot["Row"],
-                                                        replica=spot["Replica"]
-                                                        )
 
-            _, _ = Spot.objects.get_or_create(raw_spot=raw_spot,
-                                              intensity=spot["Intensity"],
-                                              std=spot["Std"]
-                                              )
+
+            for k, spot in spots.iterrows():
+                # print(spot["Peptide"])
+
+                # gets or creates spots
+                raw_spot, _ = RawSpot.objects.get_or_create(peptide_batch=PeptideBatch.objects.get(sid=spot["Peptide"]),
+                                                            virus_batch=VirusBatch.objects.get(sid=spot["Virus"]),
+                                                            raw_spot_collection=raw_spot_collection,
+                                                            column=spot["Column"],
+                                                            row=spot["Row"],
+                                                            replica=spot["Replica"]
+                                                            )
+
+                _, _ = Spot.objects.get_or_create(raw_spot=raw_spot,
+                                                  intensity=spot["Intensity"],
+                                                  std=spot["Std"]
+                                                  )
 
 
 
 
 
         print("-" * 80)
-        print("Finished filling data with process2db for id <{}>".format(data_id))
+        print("Finished filling media with process2db for id <{}>".format(data_id))
         print("-" * 80)
 
 ###################################################################################

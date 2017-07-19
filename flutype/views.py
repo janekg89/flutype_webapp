@@ -34,7 +34,7 @@ def process_list(request):
 class IndexView(generic.ListView):
     template_name = 'flutype/index.html'
     model = RawSpotCollection
-    context_object_name = 'RawSpotCollection'
+    context_object_name = 'RawSpotCollections'
 
     def get_queryset(self):
         return RawSpotCollection.objects.only('sid')

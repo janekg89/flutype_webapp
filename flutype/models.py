@@ -10,7 +10,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User as DUser
 from djchoices import DjangoChoices, ChoiceItem
 from django.core.files.storage import FileSystemStorage
-fs = FileSystemStorage(location='../data')
+fs = FileSystemStorage(location='../media')
 
 
 class User(models.Model):
@@ -80,6 +80,7 @@ class Peptide(models.Model):
     name = models.CharField(max_length=50, blank=True, null=True)
     pep_type = models.CharField(max_length=5,choices=PeptideType.choices, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
+
 
 class Virus(models.Model):
     """
@@ -158,7 +159,7 @@ class Drying(Treatment):
 
 
 class Spotting(Treatment):
-    """ Spotting method and data related to spotting. """
+    """ Spotting method and media related to spotting. """
     order = models.IntegerField(default=0, blank=True, null=True)
 
 
@@ -179,6 +180,13 @@ class Process(models.Model):
     quenching = models.ForeignKey(Quenching,null=True, blank=True)
 
 ######################################################################
+class GalVirus(models.Model):
+    sid = models.CharField(max_length=20)
+    gal_file = models.FileField(upload_to="gal_vir",null=True, blank=True)
+
+class GalPeptide(models.Model):
+    sid = models.CharField(max_length=20)
+    gal_file = models.FileField(upload_to="gal_pep", null=True, blank=True)
 
 
 # TODO: view (list view & individual/detail entry)
@@ -191,10 +199,40 @@ class RawSpotCollection(models.Model):
     holder_type = models.CharField(max_length=20, choices=HolderType.choices)
     functionalization = models.CharField(max_length=20,choices=Substance.choices)
     manufacturer = models.CharField(max_length=20,choices=Manufacturer.choices)
-    image = models.FilePathField("../data/scan",null=True, blank=True)
-    gal_virus = models.FilePathField("../data/gal_pep",null=True, blank=True)
-    gal_peptide =models.FilePathField("../data/gal_vir",null=True, blank=True)
+    image = models.ImageField(upload_to="scan",null=True, blank=True)
+    gal_virus = models.ForeignKey(GalVirus,null=True, blank=True)
+    gal_peptide = models.ForeignKey(GalPeptide,null=True, blank=True)
     process = models.ForeignKey(Process,blank=True, null=True)
+
+    def peptide_set(self):
+        raw_spots = self.rawspot_set.all()
+        unique_peptide_sid =[]
+        unique_peptide = []
+
+        for raw_spot in raw_spots:
+            if raw_spot.peptide_batch.peptide.sid in unique_peptide_sid:
+                pass
+            else:
+                unique_peptide_sid.append(raw_spot.peptide_batch.peptide.sid)
+                unique_peptide.append(raw_spot.peptide_batch.peptide)
+
+
+        return unique_peptide
+
+    def virus_set(self):
+        raw_spots = self.rawspot_set.all()
+        unique_viurs_sid =[]
+        unique_virus = []
+
+        for raw_spot in raw_spots:
+            if raw_spot.virus_batch.virus.sid in unique_viurs_sid:
+                pass
+            else:
+                unique_viurs_sid.append(raw_spot.virus_batch.virus.sid)
+                unique_virus.append(raw_spot.virus_batch.virus)
+
+
+        return unique_virus
 
 
 

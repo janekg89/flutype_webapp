@@ -1,22 +1,98 @@
-{% extends "expdata_interface/base.html" %}
+{% extends "flutype/base.html" %}
+
 {% block content %}
 <h4>
-    [{{ publication.pmid }}] {{ publication.title }}
+    [{{ rawspotcollection.sid }}] {{ rawspotcollection.batch }}
 </h4>
-<h6>Abstract:</h6>
-{{publication.abstract}}
-<h6>Authors:</h6>
-<p>
-{% for author in publication.author.all %}
-     <a href="{% url 'expdata_interface:author' author.id %}">{{author}} </a>  &nbsp;
-{% endfor %}
-</p>
+    <h6>The Scan:</h6>
+    {% if rawspotcollection.image %}
+    <img src={{rawspotcollection.image.url}} alt="Scan" height="800" width="200" >
+    {% else %}
+        No Image File
+    {% endif %}
 
-<p>
-<h6>MeSH Terms:</h6>
+    <table id="SpotCollections" class="table table-striped">
+     <caption>Peptides</caption>
+<thead>
+  <tr>
+      <th>sid</th>
+      <th>linker</th>
+      <th>spacer</th>
+      <th>sequence</th>
+       <th>c_terminus</th>
+       <th>name</th>
+       <th>pep_type</th>
+       <th>comment</th>
+  </tr>
+</thead>
+<tbody>
+      {%  for peptide in rawspotcollection.peptide_set %}
+         <tr>
+             <td>
+                 {{ peptide.sid }}
+             <td>
+                 {{peptide.linker}}
+             </td>
+             <td>
+                 {{peptide.spacer}}
+             </td>
+             <td>
+                 {{peptide.sequence}}
+             </td>
+             <td>
+                 {{peptide.c_terminus}}
+             </td>
+             <td>
+                {{peptide.name}}
+             </td>
+            <td>
+              {{peptide.pep_type}}
+            </td>
+            <td>
+              {{peptide.comment}}
+            </td>
 
-{% for mesh in publication.mesh.all %}
-    <a href="{% url 'expdata_interface:mesh' mesh.id %}"> {{ mesh}} </a> &nbsp;
-{% endfor %}
-</p>
+
+
+         </tr>
+     {% endfor %}
+</tbody>
+</table>
+   <table id="SpotCollections" class="table table-striped">
+     <caption>Viruses</caption>
+<thead>
+  <tr>
+      <th>sid</th>
+      <th>subgroup</th>
+      <th>country</th>
+      <th>date of appearance</th>
+       <th>strain</th>
+
+  </tr>
+</thead>
+<tbody>
+      {%  for virus in rawspotcollection.virus_set %}
+         <tr>
+             <td>
+                 {{ virus.sid }}
+             <td>
+                 {{virus.subgroup}}
+             </td>
+             <td>
+                 {{virus.country}}
+             </td>
+             <td>
+                 {{virus.date_of_appearance}}
+             </td>
+             <td>
+                 {{virus.strain}}
+             </td>
+
+
+
+
+         </tr>
+     {% endfor %}
+</tbody>
+</table>
 {% endblock %}
