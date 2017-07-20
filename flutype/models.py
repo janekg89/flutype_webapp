@@ -187,6 +187,10 @@ class Process(models.Model):
     quenching = models.ForeignKey(Quenching,null=True, blank=True)
 
 ######################################################################
+
+# TODO: save gal files with *.txt ending so that can be displayed in browser
+
+# FIXME: name file, same for peptide gal file
 class GalVirus(models.Model):
     sid = models.CharField(max_length=20)
     gal_file = models.FileField(upload_to="gal_vir",null=True, blank=True)

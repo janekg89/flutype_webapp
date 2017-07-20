@@ -61,6 +61,7 @@ def test_view(request, pk):
     # get spot collections
 
     context = {
+        'type': 'rawspotcollection',
         'rawspotcollection': rsc,
     }
     return render(request,
