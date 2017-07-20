@@ -3,3 +3,4 @@ django>=1.11.3
 pyexcel
 pyexcel-ods
 django-choices
+django-debug-toolbar

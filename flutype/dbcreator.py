@@ -41,7 +41,8 @@ from flutype.models import (Peptide,
                             Incubating,
                             Process,
                             GalPeptide,
-                            GalVirus)
+                            GalVirus,
+                            SpotCollection)
 
 
 class DBCreator(object):
@@ -546,7 +547,7 @@ class DBCreator(object):
 
         # gets or creates raw_spot_collection
         try:
-            RawSpotCollection.objects.get(sid=proces_dic["S ID"])
+            raw_spot_collection = RawSpotCollection.objects.get(sid=proces_dic["S ID"])
         except:
             raw_spot_collection, _ = RawSpotCollection.objects.get_or_create(sid=proces_dic["S ID"],
                                                                              batch=proces_dic["Charge"],
@@ -558,6 +559,10 @@ class DBCreator(object):
                                                                              gal_virus=galvir,
                                                                              #image=scan_path_true,
                                                                              process=process)
+
+
+            spot_collection ,_ = SpotCollection.objects.get_or_create(raw_spot_collection=raw_spot_collection)
+
             #raw_spot_collection.gal_peptide.
             if scan_name:
                 raw_spot_collection.image.save(scan_name,File(open(scan_path_true,"r")))
@@ -578,8 +583,11 @@ class DBCreator(object):
 
                 _, _ = Spot.objects.get_or_create(raw_spot=raw_spot,
                                                   intensity=spot["Intensity"],
-                                                  std=spot["Std"]
-                                                  )
+                                                  std=spot["Std"],
+                                                  spot_collection=spot_collection)
+
+
+
 
 
 

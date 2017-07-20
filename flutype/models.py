@@ -10,6 +10,11 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User as DUser
 from djchoices import DjangoChoices, ChoiceItem
 from django.core.files.storage import FileSystemStorage
+import pandas as pd
+from flutype_analysis import analysis
+import matplotlib.pyplot as plt, mpld3
+
+
 fs = FileSystemStorage(location='../media')
 
 
@@ -67,6 +72,7 @@ class Manufacturer(DjangoChoices):
 
 class ProcessingType(DjangoChoices):
     substract_buffer= ChoiceItem("sub_buf")
+
 
 class Peptide(models.Model):
     """
@@ -205,8 +211,12 @@ class RawSpotCollection(models.Model):
     process = models.ForeignKey(Process,blank=True, null=True)
 
     def peptide_set(self):
+        """
+
+        :return: a set of peptides which were used in RawSpotCollection
+        """
         raw_spots = self.rawspot_set.all()
-        unique_peptide_sid =[]
+        unique_peptide_sid = []
         unique_peptide = []
 
         for raw_spot in raw_spots:
@@ -220,8 +230,11 @@ class RawSpotCollection(models.Model):
         return unique_peptide
 
     def virus_set(self):
+        """
+        :return: a set of viruses which were used in RawSpotCollection
+        """
         raw_spots = self.rawspot_set.all()
-        unique_viurs_sid =[]
+        unique_viurs_sid = []
         unique_virus = []
 
         for raw_spot in raw_spots:
@@ -233,6 +246,40 @@ class RawSpotCollection(models.Model):
 
 
         return unique_virus
+
+
+    def analysis(self):
+        """ Returns the analysis object."""
+        d = {'data_id': self.sid}
+        d['gal_vir'] = pd.read_csv("../" + self.gal_virus.gal_file.url, sep='\t', index_col="ID")
+        d['gal_pep'] = pd.read_csv("../" + self.gal_peptide.gal_file.url, sep='\t', index_col="ID")
+        d['meta'] = "not necessary anymore"
+        ana = analysis.Analysis(d)
+        return ana
+
+    def pepmap(self):
+        """
+        :return: pepmap as matplotlib figure
+        """
+        ana = self.analysis()
+        fig = ana.heatmap(heatmap=False, figsize=(20,10))
+        #mpld3.show(fig)
+        html = mpld3.fig_to_html(fig)
+
+        return html
+
+
+
+
+class SpotCollection(models.Model):
+    raw_spot_collection = models.ForeignKey(RawSpotCollection)
+    image2numeric_version = models.FloatField(default=0.1)
+    processing_type = models.CharField(max_length=30,
+                                       choices=ProcessingType.choices,
+                                       blank=True,
+                                       null=True)
+    comment= models.TextField(default="The Intesity values are calcualted as the total intensity over a spot containing square."
+                                      " The data is not preprocessed.")
 
 
 
@@ -265,11 +312,8 @@ class Spot(models.Model):
     ############in results#########################
     intensity = models.FloatField(null=True, blank=True)
     std = models.FloatField(null=True, blank=True)
-    image2numeric_version = models.FloatField(default=0.1)
-    processing_type = models.CharField(max_length=30,
-                                       choices=ProcessingType.choices,
-                                       blank=True,
-                                       null=True)
+    spot_collection = models.ForeignKey(SpotCollection)
+
 
 
 

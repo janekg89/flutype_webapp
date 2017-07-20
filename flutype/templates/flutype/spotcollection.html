@@ -1,17 +1,21 @@
 {% extends "flutype/base.html" %}
 
 {% block content %}
+    <a href="{% url 'index'%}"> Home </a>
+    <a href="{% url "rawspotcollectionview" pk=spotcollection.raw_spot_collection.id %}"> {{ spotcollection.raw_spot_collection.sid}}</a>
 <h4>
-    [{{ rawspotcollection.sid }}] {{ rawspotcollection.batch }}
+    [{{ spotcollection.raw_spot_collection.sid }}]
+
+    <p>{{ spotcollection.comment }} </p>
 </h4>
-    <h6>The Scan:</h6>
-    {% if rawspotcollection.image %}
-    <img src={{rawspotcollection.image.url}} alt="Scan" height="800" width="200" >
+
+<h6>The Scan:</h6>
+    {% if spotcollection.raw_spot_collection.image %}
+    <img src={{spotcollection.raw_spot_collection.image.url}} alt="Scan" height="800" width="200" >
     {% else %}
         No Image File
     {% endif %}
-
-    <table id="SpotCollections" class="table table-striped">
+<table id="RawSpotCollections" class="table table-striped">
      <caption>Peptides</caption>
 <thead>
   <tr>
@@ -26,7 +30,7 @@
   </tr>
 </thead>
 <tbody>
-      {%  for peptide in rawspotcollection.peptide_set %}
+      {%  for peptide in spotcollection.raw_spot_collection.peptide_set %}
          <tr>
              <td>
                  {{ peptide.sid }}
@@ -71,7 +75,7 @@
   </tr>
 </thead>
 <tbody>
-      {%  for virus in rawspotcollection.virus_set %}
+      {%  for virus in spotcollection.raw_spot_collection.virus_set %}
          <tr>
              <td>
                  {{ virus.sid }}

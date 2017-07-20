@@ -21,7 +21,7 @@
      {% for RawSpotCollection in RawSpotCollections %}
          <tr>
              <td>
-                 <a href="/flutype/{{RawSpotCollection.id}}/">{{ RawSpotCollection.sid }}</a>
+                 <a href="{% url "rawspotcollectionview" pk=RawSpotCollection.id %}"> {{ RawSpotCollection.sid }}</a>
              <td>
                  {{RawSpotCollection.batch}}
              </td>
