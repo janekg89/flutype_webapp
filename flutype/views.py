@@ -4,7 +4,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.http import HttpResponse
-from .models import RawSpotCollection,SpotCollection
+from .models import RawSpotCollection,SpotCollection, PeptideBatch
 from django.views import generic
 from django.shortcuts import render, get_object_or_404
 
@@ -42,9 +42,17 @@ def index_view(request):
     return render(request,
                   'flutype/index.html', context)
 
+def peptide_batch_view(request):
+    peptide_batches = PeptideBatch.objects.all()
+    context = {
+        'peptide_batches': peptide_batches,
+    }
+    return render(request,
+                  'flutype/peptidebatch.html', context)
+
 
 # FIXME: naming of function
-def test_view(request, pk):
+def raw_spot_collection_detail_view(request, pk):
     """ Renders detailed RawSpotCollection View.
 
     :param request:

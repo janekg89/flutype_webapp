@@ -1,0 +1,71 @@
+{% extends "flutype/base.html" %}
+{% block content %}
+    <!-- LIST OF RAWSPOTCOLLECTION -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1>Peptide Batches</h1>
+            {% if peptide_batches %}
+                    <h2>Peptide Batches</h2>
+            <table id="peptide_batches" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>sid peptide batch</th>
+                    <th>sid peptide</th>
+                    <th>linker</th>
+                    <th>spacer</th>
+                    <th>sequence</th>
+                    <th>c_terminus</th>
+                    <th>name</th>
+                    <th>pep_type</th>
+                    <th>comment</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for peptidebatch in peptide_batches.all %}
+                    <tr>
+                        <td>
+                            {{ peptidebatch.sid }}
+                        </td>
+                        <td>
+                            {{ peptidebatch.peptide.sid }}
+                        <td>
+                            {{ peptidebatch.peptide.linker }}
+                        </td>
+                        <td>
+                            {{ peptidebatch.peptide.spacer }}
+                        </td>
+                        <td>
+                            {{ peptidebatch.peptide.sequence }}
+                        </td>
+                        <td>
+                            {{ peptidebatch.peptide.c_terminus }}
+                        </td>
+                        <td>
+                            {{ peptidebatch.peptide.name }}
+                        </td>
+                        <td>
+                            {{ peptidebatch.peptide.pep_type }}
+                        </td>
+                        <td>
+                            {{ peptidebatch.peptide.comment }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {% else %}
+                <p>No entries in database.</p>
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#peptide_batches').DataTable();
+        });
+    </script>
+{% endblock %}
