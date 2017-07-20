@@ -214,47 +214,11 @@ class RawSpotCollection(models.Model):
     gal_virus = models.ForeignKey(GalVirus,null=True, blank=True)
     gal_peptide = models.ForeignKey(GalPeptide,null=True, blank=True)
     process = models.ForeignKey(Process,blank=True, null=True)
-
-    def peptide_set(self):
-        """
-
-        :return: a set of peptides which were used in RawSpotCollection
-        """
-        raw_spots = self.rawspot_set.all()
-        unique_peptide_sid = []
-        unique_peptide = []
-
-        for raw_spot in raw_spots:
-            if raw_spot.peptide_batch.peptide.sid in unique_peptide_sid:
-                pass
-            else:
-                unique_peptide_sid.append(raw_spot.peptide_batch.peptide.sid)
-                unique_peptide.append(raw_spot.peptide_batch.peptide)
+    viruses = models.ManyToManyField(Virus)
+    peptides = models.ManyToManyField(Peptide)
 
 
-        return unique_peptide
 
-    def virus_set(self):
-        """
-        :return: a set of viruses which were used in RawSpotCollection
-        """
-        raw_spots = self.rawspot_set.all()
-        unique_virus_sid = []
-        unique_virus = []
-
-        for raw_spot in raw_spots:
-            virus = raw_spot.virus_batch.virus
-            if not hasattr(virus, 'sid'):
-                warnings.warn("No connection between peptide and peptide batch for virus: {}".format(virus))
-            else:
-                if virus.sid in unique_virus_sid:
-                    pass
-                else:
-                    unique_virus_sid.append(raw_spot.virus_batch.virus.sid)
-                    unique_virus.append(raw_spot.virus_batch.virus)
-
-
-        return unique_virus
 
 
     def analysis(self):

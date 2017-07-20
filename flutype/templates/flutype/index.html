@@ -4,8 +4,8 @@
     <div class="row">
         <div class="col-lg-12">
             <h1>FluType Experiments</h1>
-            {% if RawSpotCollections %}
-                <table id="RawSpotCollections" class="table table-striped">
+            {% if collections %}
+                <table id="collections" class="table table-striped">
                     <caption>Raw Spot Collections</caption>
                     <thead>
                     <tr>
@@ -22,40 +22,43 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for RawSpotCollection in RawSpotCollections %}
+                    {% for c in collections %}
                         <tr>
                             <td>
-                                <a href="{% url "rawspotcollectionview" pk=RawSpotCollection.id %}"> {{ RawSpotCollection.sid }}</a>
+                                <a href="{% url "rawspotcollectionview" pk=c.id %}"> {{ c.sid }}</a>
                             <td>
-                                {{ RawSpotCollection.batch }}
+                                {{ c.batch }}
                             </td>
                             <td>
-                                {{ RawSpotCollection.holder_type }}
+                                {{ c.holder_type }}
                             </td>
                             <td>
-                                {{ RawSpotCollection.functionalization }}
+                                {{ c.functionalization }}
                             </td>
                             <td>
-                                {{ RawSpotCollection.manufacturer }}
+                                {{ c.manufacturer }}
                             </td>
                             <td>
-                                {{ RawSpotCollection.image }}
+                                {{ c.image }}
                             </td>
                             <td>
-                                {% for virus in RawSpotCollection.virus_set %}
+
+                                {% for virus in c.viruses.all %}
                                     {{ virus.subgroup }} ({{ virus.strain }})&nbsp;
                                 {% endfor %}
+
+
                             </td>
                             <td>
-                                <a href="{{ RawSpotCollection.gal_virus.gal_file.url }}" target="_blank">
-                                    {{ RawSpotCollection.gal_virus.sid }}</a>
+                                <a href="{{ c.gal_virus.gal_file.url }}" target="_blank">
+                                    {{ c.gal_virus.sid }}</a>
                             </td>
                             <td>
-                                <a href="{{ RawSpotCollection.gal_peptide.gal_file.url }}" target="_blank">
-                                    {{ RawSpotCollection.gal_peptide.sid }}</a>
+                                <a href="{{ c.gal_peptide.gal_file.url }}" target="_blank">
+                                    {{ c.gal_peptide.sid }}</a>
                             </td>
                             <td>
-                                {{ RawSpotCollection.process.id }}
+                                {{ c.process.id }}
                             </td>
                         </tr>
                     {% endfor %}
@@ -73,7 +76,7 @@
 {% block javascript %}
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
-            $('#RawSpotCollections').DataTable();
+            $('#collections').DataTable();
         });
     </script>
 {% endblock %}

@@ -17,7 +17,8 @@
                     <img src={{ rawspotcollection.image.url }} alt="Scan" height="800">
                 </a>
             {% else %}
-                No Image File
+                    <img src="/media/scan/nofile.jpg" alt="Scan" height="800">
+
             {% endif %}
         </div>
         <div class="col-lg-3">
@@ -28,6 +29,27 @@
                 {% endfor %}
                 <!-- TODO: Process information here in table -->
             </p>
+            <h2>Process</h2>
+        <p>
+        Holder Type: {{rawspotcollection.holder_type}}
+        </p>
+        <p>
+        Functionalization: {{rawspotcollection.functionalization}}
+        </p>
+        <p>
+        Manufacturer: {{rawspotcollection.manufacturer}}
+        </p>
+        <p>
+        Spotting: {{rawspotcollection.process.spotting.method}}
+        </p>
+        <p>
+        Quenching: {{rawspotcollection.process.quenching.method}}
+        </p>
+        <p>
+        Incubating: {{rawspotcollection.process.incubating.method}}
+        </p>
+
+
         </div>
         <div class="col-lg-7">
             <h2>Peptides</h2>
@@ -45,7 +67,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for peptide in rawspotcollection.peptide_set %}
+                {% for peptide in rawspotcollection.peptides.all %}
                     <tr>
                         <td>
                             {{ peptide.sid }}
@@ -88,7 +110,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for virus in rawspotcollection.virus_set %}
+                {% for virus in rawspotcollection.viruses.all %}
                     <tr>
                         <td>
                             {{ virus.sid }}

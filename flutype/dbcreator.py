@@ -15,6 +15,8 @@ import cv2
 import urllib2
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
+import warnings
+
 
 from flutype_analysis import utils, analysis
 
@@ -189,6 +191,45 @@ class DBCreator(object):
         return name_data
 
     @staticmethod
+    def peptide_set(RawSpotCollection):
+        """
+        :return: a set of peptides which were used in RawSpotCollection
+        """
+        raw_spots = RawSpotCollection.rawspot_set.all()
+        unique_peptide_sid = []
+
+        for raw_spot in raw_spots:
+            if raw_spot.peptide_batch.peptide.sid in unique_peptide_sid:
+                pass
+            else:
+                unique_peptide_sid.append(raw_spot.peptide_batch.peptide.sid)
+
+
+        return unique_peptide_sid
+
+    @staticmethod
+    def virus_set(RawSpotCollection):
+        """
+        :return: a set of viruses which were used in RawSpotCollection
+        """
+        raw_spots = RawSpotCollection.rawspot_set.all()
+        unique_virus_sid = []
+
+        for raw_spot in raw_spots:
+            virus = raw_spot.virus_batch.virus
+            if not hasattr(virus, 'sid'):
+                warnings.warn("No connection between peptide and peptide batch for virus: {}".format(virus))
+            else:
+                if virus.sid in unique_virus_sid:
+                    pass
+                else:
+                    unique_virus_sid.append(raw_spot.virus_batch.virus.sid)
+
+
+
+        return  unique_virus_sid
+
+    @staticmethod
     def load_procedure_data(directory):
         """ Loads procedure media from template.
         :param directory:
@@ -221,7 +262,7 @@ class DBCreator(object):
         max_name = 0
         created = False
         for fn in os.listdir(directory):
-            result = re.search('pep(.*).gal', fn)
+            result = re.search('pep(.*).txt', fn)
             if int(result.group(1)) > max_name:
                 max_name = int(result.group(1))
 
@@ -234,7 +275,7 @@ class DBCreator(object):
                 break
         else:
             created = True
-            fname = 'pep' + '{:03}'.format(max_name + 1) + '.gal'
+            fname = 'pep' + '{:03}'.format(max_name + 1) + '.txt'
             fpath = os.path.join(directory,fname)
             data["gal_pep"].to_csv(fpath, sep='\t')
 
@@ -245,7 +286,7 @@ class DBCreator(object):
         max_name = 0
         created = False
         for fn in os.listdir(directory):
-            result = re.search('vir(.*).gal', fn)
+            result = re.search('vir(.*).txt', fn)
             if int(result.group(1)) > max_name:
                 max_name = int(result.group(1))
 
@@ -259,7 +300,7 @@ class DBCreator(object):
                 break
         else:
             created = True
-            fname = 'vir' + '{:03}'.format(max_name + 1) + '.gal'
+            fname = 'vir' + '{:03}'.format(max_name + 1) + '.txt'
             fpath = os.path.join(directory,fname)
             data["gal_vir"].to_csv(fpath, sep='\t')
 
@@ -586,7 +627,22 @@ class DBCreator(object):
                                                   std=spot["Std"],
                                                   spot_collection=spot_collection)
 
+    @staticmethod
+    def fillmany2many_rawspots_peptides_viruses():
+        for rsc in RawSpotCollection.objects.all():
+            virus_ids=DBCreator.virus_set(rsc)
+            peptide_ids=DBCreator.peptide_set(rsc)
 
+            for virus_id in virus_ids:
+                try:
+                    rsc.viruses.add(Virus.objects.get(sid=virus_id))
+                except:
+                    pass
+            for peptide_id in peptide_ids:
+                try:
+                    rsc.peptides.add(Peptide.objects.get(sid=peptide_id))
+                except:
+                    pass
 
 
 
@@ -637,6 +693,8 @@ if __name__ == "__main__":
     ## fills_microwell_data
     for mid in microwell_data_ids:
         DBCreator().process2db(PATTERN_DIR_MICROWELL, mid)
+
+    DBCreator().fillmany2many_rawspots_peptides_viruses()
 
 
 

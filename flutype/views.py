@@ -33,20 +33,15 @@ def process_list(request):
 
 
 
-class IndexView(generic.ListView):
-    template_name = 'flutype/index.html'
-    model = RawSpotCollection
-    context_object_name = 'RawSpotCollections'
 
-    def get_queryset(self):
-        return RawSpotCollection.objects.only('sid')
+def index_view(request):
+    collections = RawSpotCollection.objects.all()
+    context = {
+        'collections': collections,
+    }
+    return render(request,
+                  'flutype/index.html', context)
 
-
-'''
-class RawSpotCollectionView(generic.DetailView):
-    model = RawSpotCollection
-    template_name = 'flutype/rawspotcollection.html'
-'''
 
 # FIXME: naming of function
 def test_view(request, pk):
