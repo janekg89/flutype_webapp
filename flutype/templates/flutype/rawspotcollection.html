@@ -1,108 +1,144 @@
 {% extends "flutype/base.html" %}
 
 {% block content %}
-<a href="{% url "index" %}">Raw Spot Collection</a>
-    <p>Spot Collections</p>
-{% for spotcollection in rawspotcollection.spotcollection_set.all %}
-    <a href="{% url "spotcollectionview" pk=spotcollection.id %}">{{ spotcollection.id}}</a>
-{% endfor %}
+    <div class="row">
+        <div class="col-lg-12">
 
-<h4>
-    [{{ rawspotcollection.sid }}] {{ rawspotcollection.batch }}
-</h4>
-    <h6>The Scan:</h6>
-    {% if rawspotcollection.image %}
-    <img src={{rawspotcollection.image.url}} alt="Scan" height="800" width="200" >
-    {% else %}
-        No Image File
-    {% endif %}
+            <a href="{% url "index" %}">FluType Experiments</a>
 
-    <img src="./heatmap" width="800"/>
-    <img src="./barplot" width="800"/>
+        </div>
+    </div>
+
+    <!-- DETAIL OF RAWSPOTCOLLECTION -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1>Measurement: [{{ rawspotcollection.sid }}] {{ rawspotcollection.batch }}</h1>
+        </div>
+    </div>
 
 
-    <table id="RawSpotCollections" class="table table-striped">
-     <caption>Peptides</caption>
-<thead>
-  <tr>
-      <th>sid</th>
-      <th>linker</th>
-      <th>spacer</th>
-      <th>sequence</th>
-       <th>c_terminus</th>
-       <th>name</th>
-       <th>pep_type</th>
-       <th>comment</th>
-  </tr>
-</thead>
-<tbody>
-      {%  for peptide in rawspotcollection.peptide_set %}
-         <tr>
-             <td>
-                 {{ peptide.sid }}
-             <td>
-                 {{peptide.linker}}
-             </td>
-             <td>
-                 {{peptide.spacer}}
-             </td>
-             <td>
-                 {{peptide.sequence}}
-             </td>
-             <td>
-                 {{peptide.c_terminus}}
-             </td>
-             <td>
-                {{peptide.name}}
-             </td>
-            <td>
-              {{peptide.pep_type}}
-            </td>
-            <td>
-              {{peptide.comment}}
-            </td>
+    <!-- Raw Image & General information -->
+    <div class="row">
+        <div class="col-lg-2">
+            {% if rawspotcollection.image %}
+                <a href="{{ rawspotcollection.image.url }}" target="_blank">
+                    <img src={{ rawspotcollection.image.url }} alt="Scan" height="800">
+                </a>
+            {% else %}
+                No Image File
+            {% endif %}
+        </div>
+        <div class="col-lg-3">
+            <h2>Spot Collections</h2>
+            <p>
+                {% for spotcollection in rawspotcollection.spotcollection_set.all %}
+                    <a href="{% url "spotcollectionview" pk=spotcollection.id %}">{{ spotcollection.id }}</a><br/>
+                {% endfor %}
+                <!-- TODO: Process information here in table -->
+            </p>
+        </div>
+        <div class="col-lg-7">
+            <h2>Peptides</h2>
+            <table id="peptides" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>sid</th>
+                    <th>linker</th>
+                    <th>spacer</th>
+                    <th>sequence</th>
+                    <th>c_terminus</th>
+                    <th>name</th>
+                    <th>pep_type</th>
+                    <th>comment</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for peptide in rawspotcollection.peptide_set %}
+                    <tr>
+                        <td>
+                            {{ peptide.sid }}
+                        <td>
+                            {{ peptide.linker }}
+                        </td>
+                        <td>
+                            {{ peptide.spacer }}
+                        </td>
+                        <td>
+                            {{ peptide.sequence }}
+                        </td>
+                        <td>
+                            {{ peptide.c_terminus }}
+                        </td>
+                        <td>
+                            {{ peptide.name }}
+                        </td>
+                        <td>
+                            {{ peptide.pep_type }}
+                        </td>
+                        <td>
+                            {{ peptide.comment }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
 
+            <h2>Viruses</h2>
+            <p>
+            <table id="viruses" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>sid</th>
+                    <th>subgroup</th>
+                    <th>country</th>
+                    <th>date of appearance</th>
+                    <th>strain</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for virus in rawspotcollection.virus_set %}
+                    <tr>
+                        <td>
+                            {{ virus.sid }}
+                        <td>
+                            {{ virus.subgroup }}
+                        </td>
+                        <td>
+                            {{ virus.country }}
+                        </td>
+                        <td>
+                            {{ virus.date_of_appearance }}
+                        </td>
+                        <td>
+                            {{ virus.strain }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
+    </div>
 
-         </tr>
-     {% endfor %}
-</tbody>
-</table>
-   <table id="SpotCollections" class="table table-striped">
-     <caption>Viruses</caption>
-<thead>
-  <tr>
-      <th>sid</th>
-      <th>subgroup</th>
-      <th>country</th>
-      <th>date of appearance</th>
-       <th>strain</th>
+    <!-- Heatmap & Peptide/Virus table -->
+    <div class="row">
+        <div class="col-lg-4">
+            <img src="./heatmap" width="500"/>
+        </div>
+    </div>
 
-  </tr>
-</thead>
-<tbody>
-      {%  for virus in rawspotcollection.virus_set %}
-         <tr>
-             <td>
-                 {{ virus.sid }}
-             <td>
-                 {{virus.subgroup}}
-             </td>
-             <td>
-                 {{virus.country}}
-             </td>
-             <td>
-                 {{virus.date_of_appearance}}
-             </td>
-             <td>
-                 {{virus.strain}}
-             </td>
+{% endblock %}
 
+{% block javascript %}
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#peptides').DataTable();
+        });
+    </script>
 
-
-
-         </tr>
-     {% endfor %}
-</tbody>
-</table>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#viruses').DataTable();
+        });
+    </script>
 {% endblock %}

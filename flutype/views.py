@@ -48,14 +48,20 @@ class RawSpotCollectionView(generic.DetailView):
     template_name = 'flutype/rawspotcollection.html'
 '''
 
+# FIXME: naming of function
 def test_view(request, pk):
+    """ Renders detailed RawSpotCollection View.
+
+    :param request:
+    :param pk:
+    :return:
+    """
     rsc = get_object_or_404(RawSpotCollection, id=pk)
 
     # get spot collections
 
     context = {
         'rawspotcollection': rsc,
-        'html': rsc.pepmap(),
     }
     return render(request,
                   'flutype/rawspotcollection.html', context)
@@ -84,7 +90,6 @@ def heatmap_view(request, pk):
     canvas.print_png(response)
 
     return response
-
 
 
 

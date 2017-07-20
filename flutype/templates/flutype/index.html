@@ -1,68 +1,71 @@
 {% extends "flutype/base.html" %}
 {% block content %}
-{% if RawSpotCollections %}
+    <!-- LIST OF RAWSPOTCOLLECTION -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1>FluType Experiments</h1>
+            {% if RawSpotCollections %}
+                <table id="RawSpotCollections" class="table table-striped">
+                    <caption>Raw Spot Collections</caption>
+                    <thead>
+                    <tr>
+                        <th>sid</th>
+                        <th>batch</th>
+                        <th>holder type</th>
+                        <th>functionalization</th>
+                        <th>manufacturer</th>
+                        <th>image</th>
+                        <th>gal_virus</th>
+                        <th>gal_peptide</th>
+                        <th>process</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for RawSpotCollection in RawSpotCollections %}
+                        <tr>
+                            <td>
+                                <a href="{% url "rawspotcollectionview" pk=RawSpotCollection.id %}"> {{ RawSpotCollection.sid }}</a>
+                            <td>
+                                {{ RawSpotCollection.batch }}
+                            </td>
+                            <td>
+                                {{ RawSpotCollection.holder_type }}
+                            </td>
+                            <td>
+                                {{ RawSpotCollection.functionalization }}
+                            </td>
+                            <td>
+                                {{ RawSpotCollection.manufacturer }}
+                            </td>
+                            <td>
+                                {{ RawSpotCollection.image }}
+                            </td>
+                            <td>
+                                {{ RawSpotCollection.gal_virus.sid }}
+                            </td>
+                            <td>
+                                {{ RawSpotCollection.gal_peptide.sid }}
+                            </td>
+                            <td>
+                                {{ RawSpotCollection.process.id }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
 
-<table id="SpotCollections" class="table table-striped">
-     <caption>Raw Spot Collections</caption>
-<thead>
-  <tr>
-      <th>sid</th>
-      <th>batch</th>
-      <th>holder type</th>
-      <th>functionalization</th>
-       <th>manufacturer</th>
-       <th>image</th>
-       <th>gal_virus</th>
-       <th>gal_peptide</th>
-       <th>process</th>
-  </tr>
-</thead>
-<tbody>
-     {% for RawSpotCollection in RawSpotCollections %}
-         <tr>
-             <td>
-                 <a href="{% url "rawspotcollectionview" pk=RawSpotCollection.id %}"> {{ RawSpotCollection.sid }}</a>
-             <td>
-                 {{RawSpotCollection.batch}}
-             </td>
-             <td>
-                 {{RawSpotCollection.holder_type}}
-             </td>
-             <td>
-                 {{RawSpotCollection.functionalization}}
-             </td>
-             <td>
-                 {{RawSpotCollection.manufacturer}}
-             </td>
-             <td>
-                {{RawSpotCollection.image}}
-             </td>
-            <td>
-              {{RawSpotCollection.gal_virus.sid}}
-            </td>
-            <td>
-              {{RawSpotCollection.gal_peptide.sid}}
-            </td>
-            <td>
-              {{RawSpotCollection.process.id}}
-            </td>
+            {% else %}
+                <p>No entries in database.</p>
+            {% endif %}
 
-
-
-         </tr>
-     {% endfor %}
-</tbody>
-</table>
-
-{% else %}
-    <p>No Rawspotcollection in database.</p>
-{% endif %}
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascript %}
-<script type="text/javascript" charset="utf-8">
-   $(document).ready(function() {
-    $('#publications').DataTable();
-} );
-</script>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#RawSpotCollections').DataTable();
+        });
+    </script>
 {% endblock %}

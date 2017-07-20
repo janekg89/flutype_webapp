@@ -5,6 +5,8 @@ Django models for the flutype webapp.
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, print_function, unicode_literals
 
+import warnings
+
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User as DUser
@@ -12,7 +14,6 @@ from djchoices import DjangoChoices, ChoiceItem
 from django.core.files.storage import FileSystemStorage
 import pandas as pd
 from flutype_analysis import analysis
-import matplotlib.pyplot as plt, mpld3
 
 
 fs = FileSystemStorage(location='../media')
@@ -234,15 +235,19 @@ class RawSpotCollection(models.Model):
         :return: a set of viruses which were used in RawSpotCollection
         """
         raw_spots = self.rawspot_set.all()
-        unique_viurs_sid = []
+        unique_virus_sid = []
         unique_virus = []
 
         for raw_spot in raw_spots:
-            if raw_spot.virus_batch.virus.sid in unique_viurs_sid:
-                pass
+            virus = raw_spot.virus_batch.virus
+            if not hasattr(virus, 'sid'):
+                warnings.warn("No connection between peptide and peptide batch for virus: {}".format(virus))
             else:
-                unique_viurs_sid.append(raw_spot.virus_batch.virus.sid)
-                unique_virus.append(raw_spot.virus_batch.virus)
+                if virus.sid in unique_virus_sid:
+                    pass
+                else:
+                    unique_virus_sid.append(raw_spot.virus_batch.virus.sid)
+                    unique_virus.append(raw_spot.virus_batch.virus)
 
 
         return unique_virus
@@ -256,19 +261,6 @@ class RawSpotCollection(models.Model):
         d['meta'] = "not necessary anymore"
         ana = analysis.Analysis(d)
         return ana
-
-    def pepmap(self):
-        """
-        :return: pepmap as matplotlib figure
-        """
-        ana = self.analysis()
-        fig = ana.heatmap(heatmap=False, figsize=(20,10))
-        #mpld3.show(fig)
-        html = mpld3.fig_to_html(fig)
-
-        return html
-
-
 
 
 class SpotCollection(models.Model):
