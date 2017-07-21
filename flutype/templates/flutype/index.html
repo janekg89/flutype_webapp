@@ -1,0 +1,90 @@
+{% extends "flutype/base.html" %}
+{% block content %}
+    <!-- LIST OF RAWSPOTCOLLECTION -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1>FluType Experiments</h1>
+            {% if collections %}
+                <table id="collections" class="table table-striped">
+                    <caption>Raw Spot Collections</caption>
+                    <thead>
+                    <tr>
+                        <th>sid</th>
+                        <th>batch</th>
+                        <th>holder type</th>
+                        <th>functionalization</th>
+                        <th>manufacturer</th>
+                        <th>image</th>
+                        <th>virus</th>
+                        <th>gal_virus</th>
+                        <th>gal_peptide</th>
+                        <th>process</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for c in collections %}
+                        <tr>
+                            <td class="warning">
+                                <b><a href="{% url "rawspotcollectionview" pk=c.id %}"> {{ c.sid }}</a></b>
+                            <td>
+                                {{ c.batch }}
+                            </td>
+                            <td>
+                                {% if c.holder_type == "microwell" %}
+                                    <i class="fa fa-building-o"></i>&nbsp;
+                                {% elif c.holder_type == "microarray" %}
+                                    <i class="fa fa-building"></i>&nbsp;
+                                {% endif %}
+                                {{ c.holder_type }}
+                            </td>
+                            <td>
+                                {{ c.functionalization }}
+                            </td>
+                            <td>
+                                {{ c.manufacturer }}
+                            </td>
+                            <td>
+                                {% if c.image %}
+                                 <a alt="{{ c.image }}" href="{{ c.image.url }}" target="_blank">
+                                    <i class="fa fa-file-image-o"></i>
+                                 </a>
+                                {% else %}
+                                    <i class="fa fa-ban"></i>
+                                {%  endif %}
+                            </td>
+                            <td>
+                                {% for virus in c.viruses.all %}
+                                    {{ virus.subgroup }} ({{ virus.strain }})&nbsp;
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <a href="{{ c.gal_virus.gal_file.url }}" target="_blank">
+                                    {{ c.gal_virus.sid }}</a>
+                            </td>
+                            <td>
+                                <a href="{{ c.gal_peptide.gal_file.url }}" target="_blank">
+                                    {{ c.gal_peptide.sid }}</a>
+                            </td>
+                            <td>
+                                {{ c.process.id }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+            {% else %}
+                <p>No entries in database.</p>
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#collections').DataTable();
+        });
+    </script>
+{% endblock %}

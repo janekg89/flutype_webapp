@@ -1,0 +1,85 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="Flutype Web Database">
+    <meta name="author" content="Janek">
+
+    <link rel="icon" href="{% static 'flutype/images/flutype.ico' %}">
+    <title>FluType</title>
+
+    <!-- Bootstrap & datatables -->
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'flutype/css/bootstrap.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'flutype/css/dataTables.bootstrap.css' %}"/>
+     <!-- Custom Fonts -->
+    <link href="{% static 'flutype/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="{% static 'flutype/css/custom.css' %}"/>
+
+    <!-- JS -->
+    <script type="text/javascript" src="{% static 'flutype/js/jquery-1.12.4.js' %}"></script>
+    <script type="text/javascript" src="{% static 'flutype/js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'flutype/js/jquery.dataTables.js' %}"></script>
+    <script type="text/javascript" src="{% static 'flutype/js/dataTables.bootstrap.js' %}"></script>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-default navbar-inverse">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{% url "index" %}">FluType</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="{% url "index" %}">Experiments <span class="sr-only">(current)</span></a></li>
+          <li class="active"><a href="{% url "peptidebatches" %}">Peptide Batches <span class="sr-only">(current)</span></a></li>
+          <li class="active"><a href="{% url "peptides" %}">Peptides <span class="sr-only">(current)</span></a></li>
+          <li class="active"><a href="{% url "virusbatches" %}">Virus Batches <span class="sr-only">(current)</span></a></li>
+          <li class="active"><a href="{% url "viruses" %}">Viruses <span class="sr-only">(current)</span></a></li>
+
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<div id="wrapper">
+    <div id="page-wrapper">
+
+        <div class="container-fluid">
+            <!-- CONTENT -->
+            {% block content %}{% endblock %}
+            <!-- END CONTENT -->
+
+            <!-- FOOTER -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <hr/>
+                    <p>&copy; 2017 FluType</p>
+                </div>
+            </div>
+            <!-- END FOOTER -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+
+{% block javascript %}{% endblock %}
+</body>
+</html>

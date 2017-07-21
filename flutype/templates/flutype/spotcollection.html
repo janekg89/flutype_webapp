@@ -1,0 +1,185 @@
+{% extends "flutype/base.html" %}
+
+{% block content %}
+    <!-- RENDERS RAWSPOTCOLLECTION OR QUANTIFIEDSPOTCOLLECTION -->
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            {%  if type == "raw" %}
+                <h1>Raw: {{ collection.sid }} </h1>
+            {%  else %}
+                <h1>Quantified: {{ q_collection.pk }}</h1>
+            {%  endif %}
+        </div>
+    </div>
+
+
+    <!-- Raw Image & General information -->
+    <div class="row">
+
+        <!-- Raw Image -->
+        <div class="col-lg-2">
+            {% if collection.image %}
+                <a href="{{ collection.image.url }}" target="_blank">
+                    <img src={{ collection.image.url }} alt="Scan" height="800">
+                </a>
+            {% else %}
+                <center><i class="fa fa-5x fa-ban"></i><br />
+                    <b>No image available</b></center>
+            {% endif %}
+        </div>
+
+        <!-- Process Information -->
+        <div class="col-lg-3">
+            {%  if type == "raw" %}
+                <h2>Quantified Collections</h2>
+                <p>
+                    {% for sc in collection.spotcollection_set.all %}
+                        <a href="{% url "qspotcollectionview" pk=sc.id %}"><b>QuantifiedCollection:{{ sc.id }}</b></a><br />
+                    {% endfor %}
+                </p>
+            {% else %}
+
+                <h2>Raw Collection</h2>
+                <p>
+                    <a href="{% url "rawspotcollectionview" pk=collection.pk %}"><b>RawCollection:{{ collection.sid }}</b></a><br />
+                </p>
+
+            {% endif %}
+
+            <!-- TODO: Process information here in table -->
+            <h2>Process</h2>
+            <table>
+                <tr>
+                    <td><b>Holder Type</b></td><td>{{collection.holder_type}}</td>
+                </tr><tr>
+                    <td><b>Functionalization</b></td><td>{{collection.functionalization}}</td>
+                </tr><tr>
+                    <td><b>Manufacturer</b></td><td>{{collection.manufacturer}}</td>
+                </tr><tr>
+                    <td><b>Spotting</b></td><td>{{collection.process.spotting.method}}</td>
+                </tr><tr>
+                    <td><b>Quenching</b></td><td>{{collection.process.quenching.method}}</td>
+                </tr><tr>
+                    <td><b>Incubating</b></td><td>{{collection.process.incubating.method}}</td>
+                </tr><tr>
+                </tr><tr>
+                    <td><b>RawSpotCollection Batch</b></td><td>{{ collection.batch }}</td>
+                </tr>
+            </table>
+
+        <img src="./heatmap" width="400" >
+
+
+        </div>
+
+        <!-- Peptides & Viruses -->
+        <div class="col-lg-7">
+            <h2>Peptides</h2>
+            <table id="peptides" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>sid</th>
+                    <th>linker</th>
+                    <th>spacer</th>
+                    <th>sequence</th>
+                    <th>c_terminus</th>
+                    <th>name</th>
+                    <th>pep_type</th>
+                    <th>comment</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for peptide in collection.peptides.all %}
+                    <tr>
+                        <td>
+                            {{ peptide.sid }}
+                        <td>
+                            {{ peptide.linker }}
+                        </td>
+                        <td>
+                            {{ peptide.spacer }}
+                        </td>
+                        <td>
+                            {{ peptide.sequence }}
+                        </td>
+                        <td>
+                            {{ peptide.c_terminus }}
+                        </td>
+                        <td>
+                            {{ peptide.name }}
+                        </td>
+                        <td>
+                            {{ peptide.pep_type }}
+                        </td>
+                        <td>
+                            {{ peptide.comment }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <h2>Viruses</h2>
+
+            <table id="viruses" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>sid</th>
+                    <th>subgroup</th>
+                    <th>country</th>
+                    <th>date of appearance</th>
+                    <th>strain</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for virus in collection.viruses.all %}
+                    <tr>
+                        <td>
+                            {{ virus.sid }}
+                        <td>
+                            {{ virus.subgroup }}
+                        </td>
+                        <td>
+                            {{ virus.country }}
+                        </td>
+                        <td>
+                            {{ virus.date_of_appearance }}
+                        </td>
+                        <td>
+                            {{ virus.strain }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- Heatmap & Peptide/Virus table -->
+    <div class="row">
+        <div class="col-lg-12">
+    {% if type == "quantified" %}
+    {% endif %}
+   </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#peptides').DataTable();
+        });
+    </script>
+
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#viruses').DataTable();
+        });
+    </script>
+{% endblock %}

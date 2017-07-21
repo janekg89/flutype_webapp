@@ -1,0 +1,56 @@
+{% extends "flutype/base.html" %}
+{% block content %}
+    <!-- LIST OF RAWSPOTCOLLECTION -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1>Viruses</h1>
+            {% if viruses %}
+
+            <table id="viruses" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>sid</th>
+                    <th>Subgroup</th>
+                    <th>Country</th>
+                    <th>Date of Appearance</th>
+                    <th>Strain</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for virus in viruses %}
+                    <tr>
+                        <td class="warning">
+                            <b>{{ virus.sid }}</b>
+                        </td>
+                        <td>
+                            {{ virus.subgroup }}
+                        </td>
+                        <td>
+                            {{ virus.country }}
+                        </td>
+                        <td>
+                            {{ virus.date_of_appearance }}
+                        </td>
+                        <td>
+                            {{ virus.strain }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {% else %}
+                <p>No entries in database.</p>
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#viruses').DataTable();
+        });
+    </script>
+{% endblock %}
