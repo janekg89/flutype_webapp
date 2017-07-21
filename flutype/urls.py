@@ -14,6 +14,8 @@ urlpatterns = [
     url(r'^qspotcollection/(?P<pk>[0-9]+)/$', views.quantified_spot_collection, name='qspotcollectionview'),
 
     # render heatmap image
-    url(r'^rawspotcollection/(?P<pk>[0-9]+)/heatmap$', views.heatmap_view, name='heatmapview'),
+    url(r'^rawspotcollection/(?P<pk>[0-9]+)/heatmap$', views.desciptmap_view, name='desciptmapview'),
+    url(r'^qspotcollection/(?P<pk>[0-9]+)/heatmap$', views.heatmap_view, name='heatmapview'),
+    url(r'^qspotcollection/(?P<pk>[0-9]+)/barplot$', views.barplot_view, name='barplotview'),
 
 ]

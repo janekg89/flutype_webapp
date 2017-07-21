@@ -105,6 +105,34 @@ def heatmap_view(request, pk):
     :param pk:
     :return:
     """
+
+    sc = get_object_or_404(SpotCollection, id=pk)
+
+    # create a matplotlib plot
+    ana = sc.analysis()
+
+    # ! the figure must be created with:
+    # from matplotlib.figure import Figure
+    # fig = Figure(**kwargs)
+
+
+    fig = ana.heatmap(heatmap=True, descript=False, figsize=(10, 15))
+
+    canvas = FigureCanvas(fig)
+    response = HttpResponse(content_type='image/png')
+    canvas.print_png(response)
+
+    return response
+
+
+def desciptmap_view(request, pk):
+    """ View to render a heatmap as png response.
+
+    :param request:
+    :param pk:
+    :return:
+    """
+
     rsc = get_object_or_404(RawSpotCollection, id=pk)
 
     # create a matplotlib plot
@@ -113,7 +141,34 @@ def heatmap_view(request, pk):
     # ! the figure must be created with:
     # from matplotlib.figure import Figure
     # fig = Figure(**kwargs)
-    fig = ana.heatmap(heatmap=False, figsize=(20, 10))
+
+    fig = ana.heatmap(heatmap=False, descript=True, figsize=(10, 15))
+
+    canvas = FigureCanvas(fig)
+    response = HttpResponse(content_type='image/png')
+    canvas.print_png(response)
+
+    return response
+
+def barplot_view(request, pk):
+    """ View to render a heatmap as png response.
+
+    :param request:
+    :param pk:
+    :return:
+    """
+
+    sc = get_object_or_404(SpotCollection, id=pk)
+
+    # create a matplotlib plot
+    ana = sc.analysis()
+
+    # ! the figure must be created with:
+    # from matplotlib.figure import Figure
+    # fig = Figure(**kwargs)
+
+
+    fig = ana.barplot(scale="log", figsize=(20, 10))
 
     canvas = FigureCanvas(fig)
     response = HttpResponse(content_type='image/png')

@@ -14,6 +14,7 @@ from djchoices import DjangoChoices, ChoiceItem
 from django.core.files.storage import FileSystemStorage
 import pandas as pd
 from flutype_analysis import analysis
+from django_pandas.io import read_frame
 
 
 fs = FileSystemStorage(location='../media')
@@ -178,7 +179,6 @@ class Quenching(Treatment):
     duration = models.DurationField(null=True, blank=True)
     substance = models.CharField(max_length=50, null=True, blank=True)
 
-# TODO: list view (with links to RawCollections)
 class Process(models.Model):
     washing = models.ForeignKey(Washing,null=True, blank=True)
     drying = models.ForeignKey(Drying,null=True, blank=True)
@@ -188,7 +188,6 @@ class Process(models.Model):
 
 ######################################################################
 
-# TODO: save gal files with *.txt ending so that can be displayed in browser
 
 # FIXME: name file, same for peptide gal file
 class GalVirus(models.Model):
@@ -200,7 +199,6 @@ class GalPeptide(models.Model):
     gal_file = models.FileField(upload_to="gal_pep", null=True, blank=True)
 
 
-# TODO: view (list view & individual/detail entry)
 class RawSpotCollection(models.Model):
     """
     A collection of raw spots: Information for a Collection of Spots collected at once for one microarray, one microwellplate
@@ -241,10 +239,30 @@ class SpotCollection(models.Model):
     comment= models.TextField(default="The Intesity values are calcualted as the total intensity over a spot containing square."
                                       " The data is not preprocessed.")
 
+    def analysis(self):
+        """ Returns the analysis object."""
+        d = {'data_id': self.raw_spot_collection.sid}
+        d['gal_vir'] = pd.read_csv("../" + self.raw_spot_collection.gal_virus.gal_file.url, sep='\t', index_col="ID")
+        d['gal_pep'] = pd.read_csv("../" + self.raw_spot_collection.gal_peptide.gal_file.url, sep='\t', index_col="ID")
+        d['meta'] = "not necessary anymore"
+
+        data = read_frame(self.spot_set.all(),fieldnames=["intensity"])
+
+        raw = []
+        column = []
+        for spot in self.spot_set.all():
+            raw.append(spot.raw_spot.row)
+            column.append(spot.raw_spot.column)
+        data["Row"] = raw
+        data["Column"] = column
+        data1= data.pivot(index="Row", columns="Column", values="intensity")
+        d["data"] = data1
+        ana = analysis.Analysis(d)
+
+        return ana
 
 
-# FIXME: it must be easy to get for one RawCollection entry all SpotCollections
-# which belong to the RawCollection
+
 
 
     #raw_spots = models.ManyToManyField(RawSpot,through='Grid')
@@ -273,6 +291,8 @@ class Spot(models.Model):
     intensity = models.FloatField(null=True, blank=True)
     std = models.FloatField(null=True, blank=True)
     spot_collection = models.ForeignKey(SpotCollection)
+
+
 
 
 

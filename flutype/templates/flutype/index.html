@@ -30,6 +30,11 @@
                                 {{ c.batch }}
                             </td>
                             <td>
+                                {% if c.holder_type == "microwell" %}
+                                    <i class="fa fa-building-o"></i>&nbsp;
+                                {% elif c.holder_type == "microarray" %}
+                                    <i class="fa fa-building"></i>&nbsp;
+                                {% endif %}
                                 {{ c.holder_type }}
                             </td>
                             <td>

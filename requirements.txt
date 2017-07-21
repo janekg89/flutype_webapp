@@ -2,5 +2,6 @@ flutype_analysis>=0.0.2
 django>=1.11.3
 pyexcel
 pyexcel-ods
+django-pandas
 django-choices
 django-debug-toolbar

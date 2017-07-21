@@ -52,38 +52,26 @@
             <h2>Process</h2>
             <table>
                 <tr>
-                <tr>
                     <td><b>Holder Type</b></td><td>{{collection.holder_type}}</td>
                 </tr><tr>
                     <td><b>Functionalization</b></td><td>{{collection.functionalization}}</td>
                 </tr><tr>
-                    <td>Holder Type<b></b></td><td></td>
+                    <td><b>Manufacturer</b></td><td>{{collection.manufacturer}}</td>
                 </tr><tr>
-                    <td>Holder Type<b></b></td><td></td>
+                    <td><b>Spotting</b></td><td>{{collection.process.spotting.method}}</td>
                 </tr><tr>
-                    <td>Holder Type<b></b></td><td></td>
+                    <td><b>Quenching</b></td><td>{{collection.process.quenching.method}}</td>
                 </tr><tr>
-                    <td>Holder Type<b></b></td><td></td>
+                    <td><b>Incubating</b></td><td>{{collection.process.incubating.method}}</td>
                 </tr><tr>
                 </tr><tr>
-                    <td>RawSpotCollection Batch<b></b></td><td>{{ collection.batch }}</td>
+                    <td><b>RawSpotCollection Batch</b></td><td>{{ collection.batch }}</td>
                 </tr>
-                </tbody>
             </table>
 
-        </p>
-        <p>
-        Manufacturer: {{collection.manufacturer}}
-        </p>
-        <p>
-        Spotting: {{collection.process.spotting.method}}
-        </p>
-        <p>
-        Quenching: {{collection.process.quenching.method}}
-        </p>
-        <p>
-        Incubating: {{collection.process.incubating.method}}
-        </p>
+        <img src="./heatmap" width="400" >
+
+
         </div>
 
         <!-- Peptides & Viruses -->
@@ -172,14 +160,11 @@
 
     <!-- Heatmap & Peptide/Virus table -->
     <div class="row">
-        <div class="col-lg-4">
-            <img src="./heatmap" width="500"/>
-        </div>
-    </div>
-
+        <div class="col-lg-12">
     {% if type == "quantified" %}
-        <h2>{{ q_collection }}</h2>
     {% endif %}
+   </div>
+    </div>
 
 
 
