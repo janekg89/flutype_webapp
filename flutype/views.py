@@ -53,23 +53,48 @@ def virus_view(request):
                   'flutype/viruses.html', context)
 
 
+def raw_spot_collection(request, pk):
+    """ Renders detailed RawSpotCollection View. """
+
+    collection = get_object_or_404(RawSpotCollection, id=pk)
+    context = {
+        'type': 'raw',
+        'collection': collection,
+    }
+    return render(request,
+                  'flutype/spotcollection.html', context)
+
+
+def quantified_spot_collection(request, pk):
+    """ Renders detailed SpotCollection View. """
+
+    q_collection = get_object_or_404(SpotCollection, id=pk)
+    collection = q_collection.raw_spot_collection
+
+    context = {
+        'type': 'quantified',
+        'collection': collection,
+        'q_collection': q_collection,
+    }
+    return render(request,
+                  'flutype/spotcollection.html', context)
+
+
 def raw_spot_collection_detail_view(request, pk):
-    """ Renders detailed RawSpotCollection View.
+    """ Renders detailed RawSpotCollection View. """
 
-    :param request:
-    :param pk:
-    :return:
-    """
     rsc = get_object_or_404(RawSpotCollection, id=pk)
-
-    # get spot collections
-
     context = {
         'type': 'rawspotcollection',
         'rawspotcollection': rsc,
     }
     return render(request,
-                  'flutype/rawspotcollection.html', context)
+                  'flutype/spotcollection.html', context)
+
+
+class SpotCollectionView(generic.DetailView):
+    model = SpotCollection
+    template_name = 'flutype/spotcollection.html'
 
 
 
@@ -95,19 +120,3 @@ def heatmap_view(request, pk):
     canvas.print_png(response)
 
     return response
-
-
-
-
-class SpotCollectionView(generic.DetailView):
-    model = SpotCollection
-    template_name = 'flutype/spotcollection.html'
-
-"""
-class PepMap(generic.DetailView):
-    model = SpotCollection
-    return HttpResponse(RawSpotCollection.pepmap())
-"""
-
-
-

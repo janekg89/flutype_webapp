@@ -9,11 +9,11 @@ urlpatterns = [
     url(r'^virusbatches/$', views.virus_batch_view, name='virusbatches'),
     url(r'^viruses/$', views.virus_view, name='viruses'),
 
-    url(r'^rawspotcollection/(?P<pk>[0-9]+)/$', views.raw_spot_collection_detail_view, name='rawspotcollectionview'),
+    # renders spot collections
+    url(r'^rawspotcollection/(?P<pk>[0-9]+)/$', views.raw_spot_collection, name='rawspotcollectionview'),
+    url(r'^qspotcollection/(?P<pk>[0-9]+)/$', views.quantified_spot_collection, name='qspotcollectionview'),
 
     # render heatmap image
     url(r'^rawspotcollection/(?P<pk>[0-9]+)/heatmap$', views.heatmap_view, name='heatmapview'),
-    url(r'^spotcollection/(?P<pk>[0-9]+)/$', views.SpotCollectionView.as_view(), name='spotcollectionview'),
-
 
 ]
