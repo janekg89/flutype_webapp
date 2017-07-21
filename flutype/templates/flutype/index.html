@@ -24,8 +24,8 @@
                     <tbody>
                     {% for c in collections %}
                         <tr>
-                            <td>
-                                <a href="{% url "rawspotcollectionview" pk=c.id %}"> {{ c.sid }}</a>
+                            <td class="warning">
+                                <b><a href="{% url "rawspotcollectionview" pk=c.id %}"> {{ c.sid }}</a></b>
                             <td>
                                 {{ c.batch }}
                             </td>
@@ -39,15 +39,18 @@
                                 {{ c.manufacturer }}
                             </td>
                             <td>
-                                {{ c.image }}
+                                {% if c.image %}
+                                 <a alt="{{ c.image }}" href="{{ c.image.url }}" target="_blank">
+                                    <i class="fa fa-file-image-o"></i>
+                                 </a>
+                                {% else %}
+                                    <i class="fa fa-ban"></i>
+                                {%  endif %}
                             </td>
                             <td>
-
                                 {% for virus in c.viruses.all %}
                                     {{ virus.subgroup }} ({{ virus.strain }})&nbsp;
                                 {% endfor %}
-
-
                             </td>
                             <td>
                                 <a href="{{ c.gal_virus.gal_file.url }}" target="_blank">

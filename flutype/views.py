@@ -4,35 +4,14 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.http import HttpResponse
-from .models import RawSpotCollection,SpotCollection, PeptideBatch
+from .models import RawSpotCollection,SpotCollection, PeptideBatch, Peptide, VirusBatch, Virus
 from django.views import generic
 from django.shortcuts import render, get_object_or_404
 
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
-"""
-def index(request):
-    return HttpResponse("What do you want to do?")
 
-#def peptide(request):
-#    return HttpResponse("See peptide list")
-
-
-def peptide_batch(request):
-    return HttpResponse("See peptidebatch list")
-
-#def virus(request):
-#    return HttpResponse("See virus list")
-
-def virus_batch(request):
-    return HttpResponse("See virusbatch list")
-
-def process_list(request):
-    return HttpResponse("See process list")
-"""
-
-
-
+# TODO: filter functions to display subset (from
 
 def index_view(request):
     collections = RawSpotCollection.objects.all()
@@ -48,10 +27,32 @@ def peptide_batch_view(request):
         'peptide_batches': peptide_batches,
     }
     return render(request,
-                  'flutype/peptidebatch.html', context)
+                  'flutype/peptidebatches.html', context)
+
+def peptide_view(request):
+    peptides = Peptide.objects.all()
+    context = {
+        'peptides': peptides,
+    }
+    return render(request,
+                  'flutype/peptides.html', context)
+def virus_batch_view(request):
+    virus_batches = VirusBatch.objects.all()
+    context = {
+        'virus_batches': virus_batches,
+    }
+    return render(request,
+                  'flutype/virusbatches.html', context)
+
+def virus_view(request):
+    viruses = Virus.objects.all()
+    context = {
+        'viruses': viruses,
+    }
+    return render(request,
+                  'flutype/viruses.html', context)
 
 
-# FIXME: naming of function
 def raw_spot_collection_detail_view(request, pk):
     """ Renders detailed RawSpotCollection View.
 

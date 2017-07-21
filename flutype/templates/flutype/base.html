@@ -17,6 +17,8 @@
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'flutype/css/bootstrap.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'flutype/css/dataTables.bootstrap.css' %}"/>
+     <!-- Custom Fonts -->
+    <link href="{% static 'flutype/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="{% static 'flutype/css/custom.css' %}"/>
 
     <!-- JS -->
@@ -47,6 +49,9 @@
       <ul class="nav navbar-nav">
         <li class="active"><a href="{% url "index" %}">Experiments <span class="sr-only">(current)</span></a></li>
           <li class="active"><a href="{% url "peptidebatches" %}">Peptide Batches <span class="sr-only">(current)</span></a></li>
+          <li class="active"><a href="{% url "peptides" %}">Peptides <span class="sr-only">(current)</span></a></li>
+          <li class="active"><a href="{% url "virusbatches" %}">Virus Batches <span class="sr-only">(current)</span></a></li>
+          <li class="active"><a href="{% url "viruses" %}">Viruses <span class="sr-only">(current)</span></a></li>
 
       </ul>
     </div><!-- /.navbar-collapse -->

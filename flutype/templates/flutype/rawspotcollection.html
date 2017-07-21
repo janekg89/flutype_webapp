@@ -4,37 +4,58 @@
     <!-- DETAIL OF RAWSPOTCOLLECTION -->
     <div class="row">
         <div class="col-lg-12">
-            <h1>Measurement: [{{ rawspotcollection.sid }}] {{ rawspotcollection.batch }}</h1>
+            <h1>Measurement {{ rawspotcollection.sid }} </h1>
         </div>
     </div>
 
 
     <!-- Raw Image & General information -->
     <div class="row">
+
+        <!-- Raw Image -->
         <div class="col-lg-2">
             {% if rawspotcollection.image %}
                 <a href="{{ rawspotcollection.image.url }}" target="_blank">
                     <img src={{ rawspotcollection.image.url }} alt="Scan" height="800">
                 </a>
             {% else %}
-                    <img src="/media/scan/nofile.jpg" alt="Scan" height="800">
-
+                <center><i class="fa fa-5x fa-ban"></i><br />
+                    <b>No image available</b></center>
             {% endif %}
         </div>
+
+        <!-- Process Information -->
         <div class="col-lg-3">
             <h2>Spot Collections</h2>
             <p>
-                {% for spotcollection in rawspotcollection.spotcollection_set.all %}
-                    <a href="{% url "spotcollectionview" pk=spotcollection.id %}">{{ spotcollection.id }}</a><br/>
+                {% for sc in rawspotcollection.spotcollection_set.all %}
+                    <a href="{% url "spotcollectionview" pk=sc.id %}"><b>SpotCollection:{{ sc.id }}</b></a><br />
                 {% endfor %}
-                <!-- TODO: Process information here in table -->
             </p>
+
+            <!-- TODO: Process information here in table -->
             <h2>Process</h2>
-        <p>
-        Holder Type: {{rawspotcollection.holder_type}}
-        </p>
-        <p>
-        Functionalization: {{rawspotcollection.functionalization}}
+            <table>
+                <tr>
+                <tr>
+                    <td><b>Holder Type</b></td><td>{{rawspotcollection.holder_type}}</td>
+                </tr><tr>
+                    <td><b>Functionalization</b></td><td>{{rawspotcollection.functionalization}}</td>
+                </tr><tr>
+                    <td>Holder Type<b></b></td><td></td>
+                </tr><tr>
+                    <td>Holder Type<b></b></td><td></td>
+                </tr><tr>
+                    <td>Holder Type<b></b></td><td></td>
+                </tr><tr>
+                    <td>Holder Type<b></b></td><td></td>
+                </tr><tr>
+                </tr><tr>
+                    <td>RawSpotCollection Batch<b></b></td><td>{{ rawspotcollection.batch }}</td>
+                </tr>
+                </tbody>
+            </table>
+
         </p>
         <p>
         Manufacturer: {{rawspotcollection.manufacturer}}
@@ -48,9 +69,9 @@
         <p>
         Incubating: {{rawspotcollection.process.incubating.method}}
         </p>
-
-
         </div>
+
+        <!-- Peptides & Viruses -->
         <div class="col-lg-7">
             <h2>Peptides</h2>
             <table id="peptides" class="table table-striped">
@@ -98,7 +119,7 @@
             </table>
 
             <h2>Viruses</h2>
-            <p>
+
             <table id="viruses" class="table table-striped">
                 <thead>
                 <tr>
