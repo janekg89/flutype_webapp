@@ -229,7 +229,6 @@ class RawSpotCollection(models.Model):
         # was not possible to access the gal files on my laptop
         # the following fixes it
         # TODO: use proper storing of files in media
-
         media_dir = os.path.abspath(os.path.join(MEDIA_ROOT, '..'))
         gal_vir_file = os.path.join(media_dir, self.gal_virus.gal_file.url[1:])
         gal_pep_file = os.path.join(media_dir, self.gal_peptide.gal_file.url[1:])
@@ -239,7 +238,29 @@ class RawSpotCollection(models.Model):
         d['gal_vir'] = pd.read_csv(gal_vir_file, sep='\t', index_col="ID")
         d['gal_pep'] = pd.read_csv(gal_pep_file, sep='\t', index_col="ID")
         d['meta'] = "not necessary anymore"
+
+        row = []
+        column = []
+        pep_name = []
+        vir_name = []
+        for spot in self.rawspot_set.all():
+            row.append(spot.row)
+            column.append(spot.column)
+            pep_name.append(spot.peptide_batch.sid)
+            vir_name.append(spot.virus_batch.sid)
+
+        data = pd.DataFrame(row, columns=["Row"])
+        data["Column"] = column
+        pep_data = data.copy()
+        vir_data = data.copy()
+
+        pep_data["Name"] = pep_name.copy()
+        vir_data["Name"] = vir_name.copy()
+
+        d['gal_vir'] = vir_data
+        d['gal_pep'] = pep_data
         ana = analysis.Analysis(d)
+
         return ana
 
 
@@ -256,7 +277,6 @@ class SpotCollection(models.Model):
     def analysis(self):
         """ Returns the analysis object."""
         d = {'data_id': self.raw_spot_collection.sid}
-
         # FIXME: same like above (FileField for gal and pep file)
         media_dir = os.path.abspath(os.path.join(MEDIA_ROOT, '..'))
         gal_vir_file = os.path.join(media_dir, self.raw_spot_collection.gal_virus.gal_file.url[1:])
@@ -269,13 +289,30 @@ class SpotCollection(models.Model):
 
         raw = []
         column = []
+        pep_name = []
+        vir_name = []
         for spot in self.spot_set.all():
             raw.append(spot.raw_spot.row)
             column.append(spot.raw_spot.column)
+            pep_name.append(spot.raw_spot.peptide_batch.sid)
+            vir_name.append(spot.raw_spot.virus_batch.sid)
+
+
+
+
         data["Row"] = raw
         data["Column"] = column
+        pep_data = data.copy()
+        vir_data = data.copy()
+
+        pep_data["Name"] = pep_name
+        vir_data["Name"] = vir_name
+        d["gal_vir"] = vir_data.copy()
+        d["gal_pep"] = pep_data.copy()
         data1= data.pivot(index="Row", columns="Column", values="intensity")
         d["data"] = data1
+
+
         ana = analysis.Analysis(d)
 
         return ana
