@@ -5,19 +5,23 @@ Django models for the flutype webapp.
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, print_function, unicode_literals
 
+import os
 import warnings
+import pandas as pd
 
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User as DUser
 from djchoices import DjangoChoices, ChoiceItem
 from django.core.files.storage import FileSystemStorage
-import pandas as pd
-from flutype_analysis import analysis
+
 from django_pandas.io import read_frame
 
 
-fs = FileSystemStorage(location='../media')
+from flutype_analysis import analysis
+from flutype_webapp.settings import MEDIA_ROOT
+
+fs = FileSystemStorage(location=MEDIA_ROOT)
 
 
 class User(models.Model):
@@ -26,6 +30,7 @@ class User(models.Model):
     """
     # FIXME: use the django user model: see https://docs.djangoproject.com/en/1.11/topics/auth/
     name = models.CharField(max_length=50)
+
 
 class PeptideType(DjangoChoices):
     """
@@ -102,6 +107,7 @@ class Virus(models.Model):
     date_of_appearance = models.CharField(max_length=10, blank=True, null=True)
     strain = models.CharField(max_length=50, blank=True, null=True)
 
+
 class Batch(models.Model):
     """
     Batch model as abstract class not stored in the database
@@ -137,8 +143,6 @@ class PeptideBatch(Batch):
     """
     sid = models.CharField(max_length=20)
     peptide = models.ForeignKey(Peptide, blank=True, null=True)
-
-
 
 
 ##########################################################
@@ -216,14 +220,24 @@ class RawSpotCollection(models.Model):
     peptides = models.ManyToManyField(Peptide)
 
 
-
-
-
     def analysis(self):
-        """ Returns the analysis object."""
+        """ Returns the analysis object. """
         d = {'data_id': self.sid}
-        d['gal_vir'] = pd.read_csv("../" + self.gal_virus.gal_file.url, sep='\t', index_col="ID")
-        d['gal_pep'] = pd.read_csv("../" + self.gal_peptide.gal_file.url, sep='\t', index_col="ID")
+
+
+        # FIXME: something is wrong on how you create the media files/store them
+        # was not possible to access the gal files on my laptop
+        # the following fixes it
+        # TODO: use proper storing of files in media
+
+        media_dir = os.path.abspath(os.path.join(MEDIA_ROOT, '..'))
+        gal_vir_file = os.path.join(media_dir, self.gal_virus.gal_file.url[1:])
+        gal_pep_file = os.path.join(media_dir, self.gal_peptide.gal_file.url[1:])
+        print(gal_vir_file)
+        print(gal_pep_file)
+
+        d['gal_vir'] = pd.read_csv(gal_vir_file, sep='\t', index_col="ID")
+        d['gal_pep'] = pd.read_csv(gal_pep_file, sep='\t', index_col="ID")
         d['meta'] = "not necessary anymore"
         ana = analysis.Analysis(d)
         return ana
@@ -242,8 +256,13 @@ class SpotCollection(models.Model):
     def analysis(self):
         """ Returns the analysis object."""
         d = {'data_id': self.raw_spot_collection.sid}
-        d['gal_vir'] = pd.read_csv("../" + self.raw_spot_collection.gal_virus.gal_file.url, sep='\t', index_col="ID")
-        d['gal_pep'] = pd.read_csv("../" + self.raw_spot_collection.gal_peptide.gal_file.url, sep='\t', index_col="ID")
+
+        # FIXME: same like above (FileField for gal and pep file)
+        media_dir = os.path.abspath(os.path.join(MEDIA_ROOT, '..'))
+        gal_vir_file = os.path.join(media_dir, self.raw_spot_collection.gal_virus.gal_file.url[1:])
+        gal_pep_file = os.path.join(media_dir, self.raw_spot_collection.gal_peptide.gal_file.url[1:])
+        d['gal_vir'] = pd.read_csv(gal_vir_file, sep='\t', index_col="ID")
+        d['gal_pep'] = pd.read_csv(gal_pep_file, sep='\t', index_col="ID")
         d['meta'] = "not necessary anymore"
 
         data = read_frame(self.spot_set.all(),fieldnames=["intensity"])
