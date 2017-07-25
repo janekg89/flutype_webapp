@@ -11,8 +11,6 @@ from django.shortcuts import render, get_object_or_404
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 
-# TODO: filter functions to display subset (from
-
 def index_view(request):
     collections = RawSpotCollection.objects.all()
     context = {
@@ -168,7 +166,7 @@ def barplot_view(request, pk):
     # fig = Figure(**kwargs)
 
 
-    fig = ana.barplot(scale="log", figsize=(20, 10))
+    fig = ana.barplot(align="vir", scale="log", figsize=(20, 10))
 
     canvas = FigureCanvas(fig)
     response = HttpResponse(content_type='image/png')

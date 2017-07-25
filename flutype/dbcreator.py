@@ -13,7 +13,6 @@ import pyexcel as pe
 import re
 import cv2
 from django.core.files import File
-from django.core.files.temp import NamedTemporaryFile
 import warnings
 
 
@@ -21,6 +20,7 @@ from flutype_analysis import utils, analysis
 
 # setup django (add current path to sys.path)
 path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..'))
+
 if path not in sys.path:
     sys.path.append(path)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flutype_webapp.settings")
@@ -556,16 +556,16 @@ class DBCreator(object):
 
 
         # checks if peptide gal file exits in directory.
-        pep_path = '../db_create_buffer/gal_pep/'
-        vir_path = '../db_create_buffer/gal_vir/'
-        scan_path = '../db_create_buffer/scan/'
+        pep_path = 'db_create_buffer/gal_pep/'
+        vir_path = 'db_create_buffer/gal_vir/'
+        scan_path = 'db_create_buffer/scan/'
 
         pep_name,pep_path_true, _ = DBCreator.get_or_create_gal_pep(pep_path, data)
         try:
             galpep=GalPeptide.objects.get(sid=pep_name)
         except:
             galpep,_=GalPeptide.objects.get_or_create(sid=pep_name)
-            galpep.gal_file.save(pep_name, File(open(pep_path_true, "r")))
+            galpep.file.save(pep_name, File(open(pep_path_true, "r")))
 
 
         vir_name,vir_path_true,_= DBCreator.get_or_create_gal_vir(vir_path, data)
@@ -573,7 +573,7 @@ class DBCreator(object):
             galvir=GalVirus.objects.get(sid=vir_name)
         except:
             galvir,_=GalVirus.objects.get_or_create(sid=vir_name)
-            galvir.gal_file.save(vir_name,File(open(vir_path_true,"r")))
+            galvir.file.save(vir_name,File(open(vir_path_true,"r")))
 
 
 
@@ -605,70 +605,75 @@ class DBCreator(object):
             if scan_name:
                 raw_spot_collection.image.save(scan_name, File(open(scan_path_true, "rb")))
 
-            spot_collection ,_ = SpotCollection.objects.get_or_create(raw_spot_collection=raw_spot_collection)
+
+
+            if all(spots["Intensity"].notnull()) :
+
+                spot_collection ,_ = SpotCollection.objects.get_or_create(raw_spot_collection=raw_spot_collection)
 
 
 
 
 
             for k, spot in spots.iterrows():
-                # print(spot["Peptide"])
+                    # print(spot["Peptide"])
 
-                # gets or creates spots
+                    # gets or creates spots
                 raw_spot, _ = RawSpot.objects.get_or_create(peptide_batch=PeptideBatch.objects.get(sid=spot["Peptide"]),
-                                                            virus_batch=VirusBatch.objects.get(sid=spot["Virus"]),
-                                                            raw_spot_collection=raw_spot_collection,
-                                                            column=spot["Column"],
-                                                            row=spot["Row"],
-                                                            replica=spot["Replica"]
-                                                            )
+                                                                virus_batch=VirusBatch.objects.get(sid=spot["Virus"]),
+                                                                raw_spot_collection=raw_spot_collection,
+                                                                column=spot["Column"],
+                                                                row=spot["Row"],
+                                                                replica=spot["Replica"]
+                                                                )
 
-                _, _ = Spot.objects.get_or_create(raw_spot=raw_spot,
-                                                  intensity=spot["Intensity"],
-                                                  std=spot["Std"],
-                                                  spot_collection=spot_collection)
-
-    @staticmethod
-    def fillmany2many_rawspots_peptides_viruses():
-        for rsc in RawSpotCollection.objects.all():
-            virus_ids=DBCreator.virus_set(rsc)
-            peptide_ids=DBCreator.peptide_set(rsc)
-
-            for virus_id in virus_ids:
-                try:
-                    rsc.viruses.add(Virus.objects.get(sid=virus_id))
-                except:
-                    pass
-            for peptide_id in peptide_ids:
-                try:
-                    rsc.peptides.add(Peptide.objects.get(sid=peptide_id))
-                except:
-                    pass
-
-
-
-
-
+                if all(spots["Intensity"].notnull()):
+                    _, _ = Spot.objects.get_or_create(raw_spot=raw_spot,
+                                                      intensity=spot["Intensity"],
+                                                      std=spot["Std"],
+                                                      spot_collection=spot_collection)
 
         print("-" * 80)
         print("Finished filling media with process2db for id <{}>".format(data_id))
         print("-" * 80)
 
+    @staticmethod
+    def fillmany2many_rawspots_peptides_viruses():
+            for rsc in RawSpotCollection.objects.all():
+                virus_ids = DBCreator.virus_set(rsc)
+                peptide_ids = DBCreator.peptide_set(rsc)
+
+                for virus_id in virus_ids:
+                    try:
+                        rsc.viruses.add(Virus.objects.get(sid=virus_id))
+                    except:
+                        pass
+                for peptide_id in peptide_ids:
+                    try:
+                        rsc.peptides.add(Peptide.objects.get(sid=peptide_id))
+                    except:
+                        pass
+
 ###################################################################################
 if __name__ == "__main__":
+
+    # load data from formualr db:
+    # fills database from one form with peptides, peptide batches,
+    # viruses, virus batches, users, buffers, peptide types.
+    path_formular_db = "media/forumular_db/"
+    file_path = os.path.join(path, path_formular_db)
+
+    DBCreator().fromdata2db(path_formular_db)
 
 
     # requires the flutype_analysis in same directory as flutype_webapp
 
-    PATTERN_DIR_MICROARRAY = "../../flutype_analysis/data/{}/"
-    PATTERN_DIR_MICROWELL = "../../flutype_analysis/data/MTP/{}"
-
-    data_id = "2017-05-19_E5_X31"
+    PATTERN_DIR_MICROARRAY = "../flutype_analysis/data/{}"
+    PATTERN_DIR_MICROWELL = "../flutype_analysis/data/MTP/{}"
 
 
-    # fills database from one form with peptides, peptide batches,
-    # viruses, virus batches, users, buffers, peptide types.
-    DBCreator().fromdata2db(PATTERN_DIR_MICROARRAY.format(data_id))
+
+
 
     
     
@@ -681,12 +686,17 @@ if __name__ == "__main__":
         "2017-05-19_N9_X31",
         "2017-05-19_N10_Pan",
         "2017-05-19_N11_Cal",
-        "flutype_test"
+        "flutype_test",
+        "P6_170613_Cal",
+        "P5_170612_X31",
+        "P3_170612_X31",
+        "2017-05-19_N7_Cal"
         ]
 
     # fills microarrray_data
     for mid in microarray_data_ids:
-        DBCreator().process2db(PATTERN_DIR_MICROARRAY.format(mid), mid)
+        #file_path = os.path.join(path, PATTERN_DIR_MICROARRAY.format(mid))
+        DBCreator().process2db( PATTERN_DIR_MICROARRAY.format(mid), mid)
 
 
 
@@ -698,6 +708,7 @@ if __name__ == "__main__":
 
     ## fills_microwell_data
     for mid in microwell_data_ids:
+        file_path = os.path.join(path, PATTERN_DIR_MICROWELL.format(mid))
         DBCreator().process2db(PATTERN_DIR_MICROWELL.format(mid), mid)
 
     DBCreator().fillmany2many_rawspots_peptides_viruses()

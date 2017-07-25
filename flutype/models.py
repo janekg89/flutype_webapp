@@ -193,14 +193,13 @@ class Process(models.Model):
 ######################################################################
 
 
-# FIXME: name file, same for peptide gal file
 class GalVirus(models.Model):
     sid = models.CharField(max_length=20)
-    gal_file = models.FileField(upload_to="gal_vir",null=True, blank=True)
+    file = models.FileField(upload_to="gal_vir", null=True, blank=True)
 
 class GalPeptide(models.Model):
     sid = models.CharField(max_length=20)
-    gal_file = models.FileField(upload_to="gal_pep", null=True, blank=True)
+    file = models.FileField(upload_to="gal_pep", null=True, blank=True)
 
 
 class RawSpotCollection(models.Model):
@@ -219,25 +218,15 @@ class RawSpotCollection(models.Model):
     viruses = models.ManyToManyField(Virus)
     peptides = models.ManyToManyField(Peptide)
 
+    def is_spot_collection(self):
+        result = True
+        if self.spotcollection_set.all().count() == 0:
+            result = False
+        return result
 
     def analysis(self):
         """ Returns the analysis object. """
         d = {'data_id': self.sid}
-
-
-        # FIXME: something is wrong on how you create the media files/store them
-        # was not possible to access the gal files on my laptop
-        # the following fixes it
-        # TODO: use proper storing of files in media
-        media_dir = os.path.abspath(os.path.join(MEDIA_ROOT, '..'))
-        gal_vir_file = os.path.join(media_dir, self.gal_virus.gal_file.url[1:])
-        gal_pep_file = os.path.join(media_dir, self.gal_peptide.gal_file.url[1:])
-        print(gal_vir_file)
-        print(gal_pep_file)
-
-        d['gal_vir'] = pd.read_csv(gal_vir_file, sep='\t', index_col="ID")
-        d['gal_pep'] = pd.read_csv(gal_pep_file, sep='\t', index_col="ID")
-        d['meta'] = "not necessary anymore"
 
         row = []
         column = []
@@ -254,11 +243,11 @@ class RawSpotCollection(models.Model):
         pep_data = data.copy()
         vir_data = data.copy()
 
-        pep_data["Name"] = pep_name.copy()
-        vir_data["Name"] = vir_name.copy()
+        pep_data["Name"] = pep_name
+        vir_data["Name"] = vir_name
 
-        d['gal_vir'] = vir_data
-        d['gal_pep'] = pep_data
+        d['gal_vir'] = vir_data.copy()
+        d['gal_pep'] = pep_data.copy()
         ana = analysis.Analysis(d)
 
         return ana
@@ -277,16 +266,7 @@ class SpotCollection(models.Model):
     def analysis(self):
         """ Returns the analysis object."""
         d = {'data_id': self.raw_spot_collection.sid}
-        # FIXME: same like above (FileField for gal and pep file)
-        media_dir = os.path.abspath(os.path.join(MEDIA_ROOT, '..'))
-        gal_vir_file = os.path.join(media_dir, self.raw_spot_collection.gal_virus.gal_file.url[1:])
-        gal_pep_file = os.path.join(media_dir, self.raw_spot_collection.gal_peptide.gal_file.url[1:])
-        d['gal_vir'] = pd.read_csv(gal_vir_file, sep='\t', index_col="ID")
-        d['gal_pep'] = pd.read_csv(gal_pep_file, sep='\t', index_col="ID")
-        d['meta'] = "not necessary anymore"
-
         data = read_frame(self.spot_set.all(),fieldnames=["intensity"])
-
         raw = []
         column = []
         pep_name = []
@@ -297,9 +277,6 @@ class SpotCollection(models.Model):
             pep_name.append(spot.raw_spot.peptide_batch.sid)
             vir_name.append(spot.raw_spot.virus_batch.sid)
 
-
-
-
         data["Row"] = raw
         data["Column"] = column
         pep_data = data.copy()
@@ -309,10 +286,7 @@ class SpotCollection(models.Model):
         vir_data["Name"] = vir_name
         d["gal_vir"] = vir_data.copy()
         d["gal_pep"] = pep_data.copy()
-        data1= data.pivot(index="Row", columns="Column", values="intensity")
-        d["data"] = data1
-
-
+        d["data"] = data.pivot(index="Row", columns="Column", values="intensity")
         ana = analysis.Analysis(d)
 
         return ana
