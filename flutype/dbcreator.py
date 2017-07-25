@@ -12,7 +12,6 @@ import pandas as pd
 import pyexcel as pe
 import re
 import cv2
-import urllib2
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 import warnings
@@ -84,7 +83,7 @@ class DBCreator(object):
 
         # read in DataFrame
         f_formular = os.path.join(directory, "form_0.1.ods")
-        formular = pe.get_book(file_name=f_formular, start_row=5,row_limit=69, start_column=2)
+        formular = pe.get_book(file_name=f_formular, start_row=5, start_column=2)
         pep = formular["PeptideBatch"]
         pep.name_columns_by_row(0)
         pep_array = pep.to_array()
@@ -108,7 +107,7 @@ class DBCreator(object):
         :return: Pandas DataFrame with virus batches
         """
         f_formular = os.path.join(directory, "form_0.1.ods")
-        formular = pe.get_book(file_name=f_formular, start_row=4, row_limit=68, start_column=2)
+        formular = pe.get_book(file_name=f_formular, start_row=4,  start_column=2)
         virus = formular["VirusBatch"]
         virus.name_columns_by_row(0)
         virus_array = virus.to_array()
@@ -134,7 +133,7 @@ class DBCreator(object):
         :return: Pandas DataFrame with virus media
         """
         f_formular = os.path.join(directory, "form_0.1.ods")
-        formular = pe.get_book(file_name=f_formular, start_row=4, row_limit=68, start_column=2)
+        formular = pe.get_book(file_name=f_formular, start_row=4, start_column=2)
         virus = formular["Virus"]
         virus.name_columns_by_row(0)
         virus_array = virus.to_array()
@@ -218,7 +217,7 @@ class DBCreator(object):
         for raw_spot in raw_spots:
             virus = raw_spot.virus_batch.virus
             if not hasattr(virus, 'sid'):
-                warnings.warn("No connection between peptide and peptide batch for virus: {}".format(virus))
+                warnings.warn("No connection between virus and virus batch for virus_batch: {}".format(raw_spot.virus_batch.sid))
             else:
                 if virus.sid in unique_virus_sid:
                     pass
@@ -309,7 +308,8 @@ class DBCreator(object):
 
     @staticmethod
     def get_or_create_image(directory,data):
-        PATTERN_TIF = "{}_600_100_635.jpg"
+        PATTERN_TIF = "{}_600_100_635.jpeg"
+        #Pattern_jpg =
         created = False
         for fn in os.listdir(directory):
             if fn==PATTERN_TIF.format(data["data_id"]):
@@ -601,12 +601,13 @@ class DBCreator(object):
                                                                              #image=scan_path_true,
                                                                              process=process)
 
+            # raw_spot_collection.gal_peptide.
+            if scan_name:
+                raw_spot_collection.image.save(scan_name, File(open(scan_path_true, "rb")))
 
             spot_collection ,_ = SpotCollection.objects.get_or_create(raw_spot_collection=raw_spot_collection)
 
-            #raw_spot_collection.gal_peptide.
-            if scan_name:
-                raw_spot_collection.image.save(scan_name,File(open(scan_path_true,"r")))
+
 
 
 
@@ -660,7 +661,7 @@ if __name__ == "__main__":
     # requires the flutype_analysis in same directory as flutype_webapp
 
     PATTERN_DIR_MICROARRAY = "../../flutype_analysis/data/{}/"
-    PATTERN_DIR_MICROWELL = "../../flutype_analysis/data/MTP/"
+    PATTERN_DIR_MICROWELL = "../../flutype_analysis/data/MTP/{}"
 
     data_id = "2017-05-19_E5_X31"
 
@@ -669,6 +670,9 @@ if __name__ == "__main__":
     # viruses, virus batches, users, buffers, peptide types.
     DBCreator().fromdata2db(PATTERN_DIR_MICROARRAY.format(data_id))
 
+    
+    
+    
     microarray_data_ids = [
         "2017-05-19_E5_X31",
         "2017-05-19_E6_untenliegend_X31",
@@ -688,13 +692,20 @@ if __name__ == "__main__":
 
 
 
-    microwell_data_ids = ["2017-05-12_MTP_R1"]
+    microwell_data_ids = ["2017-05-12_MTP_R1",
+                          "2017-06-13_MTP"
+                          ]
 
     ## fills_microwell_data
     for mid in microwell_data_ids:
-        DBCreator().process2db(PATTERN_DIR_MICROWELL, mid)
+        DBCreator().process2db(PATTERN_DIR_MICROWELL.format(mid), mid)
 
     DBCreator().fillmany2many_rawspots_peptides_viruses()
+
+    
+    
+    
+
 
 
 
