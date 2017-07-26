@@ -9,8 +9,11 @@ from django.views import generic
 from django.shortcuts import render, get_object_or_404
 
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from django.contrib.auth.decorators import login_required
 
 
+
+@login_required
 def index_view(request):
     collections = RawSpotCollection.objects.all()
     context = {
@@ -19,6 +22,10 @@ def index_view(request):
     return render(request,
                   'flutype/index.html', context)
 
+def about_view(request):
+    return render(request,"flutype/about.html")
+
+@login_required
 def peptide_batch_view(request):
     peptide_batches = PeptideBatch.objects.all()
     context = {
@@ -27,6 +34,7 @@ def peptide_batch_view(request):
     return render(request,
                   'flutype/peptidebatches.html', context)
 
+@login_required
 def peptide_view(request):
     peptides = Peptide.objects.all()
     context = {
@@ -34,6 +42,8 @@ def peptide_view(request):
     }
     return render(request,
                   'flutype/peptides.html', context)
+
+@login_required
 def virus_batch_view(request):
     virus_batches = VirusBatch.objects.all()
     context = {
@@ -42,6 +52,7 @@ def virus_batch_view(request):
     return render(request,
                   'flutype/virusbatches.html', context)
 
+@login_required
 def virus_view(request):
     viruses = Virus.objects.all()
     context = {
@@ -50,7 +61,7 @@ def virus_view(request):
     return render(request,
                   'flutype/viruses.html', context)
 
-
+@login_required
 def raw_spot_collection(request, pk):
     """ Renders detailed RawSpotCollection View. """
 
@@ -62,7 +73,7 @@ def raw_spot_collection(request, pk):
     return render(request,
                   'flutype/spotcollection.html', context)
 
-
+@login_required
 def quantified_spot_collection(request, pk):
     """ Renders detailed SpotCollection View. """
 
@@ -77,7 +88,7 @@ def quantified_spot_collection(request, pk):
     return render(request,
                   'flutype/spotcollection.html', context)
 
-
+@login_required
 def raw_spot_collection_detail_view(request, pk):
     """ Renders detailed RawSpotCollection View. """
 
@@ -94,8 +105,7 @@ class SpotCollectionView(generic.DetailView):
     model = SpotCollection
     template_name = 'flutype/spotcollection.html'
 
-
-
+@login_required
 def heatmap_view(request, pk):
     """ View to render a heatmap as png response.
 
@@ -122,7 +132,8 @@ def heatmap_view(request, pk):
 
     return response
 
-
+# FIXME: typo
+@login_required
 def desciptmap_view(request, pk):
     """ View to render a heatmap as png response.
 
@@ -148,6 +159,7 @@ def desciptmap_view(request, pk):
 
     return response
 
+@login_required
 def barplot_view(request, pk):
     """ View to render a heatmap as png response.
 

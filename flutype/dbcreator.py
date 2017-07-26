@@ -45,7 +45,7 @@ from flutype.models import (Peptide,
                             GalVirus,
                             SpotCollection)
 
-
+#fixme: get or create to update_or_create()
 class DBCreator(object):
     """ 
     Fill the database with peptides and Viruses.
