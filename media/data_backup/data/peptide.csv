@@ -1,0 +1,38 @@
+	Peptide ID	Linker	Spacer	Sequence	C-terminus	Name	Types	Comment
+0	Buffer001	NA	NA	NA	NA		BUF	Buffer
+1	Empty	NA	NA	NA	NA		EMP	Empty
+2	Dye001					DY-634	REF	
+3	P001	KKK		FYDYDVFY	amide	PeB-Lys	PEP	Peptide 6
+4	P002	KK	ßAßA	LGVIWAGGNTNY	amide	PeC-Lys	PEP	
+5	P003			SGFLLISNGVHWV	amide	PeA	PEP	
+6	P004			ARDFYDYDVFYYAMD 	amide	PeB	PEP	
+7	P005			ARDFYGYDVFFYAMD	amide	PeBGF	PEP	
+8	P006			ARDFYDPDVFYYAMD	amide	PeBP	PEP	
+9	P007	KKKK		SGFLLISN	amide	PeA-Lys	PEP	
+10	P008				amide		PEP	
+11	P009	KKK		LYGYDVFF	amide		PEP	
+12	P010	KKK		FYGYDVAF	amide		PEP	
+13	P011				amide		PEP	
+14	P012					Fetuin	PEP	Fetuin
+15	P013	C-KK		FYGYDVFF	amide	PN	PEP	
+16	P014	Ahx-KK		FYDYDVFY	amide		PEP	Peptid 10
+17	P015	KK-SG		FYDYDVFY	amide		PEP	Peptid 12
+18	P016		ßAßAßA	FYDYDVFY	amide		PEP	Peptid 13
+19	P017		ßAßAK	FYDYDVFY	amide		PEP	Peptid 14
+20	P018	ßAKK		FYDYDVFY	amide		PEP	Peptid 15
+21	P019	KKK		FYDYDVFY	amide		PEP	Peptid 16
+22	P020	KKK		FYDYDVFF	amide		PEP	Peptid 17
+23	A001	NA	NA	NA	NA	Anti-Koerper 	AB	
+24	P1						PEP	
+25	P3						PEP	
+26	P4						PEP	
+27	P5						PEP	
+28	P6						PEP	
+29	P7						PEP	
+30	P8						PEP	
+31	P10						PEP	
+32	P13						PEP	
+33	P030					Kloe S 	PEP	
+34	P031					Kloe A	PEP	
+35	P032					Fetuin-634	REF	
+36	X31-2							

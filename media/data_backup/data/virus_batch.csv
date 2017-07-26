@@ -1,0 +1,19 @@
+	Batch ID		Taxonomy ID	Virus Subtype	Strain Name	-1	Concentration [mg/ml]	Labeling	Buffer	pH	Active	Passage History	Production Date	Comment
+0	X31A		387139	H3N2	A/Aichi/2/68 		0.833				False	Egg		Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot), TK 1.S.040
+1	X31B		387139	H3N2	A/Aichi/2/68 		0.927				False	Egg		Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot), TK 1.S.040
+2	CAL1		1316510	H1N1	A/California/7/2009		0.333				False	Egg		Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot), TK 1.S.040
+3	PAN1		381513	H3N2	A/Panama/2007/1999		0.48				False	Egg		Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot), TK 1.S.040
+4	PAN2		381513	H3N2	A/Panama/2007/1999		0.353				False	Egg		Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot), TK 1.S.040
+5	CAL2		1316510	H1N1	A/California/7/2009		0.367				False	Egg		Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot), TK 1.S.040
+6	X31C		387139	H3N2	A/Aichi/2/68 		0.05		PBST 		False	Egg		Labeling vom 11.1.17
+7	NO		NO	NA	NA		0	NA	NA					
+8	X31D		387139	H3N2	A/Aichi/2/68 						False	Egg		benutzt bei Publication
+9	H1			#N/A	#N/A									benutzt bei Publication
+10	H1N1			#N/A	#N/A									benutzt bei Publication
+11	H5			#N/A	#N/A									benutzt bei Publication
+12	H7			#N/A	#N/A									benutzt bei Publication
+13	Vi		392809	H3N2	A/Victoria/3/75									benutzt bei Publication
+14	NY		518981	H3N2	A/New York/55/2004									benutzt bei Publication
+15	X31		387139	H3N2	A/Aichi/2/68 									benutzt bei den ersten Microarrays 2017
+16	Pan		381513	H3N2	A/Panama/2007/1999									benutzt bei den ersten Microarrays 2017
+17	Cal		1316510	H1N1	A/California/7/2009									benutzt bei den ersten Microarrays 2017
