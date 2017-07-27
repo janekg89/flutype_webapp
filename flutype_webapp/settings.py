@@ -25,7 +25,7 @@ SECRET_KEY = 'f$h*w&tw*vqk=sg306mc0t(kd*cuhgu57_xfo=t@4h4a0&no+8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0']
 
 
 # Application definition
@@ -129,7 +129,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 # for djange debug toolbar
-INTERNAL_IPS = ['127.0.0.1',]
+INTERNAL_IPS = ['127.0.0.1', ]
 
 LOGIN_REDIRECT_URL = '/index'
 LOGIN_URL = '/login/'
