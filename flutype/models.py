@@ -261,7 +261,7 @@ class SpotCollection(models.Model):
                                        blank=True,
                                        null=True)
     comment= models.TextField(default="The Intesity values are calcualted as the total intensity over a spot containing square."
-                                      " The data is not preprocessed.")
+                                      " The data_tables is not preprocessed.")
 
     def analysis(self):
         """ Returns the analysis object."""
@@ -286,7 +286,7 @@ class SpotCollection(models.Model):
         vir_data["Name"] = vir_name
         d["gal_vir"] = vir_data.copy()
         d["gal_pep"] = pep_data.copy()
-        d["data"] = data.pivot(index="Row", columns="Column", values="intensity")
+        d["data_tables"] = data.pivot(index="Row", columns="Column", values="intensity")
         ana = analysis.Analysis(d)
 
         return ana
@@ -296,6 +296,7 @@ class SpotCollection(models.Model):
 
 
     #raw_spots = models.ManyToManyField(RawSpot,through='Grid')
+
 class RawSpot(models.Model):
     """
     spot model
@@ -321,6 +322,7 @@ class Spot(models.Model):
     intensity = models.FloatField(null=True, blank=True)
     std = models.FloatField(null=True, blank=True)
     spot_collection = models.ForeignKey(SpotCollection)
+    #TODO: add Coordinates on Image
 
 
 
