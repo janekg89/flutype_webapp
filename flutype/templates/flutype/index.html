@@ -15,6 +15,7 @@
                         <th>functionalization</th>
                         <th>manufacturer</th>
                         <th>image</th>
+                        <th>quantified collection</th>
                         <th>virus</th>
                         <th>gal_virus</th>
                         <th>gal_peptide</th>
@@ -48,6 +49,16 @@
                                  <a alt="{{ c.image }}" href="{{ c.image.url }}" target="_blank">
                                     <i class="fa fa-file-image-o"></i>
                                  </a>
+                                {% else %}
+                                    <i class="fa fa-ban"></i>
+                                {%  endif %}
+                            </td>
+                            <td>
+                                {% if c.is_spot_collection %}
+                                     <a>
+                                         <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                     </a>
+
                                 {% else %}
                                     <i class="fa fa-ban"></i>
                                 {%  endif %}
