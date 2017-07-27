@@ -25,7 +25,7 @@ SECRET_KEY = 'f$h*w&tw*vqk=sg306mc0t(kd*cuhgu57_xfo=t@4h4a0&no+8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0']
+ALLOWED_HOSTS = ['0.0.0.0', 'flutype.de', 'www.flutype.de']
 
 
 # Application definition
@@ -124,9 +124,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # for djange debug toolbar
 INTERNAL_IPS = ['127.0.0.1', ]
