@@ -5,19 +5,23 @@ Django models for the flutype webapp.
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, print_function, unicode_literals
 
+import os
 import warnings
+import pandas as pd
 
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User as DUser
 from djchoices import DjangoChoices, ChoiceItem
 from django.core.files.storage import FileSystemStorage
-import pandas as pd
-from flutype_analysis import analysis
+
 from django_pandas.io import read_frame
 
 
-fs = FileSystemStorage(location='../media')
+from flutype_analysis import analysis
+from flutype_webapp.settings import MEDIA_ROOT
+
+fs = FileSystemStorage(location=MEDIA_ROOT)
 
 
 class User(models.Model):
@@ -26,6 +30,7 @@ class User(models.Model):
     """
     # FIXME: use the django user model: see https://docs.djangoproject.com/en/1.11/topics/auth/
     name = models.CharField(max_length=50)
+
 
 class PeptideType(DjangoChoices):
     """
@@ -102,6 +107,7 @@ class Virus(models.Model):
     date_of_appearance = models.CharField(max_length=10, blank=True, null=True)
     strain = models.CharField(max_length=50, blank=True, null=True)
 
+
 class Batch(models.Model):
     """
     Batch model as abstract class not stored in the database
@@ -137,8 +143,6 @@ class PeptideBatch(Batch):
     """
     sid = models.CharField(max_length=20)
     peptide = models.ForeignKey(Peptide, blank=True, null=True)
-
-
 
 
 ##########################################################
@@ -189,14 +193,13 @@ class Process(models.Model):
 ######################################################################
 
 
-# FIXME: name file, same for peptide gal file
 class GalVirus(models.Model):
     sid = models.CharField(max_length=20)
-    gal_file = models.FileField(upload_to="gal_vir",null=True, blank=True)
+    file = models.FileField(upload_to="gal_vir", null=True, blank=True)
 
 class GalPeptide(models.Model):
     sid = models.CharField(max_length=20)
-    gal_file = models.FileField(upload_to="gal_pep", null=True, blank=True)
+    file = models.FileField(upload_to="gal_pep", null=True, blank=True)
 
 
 class RawSpotCollection(models.Model):
@@ -215,17 +218,38 @@ class RawSpotCollection(models.Model):
     viruses = models.ManyToManyField(Virus)
     peptides = models.ManyToManyField(Peptide)
 
-
-
-
+    def is_spot_collection(self):
+        result = True
+        if self.spotcollection_set.all().count() == 0:
+            result = False
+        return result
 
     def analysis(self):
-        """ Returns the analysis object."""
+        """ Returns the analysis object. """
         d = {'data_id': self.sid}
-        d['gal_vir'] = pd.read_csv("../" + self.gal_virus.gal_file.url, sep='\t', index_col="ID")
-        d['gal_pep'] = pd.read_csv("../" + self.gal_peptide.gal_file.url, sep='\t', index_col="ID")
-        d['meta'] = "not necessary anymore"
+
+        row = []
+        column = []
+        pep_name = []
+        vir_name = []
+        for spot in self.rawspot_set.all():
+            row.append(spot.row)
+            column.append(spot.column)
+            pep_name.append(spot.peptide_batch.sid)
+            vir_name.append(spot.virus_batch.sid)
+
+        data = pd.DataFrame(row, columns=["Row"])
+        data["Column"] = column
+        pep_data = data.copy()
+        vir_data = data.copy()
+
+        pep_data["Name"] = pep_name
+        vir_data["Name"] = vir_name
+
+        d['gal_vir'] = vir_data.copy()
+        d['gal_pep'] = pep_data.copy()
         ana = analysis.Analysis(d)
+
         return ana
 
 
@@ -237,26 +261,32 @@ class SpotCollection(models.Model):
                                        blank=True,
                                        null=True)
     comment= models.TextField(default="The Intesity values are calcualted as the total intensity over a spot containing square."
-                                      " The data is not preprocessed.")
+                                      " The data_tables is not preprocessed.")
 
     def analysis(self):
         """ Returns the analysis object."""
         d = {'data_id': self.raw_spot_collection.sid}
-        d['gal_vir'] = pd.read_csv("../" + self.raw_spot_collection.gal_virus.gal_file.url, sep='\t', index_col="ID")
-        d['gal_pep'] = pd.read_csv("../" + self.raw_spot_collection.gal_peptide.gal_file.url, sep='\t', index_col="ID")
-        d['meta'] = "not necessary anymore"
-
         data = read_frame(self.spot_set.all(),fieldnames=["intensity"])
-
         raw = []
         column = []
+        pep_name = []
+        vir_name = []
         for spot in self.spot_set.all():
             raw.append(spot.raw_spot.row)
             column.append(spot.raw_spot.column)
+            pep_name.append(spot.raw_spot.peptide_batch.sid)
+            vir_name.append(spot.raw_spot.virus_batch.sid)
+
         data["Row"] = raw
         data["Column"] = column
-        data1= data.pivot(index="Row", columns="Column", values="intensity")
-        d["data"] = data1
+        pep_data = data.copy()
+        vir_data = data.copy()
+
+        pep_data["Name"] = pep_name
+        vir_data["Name"] = vir_name
+        d["gal_vir"] = vir_data.copy()
+        d["gal_pep"] = pep_data.copy()
+        d["data_tables"] = data.pivot(index="Row", columns="Column", values="intensity")
         ana = analysis.Analysis(d)
 
         return ana
@@ -266,6 +296,7 @@ class SpotCollection(models.Model):
 
 
     #raw_spots = models.ManyToManyField(RawSpot,through='Grid')
+
 class RawSpot(models.Model):
     """
     spot model
@@ -291,6 +322,7 @@ class Spot(models.Model):
     intensity = models.FloatField(null=True, blank=True)
     std = models.FloatField(null=True, blank=True)
     spot_collection = models.ForeignKey(SpotCollection)
+    #TODO: add Coordinates on Image
 
 
 
