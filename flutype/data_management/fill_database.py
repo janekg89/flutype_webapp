@@ -1,7 +1,5 @@
 """
-Script for creating and filling database.
-
-Reads the data from given excel template forms.
+Script for filling database from backup
 """
 from __future__ import print_function, absolute_import, division
 
@@ -9,17 +7,14 @@ import os
 import sys
 import numpy as np
 import pandas as pd
-import pyexcel as pe
 import re
 import cv2
 from django.core.files import File
 import warnings
-
-
 from flutype_analysis import utils, analysis
 
 # setup django (add current path to sys.path)
-path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..'))
+path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../'))
 
 if path not in sys.path:
     sys.path.append(path)
@@ -46,151 +41,13 @@ from flutype.models import (Peptide,
                             SpotCollection)
 
 #fixme: get or create to update_or_create()
-class DBCreator(object):
+class DBFill(object):
     """ 
-    Fill the database with peptides and Viruses.
+    contains functions to fill the database
     """
-    @staticmethod
-    def load_peptide_data(directory):
-        """
-        loads peptide media from template
-
-        :param directory:
-        :return: Pandas DataFrame with peptides
-        """
-
-        f_formular = os.path.join(directory, "form_0.1.ods")
-
-        formular = pe.get_book(file_name=f_formular, start_row=4, start_column=4)
-        pep = formular["Peptide"]
-        pep.name_columns_by_row(0)
-        pep_array = pep.to_array()
-        pep_array = np.array(pep_array)
-        peptide_data = pd.DataFrame(pep_array[1:, :], columns=pep_array[0, :])
-        # replaces empty strings tith NaN and drops completely empty rows
-        peptide_data.replace("", np.NaN, inplace=True)
-        peptide_data.dropna(0, how="all", inplace=True)
-        # replaces NaN with None -> Django Querysets take None as Null.
-        peptide_data.replace([np.NaN], [None], inplace=True)
-        return peptide_data
 
     @staticmethod
-    def load_peptide_batch_data(directory):
-        """ Loads peptide batch Information from template.
-        :param directory:
-        :return: Pandas DataFrame with peptide batches (ligands)
-        """
-
-        # read in DataFrame
-        f_formular = os.path.join(directory, "form_0.1.ods")
-        formular = pe.get_book(file_name=f_formular, start_row=5, start_column=2)
-        pep = formular["PeptideBatch"]
-        pep.name_columns_by_row(0)
-        pep_array = pep.to_array()
-        pep_array = np.array(pep_array)
-        #replaces empty strings tith NaN and drops completely empty rows
-        ligand_data = pd.DataFrame(pep_array[1:, :], columns=pep_array[0, :])
-
-        # DataFrane processing
-        # FIXME: refactor in processing function and call in all media loading
-        ligand_data.replace("", np.NaN, inplace=True)
-        ligand_data.replace(0, np.NaN, inplace=True)
-        ligand_data.dropna(0, how="all", inplace=True)
-        #replaces NaN with None -> Django Querysets take None as Null.
-        ligand_data.replace([np.NaN], [None], inplace=True)
-        return ligand_data
-
-    @staticmethod
-    def load_virus_batch_data(directory):
-        """ Loads virus batch Information from template.
-        :param directory:
-        :return: Pandas DataFrame with virus batches
-        """
-        f_formular = os.path.join(directory, "form_0.1.ods")
-        formular = pe.get_book(file_name=f_formular, start_row=4,  start_column=2)
-        virus = formular["VirusBatch"]
-        virus.name_columns_by_row(0)
-        virus_array = virus.to_array()
-        virus_array = np.array(virus_array)
-        #replaces empty strings tith NaN and drops completely empty rows
-        virus_array = pd.DataFrame(virus_array[1:, :], columns=virus_array[0, :])
-        virus_array.replace("", np.NaN, inplace=True)
-        virus_array.replace(0, np.NaN, inplace=True)
-        virus_array.dropna(0, how="all", inplace=True)
-        #replaces NaN with None -> Django Querysets take None as Null.
-        virus_array.replace([np.NaN], [None], inplace=True)
-
-        #change to binary format
-        virus_array["Active"].replace("no", False, inplace=True)
-        return virus_array
-
-
-    @staticmethod
-    def load_virus_data(directory):
-        """ Loads virus media from template.
-
-        :param directory:
-        :return: Pandas DataFrame with virus media
-        """
-        f_formular = os.path.join(directory, "form_0.1.ods")
-        formular = pe.get_book(file_name=f_formular, start_row=4, start_column=2)
-        virus = formular["Virus"]
-        virus.name_columns_by_row(0)
-        virus_array = virus.to_array()
-        virus_array = np.array(virus_array)
-        virus_data = pd.DataFrame(virus_array[1:, :], columns=virus_array[0, :])
-        #replaces empty strings tith NaN and drops completely empty rows
-        virus_data.replace("", np.NaN, inplace=True)
-        virus_data.replace(0, np.NaN, inplace=True)
-        virus_data.dropna(0, how="all", inplace=True)
-        #replaces NaN with None -> Django Querysets take None as Null.
-        virus_data.replace([np.NaN], [None], inplace=True)
-        return virus_data
-
-
-    @staticmethod
-    def load_user_data(directory):
-        """ Loads user media from template.
-        :param directory:
-        :return: Pandas DataFrame with user media
-        """
-        f_formular = os.path.join(directory, "form_0.1.ods")
-        formular = pe.get_book(file_name=f_formular, start_row=3, row_limit=5, start_column=2, column_limit=1)
-        name = formular["User , Washing,surface, Buffer"]
-        name.name_columns_by_row(0)
-        name_array = name.to_array()
-        name_array = np.array(name_array)
-        name_data = pd.DataFrame(name_array[1:, :], columns=name_array[0, :])
-        #replaces empty strings tith NaN and drops completely empty rows
-        name_data.replace("", np.NaN, inplace=True)
-        name_data.replace(0, np.NaN, inplace=True)
-        name_data.dropna(0, how="all", inplace=True)
-        #replaces NaN with None -> Django Querysets take None as Null.
-        name_data.replace([np.NaN], [None], inplace=True)
-        return name_data
-
-    @staticmethod
-    def load_treatment_data(treatment,directory):
-        """ Loads user media from template.
-        :param directory:
-        :return: Pandas DataFrame with user media
-        """
-        f_formular = os.path.join(directory, "form_0.1.ods")
-        formular = pe.get_book(file_name=f_formular, start_row=4, start_column=2, )
-        name = formular[treatment]
-        name.name_columns_by_row(0)
-        name_array = name.to_array()
-        name_array = np.array(name_array)
-        name_data = pd.DataFrame(name_array[1:, :], columns=name_array[0, :])
-        # replaces empty strings tith NaN and drops completely empty rows
-        name_data.replace("", np.NaN, inplace=True)
-        name_data.dropna(0, how="all", inplace=True)
-        # replaces NaN with None -> Django Querysets take None as Null.
-        name_data.replace([np.NaN], [None], inplace=True)
-        return name_data
-
-    @staticmethod
-    def peptide_set(RawSpotCollection):
+    def get_peptide_set(RawSpotCollection):
         """
         :return: a set of peptides which were used in RawSpotCollection
         """
@@ -202,12 +59,10 @@ class DBCreator(object):
                 pass
             else:
                 unique_peptide_sid.append(raw_spot.peptide_batch.peptide.sid)
-
-
         return unique_peptide_sid
 
     @staticmethod
-    def virus_set(RawSpotCollection):
+    def get_virus_set(RawSpotCollection):
         """
         :return: a set of viruses which were used in RawSpotCollection
         """
@@ -223,39 +78,7 @@ class DBCreator(object):
                     pass
                 else:
                     unique_virus_sid.append(raw_spot.virus_batch.virus.sid)
-
-
-
         return  unique_virus_sid
-
-    @staticmethod
-    def load_procedure_data(directory):
-        """ Loads procedure media from template.
-        :param directory:
-        :return: Dictonary with process media
-        """
-        f_formular = os.path.join(directory, "form_0.1.ods")
-        formular = pe.get_book(file_name=f_formular, start_row=5, start_column=3)
-        name = formular["Procedure"]
-        name_array = name.to_array()
-        name_array = np.array(name_array)
-        dic_all={"Spotting": name_array[9,0],"Quenching":name_array[21,0],"Incubating":name_array[33,0]}
-        dic_microarray = {"S ID": name_array[0,1],"Charge":name_array[1,1],"Surface Substance":name_array[2,1],
-             "manfacturer": name_array[3,1]}
-        dic_microwell = {"S ID": name_array[0,7],"Charge":name_array[1,6],"Surface Substance":name_array[2,7],
-             "manfacturer": name_array[3,7]}
-        if any(dic_microarray.values()):
-            print("Sample Holder is a microarray.")
-            dic_microarray["Holder Type"]= "microarray"
-            dic_microarray.update(dic_all)
-            return dic_microarray
-
-        elif any(dic_microwell.values()):
-            print("Sample Holder is a microwell plate.")
-            dic_microwell["Holder Type"] = "microwell"
-            dic_microwell.update(dic_all)
-            return dic_microwell
-
 
     @staticmethod
     def get_or_create_gal_pep(directory,data):
@@ -278,7 +101,6 @@ class DBCreator(object):
             fname = 'pep' + '{:03}'.format(max_name + 1) + '.txt'
             fpath = os.path.join(directory,fname)
             data["gal_pep"].to_csv(fpath, sep='\t')
-
         return fname,fpath, created
 
     @staticmethod
@@ -296,14 +118,12 @@ class DBCreator(object):
             if data["gal_vir"].equals(pep_gal):
                 fname = fn
                 fpath = os.path.join(directory, fname)
-
                 break
         else:
             created = True
             fname = 'vir' + '{:03}'.format(max_name + 1) + '.txt'
             fpath = os.path.join(directory,fname)
             data["gal_vir"].to_csv(fpath, sep='\t')
-
 
         return fname,fpath, created
 
@@ -322,7 +142,6 @@ class DBCreator(object):
             fpath = os.path.join(directory,fname)
             cv2.imwrite(fpath,data["tif"])
             created = True
-
         return fname, fpath, created
 
 
@@ -340,14 +159,14 @@ class DBCreator(object):
         print("Filling database with fromdata2db")
         print("-" * 80)
         # loads media from template
-        virus_data = DBCreator.load_virus_data(directory)
-        virus_batch_data = DBCreator.load_virus_batch_data(directory)
-        peptide_data = DBCreator.load_peptide_data(directory)
-        peptide__batch_data = DBCreator.load_peptide_batch_data(directory)
-        user_data = DBCreator.load_user_data(directory)
-        spotting_data = DBCreator.load_treatment_data("Spotting", directory)
-        quenching_data = DBCreator.load_treatment_data("Quenching", directory)
-        incubating_data = DBCreator.load_treatment_data("Incubating", directory)
+        virus_data = DBFill.load_virus_data(directory)
+        virus_batch_data = DBFill.load_virus_batch_data(directory)
+        peptide_data = DBFill.load_peptide_data(directory)
+        peptide__batch_data = DBFill.load_peptide_batch_data(directory)
+        user_data = DBFill.load_user_data(directory)
+        spotting_data = DBFill.load_treatment_data("Spotting", directory)
+        quenching_data = DBFill.load_treatment_data("Quenching", directory)
+        incubating_data = DBFill.load_treatment_data("Incubating", directory)
 
         # Stores informations if any new media was loaded.
         created_u = []
@@ -524,7 +343,7 @@ class DBCreator(object):
         print("-" * 80)
         print("Filling media with process2db for id <{}>".format(data_id))
 
-        proces_dic=DBCreator.load_procedure_data(directory)
+        proces_dic=DBFill.load_procedure_data(directory)
         data = utils.load_data(data_id, directory)
         ana = analysis.Analysis(data)
         spots = ana.spot
@@ -561,7 +380,7 @@ class DBCreator(object):
         vir_path = 'db_create_buffer/gal_vir/'
         scan_path = 'db_create_buffer/scan/'
 
-        pep_name,pep_path_true, _ = DBCreator.get_or_create_gal_pep(pep_path, data)
+        pep_name,pep_path_true, _ = DBFill.get_or_create_gal_pep(pep_path, data)
         try:
             galpep=GalPeptide.objects.get(sid=pep_name)
         except:
@@ -569,7 +388,7 @@ class DBCreator(object):
             galpep.file.save(pep_name, File(open(pep_path_true, "r")))
 
 
-        vir_name,vir_path_true,_= DBCreator.get_or_create_gal_vir(vir_path, data)
+        vir_name,vir_path_true,_= DBFill.get_or_create_gal_vir(vir_path, data)
         try:
             galvir=GalVirus.objects.get(sid=vir_name)
         except:
@@ -579,7 +398,7 @@ class DBCreator(object):
 
 
         try:
-            scan_name, scan_path_true, _ = DBCreator.get_or_create_image(scan_path, data)
+            scan_name, scan_path_true, _ = DBFill.get_or_create_image(scan_path, data)
         except:
             scan_name = False
 
@@ -641,8 +460,8 @@ class DBCreator(object):
     @staticmethod
     def fillmany2many_rawspots_peptides_viruses():
             for rsc in RawSpotCollection.objects.all():
-                virus_ids = DBCreator.virus_set(rsc)
-                peptide_ids = DBCreator.peptide_set(rsc)
+                virus_ids = DBFill.get_virus_set(rsc)
+                peptide_ids = DBFill.get_peptide_set(rsc)
 
                 for virus_id in virus_ids:
                     try:
@@ -658,19 +477,19 @@ class DBCreator(object):
 ###################################################################################
 if __name__ == "__main__":
 
-    # load data from formualr db:
+    # load data_tables from formualr db:
     # fills database from one form with peptides, peptide batches,
     # viruses, virus batches, users, buffers, peptide types.
     path_formular_db = "media/forumular_db/"
     file_path = os.path.join(path, path_formular_db)
 
-    DBCreator().fromdata2db(path_formular_db)
+    DBFill().fromdata2db(path_formular_db)
 
 
     # requires the flutype_analysis in same directory as flutype_webapp
 
-    PATTERN_DIR_MICROARRAY = "../flutype_analysis/data/{}"
-    PATTERN_DIR_MICROWELL = "../flutype_analysis/data/MTP/{}"
+    PATTERN_DIR_MICROARRAY = "../flutype_analysis/data_tables/{}"
+    PATTERN_DIR_MICROWELL = "../flutype_analysis/data_tables/MTP/{}"
 
 
 
@@ -697,7 +516,7 @@ if __name__ == "__main__":
     # fills microarrray_data
     for mid in microarray_data_ids:
         #file_path = os.path.join(path, PATTERN_DIR_MICROARRAY.format(mid))
-        DBCreator().process2db( PATTERN_DIR_MICROARRAY.format(mid), mid)
+        DBFill().process2db(PATTERN_DIR_MICROARRAY.format(mid), mid)
 
 
 
@@ -710,9 +529,9 @@ if __name__ == "__main__":
     ## fills_microwell_data
     for mid in microwell_data_ids:
         file_path = os.path.join(path, PATTERN_DIR_MICROWELL.format(mid))
-        DBCreator().process2db(PATTERN_DIR_MICROWELL.format(mid), mid)
+        DBFill().process2db(PATTERN_DIR_MICROWELL.format(mid), mid)
 
-    DBCreator().fillmany2many_rawspots_peptides_viruses()
+    DBFill().fillmany2many_rawspots_peptides_viruses()
 
     
     

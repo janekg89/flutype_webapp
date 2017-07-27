@@ -3,7 +3,7 @@ import os
 import sys
 
 # setup django (add current path to sys.path)
-path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..'))
+path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../'))
 
 if path not in sys.path:
     sys.path.append(path)
