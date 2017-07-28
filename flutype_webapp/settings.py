@@ -25,7 +25,10 @@ SECRET_KEY = 'f$h*w&tw*vqk=sg306mc0t(kd*cuhgu57_xfo=t@4h4a0&no+8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0', 'flutype.de', 'www.flutype.de']
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', 'flutype.de', 'www.flutype.de']
+
+# SECURITY WARNING: don't run create users with default password in production !
+DEFAULT_USER_PASSWORD = 'flutype_db'
 
 
 # Application definition
@@ -80,7 +83,15 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'media/db.sqlite3'),
-    }
+    },
+
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'postgres',
+    #     'USER': 'postgres',
+    #     'HOST': 'db',
+    #     'PORT': 5432,
+    # }
 }
 
 

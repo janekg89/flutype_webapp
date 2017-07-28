@@ -491,13 +491,6 @@ if __name__ == "__main__":
     PATTERN_DIR_MICROARRAY = "../flutype_analysis/data_tables/{}"
     PATTERN_DIR_MICROWELL = "../flutype_analysis/data_tables/MTP/{}"
 
-
-
-
-
-    
-    
-    
     microarray_data_ids = [
         "2017-05-19_E5_X31",
         "2017-05-19_E6_untenliegend_X31",
@@ -517,8 +510,6 @@ if __name__ == "__main__":
     for mid in microarray_data_ids:
         #file_path = os.path.join(path, PATTERN_DIR_MICROARRAY.format(mid))
         DBFill().process2db(PATTERN_DIR_MICROARRAY.format(mid), mid)
-
-
 
 
 
