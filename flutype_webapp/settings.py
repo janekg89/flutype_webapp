@@ -141,11 +141,8 @@ try:
     print("*"*40)
     print("RUNNING IN DEPLOYMENT")
     print("*" * 40)
-except AttributeError as e:
-    pass
-    '''
 except ImportError as e:
     print("*" * 40)
     print("RUNNING IN DEVELOP")
     print("*" * 40)
-    '''
+
