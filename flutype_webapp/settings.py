@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'flutype.apps.FlutypeConfig',
     'debug_toolbar',
+
 ]
 
 MIDDLEWARE = [
