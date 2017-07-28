@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
-
+from __future__ import absolute_import, print_function
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -29,7 +29,6 @@ ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0', 'flutype.de', 'www.flutype.de']
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -89,7 +88,6 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -110,13 +108,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 
@@ -134,3 +128,24 @@ INTERNAL_IPS = ['127.0.0.1', ]
 
 LOGIN_REDIRECT_URL = '/index'
 LOGIN_URL = '/login/'
+
+
+######################################################################################
+# Overwrite settings for the deployment
+######################################################################################
+# The deploy_settings.py is only on the server and not tracked via
+# the version control !
+######################################################################################
+try:
+    from flutype_webapp.deploy_settings import *
+    print("*"*40)
+    print("RUNNING IN DEPLOYMENT")
+    print("*" * 40)
+except AttributeError as e:
+    pass
+    '''
+except ImportError as e:
+    print("*" * 40)
+    print("RUNNING IN DEVELOP")
+    print("*" * 40)
+    '''
