@@ -15,6 +15,8 @@ from django.contrib.auth.models import User
 #deletes all users
 User.objects.all().delete()
 #defines all users
+
+# FIXME: The usernames CANNOT BE HARDCODED in git !!! SECURITY BREACH.
 janek = {"username":"janekg89",
          "first_name":"Jan",
          "last_name":"Grzegorzewski",
@@ -51,7 +53,7 @@ matthias ={"username":"Matthias.K",
         "password":"flutype_db",
         "email":"konigmatt@googlemail.com"}
 
-users = [janek, marc,henry, sandra, bernhard, matthias]
+users = [janek, marc, henry, sandra, bernhard, matthias]
 
 # adds user to database
 for user in users:
