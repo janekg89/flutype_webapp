@@ -27,6 +27,7 @@
     <script type="text/javascript" src="{% static 'flutype/js/jquery.dataTables.js' %}"></script>
     <script type="text/javascript" src="{% static 'flutype/js/dataTables.bootstrap.js' %}"></script>
 
+
 </head>
 
 <body>
@@ -60,10 +61,12 @@
                     <li class="active"><a href="{% url "viruses" %}">Viruses <span class="sr-only">(current)</span></a>
                     </li>
                 {% endif %}
+
                 <li class="active"><a href="{% url "about" %}">About <span class="sr-only">(current)</span></a></li>
 
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                <li class="active"> <a href="https://github.com/janekg89/flutype_webapp">  <span class="fa fa-github fa-1x"></span>  Github </a>
                 <li><img src="{% static "flutype/images/flutype_logo.jpg" %}" width="50"></li>
                 {% if user.is_authenticated %}
                     <li class="active"><a> <span class="glyphicon glyphicon-user"></span> {{ user.get_username }}</a>
