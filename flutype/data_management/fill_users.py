@@ -41,18 +41,15 @@ def create_users(user_defs, delete_all=True):
     # adds user to database
     for user_def in user_defs:
 
-        # get_or_create patternf for update
-        user, created = User.objects.get_or_create(username=user_def.username)
-
-        user.password = DEFAULT_USER_PASSWORD
-        user.email = user_def.email
+        # special pattern for user creation required
+        user = User.objects.create_user(username=user_def.username, email=user_def.email, password=DEFAULT_USER_PASSWORD)
         user.last_name = user_def.last_name
         user.first_name = user_def.first_name
         user.save()
 
     for user in User.objects.all():
-        print('\t', user.username, user.email)
+        print('\t', user.username, user.email, user.password)
 
 if __name__ == "__main__":
     print("*** Creating users ***")
-    create_users(user_defs=user_defs, delete_all=False)
+    create_users(user_defs=user_defs, delete_all=True)
