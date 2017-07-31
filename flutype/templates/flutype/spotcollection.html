@@ -94,27 +94,27 @@
                 {% for peptide in collection.peptides.all %}
                     <tr>
                         <td>
-                            {{ peptide.sid }}
+                            {{ peptide.sid|default_if_none:"" }}
                         <td>
-                            {{ peptide.linker }}
+                            {{ peptide.linker|default_if_none:"" }}
                         </td>
                         <td>
-                            {{ peptide.spacer }}
+                            {{ peptide.spacer|default_if_none:"" }}
                         </td>
                         <td>
-                            {{ peptide.sequence }}
+                            {{ peptide.sequence|default_if_none:"" }}
                         </td>
                         <td>
-                            {{ peptide.c_terminus }}
+                            {{ peptide.c_terminus|default_if_none:"" }}
                         </td>
                         <td>
-                            {{ peptide.name }}
+                            {{ peptide.name|default_if_none:"" }}
                         </td>
                         <td>
-                            {{ peptide.pep_type }}
+                            {{ peptide.pep_type|default_if_none:"" }}
                         </td>
                         <td>
-                            {{ peptide.comment }}
+                            {{ peptide.comment|default_if_none:"" }}
                         </td>
                     </tr>
                 {% endfor %}
@@ -137,18 +137,18 @@
                 {% for virus in collection.viruses.all %}
                     <tr>
                         <td>
-                            {{ virus.sid }}
+                            {{ virus.sid|default_if_none:"" }}
                         <td>
-                            {{ virus.subgroup }}
+                            {{ virus.subgroup|default_if_none:"" }}
                         </td>
                         <td>
-                            {{ virus.country }}
+                            {{ virus.country|default_if_none:"" }}
                         </td>
                         <td>
-                            {{ virus.date_of_appearance }}
+                            {{ virus.date_of_appearance|default_if_none:"" }}
                         </td>
                         <td>
-                            {{ virus.strain }}
+                            {{ virus.strain|default_if_none:"" }}
                         </td>
                     </tr>
                 {% endfor %}
