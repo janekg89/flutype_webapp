@@ -30,50 +30,50 @@
                 {% for peptidebatch in peptide_batches.all %}
                     <tr>
                         <td class="warning">
-                            <b>{{ peptidebatch.sid }}</b>
+                            <b>{{ peptidebatch.sid|default_if_none:"" }}</b>
                         </td>
                         <!-- peptide information -->
                         <td class="danger">
-                            {{ peptidebatch.peptide.sid }}
+                            {{ peptidebatch.peptide.sid|default_if_none:"" }}
                         <td class="danger">
-                            {{ peptidebatch.peptide.linker }}
+                            {{ peptidebatch.peptide.linker|default_if_none:"" }}
                         </td>
                         <td class="danger">
-                            {{ peptidebatch.peptide.spacer }}
+                            {{ peptidebatch.peptide.spacer|default_if_none:"" }}
                         </td>
                         <td class="danger">
-                            {{ peptidebatch.peptide.sequence }}
+                            {{ peptidebatch.peptide.sequence|default_if_none:"" }}
                         </td>
                         <td class="danger">
-                            {{ peptidebatch.peptide.c_terminus }}
+                            {{ peptidebatch.peptide.c_terminus|default_if_none:"" }}
                         </td>
                         <td class="danger">
-                            {{ peptidebatch.peptide.name }}
+                            {{ peptidebatch.peptide.name|default_if_none:"" }}
                         </td>
                         <td class="danger">
-                            {{ peptidebatch.peptide.pep_type }}
+                            {{ peptidebatch.peptide.pep_type|default_if_none:"" }}
                         </td>
                         <!-- batch information -->
                         <td>
-                            {{ peptidebatch.concentration }}
+                            {{ peptidebatch.concentration|default_if_none:"" }}
                         </td>
                         <td>
-                            {{ peptidebatch.buffer }}
+                            {{ peptidebatch.buffer|default_if_none:"" }}
                         </td>
                         <td>
-                            {{ peptidebatch.ph }}
+                            {{ peptidebatch.ph|default_if_none:"" }}
                         </td>
                         <td>
-                            {{ peptidebatch.purity }}
+                            {{ peptidebatch.purity|default_if_none:"" }}
                         </td>
                         <td>
-                            {{ peptidebatch.produced_by }}
+                            {{ peptidebatch.produced_by|default_if_none:"" }}
                         </td>
                         <td>
-                            {{ peptidebatch.production_date }}
+                            {{ peptidebatch.production_date|default_if_none:"" }}
                         </td>
                         <td>
-                            {{ peptidebatch.comment }}
+                            {{ peptidebatch.comment|default_if_none:"" }}
                         </td>
                     </tr>
                 {% endfor %}

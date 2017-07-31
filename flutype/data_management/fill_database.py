@@ -349,15 +349,10 @@ class DBFill(object):
         data = utils.load_data(data_id, directory)
         ana = analysis.Analysis(data)
         spots = ana.spot
+
         #stick to convetion if media not present -> None
         spots["Replica"].replace([np.NaN], [None], inplace=True)
         spots["Std"].replace([np.NaN], [None], inplace=True)
-
-
-
-
-
-
         try:
             spotting = Spotting.objects.get(sid=proces_dic["Spotting"])
         except:

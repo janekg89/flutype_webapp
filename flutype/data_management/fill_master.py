@@ -7,7 +7,7 @@ import csv
 import re
 from flutype_analysis import utils, analysis
 import pandas as pd
-
+import numpy as np
 # setup django (add current path to sys.path)
 path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../'))
 
@@ -274,12 +274,23 @@ class Master(object):
         #collections = next(os.walk(self.collection_path))[1]
 
     def read_q_collection(self,collection_id, q_collection_id):
-        pass
+        return dic_data
+
+
     def read_datatables(self):
         """
 
         :return: data_tables_dic
         """
+        data_tables_dic ={}
+        for fn in os.listdir(self.data_tables_path):
+            key = re.search('(.*).csv', fn)
+            d_file = os.path.join(self.data_tables_path,fn)
+            data_tables_dic[key.group(1)] = pd.read_csv(d_file, sep="\t", encoding='utf-8')
+            data_tables_dic[key.group(1)].replace([np.NaN], [None] , inplace=True)
+
+        return data_tables_dic
+
 
 
 
@@ -368,24 +379,23 @@ if __name__ == "__main__":
 
 
     # all sid of microarray collections
-    microarray_collection_ids = [
-    "2017-05-19_E5_X31",
-    "2017-05-19_E6_untenliegend_X31",
-    "2017-05-19_N5_X31",
-    "2017-05-19_N6_Pan",
-    "2017-05-19_N9_X31",
-    "2017-05-19_N10_Pan",
-    "2017-05-19_N11_Cal",
-    "flutype_test",
-    "P6_170613_Cal",
-    "P5_170612_X31",
-    "P3_170612_X31",
-    "2017-05-19_N7_Cal"
-    ]
+    microarray_collection_ids = ["2017-05-19_E5_X31",
+                                 "2017-05-19_E6_untenliegend_X31",
+                                 "2017-05-19_N5_X31",
+                                 "2017-05-19_N6_Pan",
+                                 "2017-05-19_N9_X31",
+                                 "2017-05-19_N10_Pan",
+                                 "2017-05-19_N11_Cal",
+                                 "flutype_test",
+                                 "P6_170613_Cal",
+                                 "P5_170612_X31",
+                                 "P3_170612_X31",
+                                 "2017-05-19_N7_Cal"
+                                 ]
     # all sids of microwell collections
     microwell_collection_ids = ["2017-05-12_MTP_R1",
-                            "2017-06-13_MTP"
-                            ]
+                                "2017-06-13_MTP"
+                               ]
 
     def rename_dic(dic_data):
         """
