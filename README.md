@@ -24,7 +24,7 @@ right click `db.sqlite3` -> As Data Source
 
 
 ## Docker container
-Install docker via `docker-ce` on the system.
+Install docker via `docker-ce` and `docker-compose` on the system.
 
 Run the app via
 ```
