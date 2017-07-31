@@ -26,8 +26,6 @@
     <script type="text/javascript" src="{% static 'flutype/js/bootstrap.js' %}"></script>
     <script type="text/javascript" src="{% static 'flutype/js/jquery.dataTables.js' %}"></script>
     <script type="text/javascript" src="{% static 'flutype/js/dataTables.bootstrap.js' %}"></script>
-
-
 </head>
 
 <body>
@@ -43,7 +41,8 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{% url "index" %}">FluType</a>
+            <a class="nav navbar-nav" href="{% url "index" %}"><img src="{% static "flutype/images/flutype-logo.png" %}" width="50"></a>
+            <a class="navbar-brand" href="{% url "index" %}">&nbsp;&nbsp;FluType</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -68,7 +67,6 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="active"> <a href="https://github.com/janekg89/flutype_webapp">  <span class="fa fa-github fa-1x"></span>  Github </a>
-                <li><img src="{% static "flutype/images/flutype_logo.jpg" %}" width="50"></li>
                 {% if user.is_authenticated %}
                     <li class="active"><a> <span class="glyphicon glyphicon-user"></span> {{ user.get_username }}</a>
                     </li>
