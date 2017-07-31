@@ -23,7 +23,7 @@ def index_view(request):
     return render(request,
                   'flutype/index.html', context)
 
-#@login_required
+#login_required
 def users_view(request):
     users = User.objects.all()
     context = {
