@@ -190,6 +190,7 @@ class Database(object):
         print ("incubating:", any(created_i))
 
     def fill_collection(self,collection):
+        pass
 
 
 
@@ -234,7 +235,6 @@ if __name__ == "__main__":
     print("-" * 80)
     #loads data_tables
     data_tables = ma.read_datatables()
-
     db = Database()
     db.fill_dt(data_tables)
 
