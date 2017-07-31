@@ -4,6 +4,7 @@
     <div class="row">
         <div class="col-lg-12">
             <h1>Virus Batches</h1>
+            {% if virus_batches %}
             <table id="peptide_batches" class="table table-striped">
                 <thead>
                 <tr>
@@ -25,9 +26,8 @@
                     <th>Comment</th>
                 </tr>
                 </thead>
-                <tbody>
-                {% if virus_batches %}
 
+                <tbody>
                 {% for virusbatch in virus_batches %}
                     <tr>
                         <td class="warning">
