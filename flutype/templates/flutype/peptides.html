@@ -22,27 +22,27 @@
                 {% for p in peptides.all %}
                     <tr>
                         <td class="warning">
-                            <b>{{p.sid }}</b>
+                            <b>{{p.sid|default_if_none:"" }}</b>
                         <td>
-                            {{ p.linker }}
+                            {{ p.linker|default_if_none:"" }}
                         </td>
                         <td>
-                            {{ p.spacer }}
+                            {{ p.spacer|default_if_none:"" }}
                         </td>
                         <td>
-                            {{ p.sequence }}
+                            {{ p.sequence|default_if_none:"" }}
                         </td>
                         <td>
-                            {{ p.c_terminus }}
+                            {{ p.c_terminus|default_if_none:"" }}
                         </td>
                         <td>
-                            {{ p.name }}
+                            {{ p.name|default_if_none:"" }}
                         </td>
                         <td>
-                            {{ p.pep_type }}
+                            {{ p.pep_type|default_if_none:"" }}
                         </td>
                         <td>
-                            {{ p.comment }}
+                            {{ p.comment|default_if_none:"" }}
                         </td>
                     </tr>
                 {% endfor %}
