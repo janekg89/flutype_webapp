@@ -1,2 +1,2 @@
-Holder Type	S ID	manfacturer	Surface Substance	Charge	Incubating	Spotting	Quenching
-microwell	170509-00	PolyAn	3D-NHS	161118	I01	S01	NO
+Manfacturer	HolderType	Spotting	Charge	Incubating	SID	SurfaceSubstance	Quenching
+PolyAn	microwell	S01	161118	I01	170509-00	3D-NHS	NO
