@@ -171,19 +171,19 @@ def load_procedure_data(directory):
     name_array = name.to_array()
     name_array = np.array(name_array)
     dic_all={"Spotting": name_array[9,0],"Quenching":name_array[21,0],"Incubating":name_array[33,0]}
-    dic_microarray = {"S ID": name_array[0,1],"Charge":name_array[1,1],"Surface Substance":name_array[2,1],
-         "manfacturer": name_array[3,1]}
-    dic_microwell = {"S ID": name_array[0,7],"Charge":name_array[1,6],"Surface Substance":name_array[2,7],
-         "manfacturer": name_array[3,7]}
+    dic_microarray = {"SID": name_array[0,1],"Charge":name_array[1,1],"SurfaceSubstance":name_array[2,1],
+         "Manfacturer": name_array[3,1]}
+    dic_microwell = {"SID": name_array[0,7],"Charge":name_array[1,6],"SurfaceSubstance":name_array[2,7],
+         "Manfacturer": name_array[3,7]}
     if any(dic_microarray.values()):
         print("Sample Holder is a microarray.")
-        dic_microarray["Holder Type"]= "microarray"
+        dic_microarray["HolderType"]= "microarray"
         dic_microarray.update(dic_all)
         return dic_microarray
 
     elif any(dic_microwell.values()):
         print("Sample Holder is a microwell plate.")
-        dic_microwell["Holder Type"] = "microwell"
+        dic_microwell["HolderType"] = "microwell"
         dic_microwell.update(dic_all)
         return dic_microwell
 

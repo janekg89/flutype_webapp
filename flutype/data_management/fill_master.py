@@ -22,7 +22,6 @@ from flutype.data_management.read_flutype_analysis_db import load_procedure_data
 
 
 
-# fixme: get or create to update_or_create()
 class Master(object):
 
     def __init__(self, path):
@@ -77,6 +76,11 @@ class Master(object):
         file_path = os.path.join(self.collections_path, collection_id, "gal_ligand.csv")
         gal_ligand_data.to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
 
+    def read_gal_ligand(self, collection_id):
+        gal_lig_f = os.path.join(self.collections_path,collection_id, "gal_ligand.csv")
+        gal_ligand = pd.read_csv(gal_lig_f, sep='\t', index_col="ID")
+        return gal_ligand
+
 
     def create_or_update_gal_virus(self,gal_virus_data,collection_id):
         """
@@ -88,6 +92,11 @@ class Master(object):
 
         file_path = os.path.join(self.collections_path, collection_id, "gal_virus.csv")
         gal_virus_data.to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
+
+    def read_gal_virus(self, collection_id):
+        gal_lig_f = os.path.join(self.collections_path,collection_id, "gal_virus.csv")
+        gal_virus = pd.read_csv(gal_lig_f, sep='\t', index_col="ID")
+        return gal_virus
 
 
     def create_or_update_meta(self,meta_data,collection_id):
@@ -104,9 +113,23 @@ class Master(object):
             w.writeheader()
             w.writerow(meta_data)
 
+
+    def read_meta(self,collection_id):
+        path_file = os.path.join(self.collections_path, collection_id, 'meta.csv')
+        with open(path_file) as f:
+            reader = csv.DictReader(f,delimiter="\t")
+            for row in reader:
+                meta_data = row
+        return meta_data
+
     def create_or_update_image(self,image_data, collection_id):
         path_file = os.path.join(self.collections_path,collection_id,"image.jpg")
         cv2.imwrite(path_file, image_data)
+
+
+    def read_image(self, collection_id):
+        path_file = os.path.join(self.collections_path,collection_id,"image.jpg")
+        return cv2.imread(path_file,0)
 
     def create_or_update_intensity(self, intensity_data, collection_id,q_collection_id):
         """
@@ -120,6 +143,12 @@ class Master(object):
         file_path = os.path.join(self.collections_path,  collection_id,q_collection_id, "intensity.csv")
         intensity_data.to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
 
+    def read_intensity(self,collection_id,q_collection_id):
+        file_path = os.path.join(self.collections_path,  collection_id,q_collection_id, "intensity.csv")
+        return pd.read_csv(file_path, sep='\t', encoding='utf-8')
+
+
+
     def create_or_update_std(self, std_data, collection_id,q_collection_id):
         """
         saves std
@@ -131,6 +160,12 @@ class Master(object):
 
         file_path = os.path.join(self.collections_path, collection_id,q_collection_id, "std.csv")
         std_data.to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
+
+    def read_std(self,collection_id,q_collection_id):
+        file_path = os.path.join(self.collections_path, collection_id, q_collection_id, "std.csv")
+        return pd.read_csv(file_path, sep="\t", encoding='utf-8')
+
+
 
 
 
@@ -256,7 +291,7 @@ class Master(object):
 
 
 
-    def read_collection(self,collection):
+    def read_collection(self,collection_id):
         """
         reads data of one collection in the master folder.
         :param collection:
@@ -271,15 +306,37 @@ class Master(object):
                                                 data         (pandas.DataFrame -> Columns: "Columns" Index:"Row" Value: Intenstities)
                                                 std          (pandas.DataFrame -> Columns: "Columns" Index:"Row" Value: Standard deviation)
         """
-        #collections = next(os.walk(self.collection_path))[1]
+        dic_data = {}
+        dic_data["meta"]=self.read_meta(collection_id)
+        dic_data["gal_ligand"] = self.read_gal_ligand(collection_id)
+        dic_data["gal_virus"] = self.read_gal_virus(collection_id)
+        #FIXME: IF dic_data["meta"][holdertype]=microarray ...
+        # or think how to show and or store rawcollection/quantified colelction.
+        try:
+            dic_data["image"] =  self.read_image(collection_id)
+        except:
+            pass
+        try:
+            dic_data["intensity"] = self.read_intensity(collection_id,".")
+        except:
+            pass
+
 
     def read_q_collection(self,collection_id, q_collection_id):
+        #FIXME: Read q_meta
+        dic_data = {}
+        dic_data["intensity"] = self.read_intensity(collection_id,q_collection_id)
+        try:
+            dic_data["std"] = self.read_std(collection_id,q_collection_id)
+        except:
+            pass
         return dic_data
 
 
-    def read_datatables(self):
-        """
 
+    def read_datatables(self):
+
+        """
         :return: data_tables_dic
         """
         data_tables_dic ={}
