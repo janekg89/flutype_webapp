@@ -8,3 +8,5 @@ django-debug-toolbar
 opencv-python
 Pillow == 4.1.1
 gunicorn
+psycopg2
+

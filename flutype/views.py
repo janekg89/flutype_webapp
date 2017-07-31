@@ -4,6 +4,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.http import HttpResponse
+from django.contrib.auth.models import User
 from .models import RawSpotCollection,SpotCollection, PeptideBatch, Peptide, VirusBatch, Virus
 from django.views import generic
 from django.shortcuts import render, get_object_or_404
@@ -22,8 +23,18 @@ def index_view(request):
     return render(request,
                   'flutype/index.html', context)
 
+#@login_required
+def users_view(request):
+    users = User.objects.all()
+    context = {
+        'users': users,
+    }
+    return render(request,
+                  'flutype/users.html', context)
+
 def about_view(request):
     return render(request,"flutype/about.html")
+
 
 @login_required
 def peptide_batch_view(request):

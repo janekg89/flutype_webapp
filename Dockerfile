@@ -7,13 +7,14 @@
 #   docker build -t matthiaskoenig/flutype_webapp . && docker run -it -p 8000:8000 matthiaskoenig/flutype_webapp
 #
 ##############################################################################
-FROM python:2.7.13
+FROM python:3
 MAINTAINER Matthias Koenig <konigmatt@googlemail.com>
 
-WORKDIR /usr/src/app
-COPY requirements.txt ./
+RUN mkdir /code
+WORKDIR /code
+COPY requirements.txt /code/
 RUN pip install -r requirements.txt
-COPY . .
+COPY . /code/
 
 # Install latest flutype_analysis
 RUN pip install git+https://github.com/matthiaskoenig/flutype-analysis.git@master
@@ -22,6 +23,6 @@ RUN pip install git+https://github.com/matthiaskoenig/flutype-analysis.git@maste
 # WORKDIR /usr/src/app/flutype_webapp
 # RUN python manage.py test
 
-EXPOSE 8000
-WORKDIR /usr/src/app
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# EXPOSE 8000
+# WORKDIR /code
+# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
