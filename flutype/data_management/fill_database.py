@@ -80,6 +80,8 @@ class DBFill(object):
                     unique_virus_sid.append(raw_spot.virus_batch.virus.sid)
         return  unique_virus_sid
 
+
+
     @staticmethod
     def get_or_create_gal_pep(directory,data):
         max_name = 0
