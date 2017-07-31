@@ -102,7 +102,7 @@
 		 *    criterion ("applied") or all TR elements (i.e. no filter).
 		 *  @param {string} [oOpts.order=current] Order of the TR elements in the processed array.
 		 *    Can be either 'current', whereby the current sorting of the table is used, or
-		 *    'original' whereby the original order the media was read into the table is used.
+		 *    'original' whereby the original order the data was read into the table is used.
 		 *  @param {string} [oOpts.page=all] Limit the selection to the currently displayed page
 		 *    ("current") or not ("all"). If 'current' is given, then order is assumed to be
 		 *    'current' and filter is 'applied', regardless of what they might be given as.
@@ -136,10 +136,10 @@
 		
 		
 		/**
-		 * Almost identical to $ in operation, but in this case returns the media for the matched
+		 * Almost identical to $ in operation, but in this case returns the data for the matched
 		 * rows - as such, the jQuery selector used should match TR row nodes or TD/TH cell nodes
-		 * rather than any descendants, so the media can be obtained for the row/cell. If matching
-		 * rows are found, the media returned is the original media array/object that was used to
+		 * rather than any descendants, so the data can be obtained for the row/cell. If matching
+		 * rows are found, the data returned is the original data array/object that was used to
 		 * create the row (or a generated array if from a DOM source).
 		 *
 		 * This method is often useful in-combination with $ where both functions are given the
@@ -148,9 +148,9 @@
 		 *  @param {object} [oOpts] Optional parameters for modifying the rows to be included
 		 *  @param {string} [oOpts.filter=none] Select elements that meet the current filter
 		 *    criterion ("applied") or all elements (i.e. no filter).
-		 *  @param {string} [oOpts.order=current] Order of the media in the processed array.
+		 *  @param {string} [oOpts.order=current] Order of the data in the processed array.
 		 *    Can be either 'current', whereby the current sorting of the table is used, or
-		 *    'original' whereby the original order the media was read into the table is used.
+		 *    'original' whereby the original order the data was read into the table is used.
 		 *  @param {string} [oOpts.page=all] Limit the selection to the currently displayed page
 		 *    ("current") or not ("all"). If 'current' is given, then order is assumed to be
 		 *    'current' and filter is 'applied', regardless of what they might be given as.
@@ -164,23 +164,23 @@
 		 *    $(document).ready(function() {
 		 *      var oTable = $('#example').dataTable();
 		 *
-		 *      // Get the media from the first row in the table
-		 *      var media = oTable._('tr:first');
+		 *      // Get the data from the first row in the table
+		 *      var data = oTable._('tr:first');
 		 *
-		 *      // Do something useful with the media
-		 *      alert( "First cell is: "+media[0] );
+		 *      // Do something useful with the data
+		 *      alert( "First cell is: "+data[0] );
 		 *    } );
 		 *
 		 *  @example
 		 *    $(document).ready(function() {
 		 *      var oTable = $('#example').dataTable();
 		 *
-		 *      // Filter to 'Webkit' and get all media for
+		 *      // Filter to 'Webkit' and get all data for
 		 *      oTable.fnFilter('Webkit');
-		 *      var media = oTable._('tr', {"search": "applied"});
+		 *      var data = oTable._('tr', {"search": "applied"});
 		 *
-		 *      // Do something with the media
-		 *      alert( media.length+" rows matched the search" );
+		 *      // Do something with the data
+		 *      alert( data.length+" rows matched the search" );
 		 *    } );
 		 */
 		this._ = function ( sSelector, oOpts )
@@ -209,16 +209,16 @@
 		
 		
 		/**
-		 * Add a single new row or multiple rows of media to the table. Please note
+		 * Add a single new row or multiple rows of data to the table. Please note
 		 * that this is suitable for client-side processing only - if you are using
-		 * server-side processing (i.e. "bServerSide": true), then to add media, you
-		 * must add it to the media source, i.e. the server-side, through an Ajax call.
-		 *  @param {array|object} data The media to be added to the table. This can be:
+		 * server-side processing (i.e. "bServerSide": true), then to add data, you
+		 * must add it to the data source, i.e. the server-side, through an Ajax call.
+		 *  @param {array|object} data The data to be added to the table. This can be:
 		 *    <ul>
-		 *      <li>1D array of media - add a single row with the media provided</li>
+		 *      <li>1D array of data - add a single row with the data provided</li>
 		 *      <li>2D array of arrays - add multiple rows in a single call</li>
-		 *      <li>object - media object when using <i>mData</i></li>
-		 *      <li>array of objects - multiple media objects when using <i>mData</i></li>
+		 *      <li>object - data object when using <i>mData</i></li>
+		 *      <li>array of objects - multiple data objects when using <i>mData</i></li>
 		 *    </ul>
 		 *  @param {bool} [redraw=true] redraw the table or not
 		 *  @returns {array} An array of integers, representing the list of indexes in
@@ -264,7 +264,7 @@
 		
 		
 		/**
-		 * This function will make DataTables recalculate the column sizes, based on the media
+		 * This function will make DataTables recalculate the column sizes, based on the data
 		 * contained in the table and the sizes applied to the columns (in the DOM, CSS or
 		 * through the sWidth parameter). This can be useful when the width of the table's
 		 * parent element changes (for example a window resize).
@@ -430,13 +430,13 @@
 		this.fnDraw = function( complete )
 		{
 			// Note that this isn't an exact match to the old call to _fnDraw - it takes
-			// into account the new media, but can hold position.
+			// into account the new data, but can hold position.
 			this.api( true ).draw( complete );
 		};
 		
 		
 		/**
-		 * Filter the input based on media
+		 * Filter the input based on data
 		 *  @param {string} sInput String to filter the table on
 		 *  @param {int|null} [iColumn] Column to limit filtering to
 		 *  @param {bool} [bRegex=false] Treat as regular expression or not
@@ -470,33 +470,33 @@
 		
 		
 		/**
-		 * Get the media for the whole table, an individual row or an individual cell based on the
+		 * Get the data for the whole table, an individual row or an individual cell based on the
 		 * provided parameters.
 		 *  @param {int|node} [src] A TR row node, TD/TH cell node or an integer. If given as
-		 *    a TR node then the media source for the whole row will be returned. If given as a
-		 *    TD/TH cell node then iCol will be automatically calculated and the media for the
+		 *    a TR node then the data source for the whole row will be returned. If given as a
+		 *    TD/TH cell node then iCol will be automatically calculated and the data for the
 		 *    cell returned. If given as an integer, then this is treated as the aoData internal
-		 *    media index for the row (see fnGetPosition) and the media for that row used.
-		 *  @param {int} [col] Optional column index that you want the media of.
-		 *  @returns {array|object|string} If mRow is undefined, then the media for all rows is
-		 *    returned. If mRow is defined, just media for that row, and is iCol is
-		 *    defined, only media for the designated cell is returned.
+		 *    data index for the row (see fnGetPosition) and the data for that row used.
+		 *  @param {int} [col] Optional column index that you want the data of.
+		 *  @returns {array|object|string} If mRow is undefined, then the data for all rows is
+		 *    returned. If mRow is defined, just data for that row, and is iCol is
+		 *    defined, only data for the designated cell is returned.
 		 *  @dtopt API
 		 *  @deprecated Since v1.10
 		 *
 		 *  @example
-		 *    // Row media
+		 *    // Row data
 		 *    $(document).ready(function() {
 		 *      oTable = $('#example').dataTable();
 		 *
 		 *      oTable.$('tr').click( function () {
-		 *        var media = oTable.fnGetData( this );
-		 *        // ... do something with the array / object of media for the row
+		 *        var data = oTable.fnGetData( this );
+		 *        // ... do something with the array / object of data for the row
 		 *      } );
 		 *    } );
 		 *
 		 *  @example
-		 *    // Individual cell media
+		 *    // Individual cell data
 		 *    $(document).ready(function() {
 		 *      oTable = $('#example').dataTable();
 		 *
@@ -563,13 +563,13 @@
 		 *  @example
 		 *    $(document).ready(function() {
 		 *      $('#example tbody td').click( function () {
-		 *        // Get the position of the current media from the node
+		 *        // Get the position of the current data from the node
 		 *        var aPos = oTable.fnGetPosition( this );
 		 *
-		 *        // Get the media array for this row
+		 *        // Get the data array for this row
 		 *        var aData = oTable.fnGetData( aPos[0] );
 		 *
-		 *        // Update the media array and return the value
+		 *        // Update the data array and return the value
 		 *        aData[ aPos[1] ] = 'clicked';
 		 *        this.innerHTML = 'clicked';
 		 *      } );
@@ -744,8 +744,8 @@
 		
 		/**
 		 * Sort the table by a particular column
-		 *  @param {int} iCol the media index to sort on. Note that this will not match the
-		 *    'display index' if you have hidden media entries
+		 *  @param {int} iCol the data index to sort on. Note that this will not match the
+		 *    'display index' if you have hidden data entries
 		 *  @dtopt API
 		 *  @deprecated Since v1.10
 		 *
@@ -788,7 +788,7 @@
 		/**
 		 * Update a table cell or row - this method will accept either a single value to
 		 * update the cell with, an array of values with one element for each column or
-		 * an object in the same format as the original media source. The function is
+		 * an object in the same format as the original data source. The function is
 		 * self-referencing in order to make the multi column updates easier.
 		 *  @param {object|array|string} mData Data to update the cell/row with
 		 *  @param {node|int} mRow TR element you want to update or the aoData index
@@ -1188,7 +1188,7 @@
 			 */
 			if ( rowOne.length ) {
 				var a = function ( cell, name ) {
-					return cell.getAttribute( 'media-'+name ) !== null ? name : null;
+					return cell.getAttribute( 'data-'+name ) !== null ? name : null;
 				};
 			
 				$( rowOne[0] ).children('th, td').each( function (i, cell) {
@@ -1201,9 +1201,9 @@
 						if ( sort !== null || filter !== null ) {
 							col.mData = {
 								_:      i+'.display',
-								sort:   sort !== null   ? i+'.@media-'+sort   : undefined,
-								type:   sort !== null   ? i+'.@media-'+sort   : undefined,
-								filter: filter !== null ? i+'.@media-'+filter : undefined
+								sort:   sort !== null   ? i+'.@data-'+sort   : undefined,
+								type:   sort !== null   ? i+'.@data-'+sort   : undefined,
+								filter: filter !== null ? i+'.@data-'+filter : undefined
 							};
 			
 							_fnColumnOptions( oSettings, i );
@@ -1293,21 +1293,21 @@
 					_fnDetectHeader( oSettings.aoFooter, oSettings.nTFoot );
 				}
 			
-				/* Check if there is media passing into the constructor */
+				/* Check if there is data passing into the constructor */
 				if ( oInit.aaData ) {
 					for ( i=0 ; i<oInit.aaData.length ; i++ ) {
 						_fnAddData( oSettings, oInit.aaData[ i ] );
 					}
 				}
 				else if ( oSettings.bDeferLoading || _fnDataSource( oSettings ) == 'dom' ) {
-					/* Grab the media from the page - only do this when deferred loading or no Ajax
-					 * source since there is no point in reading the DOM media if we are then going
-					 * to replace it with Ajax media
+					/* Grab the data from the page - only do this when deferred loading or no Ajax
+					 * source since there is no point in reading the DOM data if we are then going
+					 * to replace it with Ajax data
 					 */
 					_fnAddTr( oSettings, $(oSettings.nTBody).children('tr') );
 				}
 			
-				/* Copy the media index array */
+				/* Copy the data index array */
 				oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
 			
 				/* Initialisation complete - table can be drawn */
@@ -1762,7 +1762,7 @@
 		 * sZeroRecords - assuming that is given.
 		 */
 		if ( ! lang.sEmptyTable && zeroRecords &&
-			defaults.sEmptyTable === "No media available in table" )
+			defaults.sEmptyTable === "No data available in table" )
 		{
 			_fnMap( lang, lang, 'sZeroRecords', 'sEmptyTable' );
 		}
@@ -2071,7 +2071,7 @@
 			_fnMap( oCol, oOptions, "aDataSort" );
 		}
 	
-		/* Cache the media get and set functions for speed */
+		/* Cache the data get and set functions for speed */
 		var mDataSrc = oCol.mData;
 		var mData = _fnGetObjectDataFn( mDataSrc );
 		var mRender = oCol.mRender ? _fnGetObjectDataFn( oCol.mRender ) : null;
@@ -2095,7 +2095,7 @@
 			return _fnSetObjectDataFn( mDataSrc )( rowData, val, meta );
 		};
 	
-		// Indicate if DataTables should read DOM media as an object or array
+		// Indicate if DataTables should read DOM data as an object or array
 		// Used in _fnGetRowElements
 		if ( typeof mDataSrc !== 'number' ) {
 			oSettings._rowReadObject = true;
@@ -2135,7 +2135,7 @@
 	
 	
 	/**
-	 * Adjust the table column widths for new media. Note: you would probably want to
+	 * Adjust the table column widths for new data. Note: you would probably want to
 	 * do a redraw after calling this function!
 	 *  @param {object} settings dataTables settings object
 	 *  @memberof DataTable#oApi
@@ -2165,11 +2165,11 @@
 	
 	
 	/**
-	 * Covert the index of a visible column to the index in the media array (take account
+	 * Covert the index of a visible column to the index in the data array (take account
 	 * of hidden columns)
 	 *  @param {object} oSettings dataTables settings object
 	 *  @param {int} iMatch Visible column index to lookup
-	 *  @returns {int} i the media index
+	 *  @returns {int} i the data index
 	 *  @memberof DataTable#oApi
 	 */
 	function _fnVisibleToColumnIndex( oSettings, iMatch )
@@ -2183,11 +2183,11 @@
 	
 	
 	/**
-	 * Covert the index of an index in the media array and convert it to the visible
+	 * Covert the index of an index in the data array and convert it to the visible
 	 *   column index (take account of hidden columns)
 	 *  @param {int} iMatch Column index to lookup
 	 *  @param {object} oSettings dataTables settings object
-	 *  @returns {int} i the media index
+	 *  @returns {int} i the data index
 	 *  @memberof DataTable#oApi
 	 */
 	function _fnColumnIndexToVisible( oSettings, iMatch )
@@ -2266,7 +2266,7 @@
 			else if ( ! col.sType ) {
 				for ( j=0, jen=types.length ; j<jen ; j++ ) {
 					for ( k=0, ken=data.length ; k<ken ; k++ ) {
-						// Use a cache array so we only need to get the type media
+						// Use a cache array so we only need to get the type data
 						// from the formatter once (when using multiple detectors)
 						if ( cache[k] === undefined ) {
 							cache[k] = _fnGetCellData( settings, k, i, 'type' );
@@ -2290,7 +2290,7 @@
 						}
 					}
 	
-					// Type is valid for all media points in the column - use this
+					// Type is valid for all data points in the column - use this
 					// type
 					if ( detectedType ) {
 						col.sType = detectedType;
@@ -2386,11 +2386,11 @@
 	}
 	
 	/**
-	 * Add a media array to the table, creating DOM node etc. This is the parallel to
+	 * Add a data array to the table, creating DOM node etc. This is the parallel to
 	 * _fnGatherData, but for adding rows from a Javascript source, rather than a
 	 * DOM source.
 	 *  @param {object} oSettings dataTables settings object
-	 *  @param {array} aData media array to be added
+	 *  @param {array} aData data array to be added
 	 *  @param {node} [nTr] TR element to add to the table - optional. If not given,
 	 *    DataTables will create a row automatically
 	 *  @param {array} [anTds] Array of TD|TH elements for the row - must be given
@@ -2414,7 +2414,7 @@
 		var nTd, sThisType;
 		var columns = oSettings.aoColumns;
 	
-		// Invalidate the column types as the new media needs to be revalidated
+		// Invalidate the column types as the new data needs to be revalidated
 		for ( var i=0, iLen=columns.length ; i<iLen ; i++ )
 		{
 			columns[i].sType = null;
@@ -2440,7 +2440,7 @@
 	
 	/**
 	 * Add one or more TR elements to the table. Generally we'd expect to
-	 * use this for reading media from a DOM sourced table, but it could be
+	 * use this for reading data from a DOM sourced table, but it could be
 	 * used for an TR element. Note that if a TR is given, it is used (i.e.
 	 * it is not cloned).
 	 *  @param {object} settings dataTables settings object
@@ -2478,7 +2478,7 @@
 	
 	
 	/**
-	 * Take a TD element and convert it into a column media index (not the visible index)
+	 * Take a TD element and convert it into a column data index (not the visible index)
 	 *  @param {object} oSettings dataTables settings object
 	 *  @param {int} iRow The row number the TD/TH can be found in
 	 *  @param {node} n The TD/TH element to find
@@ -2492,12 +2492,12 @@
 	
 	
 	/**
-	 * Get the media for a given cell from the internal cache, taking into account media mapping
+	 * Get the data for a given cell from the internal cache, taking into account data mapping
 	 *  @param {object} settings dataTables settings object
 	 *  @param {int} rowIdx aoData row id
 	 *  @param {int} colIdx Column index
-	 *  @param {string} type media get type ('display', 'type' 'filter' 'sort')
-	 *  @returns {*} Cell media
+	 *  @param {string} type data get type ('display', 'type' 'filter' 'sort')
+	 *  @returns {*} Cell data
 	 *  @memberof DataTable#oApi
 	 */
 	function _fnGetCellData( settings, rowIdx, colIdx, type )
@@ -2522,14 +2522,14 @@
 			return defaultContent;
 		}
 	
-		// When the media source is null and a specific media type is requested (i.e.
-		// not the original media), we can use default column media
+		// When the data source is null and a specific data type is requested (i.e.
+		// not the original data), we can use default column data
 		if ( (cellData === rowData || cellData === null) && defaultContent !== null && type !== undefined ) {
 			cellData = defaultContent;
 		}
 		else if ( typeof cellData === 'function' ) {
-			// If the media source is a function, then we run it and use the return,
-			// executing in the scope of the media object (for instances)
+			// If the data source is a function, then we run it and use the return,
+			// executing in the scope of the data object (for instances)
 			return cellData.call( rowData );
 		}
 	
@@ -2541,7 +2541,7 @@
 	
 	
 	/**
-	 * Set the value for a specific cell, into the internal media cache
+	 * Set the value for a specific cell, into the internal data cache
 	 *  @param {object} settings dataTables settings object
 	 *  @param {int} rowIdx aoData row id
 	 *  @param {int} colIdx Column index
@@ -2561,7 +2561,7 @@
 	}
 	
 	
-	// Private variable that is used to match action syntax in the media property object
+	// Private variable that is used to match action syntax in the data property object
 	var __reArray = /\[.*?\]$/;
 	var __reFn = /\(\)$/;
 	
@@ -2579,9 +2579,9 @@
 	
 	
 	/**
-	 * Return a function that can be used to get media from a source object, taking
+	 * Return a function that can be used to get data from a source object, taking
 	 * into account the ability to use nested objects as a source
-	 *  @param {string|int|function} mSource The media source for the object
+	 *  @param {string|int|function} mSource The data source for the object
 	 *  @returns {function} Data get function
 	 *  @memberof DataTable#oApi
 	 */
@@ -2620,8 +2620,8 @@
 		else if ( typeof mSource === 'string' && (mSource.indexOf('.') !== -1 ||
 			      mSource.indexOf('[') !== -1 || mSource.indexOf('(') !== -1) )
 		{
-			/* If there is a . in the source string then the media source is in a
-			 * nested object so we loop over the media for each level to get the next
+			/* If there is a . in the source string then the data source is in a
+			 * nested object so we loop over the data for each level to get the next
 			 * level down. On each loop we test for undefined, and if found immediately
 			 * return. This allows entire objects to be missing and sDefaultContent to
 			 * be used if defined, rather than throwing an error
@@ -2704,9 +2704,9 @@
 	
 	
 	/**
-	 * Return a function that can be used to set media from a source object, taking
+	 * Return a function that can be used to set data from a source object, taking
 	 * into account the ability to use nested objects as a source
-	 *  @param {string|int|function} mSource The media source for the object
+	 *  @param {string|int|function} mSource The data source for the object
 	 *  @returns {function} Data set function
 	 *  @memberof DataTable#oApi
 	 */
@@ -2715,7 +2715,7 @@
 		if ( $.isPlainObject( mSource ) )
 		{
 			/* Unlike get, only the underscore (global) option is used for for
-			 * setting media since we don't know the type here. This is why an object
+			 * setting data since we don't know the type here. This is why an object
 			 * option is not documented for `mData` (which is read/write), but it is
 			 * for `mRender` which is read only.
 			 */
@@ -2723,7 +2723,7 @@
 		}
 		else if ( mSource === null )
 		{
-			/* Nothing to do when the media source is null */
+			/* Nothing to do when the data source is null */
 			return function () {};
 		}
 		else if ( typeof mSource === 'function' )
@@ -2735,7 +2735,7 @@
 		else if ( typeof mSource === 'string' && (mSource.indexOf('.') !== -1 ||
 			      mSource.indexOf('[') !== -1 || mSource.indexOf('(') !== -1) )
 		{
-			/* Like the get, we need to get media from a nested object */
+			/* Like the get, we need to get data from a nested object */
 			var setData = function (data, val, src) {
 				var a = _fnSplitObjNotation( src ), b;
 				var aLast = a[a.length-1];
@@ -2769,14 +2769,14 @@
 						}
 						else
 						{
-							// We've been asked to save media to an array, but it
-							// isn't array media to be saved. Best that can be done
+							// We've been asked to save data to an array, but it
+							// isn't array data to be saved. Best that can be done
 							// is to just save the value.
 							data[ a[i] ] = val;
 						}
 	
 						// The inner call to setData has already traversed through the remainder
-						// of the source and has set the media, thus we can exit here
+						// of the source and has set the data, thus we can exit here
 						return;
 					}
 					else if ( funcNotation )
@@ -2824,9 +2824,9 @@
 	
 	
 	/**
-	 * Return an array with the full table media
+	 * Return an array with the full table data
 	 *  @param {object} oSettings dataTables settings object
-	 *  @returns array {array} aData Master media array
+	 *  @returns array {array} aData Master data array
 	 *  @memberof DataTable#oApi
 	 */
 	function _fnGetDataMaster ( settings )
@@ -2880,13 +2880,13 @@
 	
 	
 	/**
-	 * Mark cached media as invalid such that a re-read of the media will occur when
-	 * the cached media is next requested. Also update from the media source object.
+	 * Mark cached data as invalid such that a re-read of the data will occur when
+	 * the cached data is next requested. Also update from the data source object.
 	 *
 	 * @param {object} settings DataTables settings object
 	 * @param {int}    rowIdx   Row index to invalidate
 	 * @param {string} [src]    Source to invalidate from: undefined, 'auto', 'dom'
-	 *     or 'media'
+	 *     or 'data'
 	 * @param {int}    [colIdx] Column index to invalidate. If undefined the whole
 	 *     row will be invalidated
 	 * @memberof DataTable#oApi
@@ -2910,16 +2910,16 @@
 			cell.innerHTML = _fnGetCellData( settings, rowIdx, col, 'display' );
 		};
 	
-		// Are we reading last media from DOM or the media object?
+		// Are we reading last data from DOM or the data object?
 		if ( src === 'dom' || ((! src || src === 'auto') && row.src === 'dom') ) {
-			// Read the media from the DOM
+			// Read the data from the DOM
 			row._aData = _fnGetRowElements(
 					settings, row, colIdx, colIdx === undefined ? undefined : row._aData
 				)
 				.data;
 		}
 		else {
-			// Reading from media object, update the DOM
+			// Reading from data object, update the DOM
 			var cells = row.anCells;
 	
 			if ( cells ) {
@@ -2934,13 +2934,13 @@
 			}
 		}
 	
-		// For both row and cell invalidation, the cached media for sorting and
+		// For both row and cell invalidation, the cached data for sorting and
 		// filtering is nulled out
 		row._aSortData = null;
 		row._aFilterData = null;
 	
 		// Invalidate the type for a specific column (if given) or all columns since
-		// the media might have changed
+		// the data might have changed
 		var cols = settings.aoColumns;
 		if ( colIdx !== undefined ) {
 			cols[ colIdx ].sType = null;
@@ -2957,17 +2957,17 @@
 	
 	
 	/**
-	 * Build a media source object from an HTML row, reading the contents of the
+	 * Build a data source object from an HTML row, reading the contents of the
 	 * cells that are in the row.
 	 *
 	 * @param {object} settings DataTables settings object
-	 * @param {node|object} TR element from which to read media or existing row
-	 *   object from which to re-read the media from the cells
+	 * @param {node|object} TR element from which to read data or existing row
+	 *   object from which to re-read the data from the cells
 	 * @param {int} [colIdx] Optional column index
 	 * @param {array|object} [d] Data source object. If `colIdx` is given then this
-	 *   parameter should also be given and will be used to write the media into.
+	 *   parameter should also be given and will be used to write the data into.
 	 *   Only the column in question will be written
-	 * @returns {object} Object with two parameters: `media` the media read, in
+	 * @returns {object} Object with two parameters: `data` the data read, in
 	 *   document order, and `cells` and array of nodes (they can be useful to the
 	 *   caller, so rather than needing a second traversal to get them, just return
 	 *   them from here).
@@ -2982,7 +2982,7 @@
 			columns = settings.aoColumns,
 			objectRead = settings._rowReadObject;
 	
-		// Allow the media object to be passed in, or construct
+		// Allow the data object to be passed in, or construct
 		d = d !== undefined ?
 			d :
 			objectRead ?
@@ -3001,7 +3001,7 @@
 			}
 		};
 	
-		// Read media from a cell and store into the media object
+		// Read data from a cell and store into the data object
 		var cellProcess = function ( cell ) {
 			if ( colIdx === undefined || colIdx === i ) {
 				col = columns[i];
@@ -3016,7 +3016,7 @@
 					attr( col.mData.filter, cell );
 				}
 				else {
-					// Depending on the `media` option for the columns the media can
+					// Depending on the `data` option for the columns the data can
 					// be read to either an object or an array.
 					if ( objectRead ) {
 						if ( ! col._setter ) {
@@ -3103,7 +3103,7 @@
 			 */
 			nTr._DT_RowIndex = iRow;
 	
-			/* Special parameters can be given by the media source to be used on the row */
+			/* Special parameters can be given by the data source to be used on the row */
 			_fnRowAttributes( oSettings, row );
 	
 			/* Process each column */
@@ -3160,7 +3160,7 @@
 	
 	
 	/**
-	 * Add attributes to a row based on the special `DT_*` parameters in a media
+	 * Add attributes to a row based on the special `DT_*` parameters in a data
 	 * source object.
 	 *  @param {object} settings DataTables settings object
 	 *  @param {object} DataTables row object for the row to be modified
@@ -3835,7 +3835,7 @@
 	 * @param {object} oSettings dataTables settings object
 	 * @param {array} data Data to send to the server, required by
 	 *     DataTables - may be augmented by developer callbacks
-	 * @param {function} fn Callback function to run when media is obtained
+	 * @param {function} fn Callback function to run when data is obtained
 	 */
 	function _fnBuildAjax( oSettings, data, fn )
 	{
@@ -3880,7 +3880,7 @@
 			ajaxData = ajax.data;
 	
 			var newData = $.isFunction( ajaxData ) ?
-				ajaxData( data, oSettings ) :  // fn can manipulate media or return
+				ajaxData( data, oSettings ) :  // fn can manipulate data or return
 				ajaxData;                      // an object object or array to merge
 	
 			// If the function returned something, use that alone
@@ -3888,7 +3888,7 @@
 				newData :
 				$.extend( true, data, newData );
 	
-			// Remove the media property as we've resolved it already and don't want
+			// Remove the data property as we've resolved it already and don't want
 			// jQuery to do it again (it is restored at the end of the function)
 			delete ajax.data;
 		}
@@ -3923,10 +3923,10 @@
 			}
 		};
 	
-		// Store the media submitted for the API
+		// Store the data submitted for the API
 		oSettings.oAjaxData = data;
 	
-		// Allow plug-ins and external processes to modify the media
+		// Allow plug-ins and external processes to modify the data
 		_fnCallbackFire( oSettings, null, 'preXhr', [oSettings, data] );
 	
 		if ( oSettings.fnServerData )
@@ -4099,13 +4099,13 @@
 	
 	
 	/**
-	 * Data the media from the server (nuking the old) and redraw the table
+	 * Data the data from the server (nuking the old) and redraw the table
 	 *  @param {object} oSettings dataTables settings object
-	 *  @param {object} json json media return from the server.
+	 *  @param {object} json json data return from the server.
 	 *  @param {string} json.sEcho Tracking flag for DataTables to match requests
-	 *  @param {int} json.iTotalRecords Number of records in the media set, not accounting for filtering
-	 *  @param {int} json.iTotalDisplayRecords Number of records in the media set, accounting for filtering
-	 *  @param {array} json.aaData The media to display on this page
+	 *  @param {int} json.iTotalRecords Number of records in the data set, not accounting for filtering
+	 *  @param {int} json.iTotalDisplayRecords Number of records in the data set, accounting for filtering
+	 *  @param {array} json.aaData The data to display on this page
 	 *  @param {string} [json.sColumns] Column ordering (sName, comma separated)
 	 *  @memberof DataTable#oApi
 	 */
@@ -4152,12 +4152,12 @@
 	
 	
 	/**
-	 * Get the media from the JSON media source to use for drawing a table. Using
-	 * `_fnGetObjectDataFn` allows the media to be sourced from a property of the
+	 * Get the data from the JSON data source to use for drawing a table. Using
+	 * `_fnGetObjectDataFn` allows the data to be sourced from a property of the
 	 * source object, or from a processing function.
 	 *  @param {object} oSettings dataTables settings object
 	 *  @param  {object} json Data source object / array from the server
-	 *  @return {array} Array of media to use
+	 *  @return {array} Array of data to use
 	 */
 	function _fnAjaxDataSrc ( oSettings, json )
 	{
@@ -4384,7 +4384,7 @@
 	
 	
 	/**
-	 * Filter the media table based on user input and draw the table
+	 * Filter the data table based on user input and draw the table
 	 *  @param {object} settings dataTables settings object
 	 *  @param {string} input string to filter on
 	 *  @param {int} force optional - force a research of the master array (1) or not (undefined or 0)
@@ -4409,7 +4409,7 @@
 		// Check if any of the rows were invalidated
 		invalidated = _fnFilterData( settings );
 	
-		// If the input is blank - we just want the full media set
+		// If the input is blank - we just want the full data set
 		if ( input.length <= 0 ) {
 			settings.aiDisplay = displayMaster.slice();
 		}
@@ -4489,7 +4489,7 @@
 	var __filter_div = $('<div>')[0];
 	var __filter_div_textContent = __filter_div.textContent !== undefined;
 	
-	// Update the filtering media for each row if needed (by invalidation or first run)
+	// Update the filtering data for each row if needed (by invalidation or first run)
 	function _fnFilterData ( settings )
 	{
 		var columns = settings.aoColumns;
@@ -4704,7 +4704,7 @@
 		var features = settings.oFeatures;
 		var deferLoading = settings.bDeferLoading; // value modified by the draw
 	
-		/* Ensure that the table media is fully initialised */
+		/* Ensure that the table data is fully initialised */
 		if ( ! settings.bInitialised ) {
 			setTimeout( function(){ _fnInitialise( settings ); }, 200 );
 			return;
@@ -4739,18 +4739,18 @@
 		// If there is default sorting required - let's do it. The sort function
 		// will do the drawing for us. Otherwise we draw the table regardless of the
 		// Ajax source - this allows the table to look initialised for Ajax sourcing
-		// media (show 'loading' message possibly)
+		// data (show 'loading' message possibly)
 		_fnReDraw( settings );
 	
 		// Server-side processing init complete is done by _fnAjaxUpdateDraw
 		var dataSrc = _fnDataSource( settings );
 		if ( dataSrc != 'ssp' || deferLoading ) {
-			// if there is an ajax source load the media
+			// if there is an ajax source load the data
 			if ( dataSrc == 'ajax' ) {
 				_fnBuildAjax( settings, [], function(json) {
 					var aData = _fnAjaxDataSrc( settings, json );
 	
-					// Got the media - add it to the table
+					// Got the data - add it to the table
 					for ( i=0 ; i<aData.length ; i++ ) {
 						_fnAddData( settings, aData[i] );
 					}
@@ -4785,7 +4785,7 @@
 	{
 		settings._bInitComplete = true;
 	
-		// When media was added after the initialisation (media or Ajax) we need to
+		// When data was added after the initialisation (data or Ajax) we need to
 		// calculate the column sizing
 		if ( json || settings.oInit.aaData ) {
 			_fnAdjustColumnSizing( settings );
@@ -5572,7 +5572,7 @@
 		else
 		{
 			// Otherwise construct a single row, worst case, table with the widest
-			// node in the media, assign any user defined widths, then insert it into
+			// node in the data, assign any user defined widths, then insert it into
 			// the DOM and allow the browser to do all the hard work of calculating
 			// table widths
 			var tmpTable = $(table).clone() // don't use cloneNode - IE8 will remove events on the main table
@@ -5794,7 +5794,7 @@
 	
 	
 	/**
-	 * Get the maximum strlen for each media column
+	 * Get the maximum strlen for each data column
 	 *  @param {object} settings dataTables settings object
 	 *  @param {int} colIdx column of interest
 	 *  @returns {string} max string length for each column
@@ -5933,8 +5933,8 @@
 			aSort;
 	
 		// Resolve any column types that are unknown due to addition or invalidation
-		// @todo Can this be moved into a 'media-ready' handler which is called when
-		//   media is going to be used in the table?
+		// @todo Can this be moved into a 'data-ready' handler which is called when
+		//   data is going to be used in the table?
 		_fnColumnTypes( oSettings );
 	
 		aSort = _fnSortFlatten( oSettings );
@@ -5947,7 +5947,7 @@
 				formatters++;
 			}
 	
-			// Load the media needed for the sort, for each cell
+			// Load the data needed for the sort, for each cell
 			_fnSortData( oSettings, sortCol.col );
 		}
 	
@@ -5960,7 +5960,7 @@
 				aiOrig[ displayMaster[i] ] = i;
 			}
 	
-			/* Do the sort - here we want multi-column sorting based on a given media source (column)
+			/* Do the sort - here we want multi-column sorting based on a given data source (column)
 			 * and sorting function (from oSort) in a certain direction. It's reasonably complex to
 			 * follow on it's own, but this is what we want (example two column sorting):
 			 *  fnLocalSorting = function(a,b){
@@ -5973,9 +5973,9 @@
 			 *      return iTest;
 			 *    return oSort['numeric-asc']( aiOrig[a], aiOrig[b] );
 			 *  }
-			 * Basically we have a test for each sorting column, if the media in that column is equal,
+			 * Basically we have a test for each sorting column, if the data in that column is equal,
 			 * test the next column. If all columns match, then we use a numeric sort on the row
-			 * positions in the original media array to provide a stable sort.
+			 * positions in the original data array to provide a stable sort.
 			 *
 			 * Note - I know it seems excessive to have two sorting methods, but the first is around
 			 * 15% faster, so the second is only maintained for backwards compatibility with sorting
@@ -6038,7 +6038,7 @@
 			}
 		}
 	
-		/* Tell the draw function that we have sorted the media */
+		/* Tell the draw function that we have sorted the data */
 		oSettings.bSorted = true;
 	}
 	
@@ -6251,11 +6251,11 @@
 	}
 	
 	
-	// Get the media to sort a column, be it from cache, fresh (populating the
+	// Get the data to sort a column, be it from cache, fresh (populating the
 	// cache), or from a sort formatter
 	function _fnSortData( settings, idx )
 	{
-		// Custom sorting function - provided by the sort media type
+		// Custom sorting function - provided by the sort data type
 		var column = settings.aoColumns[ idx ];
 		var customSort = DataTable.ext.order[ column.sSortDataType ];
 		var customData;
@@ -6279,7 +6279,7 @@
 	
 			if ( ! row._aSortData[idx] || customSort ) {
 				cellData = customSort ?
-					customData[i] : // If there was a custom sort function, use media from there
+					customData[i] : // If there was a custom sort function, use data from there
 					_fnGetCellData( settings, i, idx, 'sort' );
 	
 				row._aSortData[ idx ] = formatter ?
@@ -6342,7 +6342,7 @@
 				return;
 			}
 	
-			// Allow custom and plug-in manipulation functions to alter the saved media set and
+			// Allow custom and plug-in manipulation functions to alter the saved data set and
 			// cancelling of loading by returning false
 			var abStateLoad = _fnCallbackFire( settings, 'aoStateLoadParams', 'stateLoadParams', [settings, s] );
 			if ( $.inArray( false, abStateLoad ) !== -1 ) {
@@ -6350,7 +6350,7 @@
 				return;
 			}
 	
-			// Reject old media
+			// Reject old data
 			var duration = settings.iStateDuration;
 			if ( duration > 0 && s.time < +new Date() - (duration*1000) ) {
 				callback();
@@ -6530,9 +6530,9 @@
 	 *  @param {object} extender Object from which the properties will be applied to
 	 *      out
 	 *  @param {boolean} breakRefs If true, then arrays will be sliced to take an
-	 *      independent copy with the exception of the `media` or `aaData` parameters
+	 *      independent copy with the exception of the `data` or `aaData` parameters
 	 *      if they are present. This is so you can pass in a collection to
-	 *      DataTables and have that used as your media source without breaking the
+	 *      DataTables and have that used as your data source without breaking the
 	 *      references
 	 *  @returns {object} out Reference, just for convenience - out === the return.
 	 *  @memberof DataTable#oApi
@@ -6698,7 +6698,7 @@
 	
 	
 	/**
-	 * Detect the media source being used for the table. Used to simplify the code
+	 * Detect the data source being used for the table. Used to simplify the code
 	 * a little (ajax) and to make it compress a little smaller.
 	 *
 	 *  @param {object} settings dataTables settings object
@@ -6731,7 +6731,7 @@
 	 *
 	 *     [
 	 *       {
-	 *         name:      'media'                -- string   - Property name
+	 *         name:      'data'                -- string   - Property name
 	 *         val:       function () {},       -- function - Api method (or undefined if just an object
 	 *         methodExt: [ ... ],              -- array    - Array of Api object definitions to extend the method result
 	 *         propExt:   [ ... ]               -- array    - Array of Api object definitions to extend the property
@@ -6742,7 +6742,7 @@
 	 *         methodExt: [ ... ],
 	 *         propExt:   [
 	 *           {
-	 *             name:      'media'
+	 *             name:      'data'
 	 *             val:       function () {},
 	 *             methodExt: [ ... ],
 	 *             propExt:   [ ... ]
@@ -6837,15 +6837,15 @@
 	 * a "context" - i.e. the tables that it will operate on. This could be a single
 	 * table, all tables on a page or a sub-set thereof.
 	 *
-	 * Additionally the API is designed to allow you to easily work with the media in
+	 * Additionally the API is designed to allow you to easily work with the data in
 	 * the tables, retrieving and manipulating it as required. This is done by
 	 * presenting the API class as an array like interface. The contents of the
 	 * array depend upon the actions requested by each method (for example
-	 * `rows().nodes()` will return an array of nodes, while `rows().media()` will
+	 * `rows().nodes()` will return an array of nodes, while `rows().data()` will
 	 * return an array of objects or arrays depending upon your table's
 	 * configuration). The API object has a number of array like methods (`push`,
 	 * `pop`, `reverse` etc) as well as additional helper methods (`each`, `pluck`,
-	 * `unique` etc) to assist your working with the media held in a table.
+	 * `unique` etc) to assist your working with the data held in a table.
 	 *
 	 * Most methods (those which return an Api instance) are chainable, which means
 	 * the return from a method call also has all of the methods available that the
@@ -6908,7 +6908,7 @@
 		// Remove duplicates
 		this.context = _unique( settings );
 	
-		// Initial media
+		// Initial data
 		if ( data ) {
 			$.merge( this, data );
 		}
@@ -7232,7 +7232,7 @@
 	
 	//     [
 	//       {
-	//         name:      'media'                -- string   - Property name
+	//         name:      'data'                -- string   - Property name
 	//         val:       function () {},       -- function - Api method (or undefined if just an object
 	//         methodExt: [ ... ],              -- array    - Array of Api object definitions to extend the method result
 	//         propExt:   [ ... ]               -- array    - Array of Api object definitions to extend the property
@@ -7243,7 +7243,7 @@
 	//         methodExt: [ ... ],
 	//         propExt:   [
 	//           {
-	//             name:      'media'
+	//             name:      'data'
 	//             val:       function () {},
 	//             methodExt: [ ... ],
 	//             propExt:   [ ... ]
@@ -7498,7 +7498,7 @@
 	 *  * `length` - Display length (number of records). Note that generally `start
 	 *    + length = end`, but this is not always true, for example if there are
 	 *    only 2 records to show on the final page, with a length of 10.
-	 *  * `recordsTotal` - Full media set length
+	 *  * `recordsTotal` - Full data set length
 	 *  * `recordsDisplay` - Data set length once the current filtering criterion
 	 *    are applied.
 	 */
@@ -7613,7 +7613,7 @@
 	
 	
 	/**
-	 * Get the media submitted in the last Ajax request
+	 * Get the data submitted in the last Ajax request
 	 */
 	_api_register( 'ajax.params()', function () {
 		var ctx = this.context;
@@ -7627,8 +7627,8 @@
 	
 	
 	/**
-	 * Reload tables from the Ajax media source. Note that this function will
-	 * automatically re-draw the table when the remote media has been loaded.
+	 * Reload tables from the Ajax data source. Note that this function will
+	 * automatically re-draw the table when the remote data has been loaded.
 	 *
 	 * @param {boolean} [reset=true] Reset (default) or hold the current paging
 	 *   position. A full re-sort and re-filter is performed when this method is
@@ -7687,11 +7687,11 @@
 	
 	
 	/**
-	 * Load media from the newly set Ajax URL. Note that this method is only
+	 * Load data from the newly set Ajax URL. Note that this method is only
 	 * available when `ajax.url()` is used to set a URL. Additionally, this method
 	 * has the same effect as calling `ajax.reload()` but is provided for
 	 * convenience when setting a new URL. Like `ajax.reload()` it will
-	 * automatically redraw the table once the remote media has been loaded.
+	 * automatically redraw the table once the remote data has been loaded.
 	 *
 	 * @returns {DataTables.Api} this
 	 */
@@ -7908,7 +7908,7 @@
 					return [ sel._DT_CellIndex.row ];
 				}
 				else {
-					var host = $(sel).closest('*[media-dt-row]');
+					var host = $(sel).closest('*[data-dt-row]');
 					return host.length ?
 						[ host.data('dt-row') ] :
 						[];
@@ -7979,7 +7979,7 @@
 		}, 1 );
 	} );
 	
-	_api_register( 'rows().media()', function () {
+	_api_register( 'rows().data()', function () {
 		return this.iterator( true, 'rows', function ( settings, rows ) {
 			return _pluck_order( settings.aoData, rows, '_aData' );
 		}, 1 );
@@ -8112,7 +8112,7 @@
 	} );
 	
 	
-	_api_register( 'row().media()', function ( data ) {
+	_api_register( 'row().data()', function ( data ) {
 		var ctx = this.context;
 	
 		if ( data === undefined ) {
@@ -8264,7 +8264,7 @@
 				}
 	
 				api.rows( {page:'current'} ).eq(0).each( function (idx) {
-					// Internal media grab
+					// Internal data grab
 					var row = data[ idx ];
 	
 					if ( row._detailsShow ) {
@@ -8312,7 +8312,7 @@
 	var _child_obj = _emp+'row().child';
 	var _child_mth = _child_obj+'()';
 	
-	// media can be:
+	// data can be:
 	//  tr
 	//  string
 	//  jQuery or array of any of the above
@@ -8399,7 +8399,7 @@
 	
 	
 	// r1 and r2 are redundant - but it means that the parameters match for the
-	// iterator callback in columns().media()
+	// iterator callback in columns().data()
 	var __columnData = function ( settings, column, r1, r2, rows ) {
 		var a = [];
 		for ( var row=0, ien=rows.length ; row<ien ; row++ ) {
@@ -8494,9 +8494,9 @@
 				return jqResult;
 			}
 	
-			// Otherwise a node which might have a `dt-column` media attribute, or be
+			// Otherwise a node which might have a `dt-column` data attribute, or be
 			// a child or such an element
-			var host = $(s).closest('*[media-dt-column]');
+			var host = $(s).closest('*[data-dt-column]');
 			return host.length ?
 				[ host.data('dt-column') ] :
 				[];
@@ -8588,7 +8588,7 @@
 		}, 1 );
 	} );
 	
-	_api_registerPlural( 'columns().media()', 'column().media()', function () {
+	_api_registerPlural( 'columns().data()', 'column().data()', function () {
 		return this.iterator( 'column-rows', __columnData, 1 );
 	} );
 	
@@ -8734,8 +8734,8 @@
 	
 			// Otherwise the selector is a node, and there is one last option - the
 			// element might be a child of an element which has dt-row and dt-column
-			// media attributes
-			host = $(s).closest('*[media-dt-row]');
+			// data attributes
+			host = $(s).closest('*[data-dt-row]');
 			return host.length ?
 				[ {
 					row: host.data('dt-row'),
@@ -8818,7 +8818,7 @@
 	} );
 	
 	
-	_api_register( 'cells().media()', function () {
+	_api_register( 'cells().data()', function () {
 		return this.iterator( 'cell', function ( settings, row, column ) {
 			return _fnGetCellData( settings, row, column );
 		}, 1 );
@@ -8865,7 +8865,7 @@
 	} );
 	
 	
-	_api_register( 'cell().media()', function ( data ) {
+	_api_register( 'cell().data()', function ( data ) {
 		var ctx = this.context;
 		var cell = this[0];
 	
@@ -9265,7 +9265,7 @@
 	} );
 	
 	
-	_api_register( 'media()', function () {
+	_api_register( 'data()', function () {
 		return this.iterator( 'table', function ( settings ) {
 			return _pluck( settings.aoData, '_aData' );
 		} ).flatten();
@@ -9437,7 +9437,7 @@
 	DataTable.version = "1.10.15";
 
 	/**
-	 * Private media store, containing all of the settings objects that are
+	 * Private data store, containing all of the settings objects that are
 	 * created for the tables on a given page.
 	 *
 	 * Note that the `DataTable.settings` object is aliased to
@@ -9523,10 +9523,10 @@
 		"anCells": null,
 	
 		/**
-		 * Data object from the original media source for the row. This is either
+		 * Data object from the original data source for the row. This is either
 		 * an array if using the traditional form of DataTables, or an object if
 		 * using mData options. The exact type will depend on the passed in
-		 * media from the media source, or will be an array if using DOM a media
+		 * data from the data source, or will be an array if using DOM a data
 		 * source.
 		 *  @type array|object
 		 *  @default []
@@ -9534,11 +9534,11 @@
 		"_aData": [],
 	
 		/**
-		 * Sorting media cache - this array is ostensibly the same length as the
+		 * Sorting data cache - this array is ostensibly the same length as the
 		 * number of columns (although each index is generated only as it is
-		 * needed), and holds the media that is used for sorting each column in the
+		 * needed), and holds the data that is used for sorting each column in the
 		 * row. We do this cache generation at the start of the sort in order that
-		 * the formatting of the sort media need be done only once for each cell
+		 * the formatting of the sort data need be done only once for each cell
 		 * per sort. This array should not be read from or written to by anything
 		 * other than the master sorting methods.
 		 *  @type array
@@ -9548,7 +9548,7 @@
 		"_aSortData": null,
 	
 		/**
-		 * Per cell filtering media cache. As per the sort media cache, used to
+		 * Per cell filtering data cache. As per the sort data cache, used to
 		 * increase the performance of the filtering in DataTables
 		 *  @type array
 		 *  @default null
@@ -9557,7 +9557,7 @@
 		"_aFilterData": null,
 	
 		/**
-		 * Filtering media cache. This is the same as the cell filtering cache, but
+		 * Filtering data cache. This is the same as the cell filtering cache, but
 		 * in this case a string rather than an array. This is easily computed with
 		 * a join on `_aFilterData`, but is provided as a cache so the join isn't
 		 * needed on every search (memory traded for performance)
@@ -9578,9 +9578,9 @@
 		"_sRowStripe": "",
 	
 		/**
-		 * Denote if the original media source was from the DOM, or the media source
-		 * object. This is used for invalidating media, so DataTables can
-		 * automatically read media from the original source, unless uninstructed
+		 * Denote if the original data source was from the DOM, or the data source
+		 * object. This is used for invalidating data, so DataTables can
+		 * automatically read data from the original source, unless uninstructed
 		 * otherwise.
 		 *  @type string
 		 *  @default null
@@ -9605,7 +9605,7 @@
 	 * DataTables needs about each individual column.
 	 *
 	 * Note that this object is related to {@link DataTable.defaults.column}
-	 * but this one is the internal media store for DataTables's cache of columns.
+	 * but this one is the internal data store for DataTables's cache of columns.
 	 * It should NOT be manipulated outside of DataTables. Any configuration should
 	 * be done through the initialisation options.
 	 *  @namespace
@@ -9669,7 +9669,7 @@
 		"_sManualType": null,
 	
 		/**
-		 * Flag to indicate if HTML5 media attributes should be used as the media
+		 * Flag to indicate if HTML5 data attributes should be used as the data
 		 * source for filtering or sorting. True is either are.
 		 *  @type boolean
 		 *  @default false
@@ -9685,35 +9685,35 @@
 		 *  @type function
 		 *  @param {element} nTd The TD node that has been created
 		 *  @param {*} sData The Data for the cell
-		 *  @param {array|object} oData The media for the whole row
-		 *  @param {int} iRow The row index for the aoData media store
+		 *  @param {array|object} oData The data for the whole row
+		 *  @param {int} iRow The row index for the aoData data store
 		 *  @default null
 		 */
 		"fnCreatedCell": null,
 	
 		/**
-		 * Function to get media from a cell in a column. You should <b>never</b>
-		 * access media directly through _aData internally in DataTables - always use
+		 * Function to get data from a cell in a column. You should <b>never</b>
+		 * access data directly through _aData internally in DataTables - always use
 		 * the method attached to this property. It allows mData to function as
 		 * required. This function is automatically assigned by the column
 		 * initialisation method
 		 *  @type function
-		 *  @param {array|object} oData The media array/object for the array
+		 *  @param {array|object} oData The data array/object for the array
 		 *    (i.e. aoData[]._aData)
-		 *  @param {string} sSpecific The specific media type you want to get -
+		 *  @param {string} sSpecific The specific data type you want to get -
 		 *    'display', 'type' 'filter' 'sort'
-		 *  @returns {*} The media for the cell from the given row's media
+		 *  @returns {*} The data for the cell from the given row's data
 		 *  @default null
 		 */
 		"fnGetData": null,
 	
 		/**
-		 * Function to set media for a cell in the column. You should <b>never</b>
-		 * set the media directly to _aData internally in DataTables - always use
+		 * Function to set data for a cell in the column. You should <b>never</b>
+		 * set the data directly to _aData internally in DataTables - always use
 		 * this method. It allows mData to function as required. This function
 		 * is automatically assigned by the column initialisation method
 		 *  @type function
-		 *  @param {array|object} oData The media array/object for the array
+		 *  @param {array|object} oData The data array/object for the array
 		 *    (i.e. aoData[]._aData)
 		 *  @param {*} sValue Value to set
 		 *  @default null
@@ -9721,7 +9721,7 @@
 		"fnSetData": null,
 	
 		/**
-		 * Property to read the value for the cells in the column from the media
+		 * Property to read the value for the cells in the column from the data
 		 * source array / object. If null, then the default content is used, if a
 		 * function is given then the return from the function is used.
 		 *  @type function|int|string|null
@@ -9731,9 +9731,9 @@
 	
 		/**
 		 * Partner property to mData which is used (only when defined) to get
-		 * the media - i.e. it is basically the same as mData, but without the
-		 * 'set' option, and also the media fed to it is the result from mData.
-		 * This is the rendering method to match the media method of mData.
+		 * the data - i.e. it is basically the same as mData, but without the
+		 * 'set' option, and also the data fed to it is the result from mData.
+		 * This is the rendering method to match the data method of mData.
 		 *  @type function|int|string|null
 		 *  @default null
 		 */
@@ -9777,9 +9777,9 @@
 		"sContentPadding": null,
 	
 		/**
-		 * Allows a default value to be given for a column's media, and will be used
-		 * whenever a null media source is encountered (this can be because mData
-		 * is set to null, or because the media source itself is null).
+		 * Allows a default value to be given for a column's data, and will be used
+		 * whenever a null data source is encountered (this can be because mData
+		 * is set to null, or because the data source itself is null).
 		 *  @type string
 		 *  @default null
 		 */
@@ -9793,7 +9793,7 @@
 		"sName": null,
 	
 		/**
-		 * Custom sorting media type - defines which of the available plug-ins in
+		 * Custom sorting data type - defines which of the available plug-ins in
 		 * afnSortData the custom sorting will use - if any is defined.
 		 *  @type string
 		 *  @default std
@@ -9867,8 +9867,8 @@
 	 */
 	DataTable.defaults = {
 		/**
-		 * An array of media to use for the table, passed in at initialisation which
-		 * will be used in preference to any media which is already in the DOM. This is
+		 * An array of data to use for the table, passed in at initialisation which
+		 * will be used in preference to any data which is already in the DOM. This is
 		 * particularly useful for constructing tables purely in Javascript, for
 		 * example with a custom Ajax call.
 		 *  @type array
@@ -9878,10 +9878,10 @@
 		 *  @name DataTable.defaults.data
 		 *
 		 *  @example
-		 *    // Using a 2D array media source
+		 *    // Using a 2D array data source
 		 *    $(document).ready( function () {
 		 *      $('#example').dataTable( {
-		 *        "media": [
+		 *        "data": [
 		 *          ['Trident', 'Internet Explorer 4.0', 'Win 95+', 4, 'X'],
 		 *          ['Trident', 'Internet Explorer 5.0', 'Win 95+', 5, 'C'],
 		 *        ],
@@ -9896,10 +9896,10 @@
 		 *    } );
 		 *
 		 *  @example
-		 *    // Using an array of objects as a media source (`media`)
+		 *    // Using an array of objects as a data source (`data`)
 		 *    $(document).ready( function () {
 		 *      $('#example').dataTable( {
-		 *        "media": [
+		 *        "data": [
 		 *          {
 		 *            "engine":   "Trident",
 		 *            "browser":  "Internet Explorer 4.0",
@@ -9916,11 +9916,11 @@
 		 *          }
 		 *        ],
 		 *        "columns": [
-		 *          { "title": "Engine",   "media": "engine" },
-		 *          { "title": "Browser",  "media": "browser" },
-		 *          { "title": "Platform", "media": "platform" },
-		 *          { "title": "Version",  "media": "version" },
-		 *          { "title": "Grade",    "media": "grade" }
+		 *          { "title": "Engine",   "data": "engine" },
+		 *          { "title": "Browser",  "data": "browser" },
+		 *          { "title": "Platform", "data": "platform" },
+		 *          { "title": "Version",  "data": "version" },
+		 *          { "title": "Grade",    "data": "grade" }
 		 *        ]
 		 *      } );
 		 *    } );
@@ -9982,21 +9982,21 @@
 	
 	
 		/**
-		 * DataTables can be instructed to load media to display in the table from a
+		 * DataTables can be instructed to load data to display in the table from a
 		 * Ajax source. This option defines how that Ajax call is made and where to.
 		 *
 		 * The `ajax` property has three different modes of operation, depending on
 		 * how it is defined. These are:
 		 *
-		 * * `string` - Set the URL from where the media should be loaded from.
+		 * * `string` - Set the URL from where the data should be loaded from.
 		 * * `object` - Define properties for `jQuery.ajax`.
-		 * * `function` - Custom media get function
+		 * * `function` - Custom data get function
 		 *
 		 * `string`
 		 * --------
 		 *
 		 * As a string, the `ajax` property simply defines the URL from which
-		 * DataTables will load media.
+		 * DataTables will load data.
 		 *
 		 * `object`
 		 * --------
@@ -10009,8 +10009,8 @@
 		 * the following parameters provide additional options in DataTables or
 		 * require special consideration:
 		 *
-		 * * `media` - As with jQuery, `media` can be provided as an object, but it
-		 *   can also be used as a function to manipulate the media DataTables sends
+		 * * `data` - As with jQuery, `data` can be provided as an object, but it
+		 *   can also be used as a function to manipulate the data DataTables sends
 		 *   to the server. The function takes a single parameter, an object of
 		 *   parameters with the values that DataTables has readied for sending. An
 		 *   object may be returned which will be merged into the DataTables
@@ -10018,19 +10018,19 @@
 		 *   not return anything from the function. This supersedes `fnServerParams`
 		 *   from DataTables 1.9-.
 		 *
-		 * * `dataSrc` - By default DataTables will look for the property `media` (or
-		 *   `aaData` for compatibility with DataTables 1.9-) when obtaining media
+		 * * `dataSrc` - By default DataTables will look for the property `data` (or
+		 *   `aaData` for compatibility with DataTables 1.9-) when obtaining data
 		 *   from an Ajax source or for server-side processing - this parameter
 		 *   allows that property to be changed. You can use Javascript dotted
-		 *   object notation to get a media source for multiple levels of nesting, or
+		 *   object notation to get a data source for multiple levels of nesting, or
 		 *   it my be used as a function. As a function it takes a single parameter,
 		 *   the JSON returned from the server, which can be manipulated as
 		 *   required, with the returned value being that used by DataTables as the
-		 *   media source for the table. This supersedes `sAjaxDataProp` from
+		 *   data source for the table. This supersedes `sAjaxDataProp` from
 		 *   DataTables 1.9-.
 		 *
 		 * * `success` - Should not be overridden it is used internally in
-		 *   DataTables. To manipulate / transform the media returned by the server
+		 *   DataTables. To manipulate / transform the data returned by the server
 		 *   use `ajax.dataSrc`, or use `ajax` as a function (see below).
 		 *
 		 * `function`
@@ -10038,7 +10038,7 @@
 		 *
 		 * As a function, making the Ajax call is left up to yourself allowing
 		 * complete control of the Ajax request. Indeed, if desired, a method other
-		 * than Ajax could be used to obtain the required media, such as Web storage
+		 * than Ajax could be used to obtain the required data, such as Web storage
 		 * or an AIR database.
 		 *
 		 * The function is given four parameters and no return is required. The
@@ -10046,7 +10046,7 @@
 		 *
 		 * 1. _object_ - Data to send to the server
 		 * 2. _function_ - Callback function that must be executed when the required
-		 *    media has been obtained. That media should be passed into the callback
+		 *    data has been obtained. That data should be passed into the callback
 		 *    as the only parameter
 		 * 3. _object_ - DataTables settings object for the table
 		 *
@@ -10060,39 +10060,39 @@
 		 *  @since 1.10.0
 		 *
 		 * @example
-		 *   // Get JSON media from a file via Ajax.
-		 *   // Note DataTables expects media in the form `{ media: [ ...media... ] }` by default).
+		 *   // Get JSON data from a file via Ajax.
+		 *   // Note DataTables expects data in the form `{ data: [ ...data... ] }` by default).
 		 *   $('#example').dataTable( {
-		 *     "ajax": "media.json"
+		 *     "ajax": "data.json"
 		 *   } );
 		 *
 		 * @example
-		 *   // Get JSON media from a file via Ajax, using `dataSrc` to change
-		 *   // `media` to `tableData` (i.e. `{ tableData: [ ...media... ] }`)
+		 *   // Get JSON data from a file via Ajax, using `dataSrc` to change
+		 *   // `data` to `tableData` (i.e. `{ tableData: [ ...data... ] }`)
 		 *   $('#example').dataTable( {
 		 *     "ajax": {
-		 *       "url": "media.json",
+		 *       "url": "data.json",
 		 *       "dataSrc": "tableData"
 		 *     }
 		 *   } );
 		 *
 		 * @example
-		 *   // Get JSON media from a file via Ajax, using `dataSrc` to read media
+		 *   // Get JSON data from a file via Ajax, using `dataSrc` to read data
 		 *   // from a plain array rather than an array in an object
 		 *   $('#example').dataTable( {
 		 *     "ajax": {
-		 *       "url": "media.json",
+		 *       "url": "data.json",
 		 *       "dataSrc": ""
 		 *     }
 		 *   } );
 		 *
 		 * @example
-		 *   // Manipulate the media returned from the server - add a link to media
+		 *   // Manipulate the data returned from the server - add a link to data
 		 *   // (note this can, should, be done using `render` for the column - this
-		 *   // is just a simple example of how the media can be manipulated).
+		 *   // is just a simple example of how the data can be manipulated).
 		 *   $('#example').dataTable( {
 		 *     "ajax": {
-		 *       "url": "media.json",
+		 *       "url": "data.json",
 		 *       "dataSrc": function ( json ) {
 		 *         for ( var i=0, ien=json.length ; i<ien ; i++ ) {
 		 *           json[i][0] = '<a href="/message/'+json[i][0]+'>View message</a>';
@@ -10103,11 +10103,11 @@
 		 *   } );
 		 *
 		 * @example
-		 *   // Add media to the request
+		 *   // Add data to the request
 		 *   $('#example').dataTable( {
 		 *     "ajax": {
-		 *       "url": "media.json",
-		 *       "media": function ( d ) {
+		 *       "url": "data.json",
+		 *       "data": function ( d ) {
 		 *         return {
 		 *           "extra_search": $('#extra').val()
 		 *         };
@@ -10119,16 +10119,16 @@
 		 *   // Send request as POST
 		 *   $('#example').dataTable( {
 		 *     "ajax": {
-		 *       "url": "media.json",
+		 *       "url": "data.json",
 		 *       "type": "POST"
 		 *     }
 		 *   } );
 		 *
 		 * @example
-		 *   // Get the media from localStorage (could interface with a form for
+		 *   // Get the data from localStorage (could interface with a form for
 		 *   // adding, editing and removing rows).
 		 *   $('#example').dataTable( {
-		 *     "ajax": function (media, callback, settings) {
+		 *     "ajax": function (data, callback, settings) {
 		 *       callback(
 		 *         JSON.parse( localStorage.getItem('dataTablesData') )
 		 *       );
@@ -10270,7 +10270,7 @@
 	
 		/**
 		 * Deferred rendering can provide DataTables with a huge speed boost when you
-		 * are using an Ajax or JS media source for the table. This option, when set to
+		 * are using an Ajax or JS data source for the table. This option, when set to
 		 * true, will cause DataTables to defer the creation of the table elements for
 		 * each row until they are needed for a draw - saving a significant amount of
 		 * time.
@@ -10320,7 +10320,7 @@
 	
 	
 		/**
-		 * Enable or disable filtering of media. Filtering in DataTables is "smart" in
+		 * Enable or disable filtering of data. Filtering in DataTables is "smart" in
 		 * that it allows the end user to input multiple words (space separated) and
 		 * will match a row containing those words, even if not in the order that was
 		 * specified (this allow matching across multiple columns). Note that if you
@@ -10345,8 +10345,8 @@
 	
 		/**
 		 * Enable or disable the table information display. This shows information
-		 * about the media that is currently visible on the page, including information
-		 * about filtered media if that action is being performed.
+		 * about the data that is currently visible on the page, including information
+		 * about filtered data if that action is being performed.
 		 *  @type boolean
 		 *  @default true
 		 *
@@ -10423,7 +10423,7 @@
 		/**
 		 * Enable or disable the display of a 'processing' indicator when the table is
 		 * being processed (e.g. a sort). This is particularly useful for tables with
-		 * large amounts of media where it can take a noticeable amount of time to sort
+		 * large amounts of data where it can take a noticeable amount of time to sort
 		 * the entries.
 		 *  @type boolean
 		 *  @default false
@@ -10482,7 +10482,7 @@
 		/**
 		 * When vertical (y) scrolling is enabled, DataTables will force the height of
 		 * the table's viewport to the given height at all times (useful for layout).
-		 * However, this can look odd when filtering media down to a small media set,
+		 * However, this can look odd when filtering data down to a small data set,
 		 * and the footer is left "floating" further down. This parameter (when
 		 * enabled) will cause DataTables to collapse the table's viewport down when
 		 * the result set will fit within the given Y height.
@@ -10506,7 +10506,7 @@
 		/**
 		 * Configure DataTables to use server-side processing. Note that the
 		 * `ajax` parameter must also be given in order to give DataTables a
-		 * source to obtain the required media for each draw.
+		 * source to obtain the required data for each draw.
 		 *  @type boolean
 		 *  @default false
 		 *
@@ -10588,7 +10588,7 @@
 		 * Enable or disable the addition of the classes `sorting\_1`, `sorting\_2` and
 		 * `sorting\_3` to the columns which are currently being sorted on. This is
 		 * presented as a feature switch as it can increase processing time (while
-		 * classes are removed and added) so for large media sets you might want to
+		 * classes are removed and added) so for large data sets you might want to
 		 * turn this off.
 		 *  @type boolean
 		 *  @default true
@@ -10637,7 +10637,7 @@
 		 * manipulation of the TR element (adding classes etc).
 		 *  @type function
 		 *  @param {node} row "TR" element for the current row
-		 *  @param {array} media Raw media array for this row
+		 *  @param {array} data Raw data array for this row
 		 *  @param {int} dataIndex The index of this row in the internal aoData array
 		 *
 		 *  @dtopt Callbacks
@@ -10646,9 +10646,9 @@
 		 *  @example
 		 *    $(document).ready( function() {
 		 *      $('#example').dataTable( {
-		 *        "createdRow": function( row, media, dataIndex ) {
+		 *        "createdRow": function( row, data, dataIndex ) {
 		 *          // Bold the grade for all 'A' grade browsers
-		 *          if ( media[4] == "A" )
+		 *          if ( data[4] == "A" )
 		 *          {
 		 *            $('td:eq(4)', row).html( '<b>A</b>' );
 		 *          }
@@ -10685,13 +10685,13 @@
 		 * allows you to modify the table footer on every 'draw' event.
 		 *  @type function
 		 *  @param {node} foot "TR" element for the footer
-		 *  @param {array} media Full table media (as derived from the original HTML)
+		 *  @param {array} data Full table data (as derived from the original HTML)
 		 *  @param {int} start Index for the current display starting point in the
 		 *    display array
 		 *  @param {int} end Index for the current display ending point in the
 		 *    display array
 		 *  @param {array int} display Index array to translate the visual position
-		 *    to the full media array
+		 *    to the full data array
 		 *
 		 *  @dtopt Callbacks
 		 *  @name DataTable.defaults.footerCallback
@@ -10699,7 +10699,7 @@
 		 *  @example
 		 *    $(document).ready( function() {
 		 *      $('#example').dataTable( {
-		 *        "footerCallback": function( tfoot, media, start, end, display ) {
+		 *        "footerCallback": function( tfoot, data, start, end, display ) {
 		 *          tfoot.getElementsByTagName('th')[0].innerHTML = "Starting index is "+start;
 		 *        }
 		 *      } );
@@ -10749,13 +10749,13 @@
 		 * display useful information about the table.
 		 *  @type function
 		 *  @param {node} head "TR" element for the header
-		 *  @param {array} media Full table media (as derived from the original HTML)
+		 *  @param {array} data Full table data (as derived from the original HTML)
 		 *  @param {int} start Index for the current display starting point in the
 		 *    display array
 		 *  @param {int} end Index for the current display ending point in the
 		 *    display array
 		 *  @param {array int} display Index array to translate the visual position
-		 *    to the full media array
+		 *    to the full data array
 		 *
 		 *  @dtopt Callbacks
 		 *  @name DataTable.defaults.headerCallback
@@ -10763,7 +10763,7 @@
 		 *  @example
 		 *    $(document).ready( function() {
 		 *      $('#example').dataTable( {
-		 *        "fheaderCallback": function( head, media, start, end, display ) {
+		 *        "fheaderCallback": function( head, data, start, end, display ) {
 		 *          head.getElementsByTagName('th')[0].innerHTML = "Displaying "+(end-start)+" records";
 		 *        }
 		 *      } );
@@ -10780,11 +10780,11 @@
 		 * allows you to do exactly that.
 		 *  @type function
 		 *  @param {object} oSettings DataTables settings object
-		 *  @param {int} start Starting position in media for the draw
-		 *  @param {int} end End position in media for the draw
+		 *  @param {int} start Starting position in data for the draw
+		 *  @param {int} end End position in data for the draw
 		 *  @param {int} max Total number of rows in the table (regardless of
 		 *    filtering)
-		 *  @param {int} total Total number of rows in the media set, after filtering
+		 *  @param {int} total Total number of rows in the data set, after filtering
 		 *  @param {string} pre The string that DataTables has formatted using it's
 		 *    own rules
 		 *  @returns {string} The string to be displayed in the information element.
@@ -10810,7 +10810,7 @@
 		 *  @type function
 		 *  @param {object} settings DataTables settings object
 		 *  @param {object} json The JSON object request from the server - only
-		 *    present if client-side Ajax sourced media is used
+		 *    present if client-side Ajax sourced data is used
 		 *
 		 *  @dtopt Callbacks
 		 *  @name DataTable.defaults.initComplete
@@ -10859,9 +10859,9 @@
 		 * function might be used for setting the row class name etc.
 		 *  @type function
 		 *  @param {node} row "TR" element for the current row
-		 *  @param {array} media Raw media array for this row
+		 *  @param {array} data Raw data array for this row
 		 *  @param {int} displayIndex The display index for the current table draw
-		 *  @param {int} displayIndexFull The index of the media in the full list of
+		 *  @param {int} displayIndexFull The index of the data in the full list of
 		 *    rows (after filtering)
 		 *
 		 *  @dtopt Callbacks
@@ -10870,9 +10870,9 @@
 		 *  @example
 		 *    $(document).ready( function() {
 		 *      $('#example').dataTable( {
-		 *        "rowCallback": function( row, media, displayIndex, displayIndexFull ) {
+		 *        "rowCallback": function( row, data, displayIndex, displayIndexFull ) {
 		 *          // Bold the grade for all 'A' grade browsers
-		 *          if ( media[4] == "A" ) {
+		 *          if ( data[4] == "A" ) {
 		 *            $('td:eq(4)', row).html( '<b>A</b>' );
 		 *          }
 		 *        }
@@ -10887,16 +10887,16 @@
 		 * superseded by that provided through `ajax`, which should be used instead.
 		 *
 		 * This parameter allows you to override the default function which obtains
-		 * the media from the server so something more suitable for your application.
-		 * For example you could use POST media, or pull information from a Gears or
+		 * the data from the server so something more suitable for your application.
+		 * For example you could use POST data, or pull information from a Gears or
 		 * AIR database.
 		 *  @type function
 		 *  @member
-		 *  @param {string} source HTTP source to obtain the media from (`ajax`)
-		 *  @param {array} media A key/value pair object containing the media to send
+		 *  @param {string} source HTTP source to obtain the data from (`ajax`)
+		 *  @param {array} data A key/value pair object containing the data to send
 		 *    to the server
-		 *  @param {function} callback to be called on completion of the media get
-		 *    process that will draw the media on the page.
+		 *  @param {function} callback to be called on completion of the data get
+		 *    process that will draw the data on the page.
 		 *  @param {object} settings DataTables settings object
 		 *
 		 *  @dtopt Callbacks
@@ -10912,18 +10912,18 @@
 		 * __Deprecated__ The functionality provided by this parameter has now been
 		 * superseded by that provided through `ajax`, which should be used instead.
 		 *
-		 *  It is often useful to send extra media to the server when making an Ajax
+		 *  It is often useful to send extra data to the server when making an Ajax
 		 * request - for example custom filtering information, and this callback
 		 * function makes it trivial to send extra information to the server. The
-		 * passed in parameter is the media set that has been constructed by
+		 * passed in parameter is the data set that has been constructed by
 		 * DataTables, and you can add to this or modify it as you require.
 		 *  @type function
-		 *  @param {array} media Data array (array of objects which are name/value
+		 *  @param {array} data Data array (array of objects which are name/value
 		 *    pairs) that has been constructed by DataTables and will be sent to the
-		 *    server. In the case of Ajax sourced media with server-side processing
+		 *    server. In the case of Ajax sourced data with server-side processing
 		 *    this will be an empty array, for server-side processing there will be a
 		 *    significant number of parameters!
-		 *  @returns {undefined} Ensure that you modify the media array passed in,
+		 *  @returns {undefined} Ensure that you modify the data array passed in,
 		 *    as this is passed by reference.
 		 *
 		 *  @dtopt Callbacks
@@ -10978,13 +10978,13 @@
 	
 		/**
 		 * Callback which allows modification of the saved state prior to loading that state.
-		 * This callback is called when the table is loading state from the stored media, but
+		 * This callback is called when the table is loading state from the stored data, but
 		 * prior to the settings object being modified by the saved state. Note that for
 		 * plug-in authors, you should use the `stateLoadParams` event to load parameters for
 		 * a plug-in.
 		 *  @type function
 		 *  @param {object} settings DataTables settings object
-		 *  @param {object} media The state object that is to be loaded
+		 *  @param {object} data The state object that is to be loaded
 		 *
 		 *  @dtopt Callbacks
 		 *  @name DataTable.defaults.stateLoadParams
@@ -10994,8 +10994,8 @@
 		 *    $(document).ready( function() {
 		 *      $('#example').dataTable( {
 		 *        "stateSave": true,
-		 *        "stateLoadParams": function (settings, media) {
-		 *          media.oSearch.sSearch = "";
+		 *        "stateLoadParams": function (settings, data) {
+		 *          data.oSearch.sSearch = "";
 		 *        }
 		 *      } );
 		 *    } );
@@ -11005,7 +11005,7 @@
 		 *    $(document).ready( function() {
 		 *      $('#example').dataTable( {
 		 *        "stateSave": true,
-		 *        "stateLoadParams": function (settings, media) {
+		 *        "stateLoadParams": function (settings, data) {
 		 *          return false;
 		 *        }
 		 *      } );
@@ -11019,7 +11019,7 @@
 		 * and the DataTables settings object has been modified as a result of the loaded state.
 		 *  @type function
 		 *  @param {object} settings DataTables settings object
-		 *  @param {object} media The state object that was loaded
+		 *  @param {object} data The state object that was loaded
 		 *
 		 *  @dtopt Callbacks
 		 *  @name DataTable.defaults.stateLoaded
@@ -11029,8 +11029,8 @@
 		 *    $(document).ready( function() {
 		 *      $('#example').dataTable( {
 		 *        "stateSave": true,
-		 *        "stateLoaded": function (settings, media) {
-		 *          alert( 'Saved filter was: '+media.oSearch.sSearch );
+		 *        "stateLoaded": function (settings, data) {
+		 *          alert( 'Saved filter was: '+data.oSearch.sSearch );
 		 *        }
 		 *      } );
 		 *    } );
@@ -11054,11 +11054,11 @@
 		 *    $(document).ready( function() {
 		 *      $('#example').dataTable( {
 		 *        "stateSave": true,
-		 *        "stateSaveCallback": function (settings, media) {
+		 *        "stateSaveCallback": function (settings, data) {
 		 *          // Send an Ajax request to the server with the state object
 		 *          $.ajax( {
 		 *            "url": "/state_save",
-		 *            "media": media,
+		 *            "data": data,
 		 *            "dataType": "json",
 		 *            "method": "POST"
 		 *            "success": function () {}
@@ -11085,7 +11085,7 @@
 		 * use the `stateSaveParams` event to save parameters for a plug-in.
 		 *  @type function
 		 *  @param {object} settings DataTables settings object
-		 *  @param {object} media The state object to be saved
+		 *  @param {object} data The state object to be saved
 		 *
 		 *  @dtopt Callbacks
 		 *  @name DataTable.defaults.stateSaveParams
@@ -11095,8 +11095,8 @@
 		 *    $(document).ready( function() {
 		 *      $('#example').dataTable( {
 		 *        "stateSave": true,
-		 *        "stateSaveParams": function (settings, media) {
-		 *          media.oSearch.sSearch = "";
+		 *        "stateSaveParams": function (settings, data) {
+		 *          data.oSearch.sSearch = "";
 		 *        }
 		 *      } );
 		 *    } );
@@ -11126,7 +11126,7 @@
 	
 		/**
 		 * When enabled DataTables will not make a request to the server for the first
-		 * page draw - rather it will use the media already on the page (no sorting etc
+		 * page draw - rather it will use the data already on the page (no sorting etc
 		 * will be applied to it), thus saving on an XHR at load time. `deferLoading`
 		 * is used to indicate that deferred loading is required, but it is also used
 		 * to tell DataTables how many records there are in the full table (allowing
@@ -11189,7 +11189,7 @@
 	
 	
 		/**
-		 * Define the starting point for media display when using DataTables with
+		 * Define the starting point for data display when using DataTables with
 		 * pagination. Note that this parameter is the number of records, rather than
 		 * the page number, so if you have 10 records per page and want to start on
 		 * the third page, it should be "20".
@@ -11407,11 +11407,11 @@
 	
 			/**
 			 * This string is shown in preference to `zeroRecords` when the table is
-			 * empty of media (regardless of filtering). Note that this is an optional
+			 * empty of data (regardless of filtering). Note that this is an optional
 			 * parameter - if it is not given, the value of `zeroRecords` will be used
 			 * instead (either the default or given value).
 			 *  @type string
-			 *  @default No media available in table
+			 *  @default No data available in table
 			 *
 			 *  @dtopt Language
 			 *  @name DataTable.defaults.language.emptyTable
@@ -11420,12 +11420,12 @@
 			 *    $(document).ready( function() {
 			 *      $('#example').dataTable( {
 			 *        "language": {
-			 *          "emptyTable": "No media available in table"
+			 *          "emptyTable": "No data available in table"
 			 *        }
 			 *      } );
 			 *    } );
 			 */
-			"sEmptyTable": "No media available in table",
+			"sEmptyTable": "No data available in table",
 	
 	
 			/**
@@ -11440,7 +11440,7 @@
 			 * * `\_TOTAL\_` - Number of records in the table after filtering
 			 * * `\_MAX\_` - Number of records in the table without filtering
 			 * * `\_PAGE\_` - Current page number
-			 * * `\_PAGES\_` - Total number of pages of media in the table
+			 * * `\_PAGES\_` - Total number of pages of data in the table
 			 *
 			 *  @type string
 			 *  @default Showing _START_ to _END_ of _TOTAL_ entries
@@ -11622,11 +11622,11 @@
 	
 	
 			/**
-			 * When using Ajax sourced media and during the first draw when DataTables is
-			 * gathering the media, this message is shown in an empty row in the table to
-			 * indicate to the end user the the media is being loaded. Note that this
-			 * parameter is not used when loading media by server-side processing, just
-			 * Ajax sourced media with client-side processing.
+			 * When using Ajax sourced data and during the first draw when DataTables is
+			 * gathering the data, this message is shown in an empty row in the table to
+			 * indicate to the end user the the data is being loaded. Note that this
+			 * parameter is not used when loading data by server-side processing, just
+			 * Ajax sourced data with client-side processing.
 			 *  @type string
 			 *  @default Loading...
 			 *
@@ -11767,7 +11767,7 @@
 		 * the search string will be treated as a regular expression, when false
 		 * (default) it will be treated as a straight string. When `smart`
 		 * DataTables will use it's smart filtering methods (to word match at
-		 * any point in the media), when false this will not be done.
+		 * any point in the data), when false this will not be done.
 		 *  @namespace
 		 *  @extends DataTable.models.oSearch
 		 *
@@ -11788,13 +11788,13 @@
 		 * __Deprecated__ The functionality provided by this parameter has now been
 		 * superseded by that provided through `ajax`, which should be used instead.
 		 *
-		 * By default DataTables will look for the property `media` (or `aaData` for
-		 * compatibility with DataTables 1.9-) when obtaining media from an Ajax
+		 * By default DataTables will look for the property `data` (or `aaData` for
+		 * compatibility with DataTables 1.9-) when obtaining data from an Ajax
 		 * source or for server-side processing - this parameter allows that
 		 * property to be changed. You can use Javascript dotted object notation to
-		 * get a media source for multiple levels of nesting.
+		 * get a data source for multiple levels of nesting.
 		 *  @type string
-		 *  @default media
+		 *  @default data
 		 *
 		 *  @dtopt Options
 		 *  @dtopt Server-side
@@ -11809,8 +11809,8 @@
 		 * __Deprecated__ The functionality provided by this parameter has now been
 		 * superseded by that provided through `ajax`, which should be used instead.
 		 *
-		 * You can instruct DataTables to load media from an external
-		 * source using this parameter (use aData if you want to pass media in you
+		 * You can instruct DataTables to load data from an external
+		 * source using this parameter (use aData if you want to pass data in you
 		 * already have). Simply provide a url a JSON object can be obtained from.
 		 *  @type string
 		 *  @default null
@@ -11977,9 +11977,9 @@
 	
 		/**
 		 * Enable vertical scrolling. Vertical scrolling will constrain the DataTable
-		 * to the given height, and enable scrolling for any media which overflows the
+		 * to the given height, and enable scrolling for any data which overflows the
 		 * current viewport. This can be used as an alternative to paging to display
-		 * a lot of media in a small area (although paging and scrolling can both be
+		 * a lot of data in a small area (although paging and scrolling can both be
 		 * enabled at the same time). This property can be any CSS unit, or a number
 		 * (in which case it will be treated as a pixel measurement).
 		 *  @type string
@@ -12004,7 +12004,7 @@
 		 * superseded by that provided through `ajax`, which should be used instead.
 		 *
 		 * Set the HTTP method that is used to make the Ajax call for server-side
-		 * processing or Ajax sourced media.
+		 * processing or Ajax sourced data.
 		 *  @type string
 		 *  @default GET
 		 *
@@ -12036,7 +12036,7 @@
 	
 	
 		/**
-		 * Set the media property name that DataTables should use to get a row's id
+		 * Set the data property name that DataTables should use to get a row's id
 		 * to set as the `id` property in the node.
 		 *  @type string
 		 *  @default DT_RowId
@@ -12063,7 +12063,7 @@
 		/**
 		 * Define which column(s) an order will occur on for this column. This
 		 * allows a column's ordering to take multiple columns into account when
-		 * doing a sort or use the media from a different column. For example first
+		 * doing a sort or use the data from a different column. For example first
 		 * name / last name columns make sense to do a multi-column sort over the
 		 * two columns.
 		 *  @type array|int
@@ -12142,7 +12142,7 @@
 	
 	
 		/**
-		 * Enable or disable filtering on the media in this column.
+		 * Enable or disable filtering on the data in this column.
 		 *  @type boolean
 		 *  @default true
 		 *
@@ -12248,8 +12248,8 @@
 		 *  @type function
 		 *  @param {element} td The TD node that has been created
 		 *  @param {*} cellData The Data for the cell
-		 *  @param {array|object} rowData The media for the whole row
-		 *  @param {int} row The row index for the aoData media store
+		 *  @param {array|object} rowData The data for the whole row
+		 *  @param {int} row The row index for the aoData data store
 		 *  @param {int} col The column index for aoColumns
 		 *
 		 *  @name DataTable.defaults.column.createdCell
@@ -12273,71 +12273,71 @@
 	
 	
 		/**
-		 * This parameter has been replaced by `media` in DataTables to ensure naming
+		 * This parameter has been replaced by `data` in DataTables to ensure naming
 		 * consistency. `dataProp` can still be used, as there is backwards
 		 * compatibility in DataTables for this option, but it is strongly
-		 * recommended that you use `media` in preference to `dataProp`.
+		 * recommended that you use `data` in preference to `dataProp`.
 		 *  @name DataTable.defaults.column.dataProp
 		 */
 	
 	
 		/**
-		 * This property can be used to read media from any media source property,
-		 * including deeply nested objects / properties. `media` can be given in a
+		 * This property can be used to read data from any data source property,
+		 * including deeply nested objects / properties. `data` can be given in a
 		 * number of different ways which effect its behaviour:
 		 *
-		 * * `integer` - treated as an array index for the media source. This is the
+		 * * `integer` - treated as an array index for the data source. This is the
 		 *   default that DataTables uses (incrementally increased for each column).
-		 * * `string` - read an object property from the media source. There are
+		 * * `string` - read an object property from the data source. There are
 		 *   three 'special' options that can be used in the string to alter how
-		 *   DataTables reads the media from the source object:
+		 *   DataTables reads the data from the source object:
 		 *    * `.` - Dotted Javascript notation. Just as you use a `.` in
 		 *      Javascript to read from nested objects, so to can the options
-		 *      specified in `media`. For example: `browser.version` or
+		 *      specified in `data`. For example: `browser.version` or
 		 *      `browser.name`. If your object parameter name contains a period, use
 		 *      `\\` to escape it - i.e. `first\\.name`.
-		 *    * `[]` - Array notation. DataTables can automatically combine media
-		 *      from and array source, joining the media with the characters provided
+		 *    * `[]` - Array notation. DataTables can automatically combine data
+		 *      from and array source, joining the data with the characters provided
 		 *      between the two brackets. For example: `name[, ]` would provide a
 		 *      comma-space separated list from the source array. If no characters
 		 *      are provided between the brackets, the original array source is
 		 *      returned.
 		 *    * `()` - Function notation. Adding `()` to the end of a parameter will
 		 *      execute a function of the name given. For example: `browser()` for a
-		 *      simple function on the media source, `browser.version()` for a
+		 *      simple function on the data source, `browser.version()` for a
 		 *      function in a nested property or even `browser().version` to get an
 		 *      object property if the function called returns an object. Note that
 		 *      function notation is recommended for use in `render` rather than
-		 *      `media` as it is much simpler to use as a renderer.
-		 * * `null` - use the original media source for the row rather than plucking
-		 *   media directly from it. This action has effects on two other
+		 *      `data` as it is much simpler to use as a renderer.
+		 * * `null` - use the original data source for the row rather than plucking
+		 *   data directly from it. This action has effects on two other
 		 *   initialisation options:
-		 *    * `defaultContent` - When null is given as the `media` option and
+		 *    * `defaultContent` - When null is given as the `data` option and
 		 *      `defaultContent` is specified for the column, the value defined by
 		 *      `defaultContent` will be used for the cell.
-		 *    * `render` - When null is used for the `media` option and the `render`
-		 *      option is specified for the column, the whole media source for the
+		 *    * `render` - When null is used for the `data` option and the `render`
+		 *      option is specified for the column, the whole data source for the
 		 *      row is used for the renderer.
 		 * * `function` - the function given will be executed whenever DataTables
-		 *   needs to set or get the media for a cell in the column. The function
+		 *   needs to set or get the data for a cell in the column. The function
 		 *   takes three parameters:
 		 *    * Parameters:
-		 *      * `{array|object}` The media source for the row
-		 *      * `{string}` The type call media requested - this will be 'set' when
-		 *        setting media or 'filter', 'display', 'type', 'sort' or undefined
-		 *        when gathering media. Note that when `undefined` is given for the
-		 *        type DataTables expects to get the raw media for the object back<
+		 *      * `{array|object}` The data source for the row
+		 *      * `{string}` The type call data requested - this will be 'set' when
+		 *        setting data or 'filter', 'display', 'type', 'sort' or undefined
+		 *        when gathering data. Note that when `undefined` is given for the
+		 *        type DataTables expects to get the raw data for the object back<
 		 *      * `{*}` Data to set when the second parameter is 'set'.
 		 *    * Return:
 		 *      * The return value from the function is not required when 'set' is
 		 *        the type of call, but otherwise the return is what will be used
-		 *        for the media requested.
+		 *        for the data requested.
 		 *
-		 * Note that `media` is a getter and setter option. If you just require
-		 * formatting of media for output, you will likely want to use `render` which
+		 * Note that `data` is a getter and setter option. If you just require
+		 * formatting of data for output, you will likely want to use `render` which
 		 * is simply a getter and thus simpler to use.
 		 *
-		 * Note that prior to DataTables 1.9.2 `media` was called `mDataProp`. The
+		 * Note that prior to DataTables 1.9.2 `data` was called `mDataProp`. The
 		 * name change reflects the flexibility of this property and is consistent
 		 * with the naming of mRender. If 'mDataProp' is given, then it will still
 		 * be used by DataTables, as it automatically maps the old name to the new
@@ -12350,7 +12350,7 @@
 		 *  @dtopt Columns
 		 *
 		 *  @example
-		 *    // Read table media from objects
+		 *    // Read table data from objects
 		 *    // JSON structure for each row:
 		 *    //   {
 		 *    //      "engine": {value},
@@ -12363,11 +12363,11 @@
 		 *      $('#example').dataTable( {
 		 *        "ajaxSource": "sources/objects.txt",
 		 *        "columns": [
-		 *          { "media": "engine" },
-		 *          { "media": "browser" },
-		 *          { "media": "platform" },
-		 *          { "media": "version" },
-		 *          { "media": "grade" }
+		 *          { "data": "engine" },
+		 *          { "data": "browser" },
+		 *          { "data": "platform" },
+		 *          { "data": "version" },
+		 *          { "data": "grade" }
 		 *        ]
 		 *      } );
 		 *    } );
@@ -12389,23 +12389,23 @@
 		 *      $('#example').dataTable( {
 		 *        "ajaxSource": "sources/deep.txt",
 		 *        "columns": [
-		 *          { "media": "engine" },
-		 *          { "media": "browser" },
-		 *          { "media": "platform.inner" },
-		 *          { "media": "platform.details.0" },
-		 *          { "media": "platform.details.1" }
+		 *          { "data": "engine" },
+		 *          { "data": "browser" },
+		 *          { "data": "platform.inner" },
+		 *          { "data": "platform.details.0" },
+		 *          { "data": "platform.details.1" }
 		 *        ]
 		 *      } );
 		 *    } );
 		 *
 		 *  @example
-		 *    // Using `media` as a function to provide different information for
+		 *    // Using `data` as a function to provide different information for
 		 *    // sorting, filtering and display. In this case, currency (price)
 		 *    $(document).ready( function() {
 		 *      $('#example').dataTable( {
 		 *        "columnDefs": [ {
 		 *          "targets": [ 0 ],
-		 *          "media": function ( source, type, val ) {
+		 *          "data": function ( source, type, val ) {
 		 *            if (type === 'set') {
 		 *              source.price = val;
 		 *              // Store the computed dislay and filter values for efficiency
@@ -12432,7 +12432,7 @@
 		 *      $('#example').dataTable( {
 		 *        "columnDefs": [ {
 		 *          "targets": [ 0 ],
-		 *          "media": null,
+		 *          "data": null,
 		 *          "defaultContent": "Click to edit"
 		 *        } ]
 		 *      } );
@@ -12444,7 +12444,7 @@
 		 *      $('#example').dataTable( {
 		 *        "columnDefs": [ {
 		 *          "targets": [ 0 ],
-		 *          "media": "name[, ]"
+		 *          "data": "name[, ]"
 		 *        } ]
 		 *      } );
 		 *    } );
@@ -12454,57 +12454,57 @@
 	
 	
 		/**
-		 * This property is the rendering partner to `media` and it is suggested that
-		 * when you want to manipulate media for display (including filtering,
-		 * sorting etc) without altering the underlying media for the table, use this
+		 * This property is the rendering partner to `data` and it is suggested that
+		 * when you want to manipulate data for display (including filtering,
+		 * sorting etc) without altering the underlying data for the table, use this
 		 * property. `render` can be considered to be the the read only companion to
-		 * `media` which is read / write (then as such more complex). Like `media`
+		 * `data` which is read / write (then as such more complex). Like `data`
 		 * this option can be given in a number of different ways to effect its
 		 * behaviour:
 		 *
-		 * * `integer` - treated as an array index for the media source. This is the
+		 * * `integer` - treated as an array index for the data source. This is the
 		 *   default that DataTables uses (incrementally increased for each column).
-		 * * `string` - read an object property from the media source. There are
+		 * * `string` - read an object property from the data source. There are
 		 *   three 'special' options that can be used in the string to alter how
-		 *   DataTables reads the media from the source object:
+		 *   DataTables reads the data from the source object:
 		 *    * `.` - Dotted Javascript notation. Just as you use a `.` in
 		 *      Javascript to read from nested objects, so to can the options
-		 *      specified in `media`. For example: `browser.version` or
+		 *      specified in `data`. For example: `browser.version` or
 		 *      `browser.name`. If your object parameter name contains a period, use
 		 *      `\\` to escape it - i.e. `first\\.name`.
-		 *    * `[]` - Array notation. DataTables can automatically combine media
-		 *      from and array source, joining the media with the characters provided
+		 *    * `[]` - Array notation. DataTables can automatically combine data
+		 *      from and array source, joining the data with the characters provided
 		 *      between the two brackets. For example: `name[, ]` would provide a
 		 *      comma-space separated list from the source array. If no characters
 		 *      are provided between the brackets, the original array source is
 		 *      returned.
 		 *    * `()` - Function notation. Adding `()` to the end of a parameter will
 		 *      execute a function of the name given. For example: `browser()` for a
-		 *      simple function on the media source, `browser.version()` for a
+		 *      simple function on the data source, `browser.version()` for a
 		 *      function in a nested property or even `browser().version` to get an
 		 *      object property if the function called returns an object.
-		 * * `object` - use different media for the different media types requested by
+		 * * `object` - use different data for the different data types requested by
 		 *   DataTables ('filter', 'display', 'type' or 'sort'). The property names
-		 *   of the object is the media type the property refers to and the value can
+		 *   of the object is the data type the property refers to and the value can
 		 *   defined using an integer, string or function using the same rules as
 		 *   `render` normally does. Note that an `_` option _must_ be specified.
 		 *   This is the default value to use if you haven't specified a value for
-		 *   the media type requested by DataTables.
+		 *   the data type requested by DataTables.
 		 * * `function` - the function given will be executed whenever DataTables
-		 *   needs to set or get the media for a cell in the column. The function
+		 *   needs to set or get the data for a cell in the column. The function
 		 *   takes three parameters:
 		 *    * Parameters:
-		 *      * {array|object} The media source for the row (based on `media`)
-		 *      * {string} The type call media requested - this will be 'filter',
+		 *      * {array|object} The data source for the row (based on `data`)
+		 *      * {string} The type call data requested - this will be 'filter',
 		 *        'display', 'type' or 'sort'.
-		 *      * {array|object} The full media source for the row (not based on
-		 *        `media`)
+		 *      * {array|object} The full data source for the row (not based on
+		 *        `data`)
 		 *    * Return:
 		 *      * The return value from the function is what will be used for the
-		 *        media requested.
+		 *        data requested.
 		 *
 		 *  @type string|int|function|object|null
-		 *  @default null Use the media source value.
+		 *  @default null Use the data source value.
 		 *
 		 *  @name DataTable.defaults.column.render
 		 *  @dtopt Columns
@@ -12515,10 +12515,10 @@
 		 *      $('#example').dataTable( {
 		 *        "ajaxSource": "sources/deep.txt",
 		 *        "columns": [
-		 *          { "media": "engine" },
-		 *          { "media": "browser" },
+		 *          { "data": "engine" },
+		 *          { "data": "browser" },
 		 *          {
-		 *            "media": "platform",
+		 *            "data": "platform",
 		 *            "render": "[, ].name"
 		 *          }
 		 *        ]
@@ -12526,20 +12526,20 @@
 		 *    } );
 		 *
 		 *  @example
-		 *    // Execute a function to obtain media
+		 *    // Execute a function to obtain data
 		 *    $(document).ready( function() {
 		 *      $('#example').dataTable( {
 		 *        "columnDefs": [ {
 		 *          "targets": [ 0 ],
-		 *          "media": null, // Use the full media source object for the renderer's source
+		 *          "data": null, // Use the full data source object for the renderer's source
 		 *          "render": "browserName()"
 		 *        } ]
 		 *      } );
 		 *    } );
 		 *
 		 *  @example
-		 *    // As an object, extracting different media for the different types
-		 *    // This would be used with a media source such as:
+		 *    // As an object, extracting different data for the different types
+		 *    // This would be used with a data source such as:
 		 *    //   { "phone": 5552368, "phone_filter": "5552368 555-2368", "phone_display": "555-2368" }
 		 *    // Here the `phone` integer is used for sorting and type detection, while `phone_filter`
 		 *    // (which has both forms) is used for filtering for if a user inputs either format, while
@@ -12548,7 +12548,7 @@
 		 *      $('#example').dataTable( {
 		 *        "columnDefs": [ {
 		 *          "targets": [ 0 ],
-		 *          "media": null, // Use the full media source object for the renderer's source
+		 *          "data": null, // Use the full data source object for the renderer's source
 		 *          "render": {
 		 *            "_": "phone",
 		 *            "filter": "phone_filter",
@@ -12559,14 +12559,14 @@
 		 *    } );
 		 *
 		 *  @example
-		 *    // Use as a function to create a link from the media source
+		 *    // Use as a function to create a link from the data source
 		 *    $(document).ready( function() {
 		 *      $('#example').dataTable( {
 		 *        "columnDefs": [ {
 		 *          "targets": [ 0 ],
-		 *          "media": "download_link",
-		 *          "render": function ( media, type, full ) {
-		 *            return '<a href="'+media+'">Download</a>';
+		 *          "data": "download_link",
+		 *          "render": function ( data, type, full ) {
+		 *            return '<a href="'+data+'">Download</a>';
 		 *          }
 		 *        } ]
 		 *      } );
@@ -12668,9 +12668,9 @@
 	
 	
 		/**
-		 * Allows a default value to be given for a column's media, and will be used
-		 * whenever a null media source is encountered (this can be because `media`
-		 * is set to null, or because the media source itself is null).
+		 * Allows a default value to be given for a column's data, and will be used
+		 * whenever a null data source is encountered (this can be because `data`
+		 * is set to null, or because the data source itself is null).
 		 *  @type string
 		 *  @default null
 		 *
@@ -12683,7 +12683,7 @@
 		 *      $('#example').dataTable( {
 		 *        "columnDefs": [
 		 *          {
-		 *            "media": null,
+		 *            "data": null,
 		 *            "defaultContent": "Edit",
 		 *            "targets": [ -1 ]
 		 *          }
@@ -12700,7 +12700,7 @@
 		 *          null,
 		 *          null,
 		 *          {
-		 *            "media": null,
+		 *            "data": null,
 		 *            "defaultContent": "Edit"
 		 *          }
 		 *        ]
@@ -12755,7 +12755,7 @@
 	
 	
 		/**
-		 * Defines a media source type for the ordering which can be used to read
+		 * Defines a data source type for the ordering which can be used to read
 		 * real-time information from the table (updating the internally cached
 		 * version) prior to ordering. This allows ordering to occur on user
 		 * editable elements such as form inputs.
@@ -12833,7 +12833,7 @@
 	
 	
 		/**
-		 * The type allows you to specify how the media for this column will be
+		 * The type allows you to specify how the data for this column will be
 		 * ordered. Four types (string, numeric, date and html (which will strip
 		 * HTML tags before ordering)) are currently available. Note that only date
 		 * formats understood by Javascript's Date() object will be accepted as type
@@ -12841,7 +12841,7 @@
 		 * 'numeric', 'date' or 'html' (by default). Further types can be adding
 		 * through plug-ins.
 		 *  @type string
-		 *  @default null <i>Auto-detected from raw media</i>
+		 *  @default null <i>Auto-detected from raw data</i>
 		 *
 		 *  @name DataTable.defaults.column.type
 		 *  @dtopt Columns
@@ -12917,7 +12917,7 @@
 	
 	/**
 	 * DataTables settings object - this holds all the information needed for a
-	 * given table, including configuration, media and current application of the
+	 * given table, including configuration, data and current application of the
 	 * table options. DataTables does not have a single instance for each DataTable
 	 * with the settings attached to that instance, but rather instances of the
 	 * DataTable "class" are created on-the-fly as needed (typically by a
@@ -12925,7 +12925,7 @@
 	 * instance.
 	 *
 	 * Note that this object is related to {@link DataTable.defaults} but this
-	 * one is the internal media store for DataTables's cache of columns. It should
+	 * one is the internal data store for DataTables's cache of columns. It should
 	 * NOT be manipulated outside of DataTables. Any configuration should be done
 	 * through the initialisation options.
 	 *  @namespace
@@ -12956,7 +12956,7 @@
 			/**
 			 * Delay the creation of TR and TD elements until they are actually
 			 * needed by a driven page draw. This can give a significant speed
-			 * increase for Ajax source and Javascript source media, but makes no
+			 * increase for Ajax source and Javascript source data, but makes no
 			 * difference at all fro DOM and server-side processing tables.
 			 * Note that this parameter will be set by the initialisation routine. To
 			 * set a default use {@link DataTable.defaults}.
@@ -13012,7 +13012,7 @@
 	
 			/**
 			 * Server-side processing enabled flag - when enabled DataTables will
-			 * get all media from the server for every draw - there is no filtering,
+			 * get all data from the server for every draw - there is no filtering,
 			 * sorting or paging done on the client-side.
 			 * Note that this parameter will be set by the initialisation routine. To
 			 * set a default use {@link DataTable.defaults}.
@@ -13180,7 +13180,7 @@
 		"aanFeatures": [],
 	
 		/**
-		 * Store media information - see {@link DataTable.models.oRow} for detailed
+		 * Store data information - see {@link DataTable.models.oRow} for detailed
 		 * information.
 		 *  @type array
 		 *  @default []
@@ -13202,7 +13202,7 @@
 		"aiDisplayMaster": [],
 	
 		/**
-		 * Map of row ids to media indexes
+		 * Map of row ids to data indexes
 		 *  @type object
 		 *  @default {}
 		 */
@@ -13413,7 +13413,7 @@
 		"nTableWrapper": null,
 	
 		/**
-		 * Indicate if when using server-side processing the loading of media
+		 * Indicate if when using server-side processing the loading of data
 		 * should be deferred until the second draw.
 		 * Note that this parameter will be set by the initialisation routine. To
 		 * set a default use {@link DataTable.defaults}.
@@ -13515,7 +13515,7 @@
 		"oLoadedState": null,
 	
 		/**
-		 * Source url for AJAX media for the table.
+		 * Source url for AJAX data for the table.
 		 * Note that this parameter will be set by the initialisation routine. To
 		 * set a default use {@link DataTable.defaults}.
 		 *  @type string
@@ -13524,7 +13524,7 @@
 		"sAjaxSource": null,
 	
 		/**
-		 * Property from a given object from which to read the table media from. This
+		 * Property from a given object from which to read the table data from. This
 		 * can be an empty string (when not server-side processing), in which case
 		 * it is  assumed an an array is given directly.
 		 * Note that this parameter will be set by the initialisation routine. To
@@ -13534,14 +13534,14 @@
 		"sAjaxDataProp": null,
 	
 		/**
-		 * Note if draw should be blocked while getting media
+		 * Note if draw should be blocked while getting data
 		 *  @type boolean
 		 *  @default true
 		 */
 		"bAjaxDataGet": true,
 	
 		/**
-		 * The last jQuery XHR object that was used for server-side media gathering.
+		 * The last jQuery XHR object that was used for server-side data gathering.
 		 * This can be used for working with the XHR information in one of the
 		 * callbacks
 		 *  @type object
@@ -13564,7 +13564,7 @@
 		"oAjaxData": undefined,
 	
 		/**
-		 * Function to get the server-side media.
+		 * Function to get the server-side data.
 		 * Note that this parameter will be set by the initialisation routine. To
 		 * set a default use {@link DataTable.defaults}.
 		 *  @type function
@@ -13621,7 +13621,7 @@
 		"bDrawing": false,
 	
 		/**
-		 * Draw index (iDraw) of the last error when parsing the returned media
+		 * Draw index (iDraw) of the last error when parsing the returned data
 		 *  @type int
 		 *  @default -1
 		 */
@@ -13819,7 +13819,7 @@
 		"oPlugins": {},
 	
 		/**
-		 * Function used to get a row's id from the row's media
+		 * Function used to get a row's id from the row's data
 		 *  @type function
 		 *  @default null
 		 */
@@ -13946,7 +13946,7 @@
 		 * searching, and a lot more comprehensive as it allows you complete control
 		 * over the searching logic. Each element in this array is a function
 		 * (parameters described below) that is called for every row in the table,
-		 * and your logic decides if it should be included in the searching media set
+		 * and your logic decides if it should be included in the searching data set
 		 * or not.
 		 *
 		 * Searching functions have the following input parameters:
@@ -13954,8 +13954,8 @@
 		 * 1. `{object}` DataTables settings object: see
 		 *    {@link DataTable.models.oSettings}
 		 * 2. `{array|object}` Data for the row to be processed (same as the
-		 *    original format that was passed in as the media source, or an array
-		 *    from a DOM media source
+		 *    original format that was passed in as the data source, or an array
+		 *    from a DOM data source
 		 * 3. `{int}` Row index ({@link DataTable.models.oSettings.aoData}), which
 		 *    can be useful to retrieve the `TR` element if you need DOM interaction.
 		 *
@@ -13973,13 +13973,13 @@
 		 *
 		 *  @example
 		 *    // The following example shows custom search being applied to the
-		 *    // fourth column (i.e. the media[3] index) based on two input values
-		 *    // from the end-user, matching the media in a certain range.
+		 *    // fourth column (i.e. the data[3] index) based on two input values
+		 *    // from the end-user, matching the data in a certain range.
 		 *    $.fn.dataTable.ext.search.push(
-		 *      function( settings, media, dataIndex ) {
+		 *      function( settings, data, dataIndex ) {
 		 *        var min = document.getElementById('min').value * 1;
 		 *        var max = document.getElementById('max').value * 1;
-		 *        var version = media[3] == "-" ? 0 : media[3]*1;
+		 *        var version = data[3] == "-" ? 0 : data[3]*1;
 		 *
 		 *        if ( min == "" && max == "" ) {
 		 *          return true;
@@ -14004,7 +14004,7 @@
 		 * Selector extensions
 		 *
 		 * The `selector` option can be used to extend the options available for the
-		 * selector modifier options (`selector-modifier` object media type) that
+		 * selector modifier options (`selector-modifier` object data type) that
 		 * each of the three built in selector types offer (row, column and cell +
 		 * their plural counterparts). For example the Select extension uses this
 		 * mechanism to provide an option to select only rows, columns and cells
@@ -14117,21 +14117,21 @@
 	
 	
 		/**
-		 * Ordering plug-ins - custom media source
+		 * Ordering plug-ins - custom data source
 		 * 
-		 * The extension options for ordering of media available here is complimentary
+		 * The extension options for ordering of data available here is complimentary
 		 * to the default type based ordering that DataTables typically uses. It
-		 * allows much greater control over the the media that is being used to
+		 * allows much greater control over the the data that is being used to
 		 * order a column, but is necessarily therefore more complex.
 		 * 
-		 * This type of ordering is useful if you want to do ordering based on media
+		 * This type of ordering is useful if you want to do ordering based on data
 		 * live from the DOM (for example the contents of an 'input' element) rather
 		 * than just the static string that DataTables knows of.
 		 * 
 		 * The way these plug-ins work is that you create an array of the values you
 		 * wish to be ordering for the column in question and then return that
-		 * array. The media in the array much be in the index order of the rows in
-		 * the table (not the currently ordering order!). Which order media gathering
+		 * array. The data in the array much be in the index order of the rows in
+		 * the table (not the currently ordering order!). Which order data gathering
 		 * function is run here depends on the `dt-init columns.orderDataType`
 		 * parameter that is used for the column (if any).
 		 *
@@ -14175,7 +14175,7 @@
 			 *
 			 * The functions defined in this object are used to automatically detect
 			 * a column's type, making initialisation of DataTables super easy, even
-			 * when complex media is in the table.
+			 * when complex data is in the table.
 			 *
 			 * The functions defined take two parameters:
 			 *
@@ -14196,14 +14196,14 @@
 			 *  @example
 			 *    // Currency type detection plug-in:
 			 *    $.fn.dataTable.ext.type.detect.push(
-			 *      function ( media, settings ) {
+			 *      function ( data, settings ) {
 			 *        // Check the numeric part
-			 *        if ( ! $.isNumeric( media.substring(1) ) ) {
+			 *        if ( ! $.isNumeric( data.substring(1) ) ) {
 			 *          return null;
 			 *        }
 			 *
 			 *        // Check prefixed by currency
-			 *        if ( media.charAt(0) == '$' || media.charAt(0) == '&pound;' ) {
+			 *        if ( data.charAt(0) == '$' || data.charAt(0) == '&pound;' ) {
 			 *          return 'currency';
 			 *        }
 			 *        return null;
@@ -14217,21 +14217,21 @@
 			 * Type based search formatting.
 			 *
 			 * The type based searching functions can be used to pre-format the
-			 * media to be search on. For example, it can be used to strip HTML
+			 * data to be search on. For example, it can be used to strip HTML
 			 * tags or to de-format telephone numbers for numeric only searching.
 			 *
 			 * Note that is a search is not defined for a column of a given type,
 			 * no search formatting will be performed.
 			 * 
-			 * Pre-processing of searching media plug-ins - When you assign the sType
+			 * Pre-processing of searching data plug-ins - When you assign the sType
 			 * for a column (or have it automatically detected for you by DataTables
 			 * or a type detection plug-in), you will typically be using this for
 			 * custom sorting, but it can also be used to provide custom searching
-			 * by allowing you to pre-processing the media and returning the media in
+			 * by allowing you to pre-processing the data and returning the data in
 			 * the format that should be searched upon. This is done by adding
 			 * functions this object with a parameter name which matches the sType
 			 * for that target column. This is the corollary of <i>afnSortData</i>
-			 * for searching media.
+			 * for searching data.
 			 *
 			 * The functions defined take a single parameter:
 			 *
@@ -14672,7 +14672,7 @@
 				attach( $(host).empty(), buttons );
 	
 				if ( activeEl !== undefined ) {
-					$(host).find( '[media-dt-idx='+activeEl+']' ).focus();
+					$(host).find( '[data-dt-idx='+activeEl+']' ).focus();
 				}
 			}
 		}
@@ -14967,8 +14967,8 @@
 	 * The options defined here can be used with the `columns.render` initialisation
 	 * option to provide a display renderer. The following functions are defined:
 	 *
-	 * * `number` - Will format numeric media (defined by `columns.media`) for
-	 *   display, retaining the original unformatted media for sorting and filtering.
+	 * * `number` - Will format numeric data (defined by `columns.data`) for
+	 *   display, retaining the original unformatted data for sorting and filtering.
 	 *   It takes 5 parameters:
 	 *   * `string` - Thousands grouping separator
 	 *   * `string` - Decimal point indicator
@@ -14981,7 +14981,7 @@
 	 * @example
 	 *   // Column definition using the number renderer
 	 *   {
-	 *     media: "salary",
+	 *     data: "salary",
 	 *     render: $.fn.dataTable.render.number( '\'', '.', 0, '$' )
 	 *   }
 	 *
@@ -15217,13 +15217,13 @@
 
 	/**
 	 * DataTables initialisation complete event, fired when the table is fully
-	 * drawn, including Ajax media loaded, if Ajax media is required.
+	 * drawn, including Ajax data loaded, if Ajax data is required.
 	 *  @name DataTable#init.dt
 	 *  @event
 	 *  @param {event} e jQuery event object
 	 *  @param {object} oSettings DataTables settings object
 	 *  @param {object} json The JSON object request from the server - only
-	 *    present if client-side Ajax sourced media is used</li></ol>
+	 *    present if client-side Ajax sourced data is used</li></ol>
 	 */
 
 	/**
@@ -15240,7 +15240,7 @@
 
 	/**
 	 * State load event, fired when the table is loading state from the stored
-	 * media, but prior to the settings object being modified by the saved state
+	 * data, but prior to the settings object being modified by the saved state
 	 * - allowing modification of the saved state is required or loading of
 	 * state for a plug-in.
 	 *  @name DataTable#stateLoadParams.dt
@@ -15251,8 +15251,8 @@
 	 */
 
 	/**
-	 * State loaded event, fired when state has been loaded from stored media and
-	 * the settings object has been modified by the loaded media.
+	 * State loaded event, fired when state has been loaded from stored data and
+	 * the settings object has been modified by the loaded data.
 	 *  @name DataTable#stateLoaded.dt
 	 *  @event
 	 *  @param {event} e jQuery event object
@@ -15274,9 +15274,9 @@
 
 	/**
 	 * Ajax (XHR) event, fired whenever an Ajax request is completed from a
-	 * request to made to the server for new media. This event is called before
-	 * DataTables processed the returned media, so it can also be used to pre-
-	 * process the media returned from the server, if needed.
+	 * request to made to the server for new data. This event is called before
+	 * DataTables processed the returned data, so it can also be used to pre-
+	 * process the data returned from the server, if needed.
 	 *
 	 * Note that this trigger is called in `fnServerData`, if you override
 	 * `fnServerData` and which to use this event, you need to trigger it in you
@@ -15294,12 +15294,12 @@
 	 *     } );
 	 *
 	 *  @example
-	 *     // Pre-process the media returned from the server
+	 *     // Pre-process the data returned from the server
 	 *     $('#table').dataTable().on('xhr.dt', function (e, settings, json) {
 	 *       for ( var i=0, ien=json.aaData.length ; i<ien ; i++ ) {
 	 *         json.aaData[i].sum = json.aaData[i].one + json.aaData[i].two;
 	 *       }
-	 *       // Note no return - manipulate the media directly in the JSON object.
+	 *       // Note no return - manipulate the data directly in the JSON object.
 	 *     } );
 	 */
 
