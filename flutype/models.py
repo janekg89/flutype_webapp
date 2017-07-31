@@ -23,7 +23,7 @@ from flutype_webapp.settings import MEDIA_ROOT
 
 fs = FileSystemStorage(location=MEDIA_ROOT)
 
-
+# TODO: remove this from the model. It is confusing
 class User(models.Model):
     """
     User model
