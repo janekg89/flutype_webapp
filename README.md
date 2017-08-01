@@ -1,4 +1,4 @@
-<img alt="flutype logo" src="./docs/images/flutype-logo.png" />
+<img alt="flutype logo" src="./docs/logo/flutype-logo-v3.png" height="75"/>
 
 # flutype webapp
 ## Introduction
