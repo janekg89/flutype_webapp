@@ -27,6 +27,7 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.db import models
 
+CHAR_MAX_LENGTH = 50
 
 class OverwriteStorage(FileSystemStorage):
     """
@@ -101,12 +102,12 @@ class Peptide(models.Model):
     """
     Pepide model
     """
-    sid= models.CharField(max_length=15, null=True)
-    linker = models.CharField(max_length=50, blank=True, null=True)
-    spacer = models.CharField(max_length=50, blank=True, null=True)
-    sequence = models.CharField(max_length=50, blank=True, null=True)
-    c_terminus = models.CharField(max_length=50, blank=True, null=True)
-    name = models.CharField(max_length=50, blank=True, null=True)
+    sid= models.CharField(max_length=CHAR_MAX_LENGTH, null=True)
+    linker = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    spacer = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    sequence = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    c_terminus = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     pep_type = models.CharField(max_length=5,choices=PeptideType.choices, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
 
@@ -117,11 +118,11 @@ class Virus(models.Model):
 
     sid is the taxonomy id
     """
-    sid = models.CharField(max_length=15, blank=True, null=True)
-    subgroup = models.CharField(max_length=50, blank=True, null=True)
-    country = models.CharField(max_length=50, blank=True, null=True)
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    subgroup = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    country = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     date_of_appearance = models.CharField(max_length=10, blank=True, null=True)
-    strain = models.CharField(max_length=50, blank=True, null=True)
+    strain = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
 
 
 class Batch(models.Model):
@@ -130,7 +131,7 @@ class Batch(models.Model):
     """
     concentration = models.FloatField(validators=[MinValueValidator(0)],
                                       blank=True, null=True)
-    buffer = models.CharField(max_length=20,choices=Buffer.choices, blank=True, null=True)
+    buffer = models.CharField(max_length=CHAR_MAX_LENGTH,choices=Buffer.choices, blank=True, null=True)
     ph = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(14)],
                            blank=True, null=True)
     purity = models.FloatField(validators=[MinValueValidator(0)],
@@ -146,18 +147,18 @@ class VirusBatch(Batch):
     """
     Virus batch model
     """
-    sid = models.CharField(max_length=20, blank=True, null=True)
-    virus = models.ForeignKey(Virus,blank=True, null=True)
-    passage_history = models.CharField(max_length=50, blank= True ,null=True)
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    virus = models.ForeignKey(Virus, blank=True, null=True)
+    passage_history = models.CharField(max_length=CHAR_MAX_LENGTH, blank= True ,null=True)
     active = models.NullBooleanField(blank=True, null=True)
-    labeling = models.CharField(max_length=50, blank=True,null=True)
+    labeling = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True,null=True)
 
 
 class PeptideBatch(Batch):
     """
     peptide batch model
     """
-    sid = models.CharField(max_length=20)
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
     peptide = models.ForeignKey(Peptide, blank=True, null=True)
 
 
@@ -165,8 +166,8 @@ class PeptideBatch(Batch):
 
 
 class Treatment(models.Model):
-    sid = models.CharField(max_length=10,null=True, blank=True)
-    method = models.CharField(max_length=50, null=True, blank=True)
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH,null=True, blank=True)
+    method = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     order = models.IntegerField(blank=True, null=True)
     date_time = models.DateTimeField(null=True, blank=True)
     user = models.ForeignKey(User, null=True, blank=True)
@@ -177,12 +178,12 @@ class Treatment(models.Model):
 
 
 class Washing(Treatment):
-    substance = models.CharField(max_length=50, null=True, blank=True)
+    substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
 
 
 class Drying(Treatment):
-    substance = models.CharField(max_length=50, null=True, blank=True)
+    substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
 
 
@@ -197,7 +198,7 @@ class Incubating(Treatment):
 
 class Quenching(Treatment):
     duration = models.DurationField(null=True, blank=True)
-    substance = models.CharField(max_length=50, null=True, blank=True)
+    substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
 
 
 class Process(models.Model):
@@ -211,12 +212,12 @@ class Process(models.Model):
 
 
 class GalVirus(models.Model):
-    sid = models.CharField(max_length=20)
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
     file = models.FileField(upload_to="gal_vir", null=True, blank=True, storage=OverwriteStorage())
 
 
 class GalLigand(models.Model):
-    sid = models.CharField(max_length=20)
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
     file = models.FileField(upload_to="gal_lig", null=True, blank=True, storage=OverwriteStorage())
 
 
@@ -224,11 +225,11 @@ class RawSpotCollection(models.Model):
     """
     A collection of raw spots: Information for a Collection of Spots collected at once for one microarray, one microwellplate
     """
-    sid = models.CharField(max_length=20)
-    batch = models.CharField(max_length=20, null=True, blank=True)
-    holder_type = models.CharField(max_length=20, choices=HolderType.choices)
-    functionalization = models.CharField(max_length=20,choices=Substance.choices)
-    manufacturer = models.CharField(max_length=20, choices=Manufacturer.choices)
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
+    batch = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
+    holder_type = models.CharField(max_length=CHAR_MAX_LENGTH, choices=HolderType.choices)
+    functionalization = models.CharField(max_length=CHAR_MAX_LENGTH,choices=Substance.choices)
+    manufacturer = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Manufacturer.choices)
     image = models.ImageField(upload_to="image", null=True, blank=True, storage=OverwriteStorage())
 
     gal_virus = models.ForeignKey(GalVirus,null=True, blank=True)
@@ -273,10 +274,10 @@ class RawSpotCollection(models.Model):
 
 
 class SpotCollection(models.Model):
-    sid = models.CharField(max_length=20)
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
     raw_spot_collection = models.ForeignKey(RawSpotCollection)
     image2numeric_version = models.FloatField(default=0.1)
-    processing_type = models.CharField(max_length=30,
+    processing_type = models.CharField(max_length=CHAR_MAX_LENGTH,
                                        choices=ProcessingType.choices,
                                        blank=True,
                                        null=True)
