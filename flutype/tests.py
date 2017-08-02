@@ -14,7 +14,6 @@ class ViewTestCase(TestCase):
         # only create once
         create_users(user_defs=user_defs)
 
-
     def tearDown(self):
         create_users(user_defs=None, delete_all=True)
 
