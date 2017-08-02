@@ -8,6 +8,8 @@ import re
 from flutype_analysis import utils, analysis
 import pandas as pd
 import numpy as np
+from django.core.files import File
+
 # setup django (add current path to sys.path)
 path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../'))
 
@@ -45,7 +47,6 @@ class Master(object):
         :param data_tables_dic:
         :return:
         """
-
         if not os.path.exists( self.data_tables_path):
             os.makedirs(self.data_tables_path)
 
@@ -72,14 +73,34 @@ class Master(object):
         :param collection_id:
         :return:
         """
+        fname, _ = self.get_unique_gal_lig(gal_ligand_data)
 
-        file_path = os.path.join(self.collections_path, collection_id, "gal_ligand.csv")
+        file_path = os.path.join(self.collections_path, collection_id, fname)
         gal_ligand_data.to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
 
-    def read_gal_ligand(self, collection_id):
-        gal_lig_f = os.path.join(self.collections_path,collection_id, "gal_ligand.csv")
-        gal_ligand = pd.read_csv(gal_lig_f, sep='\t', index_col="ID")
-        return gal_ligand
+
+    def read_gal_ligand(self, collection_id, format="pd"):
+        """
+
+        :param collection_id:
+        :param format: "pd": read as panadas dataFrame
+                       "dj":  django File ("rb")
+        :return:
+        """
+        collection_path = os.path.join(self.collections_path, collection_id)
+        for fn in os.listdir(collection_path):
+            result = re.search( 'lig(.*).txt', fn)
+            if bool(result):
+                f_name = fn
+                break
+        gal_lig_f = os.path.join(self.collections_path,collection_id,f_name)
+        if format == "pd":
+            gal_ligand = pd.read_csv(gal_lig_f, sep='\t', index_col="ID")
+        elif format=="dj":
+            gal_ligand = open(gal_lig_f, "rb")
+        else:
+            LookupError("format name wrong")
+        return gal_ligand, f_name
 
 
     def create_or_update_gal_virus(self,gal_virus_data,collection_id):
@@ -90,13 +111,34 @@ class Master(object):
         :return:
         """
 
-        file_path = os.path.join(self.collections_path, collection_id, "gal_virus.csv")
+        #file_path = os.path.join(self.collections_path, collection_id, "gal_virus.csv")
+        fname, _ = self.get_unique_gal_vir(gal_virus_data)
+        file_path = os.path.join(self.collections_path, collection_id, fname)
+
         gal_virus_data.to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
 
-    def read_gal_virus(self, collection_id):
-        gal_lig_f = os.path.join(self.collections_path,collection_id, "gal_virus.csv")
-        gal_virus = pd.read_csv(gal_lig_f, sep='\t', index_col="ID")
-        return gal_virus
+    def read_gal_virus(self, collection_id,format="pd"):
+        """
+
+        :param collection_id:
+        :param format:  "pd": read as panadas dataFrame
+                        "dj":  django File ("rb")
+        :return:
+        """
+        collection_path = os.path.join(self.collections_path, collection_id)
+        for fn in os.listdir(collection_path):
+            result = re.search('vir(.*).txt', fn)
+            if bool(result):
+                f_name = fn
+                break
+        gal_lig_f = os.path.join(self.collections_path,collection_id,f_name)
+        if format == "pd":
+            gal_virus = pd.read_csv(gal_lig_f, sep='\t', index_col="ID")
+        elif format == "dj":
+            gal_virus= open(gal_lig_f, "rb")
+        else:
+            LookupError("format name wrong")
+        return gal_virus, f_name
 
 
     def create_or_update_meta(self,meta_data,collection_id):
@@ -127,9 +169,20 @@ class Master(object):
         cv2.imwrite(path_file, image_data)
 
 
-    def read_image(self, collection_id):
+    def read_image(self, collection_id, format="cv2"):
+        """
+
+        :param collection_id:
+        :param format: cv2
+                       dj
+        :return:
+        """
         path_file = os.path.join(self.collections_path,collection_id,"image.jpg")
-        return cv2.imread(path_file,0)
+        if format == "cv2":
+            return cv2.imread(path_file,0)
+        elif format == "dj":
+            return File(open(path_file, "rb"))
+
 
     def create_or_update_intensity(self, intensity_data, collection_id,q_collection_id):
         """
@@ -145,7 +198,7 @@ class Master(object):
 
     def read_intensity(self,collection_id,q_collection_id):
         file_path = os.path.join(self.collections_path,  collection_id,q_collection_id, "intensity.csv")
-        return pd.read_csv(file_path, sep='\t', encoding='utf-8')
+        return pd.read_csv(file_path, sep='\t', index_col=0)
 
 
 
@@ -163,7 +216,7 @@ class Master(object):
 
     def read_std(self,collection_id,q_collection_id):
         file_path = os.path.join(self.collections_path, collection_id, q_collection_id, "std.csv")
-        return pd.read_csv(file_path, sep="\t", encoding='utf-8')
+        return pd.read_csv(file_path, sep="\t", index_col=0)
 
 
 
@@ -238,14 +291,18 @@ class Master(object):
 
         elif type == "microwell":
 
-            if q_collection_id == "not":
+            if q_collection_id == "raw":
                 #saves raw data
+
+
                 self.create_or_update_gal_ligand(dic_data["gal_ligand"], collection_id)
                 self.create_or_update_gal_virus(dic_data["gal_virus"], collection_id)
                 self.create_or_update_meta(dic_data["meta"], collection_id)
                 if "intensity" in dic_data:
+                    if not os.path.exists(q_collection_path):
+                        os.makedirs(q_collection_path)
                     self.create_or_update_intensity(dic_data["intensity"], collection_id=collection_id,
-                                                    q_collection_id=".")
+                                                    q_collection_id=q_collection_id)
 
         elif quantified_only:
             # creates path to quantified collection if not yet present
@@ -291,7 +348,7 @@ class Master(object):
 
 
 
-    def read_collection(self,collection_id):
+    def read_raw_collection(self, collection_id):
         """
         reads data of one collection in the master folder.
         :param collection:
@@ -299,38 +356,59 @@ class Master(object):
                            "quantified collection name"  -> reads also collection with "quantified collection name"
         :param only_quantified: reads only  quantified collection (required:queantfied ="quantified collection name")
         :return: dic_data: a dictionary containing one of the following keys. Their values contain the corresponding data:
-                              keys (values):    gal_ligand   (pandas.DataFrame -> Columns: "Row", "Column", "Name")
-                                                gal_virus    (pandas.DataFrame -> Columns: "Row", "Column", "Name")
+                              keys (values):    gal_ligand   (pandas.DataFrame -> Columns: "Row", "Column", "Name")  or (Django File)
+                                                gal_virus    (pandas.DataFrame -> Columns: "Row", "Column", "Name")  or (Django File)
                                                 meta         (dictionary -> keys with corresponding value go to meta.csv)
-                                                image        (cv2 image file in grayscale)
+                                                image        (cv2 image file in grayscale) or (Django File)
+                                                intensity    (pandas.DataFrame)
                                                 data         (pandas.DataFrame -> Columns: "Columns" Index:"Row" Value: Intenstities)
                                                 std          (pandas.DataFrame -> Columns: "Columns" Index:"Row" Value: Standard deviation)
         """
         dic_data = {}
         dic_data["meta"]=self.read_meta(collection_id)
-        dic_data["gal_ligand"] = self.read_gal_ligand(collection_id)
-        dic_data["gal_virus"] = self.read_gal_virus(collection_id)
+        dic_data["gal_ligand"] = self.read_gal_ligand(collection_id, format="dj")
+        dic_data["gal_virus"] = self.read_gal_virus(collection_id, format="dj")
         #FIXME: IF dic_data["meta"][holdertype]=microarray ...
         # or think how to show and or store rawcollection/quantified colelction.
         try:
-            dic_data["image"] =  self.read_image(collection_id)
+            dic_data["image"] =  self.read_image(collection_id,format="dj")
         except:
             pass
         try:
             dic_data["intensity"] = self.read_intensity(collection_id,".")
         except:
             pass
+        return dic_data
+
+    def read_dic_spots(self, collection_id):
+        dic_data = {}
+        dic_data["gal_ligand"] = self.read_gal_ligand(collection_id)[0]
+        dic_data["gal_virus"] = self.read_gal_virus(collection_id)[0]
+        dic_data["meta"] = self.read_meta(collection_id)
+
+
+        return dic_data
+
 
 
     def read_q_collection(self,collection_id, q_collection_id):
         #FIXME: Read q_meta
         dic_data = {}
+        dic_data["gal_ligand"] = self.read_gal_ligand(collection_id)[0]
+        dic_data["gal_virus"] = self.read_gal_virus(collection_id)[0]
+        dic_data["meta"] = self.read_meta(collection_id)
         dic_data["intensity"] = self.read_intensity(collection_id,q_collection_id)
         try:
             dic_data["std"] = self.read_std(collection_id,q_collection_id)
         except:
             pass
         return dic_data
+
+    def read_all_q_collection_ids_for_collection(self,collection_id):
+        collection_path = os.path.join(self.collections_path,collection_id)
+        q_collections = next(os.walk(collection_path))[1]
+        return q_collections
+
 
 
 
@@ -386,6 +464,30 @@ class Master(object):
             gal_lig.to_csv(fpath, sep='\t')
         return fname, fpath, created
 
+    def get_unique_gal_lig(self,gal_lig):
+        for fn in os.listdir(self.unique_lig_gal_path):
+            file_path = os.path.join(self.unique_lig_gal_path, fn)
+            # reads the matching file
+            gal_ligand_master = pd.read_csv(file_path, sep='\t', index_col="ID")
+            if gal_lig.equals(gal_ligand_master):
+                fname = fn
+                fpath = os.path.join(self.unique_lig_gal_path, fname)
+                return fname, fpath
+        return IOError("unique_gal_lig not found")
+
+
+
+
+    def get_unique_gal_vir(self, gal_vir):
+        for fn in os.listdir(self.unique_vir_gal_path):
+            file_path = os.path.join(self.unique_vir_gal_path, fn)
+            # reads the matching file
+            gal_virus_master = pd.read_csv(file_path, sep='\t', index_col="ID")
+            if gal_vir.equals(gal_virus_master):
+                fname = fn
+                fpath = os.path.join(self.unique_lig_gal_path, fname)
+                return fname, fpath
+        return IOError("unique_gal_lig not found")
 
     def create_or_update_unique_gal_vir(self, gal_vir):
         """
@@ -473,22 +575,34 @@ if __name__ == "__main__":
             dic_data["std"] = dic_data.pop("data_std")
         return dic_data
 
+    # fill master/data_tables
+    path_formular_db = "media/forumular_db/"
+    # loads data tabels information from formular
+    data_tables_dic = load_db_from_formular(path_formular_db)
+    # saves data tables
+    ma.write_data_tables(data_tables_dic)
+
 
     for collection_id in microarray_collection_ids:
 
-        print(os.path.abspath(PATTERN_DIR_MICROARRAY.format(collection_id)))
 
         #loading gal_vi,gal_pep, picture,data, data_std
         dic_data = utils.load_data(collection_id, PATTERN_DIR_MICROARRAY.format(collection_id))
+
         #renaming keys
         dic_data = rename_dic(dic_data)
+
         #loading procedure data from formular
         dic_data["meta"] = load_procedure_data(PATTERN_DIR_MICROARRAY.format(collection_id))
-        # saving microarray collection data
-        ma.create_or_update_collection(collection_id, dic_data, q_collection_id="q001", quantified_only=False, type="microarray")
+
         # get_or_create_unique_ligand / unique_virus .
+        #important !!!! unique_gal_vir must be created before creating collection !!!!!
         ma.create_or_update_unique_gal_vir(dic_data["gal_virus"])
         ma.create_or_update_unique_gal_lig(dic_data["gal_ligand"])
+
+        # saving microarray collection data
+        ma.create_or_update_collection(collection_id, dic_data, q_collection_id="q001", quantified_only=False, type="microarray")
+
 
 
     for collection_id in microwell_collection_ids:
@@ -499,21 +613,19 @@ if __name__ == "__main__":
         dic_data = rename_dic(dic_data)
         #loading procedure data from formular
         dic_data["meta"] = load_procedure_data(PATTERN_DIR_MICROWELL.format(collection_id))
-        ######## saving microwell plate collection data
-        ma.create_or_update_collection(collection_id, dic_data, q_collection_id = "not",
-                                                                    quantified_only=False, type="microwell")
-
         # get_or_create_unique_ligand / unique_virus .
+        #important !!!! unique_gal_vir must be created before creating collection !!!!!
         ma.create_or_update_unique_gal_vir(dic_data["gal_virus"])
         ma.create_or_update_unique_gal_lig(dic_data["gal_ligand"])
 
+        # saving microwell plate collection data
+        ma.create_or_update_collection(collection_id, dic_data, q_collection_id = "raw",
+                                                                    quantified_only=False, type="microwell")
 
-    # fill master/data_tables
-    path_formular_db = "media/forumular_db/"
-    #loads data tabels information from formular
-    data_tables_dic = load_db_from_formular(path_formular_db)
-    #saves data tables
-    ma.write_data_tables(data_tables_dic)
+
+
+
+
 
 
 

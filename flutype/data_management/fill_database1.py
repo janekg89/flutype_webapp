@@ -37,14 +37,13 @@ from flutype.models import (Peptide,
                             Quenching,
                             Incubating,
                             Process,
-                            GalPeptide,
+                            GalLigand,
                             GalVirus)
 
 class Database(object):
     """
     """
-    def __init__(self):
-        self.type = "sqlite"
+
 
     def create_or_update_virus(self, virus):
         vir, created = Virus.objects.get_or_create(subgroup=virus["SubGroup"],
@@ -189,55 +188,305 @@ class Database(object):
         print ("quenching:", any(created_q))
         print ("incubating:", any(created_i))
 
-    def fill_collection(self,collection):
-        pass
+    def fill_process(self,meta):
+        """
+
+        :param meta: (dictionary -> keys with corresponding value ->  meta.csv)
+                    keys :Manfacturer
+                          HolderType
+                          Spotting
+                          HolderBatch
+                          Incubating
+                          SID
+                          SurfaceSubstance
+                          Quenching
+
+
+        :return: process (Django.model object), created (True if created, False if found)
+        """
+        try:
+            spotting = Spotting.objects.get(sid=meta["Spotting"])
+        except:
+            spotting = None
+        try:
+            incubating = Incubating.objects.get(sid=meta["Incubating"])
+        except:
+            incubating = None
+        try:
+            quenching = Quenching.objects.get(sid=meta["Quenching"])
+        except:
+            quenching = None
+
+        process, created = Process.objects.get_or_create(spotting=spotting,
+                                                         incubating=incubating,
+                                                         quenching=quenching)
+        return process, created
 
 
 
+    def fill_raw_collection(self,dic_data):
+        """
+         :param  dic_data: a dictionary containing one of the following keys. Their values contain the corresponding data:
+                            keys (data_format):     gal_ligand    tuple (Django File, fname)
+                                                    gal_virus     tuple (Django File, fname)
+                                                    meta          (dictionary -> keys with corresponding value go to meta.csv)
+                                                    image         Django File
 
 
 
+        :return:
+        """
+        print("-" * 80)
+        print("Filling Collection with sid <{}>".format(dic_data["meta"]["SID"]))
+
+        process, priocess_created = self.fill_process(dic_data["meta"])
+        gal_vir, gal_vir_created = self.fill_gal_vir(dic_data["gal_virus"][0],dic_data["gal_virus"][1])
+        gal_lig, gal_lig_created = self.fill_gal_lig(dic_data["gal_ligand"][0],dic_data["gal_ligand"][1])
+
+
+        # gets or creates raw_spot_collection
+        raw_spot_collection, _ = RawSpotCollection.objects.get_or_create(sid=dic_data["meta"]["SID"],
+                                                                             batch=dic_data["meta"]["HolderBatch"],
+                                                                             holder_type=dic_data["meta"]["HolderType"],
+                                                                             functionalization=dic_data["meta"]['SurfaceSubstance'],
+                                                                             manufacturer=dic_data["meta"]['Manfacturer'],
+                                                                             gal_ligand=gal_lig,
+                                                                             gal_virus=gal_vir,
+                                                                             process=process)
+        if "image" in dic_data:
+            raw_spot_collection.image.save(dic_data["meta"]["SID"]+".jpg", dic_data["image"])
+
+
+    def fill_spot_collection(self, collection_id, q_collection_id):
+        """
+                                                            intensity     (pandas.DataFrame -> Columns: "Columns" Index:"Row" Value: Intenstities)
+
+        :param collection:
+        :param q_collection:
+        :return:
+        """
+        raw_spot_collection = RawSpotCollection.objects.get(sid=collection_id)
+        spot_collection, created = SpotCollection.objects.get_or_create(sid=q_collection_id,
+                                                                        raw_spot_collection=raw_spot_collection
+                                                                        )
+
+        return spot_collection ,created, raw_spot_collection
+
+    def fill_raw_spot(self, collection_id, raw_spot):
+
+        raw_spot_collection = RawSpotCollection.objects.get(sid=collection_id)
+
+
+        raw_spot, created = RawSpot.objects.get_or_create(peptide_batch=PeptideBatch.objects.get(sid=raw_spot["Ligand"]),
+                                                          virus_batch=VirusBatch.objects.get(sid=raw_spot["Virus"]),
+                                                          raw_spot_collection=raw_spot_collection,
+                                                          column=raw_spot["Column"],
+                                                          row=raw_spot["Row"]
+                                                          )
+        return raw_spot, created
+
+    def fill_spot(self, raw_spot,spot_collection, spot):
+        spo,created = Spot.objects.get_or_create(raw_spot=raw_spot,
+                                          intensity=spot["Intensity"],
+                                          std=spot["Std"],
+                                          spot_collection=spot_collection)
+        return spo, created
+
+
+
+    def fill_gal_lig(self,gal_lig, fname_gal_lig):
+        """
+
+        :param  fname_gal_lig: name of _gal_ligand
+        :param  gal_lig: gal ligand (django File format !)
+        :return: gal_ligand, created
+        """
+
+        try:
+            gal_ligand = GalLigand.objects.get(sid=fname_gal_lig)
+            created = False
+        except:
+            gal_ligand, created = GalLigand.objects.get_or_create(sid=fname_gal_lig)
+            gal_ligand.file.save(fname_gal_lig, File(gal_lig))
+
+        return gal_ligand, created
+
+
+    def fill_gal_vir(self, gal_vir, fname_gal_vir):
+        """
+
+        :param fname_gal_vir: name of gal_vir
+        :param gal_vir : (django File format !)
+        :return: gal_virus, created
+
+        """
+
+        try:
+            gal_virus = GalVirus.objects.get(sid=fname_gal_vir)
+            created = False
+        except:
+            gal_virus, created = GalVirus.objects.get_or_create(sid=fname_gal_vir)
+            gal_virus.file.save(fname_gal_vir, File(gal_vir))
+
+        return gal_virus, created
+
+
+    def get_peptide_set(self,RawSpotCollection):
+        """
+        :return: a set of peptides which were used in RawSpotCollection
+        """
+        raw_spots = RawSpotCollection.rawspot_set.all()
+        unique_peptide_sid = []
+
+        for raw_spot in raw_spots:
+            if raw_spot.peptide_batch.peptide.sid in unique_peptide_sid:
+                pass
+            else:
+                unique_peptide_sid.append(raw_spot.peptide_batch.peptide.sid)
+        return unique_peptide_sid
+
+    def get_virus_set(self,RawSpotCollection):
+        """
+        :return: a set of viruses which were used in RawSpotCollection
+        """
+        raw_spots = RawSpotCollection.rawspot_set.all()
+        unique_virus_sid = []
+
+        for raw_spot in raw_spots:
+            virus = raw_spot.virus_batch.virus
+            if not hasattr(virus, 'sid'):
+                warnings.warn(
+                    "No connection between virus and virus batch for virus_batch: {}".format(raw_spot.virus_batch.sid))
+            else:
+                if virus.sid in unique_virus_sid:
+                    pass
+                else:
+                    unique_virus_sid.append(raw_spot.virus_batch.virus.sid)
+        return unique_virus_sid
+
+    def get_spots_of_collection(self, dic_data):
+
+        vir_cor = dic_data["gal_virus"].pivot(index="Row", columns="Column", values="Name")
+        pep_cor = dic_data["gal_ligand"].pivot(index="Row", columns="Column", values="Name")
+
+        # merge raw  spot information.
+        vir_cor_unstacked = vir_cor.unstack()
+        spot = pep_cor.unstack()
+        spot = spot.reset_index()
+        spot = spot.rename(columns={0: "Ligand"})
+        spot["Virus"] = vir_cor_unstacked.values
+        if "intensity" in dic_data:
+            spot["Intensity"]= dic_data["intensity"].unstack().values
+
+        if "std" in dic_data:
+            spot["Std"] = dic_data["std"].unstack().values
+        else:
+            spot["Std"] = None
+
+        return spot
+
+
+    def fillmany2many_rawspots_peptides_viruses(self):
+            for rsc in RawSpotCollection.objects.all():
+                virus_ids = self.get_virus_set(rsc)
+                peptide_ids = self.get_peptide_set(rsc)
+
+                for virus_id in virus_ids:
+                    try:
+                        rsc.viruses.add(Virus.objects.get(sid=virus_id))
+                    except:
+                        pass
+                for peptide_id in peptide_ids:
+                    try:
+                        rsc.peptides.add(Peptide.objects.get(sid=peptide_id))
+                    except:
+                        pass
+
+    def fill_raw_collection_and_related_raw_spots(self, dic_data, dic_spots):
+
+        db.fill_raw_collection(dic_data)
+        # fill raw spots
+        raw_spots = db.get_spots_of_collection(dic_spots)
+        for k, raw_spot in raw_spots.iterrows():
+            db.fill_raw_spot(dic_data["meta"]["SID"], raw_spot)
+
+
+
+    def fill_q_collection_and_related_spots(self, dic_data_q, q_collection_id):
+
+        spot_collection, created, raw_spot_collection = db.fill_spot_collection(dic_data_q["meta"]["SID"],
+                                                                                q_collection_id)
+        spots = db.get_spots_of_collection(dic_data_q)
+        for k, spot in spots.iterrows():
+            raw_spo = RawSpot.objects.get(raw_spot_collection=raw_spot_collection,
+                                          column=spot["Column"],
+                                          row=spot["Row"]
+                                          )
+            self.fill_spot(raw_spot=raw_spo, spot_collection=spot_collection, spot=spot)
 
 
 
 
 if __name__ == "__main__":
-
-
-
     # the path to the master folder
     path_master = "master/"
-    ma = Master(path_master)
+
+
 
 
     # all sid of microarray collections
-    microarray_collection_ids = ["2017-05-19_E5_X31",
-                                 "2017-05-19_E6_untenliegend_X31",
-                                 "2017-05-19_N5_X31",
-                                 "2017-05-19_N6_Pan",
-                                 "2017-05-19_N9_X31",
-                                 "2017-05-19_N10_Pan",
-                                 "2017-05-19_N11_Cal",
-                                 "flutype_test",
-                                 "P6_170613_Cal",
-                                 "P5_170612_X31",
-                                 "P3_170612_X31",
-                                 "2017-05-19_N7_Cal"
-                                 ]
+    collection_ids = ["2017-05-19_E5_X31",
+                      "2017-05-19_E6_untenliegend_X31",
+                      "2017-05-19_N5_X31",
+                      "2017-05-19_N6_Pan",
+                      "2017-05-19_N9_X31",
+                      "2017-05-19_N10_Pan",
+                      "2017-05-19_N11_Cal",
+                      "flutype_test",
+                      "P6_170613_Cal",
+                      "P5_170612_X31",
+                      "P3_170612_X31",
+                      "2017-05-19_N7_Cal",
+                      "2017-05-12_MTP_R1",
+                      "2017-06-13_MTP"
+                      ]
                                  
-    # all sids of microwell collections
-    microwell_collection_ids = ["2017-05-12_MTP_R1",
-                                "2017-06-13_MTP"
-                                ]
+
 
     print("-" * 80)
     print("Filling database")
     print("-" * 80)
-    #loads data_tables
-    data_tables = ma.read_datatables()
+
+    # loads data_tables
+    ma = Master(path_master)
+
     db = Database()
+    data_tables = ma.read_datatables()
     db.fill_dt(data_tables)
 
 
-    # collections = next(os.walk(self.collection_path))[1]
+
+
+    #loads collection
+    for collection_id in collection_ids:
+        #fill raw collection
+        dic_data_dj = ma.read_raw_collection(collection_id)
+        dic_spots = ma.read_dic_spots(collection_id)
+        db.fill_raw_collection_and_related_raw_spots(dic_data_dj, dic_spots)
+        #fill_q_collection
+        q_collection_ids = ma.read_all_q_collection_ids_for_collection(collection_id)
+        for q_collection_id in q_collection_ids:
+            dic_data_q = ma.read_q_collection(collection_id,q_collection_id)
+            db.fill_q_collection_and_related_spots(dic_data_q, q_collection_id)
+
+
+
+
+
+
+    #many 2many relation
+    db.fillmany2many_rawspots_peptides_viruses()
+
+
+
 

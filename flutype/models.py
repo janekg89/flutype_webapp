@@ -197,9 +197,9 @@ class GalVirus(models.Model):
     sid = models.CharField(max_length=20)
     file = models.FileField(upload_to="gal_vir", null=True, blank=True)
 
-class GalPeptide(models.Model):
+class GalLigand(models.Model):
     sid = models.CharField(max_length=20)
-    file = models.FileField(upload_to="gal_pep", null=True, blank=True)
+    file = models.FileField(upload_to="gal_lig", null=True, blank=True)
 
 
 class RawSpotCollection(models.Model):
@@ -211,9 +211,9 @@ class RawSpotCollection(models.Model):
     holder_type = models.CharField(max_length=20, choices=HolderType.choices)
     functionalization = models.CharField(max_length=20,choices=Substance.choices)
     manufacturer = models.CharField(max_length=20,choices=Manufacturer.choices)
-    image = models.ImageField(upload_to="scan",null=True, blank=True)
+    image = models.ImageField(upload_to="image",null=True, blank=True)
     gal_virus = models.ForeignKey(GalVirus,null=True, blank=True)
-    gal_peptide = models.ForeignKey(GalPeptide,null=True, blank=True)
+    gal_ligand = models.ForeignKey(GalLigand, null=True, blank=True)
     process = models.ForeignKey(Process,blank=True, null=True)
     viruses = models.ManyToManyField(Virus)
     peptides = models.ManyToManyField(Peptide)
@@ -232,11 +232,11 @@ class RawSpotCollection(models.Model):
         column = []
         pep_name = []
         vir_name = []
-        for spot in self.rawspot_set.all():
-            row.append(spot.row)
-            column.append(spot.column)
-            pep_name.append(spot.peptide_batch.sid)
-            vir_name.append(spot.virus_batch.sid)
+        for raw_spot in self.rawspot_set.all():
+            row.append(raw_spot.row)
+            column.append(raw_spot.column)
+            pep_name.append(raw_spot.peptide_batch.sid)
+            vir_name.append(raw_spot.virus_batch.sid)
 
         data = pd.DataFrame(row, columns=["Row"])
         data["Column"] = column
@@ -254,14 +254,17 @@ class RawSpotCollection(models.Model):
 
 
 class SpotCollection(models.Model):
+    sid= models.CharField(max_length=20)
     raw_spot_collection = models.ForeignKey(RawSpotCollection)
     image2numeric_version = models.FloatField(default=0.1)
     processing_type = models.CharField(max_length=30,
                                        choices=ProcessingType.choices,
                                        blank=True,
                                        null=True)
-    comment= models.TextField(default="The Intesity values are calcualted as the total intensity over a spot containing square."
-                                      " The data_tables is not preprocessed.")
+    comment= models.TextField(default="A spot detecting script has located the spots in the image."
+                                      "The spots are centered in a larger square."
+                                      "The Intesity values are calculated as the total intensity over that square. "
+                                      "The image is not preprocessed.")
 
     def analysis(self):
         """ Returns the analysis object."""
@@ -286,7 +289,7 @@ class SpotCollection(models.Model):
         vir_data["Name"] = vir_name
         d["gal_vir"] = vir_data.copy()
         d["gal_pep"] = pep_data.copy()
-        d["data_tables"] = data.pivot(index="Row", columns="Column", values="intensity")
+        d["data"] = data.pivot(index="Row", columns="Column", values="intensity")
         ana = analysis.Analysis(d)
 
         return ana
@@ -306,7 +309,7 @@ class RawSpot(models.Model):
     raw_spot_collection = models.ForeignKey(RawSpotCollection)
     column = models.IntegerField()
     row = models.IntegerField()
-    replica = models.IntegerField(null=True, blank=True)
+
 
 
     class Meta:

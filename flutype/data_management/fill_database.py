@@ -36,7 +36,7 @@ from flutype.models import (Peptide,
                             Quenching,
                             Incubating,
                             Process,
-                            GalPeptide,
+                            GalLigand,
                             GalVirus,
                             SpotCollection)
 
@@ -379,9 +379,9 @@ class DBFill(object):
 
         pep_name,pep_path_true, _ = DBFill.get_or_create_gal_pep(pep_path, data)
         try:
-            galpep=GalPeptide.objects.get(sid=pep_name)
+            galpep=GalLigand.objects.get(sid=pep_name)
         except:
-            galpep,_=GalPeptide.objects.get_or_create(sid=pep_name)
+            galpep,_=GalLigand.objects.get_or_create(sid=pep_name)
             galpep.file.save(pep_name, File(open(pep_path_true, "r")))
 
 

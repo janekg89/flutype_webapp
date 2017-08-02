@@ -171,9 +171,9 @@ def load_procedure_data(directory):
     name_array = name.to_array()
     name_array = np.array(name_array)
     dic_all={"Spotting": name_array[9,0],"Quenching":name_array[21,0],"Incubating":name_array[33,0]}
-    dic_microarray = {"SID": name_array[0,1],"Charge":name_array[1,1],"SurfaceSubstance":name_array[2,1],
+    dic_microarray = {"SID": name_array[0,1],"HolderBatch":name_array[1,1],"SurfaceSubstance":name_array[2,1],
          "Manfacturer": name_array[3,1]}
-    dic_microwell = {"SID": name_array[0,7],"Charge":name_array[1,6],"SurfaceSubstance":name_array[2,7],
+    dic_microwell = {"SID": name_array[0,7],"HolderBatch":name_array[1,6],"SurfaceSubstance":name_array[2,7],
          "Manfacturer": name_array[3,7]}
     if any(dic_microarray.values()):
         print("Sample Holder is a microarray.")
