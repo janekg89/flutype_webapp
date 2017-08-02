@@ -9,4 +9,5 @@ opencv-python
 Pillow == 4.1.1
 gunicorn
 psycopg2
+jinja2
 
