@@ -26,60 +26,37 @@
                     <th>Comment</th>
                 </tr>
                 </thead>
-
                 <tbody>
                 {% for virusbatch in virus_batches %}
                     <tr>
-                        <td class="warning">
-                            <b>{{ virusbatch.sid|default_if_none:"" }}</b>
-                        </td>
+                        <td class="warning"><b>{{ virusbatch.sid }}</b></td>
+
                         <!-- virus information -->
-                        <td class="danger">
-                            {{ virusbatch.virus.sid|default_if_none:"" }}
-                        </td>
-                        <td class="danger">
-                            {{ virusbatch.virus.subgroup|default_if_none:"" }}
-                        </td>
-                        <td class="danger">
-                            {{ virusbatch.virus.country|default_if_none:"" }}
-                        </td>
-                        <td class="danger">
-                            {{ virusbatch.virus.date_of_appearance|default_if_none:"" }}
-                        </td>
-                        <td class="danger">
-                            {{ virusbatch.virus.strain|default_if_none:"" }}
-                        </td>
+                        {%  with v=virusbatch.virus %}
+                        {% if v %}
+                        <td class="danger">{{ v.sid }}</td>
+                        <td class="danger">{{ v.subgroup }}</td>
+                        <td class="danger">{{ v.country }}</td>
+                        <td class="danger">{{ v.date_of_appearance }}</td>
+                        <td class="danger">{{ v.strain }}</td>
+                        {%  else %}
+                            {% for k in range(5) %}
+                        <td class="danger">-</td>
+                            {% endfor %}
+                        {% endif %}
+                        {%  endwith %}
+
                         <!-- virus batch information -->
-                        <td>
-                            {{ virusbatch.passage_history|default_if_none:"" }}
-                        </td>
-                        <td>
-                            {{ virusbatch.active|default_if_none:"" }}
-                        </td>
-                        <td>
-                            {{ virusbatch.labeling|default_if_none:"" }}
-                        </td>
-                        <td>
-                            {{ virusbatch.concentration|default_if_none:"" }}
-                        </td>
-                        <td>
-                            {{ virusbatch.buffer|default_if_none:"" }}
-                        </td>
-                        <td>
-                            {{ virusbatch.ph|default_if_none:"" }}
-                        </td>
-                        <td>
-                            {{ virusbatch.purity|default_if_none:"" }}
-                        </td>
-                        <td>
-                            {{ virusbatch.produced_by|default_if_none:"" }}
-                        </td>
-                        <td>
-                            {{ virusbatch.production_date|default_if_none:"" }}
-                        </td>
-                        <td>
-                            {{ virusbatch.comment|default_if_none:"" }}
-                        </td>
+                        <td>{{ virusbatch.passage_history }}</td>
+                        <td>{{ virusbatch.active }}</td>
+                        <td>{{ virusbatch.labeling }}</td>
+                        <td>{{ virusbatch.concentration }}</td>
+                        <td>{{ virusbatch.buffer }}</td>
+                        <td>{{ virusbatch.ph }}</td>
+                        <td>{{ virusbatch.purity }}</td>
+                        <td>{{ virusbatch.produced_by }}</td>
+                        <td>{{ virusbatch.production_date }}</td>
+                        <td>{{ virusbatch.comment }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>

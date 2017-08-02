@@ -1,3 +1,6 @@
+{% load static from staticfiles %}
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,21 +8,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Flutype Web Database">
     <meta name="author" content="Janek and Matthias Koenig">
-    <link rel="icon" href="{{ static('flutype/images/flutype.ico') }}">
+    <link rel="icon" href="{% static 'flutype/images/flutype.ico' %}">
     <title>FluType</title>
 
     <!-- CSS -->
-    <link rel="stylesheet" type="text/css" href="{{ static('flutype/css/bootstrap.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ static('flutype/js/datatables.min.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ static('flutype/css/DataTables-1.10.15/css/dataTables.bootstrap.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ static('flutype/font-awesome-4.2.0/css/font-awesome.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ static('flutype/css/custom.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'flutype/css/bootstrap.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'flutype/js/datatables.min.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'flutype/css/DataTables-1.10.15/css/dataTables.bootstrap.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'flutype/font-awesome-4.2.0/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'flutype/css/custom.css' %}"/>
 
     <!-- JS -->
-    <script type="text/javascript" src="{{ static('flutype/js/jquery-3.2.1.min.js') }}"></script>
-    <script type="text/javascript" src="{{ static('flutype/js/tether-1.4.0.min.js') }}"></script>
-    <script type="text/javascript" src="{{ static('flutype/js/bootstrap.min.js') }}"></script>
-    <script type="text/javascript" src="{{ static('flutype/js/datatables-1.10.15.min.js') }}"></script>
+    <script type="text/javascript" src="{% static 'flutype/js/jquery-3.2.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'flutype/js/tether-1.4.0.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'flutype/js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'flutype/js/datatables-1.10.15.min.js' %}"></script>
 </head>
 <body>
 
@@ -34,37 +37,37 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="nav navbar-nav" href="{{ url('index') }}">
-                <img style="width:50px" src="{{ static('flutype/images/flutype-logo.png') }}"></a>
+            <a class="nav navbar-nav" href="{% url "index" %}">
+                <img style="width:50px" src="{% static "flutype/images/flutype-logo.png" %}"></a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                {% if request.user.is_authenticated %}
-                    <li class="active"><a href="{{ url('index') }}"><i class="fa fa-building fa-fw"></i> Experiments <span
+                {% if user.is_authenticated %}
+                    <li class="active"><a href="{% url "index" %}"><i class="fa fa-building fa-fw"></i> Experiments <span
                             class="sr-only">(current)</span></a></li>
-                    <li class="active"><a href="{{ url('peptidebatches') }}">Peptide Batches <span class="sr-only">(current)</span></a></li>
-                    <li class="active"><a href="{{ url('peptides') }}">Peptides <span
+                    <li class="active"><a href="{% url "peptidebatches" %}">Peptide Batches <span class="sr-only">(current)</span></a></li>
+                    <li class="active"><a href="{% url "peptides" %}">Peptides <span
                             class="sr-only">(current)</span></a></li>
-                    <li class="active"><a href="{{ url('virusbatches') }}">Virus Batches <span
+                    <li class="active"><a href="{% url "virusbatches" %}">Virus Batches <span
                             class="sr-only">(current)</span></a></li>
-                    <li class="active"><a href="{{ url('viruses') }}">Viruses <span class="sr-only">(current)</span></a>
+                    <li class="active"><a href="{% url "viruses" %}">Viruses <span class="sr-only">(current)</span></a>
                     </li>
-                    <li class="active"><a href="{{ url('users') }}"><i class="fa fa-group fa-fw"></i> Users <span class="sr-only">(current)</span></a></li>
+                    <li class="active"><a href="{% url "users" %}"><i class="fa fa-group fa-fw"></i> Users <span class="sr-only">(current)</span></a></li>
                 {% endif %}
-                <li class="active"><a href="{{ url('about') }}"><i class="fa fa-info fa-fw"></i> About <span class="sr-only">(current)</span></a></li>
+                <li class="active"><a href="{% url "about" %}"><i class="fa fa-info fa-fw"></i> About <span class="sr-only">(current)</span></a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
                 <li class="active"> <a href="http://cloud.flutype.de/owncloud"><i class="fa fa-cloud fa-fw"></i> Cloud</a>
                 <li class="active"> <a href="https://github.com/janekg89/flutype_webapp"><i class="fa fa-github fa-fw"></i> Github</a>
-                {% if request.user.is_authenticated %}
-                    <li class="active"><a><i class="fa fa-user fa-fw"></i> {{ request.user.get_username() }}</a>
+                {% if user.is_authenticated %}
+                    <li class="active"><a><i class="fa fa-user fa-fw"></i> {{ user.get_username }}</a>
                     </li>
-                    <li class="active"><a href="{{ url('logout') }}?next={{ request.path }}"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
+                    <li class="active"><a href="{% url 'logout' %}?next={{ request.path }}"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
                 {% else %}
-                    <li class="active"><a href="{{ url('login') }}?next={{ request.path }}"><i class="fa fa-sign-in fa-fw"></i> Login</a></li>
+                    <li class="active"><a href="{% url 'login' %}?next={{ request.path }}"><i class="fa fa-sign-in fa-fw"></i> Login</a></li>
                 {% endif %}
             </ul>
         </div><!-- /.navbar-collapse -->

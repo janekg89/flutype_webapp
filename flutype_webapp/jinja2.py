@@ -14,15 +14,19 @@ def environment(**options):
     """ Environment definition for jinja2. """
 
     def f_finalize(arg):
-        print(type(arg), ':', arg)
-        if arg is None:
-            return '<None>'
+        """ Finalize hook to handle None arguments for template.
+
+        :param arg:
+        :return:
+        """
+        return arg if arg is not None else '-'
 
     options['trim_blocks'] = True
     options['lstrip_blocks'] = True
     options['finalize'] = f_finalize
-    options['bytecode_cache'] = True
-    print(options)
+
+    # not yet supported
+    # options['bytecode_cache'] = True
 
     env = Environment(**options)
     env.globals.update({
