@@ -1,4 +1,4 @@
-<img alt="flutype logo" src="./docs/images/flutype-logo.png" />
+<img alt="flutype logo" src="./docs/logo/flutype-logo-v3.png" height="75"/>
 
 # flutype webapp
 ## Introduction
@@ -24,7 +24,7 @@ right click `db.sqlite3` -> As Data Source
 
 
 ## Docker container
-Install docker via `docker-ce` on the system.
+Install docker via `docker-ce` and `docker-compose` on the system.
 
 Run the app via
 ```
