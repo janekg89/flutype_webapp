@@ -144,7 +144,6 @@ def heatmap_view(request, pk):
     # from matplotlib.figure import Figure
     # fig = Figure(**kwargs)
 
-
     fig = ana.heatmap(heatmap=True, descript=False, figsize=(10, 15))
 
     canvas = FigureCanvas(fig)

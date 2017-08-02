@@ -199,6 +199,7 @@ class Quenching(Treatment):
     duration = models.DurationField(null=True, blank=True)
     substance = models.CharField(max_length=50, null=True, blank=True)
 
+
 class Process(models.Model):
     washing = models.ForeignKey(Washing,null=True, blank=True)
     drying = models.ForeignKey(Drying,null=True, blank=True)
@@ -279,7 +280,7 @@ class SpotCollection(models.Model):
                                        choices=ProcessingType.choices,
                                        blank=True,
                                        null=True)
-    comment= models.TextField(default="A spot detecting script has located the spots in the image."
+    comment = models.TextField(default="A spot detecting script has located the spots in the image."
                                       "The spots are centered in a larger square."
                                       "The Intesity values are calculated as the total intensity over that square. "
                                       "The image is not preprocessed.")
@@ -313,11 +314,6 @@ class SpotCollection(models.Model):
         return ana
 
 
-
-
-
-    #raw_spots = models.ManyToManyField(RawSpot,through='Grid')
-
 class RawSpot(models.Model):
     """
     spot model
@@ -327,8 +323,6 @@ class RawSpot(models.Model):
     raw_spot_collection = models.ForeignKey(RawSpotCollection)
     column = models.IntegerField()
     row = models.IntegerField()
-
-
 
     class Meta:
         unique_together = ('column', 'row', 'raw_spot_collection')
