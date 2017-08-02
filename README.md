@@ -1,4 +1,11 @@
-# flutype_webapp
+<img alt="flutype logo" src="./docs/logo/flutype-logo-v3.png" height="75"/>
+
+# flutype webapp
+## Introduction
+This project develops a web application for the data management of binding assays for the classification of influenza subtypes.
+ 
+The production version is available at
+[http://www.flutype.de](www.flutype.de).
 
 ## Installation
 ```
@@ -9,8 +16,22 @@ pip install -r requirements.txt
 ## Start the App
 ```
 cd flutype_webapp
-python manage.py runserver
+./docker-entrypoint.sh
 ```
 
 ## pycharm integration
 right click `db.sqlite3` -> As Data Source
+
+
+## Docker container
+Install docker via `docker-ce` and `docker-compose` on the system.
+
+Run the app via
+```
+docker-compose up
+```
+
+# gunicorn & deployment
+gunicorn --bind 0.0.0.0:8000 flutype_webapp.wsgi:application
+
+&copy; 2017 flutype

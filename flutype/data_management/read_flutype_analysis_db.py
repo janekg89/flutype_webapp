@@ -17,8 +17,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flutype_webapp.settings")
 import django
 django.setup()
 
-from flutype_analysis import utils
-
 ########################################################################################################################
 
 def load_peptide_data(directory):
@@ -171,19 +169,19 @@ def load_procedure_data(directory):
     name_array = name.to_array()
     name_array = np.array(name_array)
     dic_all={"Spotting": name_array[9,0],"Quenching":name_array[21,0],"Incubating":name_array[33,0]}
-    dic_microarray = {"S ID": name_array[0,1],"Charge":name_array[1,1],"Surface Substance":name_array[2,1],
-         "manfacturer": name_array[3,1]}
-    dic_microwell = {"S ID": name_array[0,7],"Charge":name_array[1,6],"Surface Substance":name_array[2,7],
-         "manfacturer": name_array[3,7]}
+    dic_microarray = {"SID": name_array[0,1],"HolderBatch":name_array[1,1],"SurfaceSubstance":name_array[2,1],
+         "Manfacturer": name_array[3,1]}
+    dic_microwell = {"SID": name_array[0,7],"HolderBatch":name_array[1,6],"SurfaceSubstance":name_array[2,7],
+         "Manfacturer": name_array[3,7]}
     if any(dic_microarray.values()):
         print("Sample Holder is a microarray.")
-        dic_microarray["Holder Type"]= "microarray"
+        dic_microarray["HolderType"]= "microarray"
         dic_microarray.update(dic_all)
         return dic_microarray
 
     elif any(dic_microwell.values()):
         print("Sample Holder is a microwell plate.")
-        dic_microwell["Holder Type"] = "microwell"
+        dic_microwell["HolderType"] = "microwell"
         dic_microwell.update(dic_all)
         return dic_microwell
 
@@ -206,114 +204,10 @@ def load_db_from_formular(path):
     d["incubating"] = load_treatment_data("Incubating", path)
     return d
 ########################################################################################################################
-def write_dic_to_file(dic, path):
-    """
-    dangerous!!!!
-
-    :param dic:
-    :param path:
-    :return:
-    """
-    raise Exception('This is dangerous! It is over writing backup.')
-    for key in dic:
-        file_name=  key + ".csv"
-        file_path = os.path.join(path, file_name)
-        dic[key].to_csv(path_or_buf=file_path , sep="\t", encoding='utf-8')
-
-def write_img_to_file(img, path):
-    """
-    dangerous!!!!!
-    :param img:
-    :param path:
-    :return:
-    """
-    name = "image.jpg"
-    path_file = os.path.join(path, name)
-    cv2.imwrite(path_file, img)
-
-def write_meta_to_file(meta,path):
-    """
-    dangerous!!!
-    :param meta:
-    :param path:
-    :return:
-
-    """
-    raise Exception('This is dangerous! It is over writing backup.')
-    name = 'meta.csv'
-    path_file = os.path.join(path, name)
-    with open(path_file, 'wb') as f:
-        w = csv.DictWriter(f, meta.keys(),delimiter="\t")
-        w.writeheader()
-        w.writerow(meta)
-
-
-
-def write_collection_master(from_path, to_path, data_id):
-
-    #loads data_tables from files fixme: add processed image.
-    data = utils.load_data(data_id, from_path)
-    del data['data_id']
-    individual_path = os.path.join(to_path,data_id)
-
-    if not os.path.exists(individual_path):
-        os.makedirs(individual_path)
-    if 'tif' in data:
-        write_img_to_file(data["tif"], individual_path)
-        del data["tif"]
-
-
-    write_dic_to_file(data, individual_path)
-
-    #loads data_tables from form/process
-    meta_dic = load_procedure_data(from_path)
-    #writes to backup/collections
-    write_meta_to_file(meta_dic, individual_path)
 
 
 
 
-
-if __name__ == "__main__":
-
-
-    #fill master/data_tables
-    path_formular_db = "../media/forumular_db/"
-    path_backup_data = "../media/master/data_tables/"
-    d = load_db_from_formular(path_formular_db)
-    write_dic_to_file(d,  path_backup_data)
-
-    #fill master/collections
-    path_backup_collections = "../media/master/collections"
-
-    PATTERN_DIR_MICROARRAY = "../../flutype_analysis/data_tables/{}"
-    PATTERN_DIR_MICROWELL = "../../flutype_analysis/data_tables/MTP/{}"
-
-    microarray_data_ids = [
-        "2017-05-19_E5_X31",
-        "2017-05-19_E6_untenliegend_X31",
-        "2017-05-19_N5_X31",
-        "2017-05-19_N6_Pan",
-        "2017-05-19_N9_X31",
-        "2017-05-19_N10_Pan",
-        "2017-05-19_N11_Cal",
-        "flutype_test",
-        "P6_170613_Cal",
-        "P5_170612_X31",
-        "P3_170612_X31",
-        "2017-05-19_N7_Cal"
-    ]
-    
-    for data_id in microarray_data_ids:
-        write_collection_master(PATTERN_DIR_MICROARRAY.format(data_id), path_backup_collections, data_id)
-
-    microwell_data_ids = ["2017-05-12_MTP_R1",
-                          "2017-06-13_MTP"
-                          ]
-    for data_id in microwell_data_ids:
-        write_collection_master(PATTERN_DIR_MICROWELL.format(data_id), path_backup_collections, data_id)
-    
-    
 
 
 

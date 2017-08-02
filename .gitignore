@@ -1,9 +1,10 @@
 # Created by .ignore support plugin (hsz.mobi)
 .idea/
-/.gitignore
 migrations/
 *.pyc
 flutype/__pycache__/
 flutype_webapp/__pycache__/
 flutype_webapp/migrations/__pycache__/
-
+/static/
+flutype_webapp/deploy_settings.py
+dbdata/
