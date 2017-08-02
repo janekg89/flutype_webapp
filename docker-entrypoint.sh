@@ -8,7 +8,7 @@ python manage.py migrate
 
 # Fill database with test dataset
 python ./flutype/data_management/fill_users.py
-# python ./flutype/data_management/fill_database.py
+python ./flutype/data_management/fill_database.py
 
 # Collect static files
 echo "Collect static files"
