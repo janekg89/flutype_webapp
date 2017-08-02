@@ -6,12 +6,14 @@ from django.test import TestCase
 from django.test import Client
 
 from flutype.data_management.fill_users import create_users, user_defs
+from flutype.data_management.fill_database import fill_database, path_master
 
 
 class ViewTestCase(TestCase):
     def setUp(self):
         # only create once
         create_users(user_defs=user_defs)
+
 
     def tearDown(self):
         create_users(user_defs=None, delete_all=True)
@@ -44,5 +46,18 @@ class ViewTestCase(TestCase):
         self.assertEqual(status, 200, "index view 200")
         self.assertTrue("<h1>Experiments</h1>" in str(response.content))
         self.assertTrue("No entries in database" in str(response.content))
+
+    def test_index_view_data(self):
+        fill_database(path_master=path_master, collection_ids=[
+            "2017-05-19_N7_Cal"
+        ])
+        c = Client()
+        c.login(username='mkoenig', password=DEFAULT_USER_PASSWORD)
+        response = c.post('/flutype/')
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("<h1>Experiments</h1>" in str(response.content))
+
+        self.assertTrue("2017-05-19_N7" in str(response.content))
 
     # TODO: write tests for all views
