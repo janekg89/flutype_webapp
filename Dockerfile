@@ -17,7 +17,7 @@ RUN pip install -r requirements.txt
 COPY . /code/
 
 # Install latest flutype_analysis
-RUN pip install git+https://github.com/matthiaskoenig/flutype-analysis.git@master
+RUN pip install git+https://github.com/matthiaskoenig/flutype-analysis.git@develop
 
 # Run tests
 # WORKDIR /usr/src/app/flutype_webapp

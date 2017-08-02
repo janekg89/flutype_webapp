@@ -23,6 +23,22 @@ from flutype_webapp.settings import MEDIA_ROOT
 
 fs = FileSystemStorage(location=MEDIA_ROOT)
 
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+from django.db import models
+
+
+class OverwriteStorage(FileSystemStorage):
+    """
+    Overwrite storage overwrites existing names by deleting the resources.
+    ! Use with care. This deletes files from the media folder !
+    """
+    def get_available_name(self, name, **kwargs):
+        if self.exists(name):
+            os.remove(os.path.join(settings.MEDIA_ROOT, name))
+        return name
+
+
 # TODO: remove this from the model. It is confusing
 class User(models.Model):
     """
@@ -195,11 +211,12 @@ class Process(models.Model):
 
 class GalVirus(models.Model):
     sid = models.CharField(max_length=20)
-    file = models.FileField(upload_to="gal_vir", null=True, blank=True)
+    file = models.FileField(upload_to="gal_vir", null=True, blank=True, storage=OverwriteStorage())
+
 
 class GalLigand(models.Model):
     sid = models.CharField(max_length=20)
-    file = models.FileField(upload_to="gal_lig", null=True, blank=True)
+    file = models.FileField(upload_to="gal_lig", null=True, blank=True, storage=OverwriteStorage())
 
 
 class RawSpotCollection(models.Model):
@@ -211,7 +228,8 @@ class RawSpotCollection(models.Model):
     holder_type = models.CharField(max_length=20, choices=HolderType.choices)
     functionalization = models.CharField(max_length=20,choices=Substance.choices)
     manufacturer = models.CharField(max_length=20,choices=Manufacturer.choices)
-    image = models.ImageField(upload_to="image",null=True, blank=True)
+    image = models.ImageField(upload_to="image", null=True, blank=True, storage=OverwriteStorage())
+
     gal_virus = models.ForeignKey(GalVirus,null=True, blank=True)
     gal_ligand = models.ForeignKey(GalLigand, null=True, blank=True)
     process = models.ForeignKey(Process,blank=True, null=True)

@@ -17,8 +17,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flutype_webapp.settings")
 import django
 django.setup()
 
-from flutype_analysis import utils
-
 ########################################################################################################################
 
 def load_peptide_data(directory):
