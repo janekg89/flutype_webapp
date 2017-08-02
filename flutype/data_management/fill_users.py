@@ -34,6 +34,9 @@ def create_users(user_defs, delete_all=True):
     :param delete_all: deletes all existing users
     :return:
     """
+    if user_defs is None:
+        user_defs = []
+
     # deletes all users
     if delete_all:
         User.objects.all().delete()
