@@ -227,7 +227,7 @@ class RawSpotCollection(models.Model):
     batch = models.CharField(max_length=20, null=True, blank=True)
     holder_type = models.CharField(max_length=20, choices=HolderType.choices)
     functionalization = models.CharField(max_length=20,choices=Substance.choices)
-    manufacturer = models.CharField(max_length=20,choices=Manufacturer.choices)
+    manufacturer = models.CharField(max_length=20, choices=Manufacturer.choices)
     image = models.ImageField(upload_to="image", null=True, blank=True, storage=OverwriteStorage())
 
     gal_virus = models.ForeignKey(GalVirus,null=True, blank=True)
@@ -272,7 +272,7 @@ class RawSpotCollection(models.Model):
 
 
 class SpotCollection(models.Model):
-    sid= models.CharField(max_length=20)
+    sid = models.CharField(max_length=20)
     raw_spot_collection = models.ForeignKey(RawSpotCollection)
     image2numeric_version = models.FloatField(default=0.1)
     processing_type = models.CharField(max_length=30,
