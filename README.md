@@ -5,7 +5,7 @@
 This project develops a web application for the data management of binding assays for the classification of influenza subtypes.
  
 The production version is available at
-[http://www.flutype.de](www.flutype.de).
+[http://www.flutype.de](http://www.flutype.de).
 
 ## Installation
 ```
