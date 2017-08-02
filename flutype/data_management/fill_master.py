@@ -61,6 +61,9 @@ import pandas as pd
 import numpy as np
 from django.core.files import File
 
+# TODO: meta csv should have field names in rows, i.e
+# type  value
+
 ###############################################
 # setup django (add current path to sys.path)
 path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../'))
@@ -74,6 +77,10 @@ django.setup()
 ###############################################
 from flutype.data_management.read_flutype_analysis_db import load_procedure_data , load_db_from_formular
 
+# fix for py3
+try:
+    input = raw_input
+except NameError: pass
 
 class Master(object):
     """ Class for operations on master files. """
@@ -100,9 +107,10 @@ class Master(object):
 
         for key in data_tables_dic:
             file_name = key + ".csv"
-            file_path = os.path.join(self.data_tables_path,file_name)
+            file_path = os.path.join(self.data_tables_path, file_name)
+
             if os.path.isfile(file_path):
-                user_input = raw_input("Type yes if you really want to delete <{}>  ".format(key))
+                user_input = input("Type yes if you really want to delete <{}>  ".format(key))
                 if user_input == "yes":
                     pass
                 else:
@@ -202,7 +210,7 @@ class Master(object):
         """
 
         path_file = os.path.join(self.collections_path, collection_id, 'meta.csv')
-        with open(path_file, 'wb') as f:
+        with open(path_file, 'w') as f:
             w = csv.DictWriter(f, meta.keys(), delimiter="\t")
             w.writeheader()
             w.writerow(meta)
@@ -215,8 +223,8 @@ class Master(object):
         :return: meta
         """
         path_file = os.path.join(self.collections_path, collection_id, 'meta.csv')
-        with open(path_file) as f:
-            reader = csv.DictReader(f,delimiter="\t")
+        with open(path_file, 'r') as f:
+            reader = csv.DictReader(f, delimiter="\t")
             for row in reader:
                 meta = row
         return meta
@@ -387,7 +395,7 @@ class Master(object):
                 text = "the quantified collections of raw collection <{}>".format(collection)
             else:
                 text = "the <{}> raw collection"
-            user_input = raw_input("Type yes if you really want to delete {}  ".format(text))
+            user_input = input("Type yes if you really want to delete {}  ".format(text))
             if user_input == "yes":
                 pass
             else:

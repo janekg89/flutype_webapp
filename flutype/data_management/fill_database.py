@@ -5,14 +5,10 @@ from __future__ import print_function, absolute_import, division
 
 import os
 import sys
-import numpy as np
-import pandas as pd
-import re
-import cv2
 from django.core.files import File
 import warnings
-from flutype_analysis import utils, analysis
 
+###########################################################
 # setup django (add current path to sys.path)
 path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../'))
 print(path)
@@ -22,9 +18,9 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flutype_webapp.settings")
 
 import django
 django.setup()
-from flutype.data_management.fill_master import Master
 
-# import models
+###########################################################
+from flutype.data_management.fill_master import Master
 from flutype.models import (Peptide,
                             PeptideBatch,
                             Virus,
@@ -40,10 +36,9 @@ from flutype.models import (Peptide,
                             GalLigand,
                             GalVirus)
 
-class Database(object):
-    """
-    """
 
+class Database(object):
+    """ Database """
 
     def create_or_update_virus(self, virus):
         vir, created = Virus.objects.get_or_create(subgroup=virus["SubGroup"],
@@ -75,7 +70,8 @@ class Database(object):
                                                             production_date=virus_batch["Production Date"],
                                                             comment=virus_batch["Comment"]
                                                             )
-        return virus_b ,created
+        return virus_b, created
+
 
     def create_or_update_peptide(self, peptide):
         # fills peptides
@@ -89,6 +85,8 @@ class Database(object):
                                                          comment=peptide["Comment"]
                                                          )
         return peptide, created
+
+
     def create_or_update_peptide_batch(self,peptide_batch):
         try:
             peptide = Peptide.objects.get(sid=peptide_batch["Peptide ID"])
@@ -153,24 +151,24 @@ class Database(object):
 
         # fills viruses
         for k, virus in data_tables["virus"].iterrows():
-            _ , created = self.create_or_update_virus(virus)
+            _, created = self.create_or_update_virus(virus)
             created_v.append(created)
 
 
         for k, virus_batch in data_tables["virus_batch"].iterrows():
-           _ , created = self.create_or_update_virus_batch(virus_batch)
+           _, created = self.create_or_update_virus_batch(virus_batch)
            created_vb.append(created)
 
         for k, peptide in data_tables["peptide"].iterrows():
-            _ , created = self.create_or_update_peptide(peptide)
+            _, created = self.create_or_update_peptide(peptide)
             created_p.append(created)
 
         for k, peptide_batch in data_tables["peptide_batch"].iterrows():
-            _ ,created = self.create_or_update_peptide_batch(peptide_batch)
+            _,created = self.create_or_update_peptide_batch(peptide_batch)
             created_pb.append(created)
 
         for k, spotting in data_tables["spotting"].iterrows():
-            _ , created = self.create_or_update_spotting(spotting)
+            _, created = self.create_or_update_spotting(spotting)
             created_s.append(created)
         for k, quenching in data_tables["quenching"].iterrows():
             _, created = self.create_or_update_quenching(quenching)
@@ -180,17 +178,16 @@ class Database(object):
             created_i.append(created)
 
         print("updates to database:")
-        print ("virus:", any(created_v))
-        print ("virus_batch:", any(created_vb))
-        print ("peptide:", any(created_p))
-        print ("peptide_batch:", any(created_pb))
-        print ("spotting:", any(created_s))
-        print ("quenching:", any(created_q))
-        print ("incubating:", any(created_i))
+        print("virus:", any(created_v))
+        print("virus_batch:", any(created_vb))
+        print("peptide:", any(created_p))
+        print("peptide_batch:", any(created_pb))
+        print("spotting:", any(created_s))
+        print("quenching:", any(created_q))
+        print("incubating:", any(created_i))
 
-    def fill_process(self,meta):
+    def fill_process(self, meta):
         """
-
         :param meta: (dictionary -> keys with corresponding value ->  meta.csv)
                     keys :Manfacturer
                           HolderType
@@ -425,8 +422,7 @@ class Database(object):
             self.fill_spot(raw_spot=raw_spo, spot_collection=spot_collection, spot=spot)
 
 
-
-
+##############################################################
 if __name__ == "__main__":
     # the path to the master folder
     path_master = "master/"
@@ -471,14 +467,5 @@ if __name__ == "__main__":
             dic_data_q = ma.read_q_collection(collection_id,q_collection_id)
             db.fill_q_collection_and_related_spots(dic_data_q, q_collection_id)
 
-
-
-
-
-
     #many 2many relation
     db.fillmany2many_rawspots_peptides_viruses()
-
-
-
-
