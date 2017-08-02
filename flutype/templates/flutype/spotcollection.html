@@ -36,7 +36,7 @@
                 <h2>Quantified Collections</h2>
                 <p>
                     {% for sc in collection.spotcollection_set.all %}
-                        <a href="{% url "qspotcollectionview" pk=sc.id %}"><b>QuantifiedCollection:{{ sc.id }}</b></a><br />
+                        <a href="{% url "qspotcollectionview" pk=sc.id %}"><b>QuantifiedCollection:{{ sc.sid }}</b></a><br />
                     {% endfor %}
                 </p>
             {% else %}
