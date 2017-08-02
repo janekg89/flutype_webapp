@@ -4,6 +4,7 @@
     <div class="row">
         <div class="col-lg-12">
             <h1>Virus Batches</h1>
+            {% if virus_batches %}
             <table id="peptide_batches" class="table table-striped">
                 <thead>
                 <tr>
@@ -26,60 +27,36 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% if virus_batches %}
-
                 {% for virusbatch in virus_batches %}
                     <tr>
-                        <td class="warning">
-                            <b>{{ virusbatch.sid }}</b>
-                        </td>
+                        <td class="warning"><b>{{ virusbatch.sid }}</b></td>
+
                         <!-- virus information -->
-                        <td class="danger">
-                            {{ virusbatch.virus.sid }}
-                        </td>
-                        <td class="danger">
-                            {{ virusbatch.virus.subgroup }}
-                        </td>
-                        <td class="danger">
-                            {{ virusbatch.virus.country }}
-                        </td>
-                        <td class="danger">
-                            {{ virusbatch.virus.date_of_appearance }}
-                        </td>
-                        <td class="danger">
-                            {{ virusbatch.virus.strain }}
-                        </td>
+                        {%  with v=virusbatch.virus %}
+                        {% if v %}
+                        <td class="danger">{{ v.sid }}</td>
+                        <td class="danger">{{ v.subgroup }}</td>
+                        <td class="danger">{{ v.country }}</td>
+                        <td class="danger">{{ v.date_of_appearance }}</td>
+                        <td class="danger">{{ v.strain }}</td>
+                        {%  else %}
+                            {% for k in range(5) %}
+                        <td class="danger">-</td>
+                            {% endfor %}
+                        {% endif %}
+                        {%  endwith %}
+
                         <!-- virus batch information -->
-                        <td>
-                            {{ virusbatch.passage_history }}
-                        </td>
-                        <td>
-                            {{ virusbatch.active }}
-                        </td>
-                        <td>
-                            {{ virusbatch.labeling }}
-                        </td>
-                        <td>
-                            {{ virusbatch.concentration }}
-                        </td>
-                        <td>
-                            {{ virusbatch.buffer }}
-                        </td>
-                        <td>
-                            {{ virusbatch.ph }}
-                        </td>
-                        <td>
-                            {{ virusbatch.purity }}
-                        </td>
-                        <td>
-                            {{ virusbatch.produced_by }}
-                        </td>
-                        <td>
-                            {{ virusbatch.production_date }}
-                        </td>
-                        <td>
-                            {{ virusbatch.comment }}
-                        </td>
+                        <td>{{ virusbatch.passage_history }}</td>
+                        <td>{{ virusbatch.active }}</td>
+                        <td>{{ virusbatch.labeling }}</td>
+                        <td>{{ virusbatch.concentration }}</td>
+                        <td>{{ virusbatch.buffer }}</td>
+                        <td>{{ virusbatch.ph }}</td>
+                        <td>{{ virusbatch.purity }}</td>
+                        <td>{{ virusbatch.produced_by }}</td>
+                        <td>{{ virusbatch.production_date }}</td>
+                        <td>{{ virusbatch.comment }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>

@@ -1,3 +1,6 @@
+"""
+Create users in the database.
+"""
 from __future__ import print_function, absolute_import, division
 import os
 import sys
@@ -12,51 +15,45 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flutype_webapp.settings")
 import django
 django.setup()
 from django.contrib.auth.models import User
-#deletes all users
-User.objects.all().delete()
-#defines all users
-janek = {"username":"janekg89",
-         "first_name":"Jan",
-         "last_name":"Grzegorzewski",
-         "password":"flutype_db",
-         "email":"janekg89@hotmail.de"}
+from flutype_webapp.settings import DEFAULT_USER_PASSWORD
 
-marc = {"username":"Marc.H",
-        "first_name":"Marc",
-        "last_name":"Hovestaedt",
-        "password":"flutype_db",
-        "email":"marc.hovestaedt@uni-potsdam.de"}
+from collections import namedtuple
 
-henry = {"username":"Henry.M",
-        "first_name":"Henry",
-        "last_name":"Memczak",
-        "password":"flutype_db",
-        "email":"memczak@uni-potsdam.de"}
+########################################################
+UserDef = namedtuple('UserDef', ['username', 'first_name', 'last_name', 'email'])
+user_defs = [
+    UserDef("janekg89", "Jan", "Grzegorzewski", "janekg89@hotmail.de"),
+    UserDef("mkoenig", "Matthias", "Koenig", "konigmatt@googlemail.com"),
+]
+########################################################
 
-sandra = {"username":"Sandra.S",
-        "first_name":"Sandra",
-        "last_name":"Saenger",
-        "password":"flutype_db",
-        "email":"SaengerS@rki.de"}
 
-bernhard = {"username":"Bernhard.A",
-        "first_name":"Bernhard",
-        "last_name":"Ay",
-        "password":"flutype_db",
-        "email":"aybernha@uni-potsdam.de"}
+def create_users(user_defs, delete_all=True):
+    """ Create users in database from user definitions.
 
-matthias ={"username":"Matthias.K",
-        "first_name":"Matthias",
-        "last_name":"Koenig",
-        "password":"flutype_db",
-        "email":"konigmatt@googlemail.com"}
+    :param delete_all: deletes all existing users
+    :return:
+    """
+    if user_defs is None:
+        user_defs = []
 
-users = [janek, marc,henry, sandra, bernhard, matthias]
+    # deletes all users
+    if delete_all:
+        User.objects.all().delete()
 
-# adds user to database
-for user in users:
-    user_db = User.objects.create_user(username=user["username"],email=user["email"], password=user["password"])
-    user_db.last_name = user["last_name"]
-    user_db.first_name = user["first_name"]
-    user_db.save()
+    # adds user to database
+    for user_def in user_defs:
 
+        # special pattern for user creation required
+        user = User.objects.create_user(username=user_def.username, email=user_def.email, password=DEFAULT_USER_PASSWORD)
+        user.last_name = user_def.last_name
+        user.first_name = user_def.first_name
+        user.save()
+
+    for user in User.objects.all():
+        print('\t', user.username, user.email, user.password)
+
+
+if __name__ == "__main__":
+    print("*** Creating users ***")
+    create_users(user_defs=user_defs, delete_all=True)
