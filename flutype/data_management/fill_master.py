@@ -1,53 +1,55 @@
-# Script for updating the master folder
-# all create_or_update_..., or write_... in class Master require data.
-# read functions require information what to read
+"""
+Script for updating the master folder
+all create_or_update_..., or write_... in class Master require data.
+read functions require information what to read
 
-# procedure:
-# 1. Initalize Master class with location of master folder:
-# ma = Master(path_to_master_folder)
-#
-# 2. Load data_tables (dic_data_table).
-#   dic_data_tables: a dictionary containing one of the following keys. Their values contain the corresponding data:
-#                            keys (data_format):     peptide          (pandas.DataFrame -> Columns: Peptide ID,	Linker,	Spacer,	Sequence,	C-terminus,	Name,	Types,	Comment)
-#                                                    peptide_batch    (pandas.DataFrame -> Columns: Ligand id,	Peptide ID,	Concentration [mg/ml], Buffer,	pH,	Purity (MS), Synthesized by,	Synthesization Date, Comment)
-#                                                    virus            (pandas.DataFrame -> Columns: Taxonomy ID, SubGroup, Country	Date, Strain Name)
-#                                                    virus_batch      (pandas.DataFrame -> Columns: Batch ID, Taxonomy ID, Concentration [mg/ml], Labeling, Buffer,	pH,	Active,	Passage History, Production Date, Comment)
-#                                                    spotting         (pandas.DataFrame -> Columns: Spotting ID, Spotting Method, Washing S ID,	Comment)
-#                                                    quenching        (pandas.DataFrame -> Columns: Queching ID, Quenching Method, Washing_Q_ID, Comment)
-#                                                    incubating       (pandas.DataFrame -> Columns: Incubating ID, Incubation Method, Washing I ID, Comment)
-#FIXME: Better column nameing.
-#FIXME: Different handling of Washing.
-#FIXME: Add anti_body and anti_body_batch
-#FIXME: Add Ligand. It can be Peptide Batch, Virus Batch, Anti_body_batch
-# 3. write dic_data_tables to files. Any key in Datatables will create a .csv file from its value(pandas.DataFrame) in (Master_folder/data_tabels/.)
-#   ma.write_data_tables(data_tables_dic)
-#FIXME: make it possible to update data_tables and not only overwrite them.
-#
-# 4. Select name of collection data (convention: collection_id).
-#
-# 5. Load collection data (dic_data) from your desired source (e.g. fluType_analysis_folder, backup, website)
-#   dic_data: a dictionary containing one of the following keys. Their values contain the corresponding data:
-#                            keys (data_format):     gal_ligand   (pandas.DataFrame -> Columns: "Row", "Column", "Name")
-#                                                    gal_virus    (pandas.DataFrame -> Columns: "Row", "Column", "Name")
-#                                                    meta         (dictionary -> keys: Manfacturer,	HolderType,	Spotting, Incubating,	HolderBatch, SID, SurfaceSubstance, Quenching)
-#                 (optional)                         image        (cv2 image file in grayscale)
-#                 (important for q_collection)       intensity    (pandas.DataFrame -> Columns: "Columns" Index:"Row" Value: Intenstities)
-#                 (optional for q_collection)        std          (pandas.DataFrame -> Columns: "Columns" Index:"Row" Value: Standard deviation)
-#                 (optional for q_collection)        q_meta       (dictionary -> keys with corresponding value go to q_meta.csv)
-#
-# 6. Create or update unique gal vir and lig FIXME: make this not nessecary anymore
-#   ma.create_or_update_unique_gal_vir(dic_data["gal_virus"])
-#   ma.create_or_update_unique_gal_lig(dic_data["gal_ligand"])
-#
-# 7. Create or update raw collection: (Convention: for microwell plate: q_collection_id = "raw", for microarray: q_collection_id = "not" ) FIXME: too complicate -> change convention: make two functions (create or update raw collection) and create or update quantified collection
-#  ma.create_or_update_collection(collection_id, dic_data, q_collection_id="raw", type="microwell")
-#   or
-#  ma.create_or_update_collection(collection_id, dic_data, q_collection_id="not", type="microarray")
-#
-# 8. Create or update quantified collection:
-#   ma.create_or_update_collection(collection_id, dic_data, q_collection_id="your_q_collection_id",quantified_only=True, type="choose-from-'microwell'-or-'microarray'")
+procedure:
+1. Initalize Master class with location of master folder:
+ma = Master(path_to_master_folder)
 
-# import libraries
+2. Load data_tables (dic_data_table).
+  dic_data_tables: a dictionary containing one of the following keys. Their values contain the corresponding data:
+                           keys (data_format):     peptide          (pandas.DataFrame -> Columns: Peptide ID,	Linker,	Spacer,	Sequence,	C-terminus,	Name,	Types,	Comment)
+                                                   peptide_batch    (pandas.DataFrame -> Columns: Ligand id,	Peptide ID,	Concentration [mg/ml], Buffer,	pH,	Purity (MS), Synthesized by,	Synthesization Date, Comment)
+                                                   virus            (pandas.DataFrame -> Columns: Taxonomy ID, SubGroup, Country	Date, Strain Name)
+                                                   virus_batch      (pandas.DataFrame -> Columns: Batch ID, Taxonomy ID, Concentration [mg/ml], Labeling, Buffer,	pH,	Active,	Passage History, Production Date, Comment)
+                                                   spotting         (pandas.DataFrame -> Columns: Spotting ID, Spotting Method, Washing S ID,	Comment)
+                                                   quenching        (pandas.DataFrame -> Columns: Queching ID, Quenching Method, Washing_Q_ID, Comment)
+                                                   incubating       (pandas.DataFrame -> Columns: Incubating ID, Incubation Method, Washing I ID, Comment)
+FIXME: Better column nameing.
+FIXME: Different handling of Washing.
+FIXME: Add anti_body and anti_body_batch
+FIXME: Add Ligand. It can be Peptide Batch, Virus Batch, Anti_body_batch
+
+3. write dic_data_tables to files. Any key in Datatables will create a .csv file from its value(pandas.DataFrame) in (Master_folder/data_tabels/.)
+  ma.write_data_tables(data_tables_dic)
+FIXME: make it possible to update data_tables and not only overwrite them.
+
+4. Select name of collection data (convention: collection_id).
+
+5. Load collection data (dic_data) from your desired source (e.g. fluType_analysis_folder, backup, website)
+  dic_data: a dictionary containing one of the following keys. Their values contain the corresponding data:
+                           keys (data_format):     gal_ligand   (pandas.DataFrame -> Columns: "Row", "Column", "Name")
+                                                   gal_virus    (pandas.DataFrame -> Columns: "Row", "Column", "Name")
+                                                   meta         (dictionary -> keys: Manfacturer,	HolderType,	Spotting, Incubating,	HolderBatch, SID, SurfaceSubstance, Quenching)
+                (optional)                         image        (cv2 image file in grayscale)
+                (important for q_collection)       intensity    (pandas.DataFrame -> Columns: "Columns" Index:"Row" Value: Intenstities)
+                (optional for q_collection)        std          (pandas.DataFrame -> Columns: "Columns" Index:"Row" Value: Standard deviation)
+                (optional for q_collection)        q_meta       (dictionary -> keys with corresponding value go to q_meta.csv)
+
+6. Create or update unique gal vir and lig FIXME: make this not nessecary anymore
+  ma.create_or_update_unique_gal_vir(dic_data["gal_virus"])
+  ma.create_or_update_unique_gal_lig(dic_data["gal_ligand"])
+
+7. Create or update raw collection: (Convention: for microwell plate: q_collection_id = "raw", for microarray: q_collection_id = "not" ) FIXME: too complicate -> change convention: make two functions (create or update raw collection) and create or update quantified collection
+   ma.create_or_update_collection(collection_id, dic_data, q_collection_id="raw", type="microwell")
+or
+   ma.create_or_update_collection(collection_id, dic_data, q_collection_id="not", type="microarray")
+
+8. Create or update quantified collection:
+   ma.create_or_update_collection(collection_id, dic_data, q_collection_id="your_q_collection_id",quantified_only=True, type="choose-from-'microwell'-or-'microarray'")
+"""
+
 from __future__ import print_function, absolute_import, division
 import os
 import sys
@@ -59,6 +61,7 @@ import pandas as pd
 import numpy as np
 from django.core.files import File
 
+###############################################
 # setup django (add current path to sys.path)
 path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../'))
 
@@ -68,12 +71,14 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flutype_webapp.settings")
 
 import django
 django.setup()
+###############################################
 from flutype.data_management.read_flutype_analysis_db import load_procedure_data , load_db_from_formular
 
+
 class Master(object):
+    """ Class for operations on master files. """
 
     def __init__(self, path):
-
         """
         :param path: The path to the master directory
 
@@ -83,9 +88,6 @@ class Master(object):
         self.collections_path = os.path.join(self.path,"collections")
         self.unique_vir_gal_path = os.path.join(self.path,"unique_gal_virus")
         self.unique_lig_gal_path = os.path.join(self.path,"unique_gal_ligand")
-
-
-
 
     def write_data_tables(self, data_tables_dic):
         """
@@ -107,7 +109,6 @@ class Master(object):
                     return
             data_tables_dic[key].to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
 
-
     def read_data_tables(self):
         """
         :return: data_tables_dic
@@ -121,11 +122,6 @@ class Master(object):
 
         return data_tables_dic
 
-
-
-
-
-
     def create_or_update_gal_ligand(self, gal_ligand, collection_id):
         """
         saves gal ligand
@@ -136,7 +132,6 @@ class Master(object):
         fname, _ = self.get_unique_gal_lig(gal_ligand)
         file_path = os.path.join(self.collections_path, collection_id, fname)
         gal_ligand.to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
-
 
     def read_gal_ligand(self, collection_id, format="pd"):
         """
@@ -161,7 +156,6 @@ class Master(object):
             LookupError("format name wrong")
         return gal_ligand, f_name
 
-
     def create_or_update_gal_virus(self,gal_virus_data,collection_id):
         """
         saves gal_virus
@@ -169,7 +163,6 @@ class Master(object):
         :param collection_id:
         :return:
         """
-
         #file_path = os.path.join(self.collections_path, collection_id, "gal_virus.csv")
         fname, _ = self.get_unique_gal_vir(gal_virus_data)
         file_path = os.path.join(self.collections_path, collection_id, fname)
@@ -199,7 +192,6 @@ class Master(object):
         else:
             LookupError("format name wrong")
         return gal_virus, f_name
-
 
     def create_or_update_meta(self, meta, collection_id):
         """
@@ -290,9 +282,6 @@ class Master(object):
         return pd.read_csv(file_path, sep="\t", index_col=0)
 
 
-
-
-
     def create_or_update_collection(self, collection_id, dic_data, q_collection_id="not", quantified_only=False, type="microarray"):
 
         """
@@ -320,13 +309,13 @@ class Master(object):
         collection_path = os.path.join(self.collections_path,collection_id)
         q_collection_path = os.path.join(collection_path, q_collection_id)
 
-        #creates path to collection if not yet present
+        # creates path to collection if not yet present
         if not os.path.exists(collection_path):
             os.makedirs(collection_path)
 
         if type == "microarray":
             if q_collection_id == "not":
-                #saves raw data
+                # saves raw data
                 self.create_or_update_gal_ligand(dic_data["gal_ligand"], collection_id)
                 self.create_or_update_gal_virus(dic_data["gal_virus"], collection_id)
                 self.create_or_update_meta(dic_data["meta"], collection_id)
@@ -334,7 +323,6 @@ class Master(object):
                 self.create_or_update_intensity(dic_data["intensity"], collection_id=collection_id, q_collection_id=q_collection_id)
 
             elif quantified_only:
-
                 # creates path to quantified collection if not yet present
                 if not os.path.exists(q_collection_path):
                     os.makedirs(q_collection_path)
@@ -361,11 +349,8 @@ class Master(object):
                     self.create_or_update_std(dic_data["std"], collection_id=collection_id, q_collection_id=q_collection_id)
 
         elif type == "microwell":
-
             if q_collection_id == "raw":
-                #saves raw data
-
-
+                # saves raw data
                 self.create_or_update_gal_ligand(dic_data["gal_ligand"], collection_id)
                 self.create_or_update_gal_virus(dic_data["gal_virus"], collection_id)
                 self.create_or_update_meta(dic_data["meta"], collection_id)
@@ -380,17 +365,10 @@ class Master(object):
             if not os.path.exists(q_collection_path):
                 os.makedirs(q_collection_path)
 
-
             self.create_or_update_intensity(dic_data["intensity"], collection_id=collection_id,
                                             q_collection_id=q_collection_id)
             if "std" in dic_data:
                 self.create_or_update_std(dic_data["std"], collection_id=collection_id, q_collection_id=q_collection_id)
-
-
-
-
-
-
 
 
     def flush_collection(self, collection, quantified=False ,only_quantified=False, user_input=True):
@@ -404,8 +382,6 @@ class Master(object):
         :param user_input: if False the user does not need to input yes for the command.
         :return:
         """
-
-
         if user_input:
             if only_quantified:
                 text = "the quantified collections of raw collection <{}>".format(collection)
@@ -416,7 +392,6 @@ class Master(object):
                 pass
             else:
                 return
-
 
 
     def read_raw_collection(self, collection_id):
@@ -439,7 +414,7 @@ class Master(object):
         dic_data["meta"]=self.read_meta(collection_id)
         dic_data["gal_ligand"] = self.read_gal_ligand(collection_id, format="dj")
         dic_data["gal_virus"] = self.read_gal_virus(collection_id, format="dj")
-        #FIXME: IF dic_data["meta"][holdertype]=microarray ...
+        # FIXME: IF dic_data["meta"][holdertype]=microarray ...
         # or think how to show and or store rawcollection/quantified colelction.
         try:
             dic_data["image"] =  self.read_image(collection_id,format="dj")
@@ -456,11 +431,7 @@ class Master(object):
         dic_data["gal_ligand"] = self.read_gal_ligand(collection_id)[0]
         dic_data["gal_virus"] = self.read_gal_virus(collection_id)[0]
         dic_data["meta"] = self.read_meta(collection_id)
-
-
         return dic_data
-
-
 
     def read_q_collection(self,collection_id, q_collection_id):
         #FIXME: Read q_meta
@@ -482,12 +453,6 @@ class Master(object):
 
 
 
-
-
-
-
-
-
     def create_or_update_unique_gal_lig(self, gal_lig):
         """
 
@@ -500,7 +465,7 @@ class Master(object):
 
         max_name = 0
         created = False
-        #search if any file in unique_lig_gal_path matches 'lig(.*).txt'.
+        # search if any file in unique_lig_gal_path matches 'lig(.*).txt'.
         for fn in os.listdir(self.unique_lig_gal_path):
             result = re.search('lig(.*).txt', fn)
             if int(result.group(1)) > max_name:
@@ -533,9 +498,6 @@ class Master(object):
                 fpath = os.path.join(self.unique_lig_gal_path, fname)
                 return fname, fpath
         return IOError("unique_gal_lig not found")
-
-
-
 
     def get_unique_gal_vir(self, gal_vir):
         for fn in os.listdir(self.unique_vir_gal_path):
@@ -579,22 +541,15 @@ class Master(object):
         return fname, fpath, created
 
 
-
-
-
+####################################################################
 if __name__ == "__main__":
-
-
-
-    # the path to the master folder
+    # path to the master folder
     path_master = "master/"
     ma = Master(path_master)
-
 
     ################# fill master/collections ######################
     PATTERN_DIR_MICROARRAY = "../flutype_analysis/data/{}"
     PATTERN_DIR_MICROWELL = "../flutype_analysis/data/MTP/{}"
-
 
     # all sid of microarray collections
     microarray_collection_ids = ["2017-05-19_E5_X31",
@@ -640,56 +595,38 @@ if __name__ == "__main__":
     # saves data tables
     ma.write_data_tables(data_tables_dic)
 
-
+    # read microarrays
     for collection_id in microarray_collection_ids:
-
-
-        #loading gal_vi,gal_pep, picture,data, data_std
+        # loading gal_vi,gal_pep, picture,data, data_std
         dic_data = utils.load_data(collection_id, PATTERN_DIR_MICROARRAY.format(collection_id))
 
-        #renaming keys
+        # renaming keys
         dic_data = rename_dic(dic_data)
 
-        #loading procedure data from formular
+        # loading procedure data from formular
         dic_data["meta"] = load_procedure_data(PATTERN_DIR_MICROARRAY.format(collection_id))
 
         # get_or_create_unique_ligand / unique_virus .
-        #important !!!! unique_gal_vir must be created before creating collection !!!!!
+        # important !!!! unique_gal_vir must be created before creating collection !!!!!
         ma.create_or_update_unique_gal_vir(dic_data["gal_virus"])
         ma.create_or_update_unique_gal_lig(dic_data["gal_ligand"])
 
         # saving microarray collection data
         ma.create_or_update_collection(collection_id, dic_data, q_collection_id="q001", quantified_only=False, type="microarray")
 
-
-
+    # Read microwells
     for collection_id in microwell_collection_ids:
-
-        #loading gal_vi,gal_pep, picture,data, data_std
+        # loading gal_vi,gal_pep, picture,data, data_std
         dic_data = utils.load_data(collection_id, PATTERN_DIR_MICROWELL.format(collection_id))
-        #renaming keys
+        # renaming keys
         dic_data = rename_dic(dic_data)
-        #loading procedure data from formular
+        # loading procedure data from formular
         dic_data["meta"] = load_procedure_data(PATTERN_DIR_MICROWELL.format(collection_id))
         # get_or_create_unique_ligand / unique_virus .
-        #important !!!! unique_gal_vir must be created before creating collection !!!!!
+        # important !!!! unique_gal_vir must be created before creating collection !!!!!
         ma.create_or_update_unique_gal_vir(dic_data["gal_virus"])
         ma.create_or_update_unique_gal_lig(dic_data["gal_ligand"])
 
         # saving microwell plate collection data
         ma.create_or_update_collection(collection_id, dic_data, q_collection_id = "raw",
                                                                     quantified_only=False, type="microwell")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
