@@ -19,6 +19,29 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flutype_webapp.settings")
 import django
 django.setup()
 
+
+# the path to the master folder
+path_master = os.path.join(path, "master/")
+
+# all sid of microarray collections
+# FIXME: get from folder names
+collection_ids = ["2017-05-19_E5_X31",
+                  "2017-05-19_E6_untenliegend_X31",
+                  "2017-05-19_N5_X31",
+                  "2017-05-19_N6_Pan",
+                  "2017-05-19_N9_X31",
+                  "2017-05-19_N10_Pan",
+                  "2017-05-19_N11_Cal",
+                  "flutype_test",
+                  "P6_170613_Cal",
+                  "P5_170612_X31",
+                  "P3_170612_X31",
+                  "2017-05-19_N7_Cal",
+                  "2017-05-12_MTP_R1",
+                  "2017-06-13_MTP"
+]
+
+
 ###########################################################
 from flutype.data_management.fill_master import Master
 from flutype.models import (Peptide,
@@ -283,7 +306,7 @@ class Database(object):
         return raw_spot, created
 
     def fill_spot(self, raw_spot,spot_collection, spot):
-        spo,created = Spot.objects.get_or_create(raw_spot=raw_spot,
+        spo, created = Spot.objects.get_or_create(raw_spot=raw_spot,
                                           intensity=spot["Intensity"],
                                           std=spot["Std"],
                                           spot_collection=spot_collection)
@@ -362,7 +385,7 @@ class Database(object):
         return unique_virus_sid
 
     def get_spots_of_collection(self, dic_data):
-
+        """ """
         vir_cor = dic_data["gal_virus"].pivot(index="Row", columns="Column", values="Name")
         pep_cor = dic_data["gal_ligand"].pivot(index="Row", columns="Column", values="Name")
 
@@ -384,36 +407,37 @@ class Database(object):
 
 
     def fillmany2many_rawspots_peptides_viruses(self):
-            for rsc in RawSpotCollection.objects.all():
-                virus_ids = self.get_virus_set(rsc)
-                peptide_ids = self.get_peptide_set(rsc)
+        """ """
+        for rsc in RawSpotCollection.objects.all():
+            virus_ids = self.get_virus_set(rsc)
+            peptide_ids = self.get_peptide_set(rsc)
 
-                for virus_id in virus_ids:
-                    try:
-                        rsc.viruses.add(Virus.objects.get(sid=virus_id))
-                    except:
-                        pass
-                for peptide_id in peptide_ids:
-                    try:
-                        rsc.peptides.add(Peptide.objects.get(sid=peptide_id))
-                    except:
-                        pass
+            for virus_id in virus_ids:
+                try:
+                    rsc.viruses.add(Virus.objects.get(sid=virus_id))
+                except:
+                    pass
+            for peptide_id in peptide_ids:
+                try:
+                    rsc.peptides.add(Peptide.objects.get(sid=peptide_id))
+                except:
+                    pass
 
     def fill_raw_collection_and_related_raw_spots(self, dic_data, dic_spots):
-
-        db.fill_raw_collection(dic_data)
+        """ """
+        self.fill_raw_collection(dic_data)
         # fill raw spots
-        raw_spots = db.get_spots_of_collection(dic_spots)
+        raw_spots = self.get_spots_of_collection(dic_spots)
         for k, raw_spot in raw_spots.iterrows():
-            db.fill_raw_spot(dic_data["meta"]["SID"], raw_spot)
+            self.fill_raw_spot(dic_data["meta"]["SID"], raw_spot)
 
 
 
     def fill_q_collection_and_related_spots(self, dic_data_q, q_collection_id):
-
-        spot_collection, created, raw_spot_collection = db.fill_spot_collection(dic_data_q["meta"]["SID"],
+        """ """
+        spot_collection, created, raw_spot_collection = self.fill_spot_collection(dic_data_q["meta"]["SID"],
                                                                                 q_collection_id)
-        spots = db.get_spots_of_collection(dic_data_q)
+        spots = self.get_spots_of_collection(dic_data_q)
         for k, spot in spots.iterrows():
             raw_spo = RawSpot.objects.get(raw_spot_collection=raw_spot_collection,
                                           column=spot["Column"],
@@ -422,28 +446,13 @@ class Database(object):
             self.fill_spot(raw_spot=raw_spo, spot_collection=spot_collection, spot=spot)
 
 
-##############################################################
-if __name__ == "__main__":
-    # the path to the master folder
-    path_master = "master/"
+def fill_database(path_master, collection_ids):
+    """ Main function to fill database
 
-    # all sid of microarray collections
-    collection_ids = ["2017-05-19_E5_X31",
-                      "2017-05-19_E6_untenliegend_X31",
-                      "2017-05-19_N5_X31",
-                      "2017-05-19_N6_Pan",
-                      "2017-05-19_N9_X31",
-                      "2017-05-19_N10_Pan",
-                      "2017-05-19_N11_Cal",
-                      "flutype_test",
-                      "P6_170613_Cal",
-                      "P5_170612_X31",
-                      "P3_170612_X31",
-                      "2017-05-19_N7_Cal",
-                      "2017-05-12_MTP_R1",
-                      "2017-06-13_MTP"
-                      ]
-
+    :param path_master:
+    :param collection_ids:
+    :return:
+    """
     print("-" * 80)
     print("Filling database")
     print("-" * 80)
@@ -469,3 +478,10 @@ if __name__ == "__main__":
 
     #many 2many relation
     db.fillmany2many_rawspots_peptides_viruses()
+
+
+##############################################################
+if __name__ == "__main__":
+
+    fill_database(path_master=path_master, collection_ids=collection_ids)
+

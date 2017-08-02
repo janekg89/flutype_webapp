@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'flutype.apps.FlutypeConfig',
-    # 'debug_toolbar',
+    'debug_toolbar',
 
 ]
 
@@ -52,7 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'flutype_webapp.urls'
@@ -163,5 +163,3 @@ except ImportError as e:
     print("*" * 40)
     print("RUNNING IN DEVELOP")
     print("*" * 40)
-
-print(os.path.join(BASE_DIR, 'templates'))

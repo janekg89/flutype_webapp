@@ -91,10 +91,10 @@ class Master(object):
 
         """
         self.path = path
-        self.data_tables_path = os.path.join(self.path,"data_tables")
-        self.collections_path = os.path.join(self.path,"collections")
-        self.unique_vir_gal_path = os.path.join(self.path,"unique_gal_virus")
-        self.unique_lig_gal_path = os.path.join(self.path,"unique_gal_ligand")
+        self.data_tables_path = os.path.join(self.path, "data_tables")
+        self.collections_path = os.path.join(self.path, "collections")
+        self.unique_vir_gal_path = os.path.join(self.path, "unique_gal_virus")
+        self.unique_lig_gal_path = os.path.join(self.path, "unique_gal_ligand")
 
     def write_data_tables(self, data_tables_dic):
         """
