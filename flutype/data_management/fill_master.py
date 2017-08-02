@@ -1,11 +1,60 @@
-from __future__ import print_function, absolute_import, division
+# Script for updating the master folder
+# all create_or_update_..., or write_... in class Master require data.
+# read functions require information what to read
 
+# procedure:
+# 1. Initalize Master class with location of master folder:
+# ma = Master(path_to_master_folder)
+#
+# 2. Load data_tables (dic_data_table).
+#   dic_data_tables: a dictionary containing one of the following keys. Their values contain the corresponding data:
+#                            keys (data_format):     peptide          (pandas.DataFrame -> Columns: Peptide ID,	Linker,	Spacer,	Sequence,	C-terminus,	Name,	Types,	Comment)
+#                                                    peptide_batch    (pandas.DataFrame -> Columns: Ligand id,	Peptide ID,	Concentration [mg/ml], Buffer,	pH,	Purity (MS), Synthesized by,	Synthesization Date, Comment)
+#                                                    virus            (pandas.DataFrame -> Columns: Taxonomy ID, SubGroup, Country	Date, Strain Name)
+#                                                    virus_batch      (pandas.DataFrame -> Columns: Batch ID, Taxonomy ID, Concentration [mg/ml], Labeling, Buffer,	pH,	Active,	Passage History, Production Date, Comment)
+#                                                    spotting         (pandas.DataFrame -> Columns: Spotting ID, Spotting Method, Washing S ID,	Comment)
+#                                                    quenching        (pandas.DataFrame -> Columns: Queching ID, Quenching Method, Washing_Q_ID, Comment)
+#                                                    incubating       (pandas.DataFrame -> Columns: Incubating ID, Incubation Method, Washing I ID, Comment)
+#FIXME: Better column nameing.
+#FIXME: Different handling of Washing.
+#FIXME: Add anti_body and anti_body_batch
+#FIXME: Add Ligand. It can be Peptide Batch, Virus Batch, Anti_body_batch
+# 3. write dic_data_tables to files. Any key in Datatables will create a .csv file from its value(pandas.DataFrame) in (Master_folder/data_tabels/.)
+#   ma.write_data_tables(data_tables_dic)
+#FIXME: make it possible to update data_tables and not only overwrite them.
+#
+# 4. Select name of collection data (convention: collection_id).
+#
+# 5. Load collection data (dic_data) from your desired source (e.g. fluType_analysis_folder, backup, website)
+#   dic_data: a dictionary containing one of the following keys. Their values contain the corresponding data:
+#                            keys (data_format):     gal_ligand   (pandas.DataFrame -> Columns: "Row", "Column", "Name")
+#                                                    gal_virus    (pandas.DataFrame -> Columns: "Row", "Column", "Name")
+#                                                    meta         (dictionary -> keys: Manfacturer,	HolderType,	Spotting, Incubating,	HolderBatch, SID, SurfaceSubstance, Quenching)
+#                 (optional)                         image        (cv2 image file in grayscale)
+#                 (important for q_collection)       intensity    (pandas.DataFrame -> Columns: "Columns" Index:"Row" Value: Intenstities)
+#                 (optional for q_collection)        std          (pandas.DataFrame -> Columns: "Columns" Index:"Row" Value: Standard deviation)
+#                 (optional for q_collection)        q_meta       (dictionary -> keys with corresponding value go to q_meta.csv)
+#
+# 6. Create or update unique gal vir and lig FIXME: make this not nessecary anymore
+#   ma.create_or_update_unique_gal_vir(dic_data["gal_virus"])
+#   ma.create_or_update_unique_gal_lig(dic_data["gal_ligand"])
+#
+# 7. Create or update raw collection: (Convention: for microwell plate: q_collection_id = "raw", for microarray: q_collection_id = "not" ) FIXME: too complicate -> change convention: make two functions (create or update raw collection) and create or update quantified collection
+#  ma.create_or_update_collection(collection_id, dic_data, q_collection_id="raw", type="microwell")
+#   or
+#  ma.create_or_update_collection(collection_id, dic_data, q_collection_id="not", type="microarray")
+#
+# 8. Create or update quantified collection:
+#   ma.create_or_update_collection(collection_id, dic_data, q_collection_id="your_q_collection_id",quantified_only=True, type="choose-from-'microwell'-or-'microarray'")
+
+# import libraries
+from __future__ import print_function, absolute_import, division
 import os
 import sys
 import cv2
 import csv
 import re
-from flutype_analysis import utils, analysis
+from flutype_analysis import utils
 import pandas as pd
 import numpy as np
 from django.core.files import File
@@ -18,18 +67,15 @@ if path not in sys.path:
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flutype_webapp.settings")
 
 import django
-
 django.setup()
 from flutype.data_management.read_flutype_analysis_db import load_procedure_data , load_db_from_formular
-
-
 
 class Master(object):
 
     def __init__(self, path):
 
         """
-        :param path: The path to the Master Directory
+        :param path: The path to the master directory
 
         """
         self.path = path
@@ -43,7 +89,7 @@ class Master(object):
 
     def write_data_tables(self, data_tables_dic):
         """
-        saves datatables
+        saves datatables in master Folder
         :param data_tables_dic:
         :return:
         """
@@ -62,21 +108,34 @@ class Master(object):
             data_tables_dic[key].to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
 
 
+    def read_data_tables(self):
+        """
+        :return: data_tables_dic
+        """
+        data_tables_dic ={}
+        for fn in os.listdir(self.data_tables_path):
+            key = re.search('(.*).csv', fn)
+            d_file = os.path.join(self.data_tables_path,fn)
+            data_tables_dic[key.group(1)] = pd.read_csv(d_file, sep="\t", encoding='utf-8')
+            data_tables_dic[key.group(1)].replace([np.NaN], [None] , inplace=True)
+
+        return data_tables_dic
 
 
 
 
-    def create_or_update_gal_ligand(self,gal_ligand_data,collection_id):
+
+
+    def create_or_update_gal_ligand(self, gal_ligand, collection_id):
         """
         saves gal ligand
-        :param gal_ligand_data:
+        :param gal_ligand:
         :param collection_id:
         :return:
         """
-        fname, _ = self.get_unique_gal_lig(gal_ligand_data)
-
+        fname, _ = self.get_unique_gal_lig(gal_ligand)
         file_path = os.path.join(self.collections_path, collection_id, fname)
-        gal_ligand_data.to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
+        gal_ligand.to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
 
 
     def read_gal_ligand(self, collection_id, format="pd"):
@@ -84,8 +143,8 @@ class Master(object):
 
         :param collection_id:
         :param format: "pd": read as panadas dataFrame
-                       "dj":  django File ("rb")
-        :return:
+                       "dj": django File ("rb")
+        :return: gal_ligand, gal_ligand_name
         """
         collection_path = os.path.join(self.collections_path, collection_id)
         for fn in os.listdir(collection_path):
@@ -123,7 +182,8 @@ class Master(object):
         :param collection_id:
         :param format:  "pd": read as panadas dataFrame
                         "dj":  django File ("rb")
-        :return:
+        :return: gal_virus: depending on format.
+                f_name
         """
         collection_path = os.path.join(self.collections_path, collection_id)
         for fn in os.listdir(collection_path):
@@ -141,30 +201,41 @@ class Master(object):
         return gal_virus, f_name
 
 
-    def create_or_update_meta(self,meta_data,collection_id):
+    def create_or_update_meta(self, meta, collection_id):
         """
-        saves meta data
-        :param meta_data:
+        saves meta
+        :param meta:
         :param collection_id:
         :return:
         """
 
         path_file = os.path.join(self.collections_path, collection_id, 'meta.csv')
         with open(path_file, 'wb') as f:
-            w = csv.DictWriter(f, meta_data.keys(), delimiter="\t")
+            w = csv.DictWriter(f, meta.keys(), delimiter="\t")
             w.writeheader()
-            w.writerow(meta_data)
+            w.writerow(meta)
 
 
     def read_meta(self,collection_id):
+        """
+
+        :param collection_id:
+        :return: meta
+        """
         path_file = os.path.join(self.collections_path, collection_id, 'meta.csv')
         with open(path_file) as f:
             reader = csv.DictReader(f,delimiter="\t")
             for row in reader:
-                meta_data = row
-        return meta_data
+                meta = row
+        return meta
 
     def create_or_update_image(self,image_data, collection_id):
+        """
+
+        :param image_data:
+        :param collection_id:
+        :return:
+        """
         path_file = os.path.join(self.collections_path,collection_id,"image.jpg")
         cv2.imwrite(path_file, image_data)
 
@@ -175,7 +246,7 @@ class Master(object):
         :param collection_id:
         :param format: cv2
                        dj
-        :return:
+        :return: image: depending on format.
         """
         path_file = os.path.join(self.collections_path,collection_id,"image.jpg")
         if format == "cv2":
@@ -412,19 +483,7 @@ class Master(object):
 
 
 
-    def read_datatables(self):
 
-        """
-        :return: data_tables_dic
-        """
-        data_tables_dic ={}
-        for fn in os.listdir(self.data_tables_path):
-            key = re.search('(.*).csv', fn)
-            d_file = os.path.join(self.data_tables_path,fn)
-            data_tables_dic[key.group(1)] = pd.read_csv(d_file, sep="\t", encoding='utf-8')
-            data_tables_dic[key.group(1)].replace([np.NaN], [None] , inplace=True)
-
-        return data_tables_dic
 
 
 
@@ -560,7 +619,6 @@ if __name__ == "__main__":
         """
         The dictionary in which is returned  from utils.load_data has different key naming than the once needed for dic_data in
         method create_or_update_collection. rename_dic changes key names.
-
 
         :param dic_data:
         :return: dic_data: same values as before, different key names.
