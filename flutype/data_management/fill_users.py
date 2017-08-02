@@ -53,6 +53,7 @@ def create_users(user_defs, delete_all=True):
     for user in User.objects.all():
         print('\t', user.username, user.email, user.password)
 
+
 if __name__ == "__main__":
     print("*** Creating users ***")
     create_users(user_defs=user_defs, delete_all=True)
