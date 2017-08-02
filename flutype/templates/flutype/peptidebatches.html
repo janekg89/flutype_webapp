@@ -5,7 +5,6 @@
         <div class="col-lg-12">
             <h1>Peptide Batches</h1>
             {% if peptide_batches %}
-
             <table id="peptide_batches" class="table table-striped">
                 <thead>
                 <tr>
@@ -27,54 +26,29 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for peptidebatch in peptide_batches.all %}
+                {% for peptidebatch in peptide_batches.all() %}
                     <tr>
                         <td class="warning">
                             <b>{{ peptidebatch.sid }}</b>
                         </td>
                         <!-- peptide information -->
-                        <td class="danger">
-                            {{ peptidebatch.peptide.sid }}
-                        <td class="danger">
-                            {{ peptidebatch.peptide.linker }}
-                        </td>
-                        <td class="danger">
-                            {{ peptidebatch.peptide.spacer }}
-                        </td>
-                        <td class="danger">
-                            {{ peptidebatch.peptide.sequence }}
-                        </td>
-                        <td class="danger">
-                            {{ peptidebatch.peptide.c_terminus }}
-                        </td>
-                        <td class="danger">
-                            {{ peptidebatch.peptide.name }}
-                        </td>
-                        <td class="danger">
-                            {{ peptidebatch.peptide.pep_type }}
-                        </td>
+                        {% with p=peptidebatch.peptide %}
+                        <td class="danger">{{ p.sid }}</td>
+                        <td class="danger">{{ p.linker }}</td>
+                        <td class="danger">{{ p.spacer }}</td>
+                        <td class="danger">{{ p.sequence }}</td>
+                        <td class="danger">{{ p.c_terminus }}</td>
+                        <td class="danger">{{ p.name }}</td>
+                        <td class="danger">{{ p.pep_type }}</td>
+                        {%  endwith %}
                         <!-- batch information -->
-                        <td>
-                            {{ peptidebatch.concentration }}
-                        </td>
-                        <td>
-                            {{ peptidebatch.buffer }}
-                        </td>
-                        <td>
-                            {{ peptidebatch.ph }}
-                        </td>
-                        <td>
-                            {{ peptidebatch.purity }}
-                        </td>
-                        <td>
-                            {{ peptidebatch.produced_by }}
-                        </td>
-                        <td>
-                            {{ peptidebatch.production_date }}
-                        </td>
-                        <td>
-                            {{ peptidebatch.comment }}
-                        </td>
+                        <td>{{ peptidebatch.concentration }}</td>
+                        <td>{{ peptidebatch.buffer }}</td>
+                        <td>{{ peptidebatch.ph }}</td>
+                        <td>{{ peptidebatch.purity }}</td>
+                        <td>{{ peptidebatch.produced_by }}</td>
+                        <td>{{ peptidebatch.production_date }}</td>
+                        <td>{{ peptidebatch.comment }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>

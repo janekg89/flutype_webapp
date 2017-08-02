@@ -4,6 +4,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.http import HttpResponse
+from django.contrib.auth.models import User
 from .models import RawSpotCollection,SpotCollection, PeptideBatch, Peptide, VirusBatch, Virus
 from django.views import generic
 from django.shortcuts import render, get_object_or_404
@@ -12,18 +13,38 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from django.contrib.auth.decorators import login_required
 
 
+# @login_required
+def test_view(request):
+    context = {
+        'data': 123,
+        'user': 'testuser'
+    }
+    return render(request,
+                  'flutype/test.html', context)
+
 
 @login_required
 def index_view(request):
     collections = RawSpotCollection.objects.all()
+
     context = {
         'collections': collections,
     }
     return render(request,
                   'flutype/index.html', context)
 
+@login_required
+def users_view(request):
+    users = User.objects.all()
+    context = {
+        'users': users,
+    }
+    return render(request,
+                  'flutype/users.html', context)
+
 def about_view(request):
     return render(request,"flutype/about.html")
+
 
 @login_required
 def peptide_batch_view(request):
@@ -122,7 +143,6 @@ def heatmap_view(request, pk):
     # ! the figure must be created with:
     # from matplotlib.figure import Figure
     # fig = Figure(**kwargs)
-
 
     fig = ana.heatmap(heatmap=True, descript=False, figsize=(10, 15))
 

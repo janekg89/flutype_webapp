@@ -1,11 +1,12 @@
 {% extends "flutype/base.html" %}
-{% load static %}
+
 {% block content %}
     <!-- Main Content -->
     <div class="container">
         <div class="row">
             <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
-                <h1>Entwicklung einer peptidbasierten Subtypisierungsplattform für Influenzaviren (FluType)</h1>
+                <h1>FluType</h1>
+                <h2>Entwicklung einer peptidbasierten Subtypisierungsplattform für Influenzaviren</h2>
                 <p>Das Influenzavirus verursacht jährlich wiederkehrende Grippewellen und in größeren Zeitabständen
                     schwerwiegende Pandemien. Der einzig wirksame kosteneffektive Schutz vor einer Grippeerkrankung ist
                     die Impfung. Da das Virus sich sehr schnell verändert (mutiert) treten immer wieder neue Varianten,
@@ -20,7 +21,7 @@
                     zirkulierenden Virusstämmen erforderlich sind. Diese Versuche sind außerdem nur schlecht
                     standardisier- und reproduzierbar, was die Aussagekraft der Ergebnisse einschränkt.
                 </p>
-                <img src="{% static "flutype/images/info_about.jpg" %}" align="left" width="400"/>
+                <img src="{{ static('flutype/images/info_about.jpg') }}" align="left" width="400"/>
                 <p> An der Universität Potsdam und dem Fraunhofer IZI-BB wurde ein neuartiges Testsystem zur
                     Influenzavirus-Subtypisierung entwickelt, welches nun hinsichtlich seiner Anwendbarkeit
                     validiert werden soll. Wie in der Abbildung dargestellt, erfolgt die Differenzierung der

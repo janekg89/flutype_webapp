@@ -5,17 +5,13 @@ from __future__ import print_function, absolute_import, division
 
 import os
 import sys
-import numpy as np
-import pandas as pd
-import re
-import cv2
 from django.core.files import File
 import warnings
-from flutype_analysis import utils, analysis
 
+###########################################################
 # setup django (add current path to sys.path)
 path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../'))
-
+print(path)
 if path not in sys.path:
     sys.path.append(path)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flutype_webapp.settings")
@@ -23,31 +19,339 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flutype_webapp.settings")
 import django
 django.setup()
 
-# import models
+
+# the path to the master folder
+path_master = os.path.join(path, "master/")
+
+# all sid of microarray collections
+# FIXME: get from folder names
+collection_ids = ["2017-05-19_E5_X31",
+                  "2017-05-19_E6_untenliegend_X31",
+                  "2017-05-19_N5_X31",
+                  "2017-05-19_N6_Pan",
+                  "2017-05-19_N9_X31",
+                  "2017-05-19_N10_Pan",
+                  "2017-05-19_N11_Cal",
+                  "flutype_test",
+                  "P6_170613_Cal",
+                  "P5_170612_X31",
+                  "P3_170612_X31",
+                  "2017-05-19_N7_Cal",
+                  "2017-05-12_MTP_R1",
+                  "2017-06-13_MTP"
+]
+
+
+###########################################################
+from flutype.data_management.fill_master import Master
 from flutype.models import (Peptide,
                             PeptideBatch,
                             Virus,
                             VirusBatch,
-                            User,
                             RawSpotCollection,
+                            SpotCollection,
                             RawSpot,
                             Spot,
                             Spotting,
                             Quenching,
                             Incubating,
                             Process,
-                            GalPeptide,
-                            GalVirus,
-                            SpotCollection)
+                            GalLigand,
+                            GalVirus)
 
-#fixme: get or create to update_or_create()
-class DBFill(object):
-    """ 
-    contains functions to fill the database
-    """
 
-    @staticmethod
-    def get_peptide_set(RawSpotCollection):
+class Database(object):
+    """ Database """
+
+    def create_or_update_virus(self, virus):
+        vir, created = Virus.objects.get_or_create(subgroup=virus["SubGroup"],
+                                                   country=virus["Country"],
+                                                   date_of_appearance=virus["Date"],
+                                                   strain=virus["Strain Name"],
+                                                   sid=virus["Taxonomy ID"]
+                                                 )
+        return vir, created
+
+    def create_or_update_virus_batch(self, virus_batch):
+        try:
+            virus = Virus.objects.get(sid=virus_batch["Taxonomy ID"])
+
+        except:
+            virus = None
+            # prints all virus batches without foreignkey to a virus in the database
+            print("No virus found for virus batch with sid:" + virus_batch["Batch ID"])
+
+        # fills virus batches
+        virus_b, created = VirusBatch.objects.get_or_create(sid=virus_batch["Batch ID"],
+                                                            passage_history=virus_batch["Passage History"],
+                                                            active=virus_batch["Active"],
+                                                            labeling=virus_batch["Labeling"],
+                                                            virus=virus,
+                                                            concentration=virus_batch["Concentration [mg/ml]"],
+                                                            ph=virus_batch["pH"],
+                                                            buffer=virus_batch["Buffer"],
+                                                            production_date=virus_batch["Production Date"],
+                                                            comment=virus_batch["Comment"]
+                                                            )
+        return virus_b, created
+
+
+    def create_or_update_peptide(self, peptide):
+        # fills peptides
+        peptide, created = Peptide.objects.get_or_create(sid=peptide["Peptide ID"],
+                                                         name=peptide["Name"],
+                                                         linker=peptide["Linker"],
+                                                         spacer=peptide["Spacer"],
+                                                         sequence=peptide["Sequence"],
+                                                         c_terminus=peptide["C-terminus"],
+                                                         pep_type=peptide["Types"],
+                                                         comment=peptide["Comment"]
+                                                         )
+        return peptide, created
+
+
+    def create_or_update_peptide_batch(self,peptide_batch):
+        try:
+            peptide = Peptide.objects.get(sid=peptide_batch["Peptide ID"])
+
+        except:
+            peptide = None
+            # prints all peptide batches without foreignkey to a virus in the database
+            print("No peptide found for peptide batch with sid:" +peptide_batch["Ligand id"])
+
+        # fills peptide_batches
+        peptide_b, created = PeptideBatch.objects.get_or_create(sid=peptide_batch["Ligand id"],
+                                                        peptide=peptide,
+                                                        concentration=peptide_batch["Concentration [mg/ml]"],
+                                                        ph=peptide_batch["pH"],
+                                                        purity=peptide_batch["Purity (MS)"],
+                                                        buffer=peptide_batch["Buffer"],
+                                                        produced_by=peptide_batch["Synthesized by"],
+                                                        production_date=peptide_batch["Synthesization Date"],
+                                                        comment=peptide_batch["Comment"]
+                                                        )
+        return peptide_b, created
+
+
+    def create_or_update_incubating(self, incubating):
+        incub, created = Incubating.objects.get_or_create(sid=incubating["Incubating ID"],
+                                                         method=incubating["Incubation Method"],
+                                                         date_time=None,
+                                                         user=None,
+                                                         comment=incubating["Comment"])
+        return incub, created
+
+
+
+    def create_or_update_quenching(self,quenching):
+        quench, created = Quenching.objects.get_or_create(sid=quenching["Queching ID"],
+                                                        method=quenching["Quenching Method"],
+                                                        date_time=None,
+                                                        user=None,
+                                                        comment=quenching["Comment"])
+        return quench , created
+
+    def create_or_update_spotting(self, spotting):
+        spotti, created = Spotting.objects.get_or_create(sid=spotting["Spotting ID"],
+                                                    method=spotting["Spotting Method"],
+                                                    date_time=None,
+                                                    user=None,
+                                                    comment=spotting["Comment"])
+        return spotti, created
+
+
+    def fill_dt(self,data_tables):
+        # Stores informations if any new media was loaded.
+
+        created_pb = []
+        created_p = []
+        created_v = []
+        created_vb = []
+        #treatments
+        created_s = []
+        created_q = []
+        created_i = []
+
+        # fills viruses
+        for k, virus in data_tables["virus"].iterrows():
+            _, created = self.create_or_update_virus(virus)
+            created_v.append(created)
+
+
+        for k, virus_batch in data_tables["virus_batch"].iterrows():
+           _, created = self.create_or_update_virus_batch(virus_batch)
+           created_vb.append(created)
+
+        for k, peptide in data_tables["peptide"].iterrows():
+            _, created = self.create_or_update_peptide(peptide)
+            created_p.append(created)
+
+        for k, peptide_batch in data_tables["peptide_batch"].iterrows():
+            _,created = self.create_or_update_peptide_batch(peptide_batch)
+            created_pb.append(created)
+
+        for k, spotting in data_tables["spotting"].iterrows():
+            _, created = self.create_or_update_spotting(spotting)
+            created_s.append(created)
+        for k, quenching in data_tables["quenching"].iterrows():
+            _, created = self.create_or_update_quenching(quenching)
+            created_q.append(created)
+        for k, incubating in data_tables["incubating"].iterrows():
+            _, created = self.create_or_update_incubating(incubating)
+            created_i.append(created)
+
+        print("updates to database:")
+        print("virus:", any(created_v))
+        print("virus_batch:", any(created_vb))
+        print("peptide:", any(created_p))
+        print("peptide_batch:", any(created_pb))
+        print("spotting:", any(created_s))
+        print("quenching:", any(created_q))
+        print("incubating:", any(created_i))
+
+    def fill_process(self, meta):
+        """
+        :param meta: (dictionary -> keys with corresponding value ->  meta.csv)
+                    keys :Manfacturer
+                          HolderType
+                          Spotting
+                          HolderBatch
+                          Incubating
+                          SID
+                          SurfaceSubstance
+                          Quenching
+
+
+        :return: process (Django.model object), created (True if created, False if found)
+        """
+        try:
+            spotting = Spotting.objects.get(sid=meta["Spotting"])
+        except:
+            spotting = None
+        try:
+            incubating = Incubating.objects.get(sid=meta["Incubating"])
+        except:
+            incubating = None
+        try:
+            quenching = Quenching.objects.get(sid=meta["Quenching"])
+        except:
+            quenching = None
+
+        process, created = Process.objects.get_or_create(spotting=spotting,
+                                                         incubating=incubating,
+                                                         quenching=quenching)
+        return process, created
+
+
+
+    def fill_raw_collection(self,dic_data):
+        """
+         :param  dic_data: a dictionary containing one of the following keys. Their values contain the corresponding data:
+                            keys (data_format):     gal_ligand    tuple (Django File, fname)
+                                                    gal_virus     tuple (Django File, fname)
+                                                    meta          (dictionary -> keys with corresponding value go to meta.csv)
+                                                    image         Django File
+
+
+
+        :return:
+        """
+        print("-" * 80)
+        print("Filling Collection with sid <{}>".format(dic_data["meta"]["SID"]))
+
+        process, priocess_created = self.fill_process(dic_data["meta"])
+        gal_vir, gal_vir_created = self.fill_gal_vir(dic_data["gal_virus"][0],dic_data["gal_virus"][1])
+        gal_lig, gal_lig_created = self.fill_gal_lig(dic_data["gal_ligand"][0],dic_data["gal_ligand"][1])
+
+
+        # gets or creates raw_spot_collection
+        raw_spot_collection, _ = RawSpotCollection.objects.get_or_create(sid=dic_data["meta"]["SID"],
+                                                                             batch=dic_data["meta"]["HolderBatch"],
+                                                                             holder_type=dic_data["meta"]["HolderType"],
+                                                                             functionalization=dic_data["meta"]['SurfaceSubstance'],
+                                                                             manufacturer=dic_data["meta"]['Manfacturer'],
+                                                                             gal_ligand=gal_lig,
+                                                                             gal_virus=gal_vir,
+                                                                             process=process)
+        if "image" in dic_data:
+            raw_spot_collection.image.save(dic_data["meta"]["SID"]+".jpg", dic_data["image"])
+
+
+    def fill_spot_collection(self, collection_id, q_collection_id):
+        """
+                                                            intensity     (pandas.DataFrame -> Columns: "Columns" Index:"Row" Value: Intenstities)
+
+        :param collection:
+        :param q_collection:
+        :return:
+        """
+        raw_spot_collection = RawSpotCollection.objects.get(sid=collection_id)
+        spot_collection, created = SpotCollection.objects.get_or_create(sid=q_collection_id,
+                                                                        raw_spot_collection=raw_spot_collection
+                                                                        )
+
+        return spot_collection ,created, raw_spot_collection
+
+    def fill_raw_spot(self, collection_id, raw_spot):
+
+        raw_spot_collection = RawSpotCollection.objects.get(sid=collection_id)
+
+
+        raw_spot, created = RawSpot.objects.get_or_create(peptide_batch=PeptideBatch.objects.get(sid=raw_spot["Ligand"]),
+                                                          virus_batch=VirusBatch.objects.get(sid=raw_spot["Virus"]),
+                                                          raw_spot_collection=raw_spot_collection,
+                                                          column=raw_spot["Column"],
+                                                          row=raw_spot["Row"]
+                                                          )
+        return raw_spot, created
+
+    def fill_spot(self, raw_spot,spot_collection, spot):
+        spo, created = Spot.objects.get_or_create(raw_spot=raw_spot,
+                                          intensity=spot["Intensity"],
+                                          std=spot["Std"],
+                                          spot_collection=spot_collection)
+        return spo, created
+
+
+
+    def fill_gal_lig(self,gal_lig, fname_gal_lig):
+        """
+
+        :param  fname_gal_lig: name of _gal_ligand
+        :param  gal_lig: gal ligand (django File format !)
+        :return: gal_ligand, created
+        """
+
+        try:
+            gal_ligand = GalLigand.objects.get(sid=fname_gal_lig)
+            created = False
+        except:
+            gal_ligand, created = GalLigand.objects.get_or_create(sid=fname_gal_lig)
+            gal_ligand.file.save(fname_gal_lig, File(gal_lig))
+
+        return gal_ligand, created
+
+
+    def fill_gal_vir(self, gal_vir, fname_gal_vir):
+        """
+
+        :param fname_gal_vir: name of gal_vir
+        :param gal_vir : (django File format !)
+        :return: gal_virus, created
+
+        """
+
+        try:
+            gal_virus = GalVirus.objects.get(sid=fname_gal_vir)
+            created = False
+        except:
+            gal_virus, created = GalVirus.objects.get_or_create(sid=fname_gal_vir)
+            gal_virus.file.save(fname_gal_vir, File(gal_vir))
+
+        return gal_virus, created
+
+
+    def get_peptide_set(self,RawSpotCollection):
         """
         :return: a set of peptides which were used in RawSpotCollection
         """
@@ -61,8 +365,7 @@ class DBFill(object):
                 unique_peptide_sid.append(raw_spot.peptide_batch.peptide.sid)
         return unique_peptide_sid
 
-    @staticmethod
-    def get_virus_set(RawSpotCollection):
+    def get_virus_set(self,RawSpotCollection):
         """
         :return: a set of viruses which were used in RawSpotCollection
         """
@@ -72,471 +375,113 @@ class DBFill(object):
         for raw_spot in raw_spots:
             virus = raw_spot.virus_batch.virus
             if not hasattr(virus, 'sid'):
-                warnings.warn("No connection between virus and virus batch for virus_batch: {}".format(raw_spot.virus_batch.sid))
+                warnings.warn(
+                    "No connection between virus and virus batch for virus_batch: {}".format(raw_spot.virus_batch.sid))
             else:
                 if virus.sid in unique_virus_sid:
                     pass
                 else:
                     unique_virus_sid.append(raw_spot.virus_batch.virus.sid)
-        return  unique_virus_sid
+        return unique_virus_sid
 
-    @staticmethod
-    def get_or_create_gal_pep(directory,data):
-        max_name = 0
-        created = False
-        for fn in os.listdir(directory):
-            result = re.search('pep(.*).txt', fn)
-            if int(result.group(1)) > max_name:
-                max_name = int(result.group(1))
+    def get_spots_of_collection(self, dic_data):
+        """ """
+        vir_cor = dic_data["gal_virus"].pivot(index="Row", columns="Column", values="Name")
+        pep_cor = dic_data["gal_ligand"].pivot(index="Row", columns="Column", values="Name")
 
-            file_path = os.path.join(directory, fn)
-            pep_gal = pd.read_csv(file_path, sep='\t', index_col="ID")
+        # merge raw  spot information.
+        vir_cor_unstacked = vir_cor.unstack()
+        spot = pep_cor.unstack()
+        spot = spot.reset_index()
+        spot = spot.rename(columns={0: "Ligand"})
+        spot["Virus"] = vir_cor_unstacked.values
+        if "intensity" in dic_data:
+            spot["Intensity"]= dic_data["intensity"].unstack().values
 
-            if data["gal_pep"].equals(pep_gal):
-                fname = fn
-                fpath = os.path.join(directory, fname)
-                break
+        if "std" in dic_data:
+            spot["Std"] = dic_data["std"].unstack().values
         else:
-            created = True
-            fname = 'pep' + '{:03}'.format(max_name + 1) + '.txt'
-            fpath = os.path.join(directory,fname)
-            data["gal_pep"].to_csv(fpath, sep='\t')
-        return fname,fpath, created
-
-    @staticmethod
-    def get_or_create_gal_vir(directory, data):
-        max_name = 0
-        created = False
-        for fn in os.listdir(directory):
-            result = re.search('vir(.*).txt', fn)
-            if int(result.group(1)) > max_name:
-                max_name = int(result.group(1))
-
-            file_path = os.path.join(directory, fn)
-            pep_gal = pd.read_csv(file_path, sep='\t', index_col="ID")
-
-            if data["gal_vir"].equals(pep_gal):
-                fname = fn
-                fpath = os.path.join(directory, fname)
-                break
-        else:
-            created = True
-            fname = 'vir' + '{:03}'.format(max_name + 1) + '.txt'
-            fpath = os.path.join(directory,fname)
-            data["gal_vir"].to_csv(fpath, sep='\t')
-
-        return fname,fpath, created
-
-    @staticmethod
-    def get_or_create_image(directory,data):
-        PATTERN_TIF = "{}_600_100_635.jpeg"
-        #Pattern_jpg =
-        created = False
-        for fn in os.listdir(directory):
-            if fn==PATTERN_TIF.format(data["data_id"]):
-                fname = fn
-                fpath = os.path.join(directory, fname)
-                break
-        else:
-            fname = PATTERN_TIF.format(data["data_id"])
-            fpath = os.path.join(directory,fname)
-            cv2.imwrite(fpath,data["tif"])
-            created = True
-        return fname, fpath, created
-
-
-    @staticmethod
-    def fromdata2db(directory):
-        """ fills database from one form with peptides, peptide batches, viruses, virus batches, users, buffers, peptide types.
-            Convention: None (Null): media not present.
-                        Not for Text: media has no value.
-
-        :param: directory: directory containing media
-
-        :return:
-        """
-        print("-"*80)
-        print("Filling database with fromdata2db")
-        print("-" * 80)
-        # loads media from template
-        virus_data = DBFill.load_virus_data(directory)
-        virus_batch_data = DBFill.load_virus_batch_data(directory)
-        peptide_data = DBFill.load_peptide_data(directory)
-        peptide__batch_data = DBFill.load_peptide_batch_data(directory)
-        user_data = DBFill.load_user_data(directory)
-        spotting_data = DBFill.load_treatment_data("Spotting", directory)
-        quenching_data = DBFill.load_treatment_data("Quenching", directory)
-        incubating_data = DBFill.load_treatment_data("Incubating", directory)
-
-        # Stores informations if any new media was loaded.
-        created_u = []
-        created_l = []
-        created_p = []
-        created_v = []
-        created_vb = []
-
-        # fills viruses
-        for k, virus in virus_data.iterrows():
-            virus, created = Virus.objects.get_or_create(subgroup=virus["SubGroup"],
-                                                         country=virus["Country"],
-                                                         date_of_appearance=virus["Date"],
-                                                         strain=virus["Strain Name"],
-                                                         sid=virus["Taxonomy ID"]
-                                                         )
-            created_v.append(created)
-
-        print("Updated any viruses in the database:", any(created_v))
-
-        print("-" * 80)
-        print("Virus batches without foreignkey to a virus in the database")
-        print("-" * 80)
-        for k, virus_batch in virus_batch_data.iterrows():
-            """
-              try:
-                # fills buffer
-                Buffer_in_db, created = Buffer.objects.get_or_create(name=virus_batch["Buffer"])
-                created_bu.append(created)
-            except:
-                Buffer_in_db = None
-            
-            """
-            try:
-                virus = Virus.objects.get(sid=virus_batch["Taxonomy ID"])
-                print("**"+virus_batch["Batch ID"])
-
-            except:
-                virus = None
-                #prints all virus batches without foreignkey to a virus in the database
-                print(virus_batch["Batch ID"])
-            #fills virus batches
-            virus_batch, created = VirusBatch.objects.get_or_create(sid=virus_batch["Batch ID"],
-                                                                    passage_history=virus_batch["Passage History"],
-                                                                    active=virus_batch["Active"],
-                                                                    labeling=virus_batch["Labeling"],
-                                                                    virus=virus,
-                                                                    concentration=virus_batch["Concentration [mg/ml]"],
-                                                                    ph=virus_batch["pH"],
-                                                                    buffer=virus_batch["Buffer"],
-                                                                    production_date=virus_batch["Production Date"],
-                                                                    comment=virus_batch["Comment"]
-                                                                    )
-            created_vb.append(created)
-        print("-" * 80)
-        print("Updated any viruses batches in the database:", any(created_v))
-
-        for k, peptide in peptide_data.iterrows():
-            """
-            
-            
-            
-
-            #fills peptide types
-            pep_type , created = PeptideType.objects.get_or_create(p_types=peptide["Types"])
-            created_pt.append(created)
-            """
-
-            #fills peptides
-            peptide, created = Peptide.objects.get_or_create(sid=peptide["Peptide ID"],
-                                                             name=peptide["Name"],
-                                                             linker=peptide["Linker"],
-                                                             spacer=peptide["Spacer"],
-                                                             sequence=peptide["Sequence"],
-                                                             c_terminus=peptide["C-terminus"],
-                                                             pep_type=peptide["Types"],
-                                                             comment=peptide["Comment"]
-                                                             )
-            created_p.append(created)
-
-        print("Updated any peptides in the database:",any(created_p))
-        #print("Updated any peptide types in the database:",any(created_pt))
-
-        for k, user in user_data.iterrows():
-            #fills users
-            user, created = User.objects.get_or_create(name=user["User Name"])
-            created_u.append(created)
-
-        print("Updated any user in the database:",any(created_u))
-        print("-" * 80)
-
-
-
-
-
-        print("Peptide batches without foreignkey to a peptide in the database")
-        print("-" * 80)
-
-        for k, ligand in peptide__batch_data.iterrows():
-            """
-            try:
-                #fills buffer
-                Buffer_in_db, created = Buffer.objects.get_or_create(name=ligand["Buffer"])
-                created_bu.append(created)
-            except:
-                Buffer_in_db = None
-            """
-            try:
-                peptide = Peptide.objects.get(sid = ligand["Peptide ID"])
-            except:
-                peptide = None
-
-                #prints all peptide batches without foreignkey to a virus in the database
-
-                print(ligand["Ligand id"])
-
-            #fills peptide_batches
-            #print(ligand["Peptide ID"])
-            _ , created = PeptideBatch.objects.get_or_create( sid = ligand["Ligand id"],
-                                                              peptide=peptide,
-                                                              concentration = ligand["Concentration [mg/ml]"],
-                                                              ph = ligand["pH"],
-                                                              purity = ligand["Purity (MS)"],
-                                                              buffer = ligand["Buffer"],
-                                                              produced_by = ligand["Synthesized by"],
-                                                              production_date = ligand["Synthesization Date"],
-                                                              comment = ligand["Comment"]
-                                                              )
-
-            created_l.append(created)
-
-        print("-" * 80)
-        #print("Updated any buffer in the database:", any(created_bu))
-
-        print("Updated any ligands in the database:",any(created_l))
-
-        for k, spotting in spotting_data.iterrows():
-            _, created = Spotting.objects.get_or_create(sid=spotting["Spotting ID"],
-                                                        method=spotting["Spotting Method"],
-                                                        date_time=None,
-                                                        user=None,
-                                                        comment=spotting["Comment"])
-
-        for k, quenching in quenching_data.iterrows():
-            _, created = Quenching.objects.get_or_create(sid=quenching["Queching ID"],
-                                                        method=quenching["Quenching Method"],
-                                                        date_time=None,
-                                                        user=None,
-                                                        comment=quenching["Comment"])
-
-        for k, incubating in incubating_data.iterrows():
-            _, created = Incubating.objects.get_or_create(sid=incubating["Incubating ID"],
-                                                         method=incubating["Incubation Method"],
-                                                         date_time=None,
-                                                         user=None,
-                                                         comment=incubating["Comment"])
-
-
-
-        print("-" * 80)
-        print("Finished loading fromdata2db.")
-        print("-" * 80)
-
-
-
-    @staticmethod
-    def process2db(directory, data_id):
-        """
-        :param directory: directory containing media
-        :param data_id: id of dataset
-        :return:
-        """
-        #loads media from datafolder
-        print("-" * 80)
-        print("Filling media with process2db for id <{}>".format(data_id))
-
-        proces_dic=DBFill.load_procedure_data(directory)
-        data = utils.load_data(data_id, directory)
-        ana = analysis.Analysis(data)
-        spots = ana.spot
-        #stick to convetion if media not present -> None
-        spots["Replica"].replace([np.NaN], [None], inplace=True)
-        spots["Std"].replace([np.NaN], [None], inplace=True)
-
-
-
-
-
-
-        try:
-            spotting = Spotting.objects.get(sid=proces_dic["Spotting"])
-        except:
-            spotting = None
-        try:
-            incubating = Incubating.objects.get(sid=proces_dic["Incubating"])
-        except:
-            incubating = None
-        try:
-            quenching = Quenching.objects.get(sid=proces_dic["Quenching"])
-        except:
-            quenching = None
-
-        process, _ = Process.objects.get_or_create(spotting=spotting,
-                                                   incubating=incubating,
-                                                   quenching=quenching)
-
-
-
-        # checks if peptide gal file exits in directory.
-        pep_path = 'db_create_buffer/gal_pep/'
-        vir_path = 'db_create_buffer/gal_vir/'
-        scan_path = 'db_create_buffer/scan/'
-
-        pep_name,pep_path_true, _ = DBFill.get_or_create_gal_pep(pep_path, data)
-        try:
-            galpep=GalPeptide.objects.get(sid=pep_name)
-        except:
-            galpep,_=GalPeptide.objects.get_or_create(sid=pep_name)
-            galpep.file.save(pep_name, File(open(pep_path_true, "r")))
-
-
-        vir_name,vir_path_true,_= DBFill.get_or_create_gal_vir(vir_path, data)
-        try:
-            galvir=GalVirus.objects.get(sid=vir_name)
-        except:
-            galvir,_=GalVirus.objects.get_or_create(sid=vir_name)
-            galvir.file.save(vir_name,File(open(vir_path_true,"r")))
-
-
-
-        try:
-            scan_name, scan_path_true, _ = DBFill.get_or_create_image(scan_path, data)
-        except:
-            scan_name = False
-
-        #gets or gcreates pepgal
-
-
-
-        # gets or creates raw_spot_collection
-        try:
-            raw_spot_collection = RawSpotCollection.objects.get(sid=proces_dic["S ID"])
-        except:
-            raw_spot_collection, _ = RawSpotCollection.objects.get_or_create(sid=proces_dic["S ID"],
-                                                                             batch=proces_dic["Charge"],
-                                                                             holder_type=proces_dic["Holder Type"],
-                                                                             functionalization=proces_dic[
-                                                                                 'Surface Substance'],
-                                                                             manufacturer=proces_dic['manfacturer'],
-                                                                             gal_peptide=galpep,
-                                                                             gal_virus=galvir,
-                                                                             #image=scan_path_true,
-                                                                             process=process)
-
-            # raw_spot_collection.gal_peptide.
-            if scan_name:
-                raw_spot_collection.image.save(scan_name, File(open(scan_path_true, "rb")))
-
-
-
-            if all(spots["Intensity"].notnull()) :
-
-                spot_collection ,_ = SpotCollection.objects.get_or_create(raw_spot_collection=raw_spot_collection)
-
-
-
-
-
-            for k, spot in spots.iterrows():
-                    # print(spot["Peptide"])
-
-                    # gets or creates spots
-                raw_spot, _ = RawSpot.objects.get_or_create(peptide_batch=PeptideBatch.objects.get(sid=spot["Peptide"]),
-                                                                virus_batch=VirusBatch.objects.get(sid=spot["Virus"]),
-                                                                raw_spot_collection=raw_spot_collection,
-                                                                column=spot["Column"],
-                                                                row=spot["Row"],
-                                                                replica=spot["Replica"]
-                                                                )
-
-                if all(spots["Intensity"].notnull()):
-                    _, _ = Spot.objects.get_or_create(raw_spot=raw_spot,
-                                                      intensity=spot["Intensity"],
-                                                      std=spot["Std"],
-                                                      spot_collection=spot_collection)
-
-        print("-" * 80)
-        print("Finished filling media with process2db for id <{}>".format(data_id))
-        print("-" * 80)
-
-    @staticmethod
-    def fillmany2many_rawspots_peptides_viruses():
-            for rsc in RawSpotCollection.objects.all():
-                virus_ids = DBFill.get_virus_set(rsc)
-                peptide_ids = DBFill.get_peptide_set(rsc)
-
-                for virus_id in virus_ids:
-                    try:
-                        rsc.viruses.add(Virus.objects.get(sid=virus_id))
-                    except:
-                        pass
-                for peptide_id in peptide_ids:
-                    try:
-                        rsc.peptides.add(Peptide.objects.get(sid=peptide_id))
-                    except:
-                        pass
-
-###################################################################################
+            spot["Std"] = None
+
+        return spot
+
+
+    def fillmany2many_rawspots_peptides_viruses(self):
+        """ """
+        for rsc in RawSpotCollection.objects.all():
+            virus_ids = self.get_virus_set(rsc)
+            peptide_ids = self.get_peptide_set(rsc)
+
+            for virus_id in virus_ids:
+                try:
+                    rsc.viruses.add(Virus.objects.get(sid=virus_id))
+                except:
+                    pass
+            for peptide_id in peptide_ids:
+                try:
+                    rsc.peptides.add(Peptide.objects.get(sid=peptide_id))
+                except:
+                    pass
+
+    def fill_raw_collection_and_related_raw_spots(self, dic_data, dic_spots):
+        """ """
+        self.fill_raw_collection(dic_data)
+        # fill raw spots
+        raw_spots = self.get_spots_of_collection(dic_spots)
+        for k, raw_spot in raw_spots.iterrows():
+            self.fill_raw_spot(dic_data["meta"]["SID"], raw_spot)
+
+
+
+    def fill_q_collection_and_related_spots(self, dic_data_q, q_collection_id):
+        """ """
+        spot_collection, created, raw_spot_collection = self.fill_spot_collection(dic_data_q["meta"]["SID"],
+                                                                                q_collection_id)
+        spots = self.get_spots_of_collection(dic_data_q)
+        for k, spot in spots.iterrows():
+            raw_spo = RawSpot.objects.get(raw_spot_collection=raw_spot_collection,
+                                          column=spot["Column"],
+                                          row=spot["Row"]
+                                          )
+            self.fill_spot(raw_spot=raw_spo, spot_collection=spot_collection, spot=spot)
+
+
+def fill_database(path_master, collection_ids):
+    """ Main function to fill database
+
+    :param path_master:
+    :param collection_ids:
+    :return:
+    """
+    print("-" * 80)
+    print("Filling database")
+    print("-" * 80)
+
+    # loads data_tables
+    ma = Master(path_master)
+
+    db = Database()
+    data_tables = ma.read_data_tables()
+    db.fill_dt(data_tables)
+
+    # loads collection
+    for collection_id in collection_ids:
+        #fill raw collection
+        dic_data_dj = ma.read_raw_collection(collection_id)
+        dic_spots = ma.read_dic_spots(collection_id)
+        db.fill_raw_collection_and_related_raw_spots(dic_data_dj, dic_spots)
+        #fill_q_collection
+        q_collection_ids = ma.read_all_q_collection_ids_for_collection(collection_id)
+        for q_collection_id in q_collection_ids:
+            dic_data_q = ma.read_q_collection(collection_id,q_collection_id)
+            db.fill_q_collection_and_related_spots(dic_data_q, q_collection_id)
+
+    #many 2many relation
+    db.fillmany2many_rawspots_peptides_viruses()
+
+
+##############################################################
 if __name__ == "__main__":
 
-    # load data_tables from formualr db:
-    # fills database from one form with peptides, peptide batches,
-    # viruses, virus batches, users, buffers, peptide types.
-    path_formular_db = "media/forumular_db/"
-    file_path = os.path.join(path, path_formular_db)
-
-    DBFill().fromdata2db(path_formular_db)
-
-
-    # requires the flutype_analysis in same directory as flutype_webapp
-
-    PATTERN_DIR_MICROARRAY = "../flutype_analysis/data_tables/{}"
-    PATTERN_DIR_MICROWELL = "../flutype_analysis/data_tables/MTP/{}"
-
-
-
-
-
-    
-    
-    
-    microarray_data_ids = [
-        "2017-05-19_E5_X31",
-        "2017-05-19_E6_untenliegend_X31",
-        "2017-05-19_N5_X31",
-        "2017-05-19_N6_Pan",
-        "2017-05-19_N9_X31",
-        "2017-05-19_N10_Pan",
-        "2017-05-19_N11_Cal",
-        "flutype_test",
-        "P6_170613_Cal",
-        "P5_170612_X31",
-        "P3_170612_X31",
-        "2017-05-19_N7_Cal"
-        ]
-
-    # fills microarrray_data
-    for mid in microarray_data_ids:
-        #file_path = os.path.join(path, PATTERN_DIR_MICROARRAY.format(mid))
-        DBFill().process2db(PATTERN_DIR_MICROARRAY.format(mid), mid)
-
-
-
-
-
-    microwell_data_ids = ["2017-05-12_MTP_R1",
-                          "2017-06-13_MTP"
-                          ]
-
-    ## fills_microwell_data
-    for mid in microwell_data_ids:
-        file_path = os.path.join(path, PATTERN_DIR_MICROWELL.format(mid))
-        DBFill().process2db(PATTERN_DIR_MICROWELL.format(mid), mid)
-
-    DBFill().fillmany2many_rawspots_peptides_viruses()
-
-    
-    
-    
-
-
-
+    fill_database(path_master=path_master, collection_ids=collection_ids)
 
