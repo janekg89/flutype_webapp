@@ -19,7 +19,7 @@ COPY . /code/
 # Install latest flutype_analysis
 RUN pip install git+https://github.com/matthiaskoenig/flutype-analysis.git@develop
 
-CMD ["echo", "*Finished building containter*"]
+# CMD ["echo", "*Finished building containter*"]
 # Run tests
 # WORKDIR /usr/src/app/flutype_webapp
 # RUN python manage.py test
