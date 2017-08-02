@@ -1,5 +1,5 @@
 {% extends "flutype/base.html" %}
-{% load static %}
+
 {% block content %}
     <!-- Main Content -->
     <div class="container">
@@ -21,7 +21,7 @@
                     zirkulierenden Virusstämmen erforderlich sind. Diese Versuche sind außerdem nur schlecht
                     standardisier- und reproduzierbar, was die Aussagekraft der Ergebnisse einschränkt.
                 </p>
-                <img src="{% static "flutype/images/info_about.jpg" %}" align="left" width="400"/>
+                <img src="{{ static('flutype/images/info_about.jpg') }}" align="left" width="400"/>
                 <p> An der Universität Potsdam und dem Fraunhofer IZI-BB wurde ein neuartiges Testsystem zur
                     Influenzavirus-Subtypisierung entwickelt, welches nun hinsichtlich seiner Anwendbarkeit
                     validiert werden soll. Wie in der Abbildung dargestellt, erfolgt die Differenzierung der

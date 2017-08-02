@@ -13,17 +13,27 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from django.contrib.auth.decorators import login_required
 
 
+# @login_required
+def test_view(request):
+    context = {
+        'data': 123,
+        'user': 'testuser'
+    }
+    return render(request,
+                  'flutype/test.html', context)
+
 
 @login_required
 def index_view(request):
     collections = RawSpotCollection.objects.all()
+
     context = {
         'collections': collections,
     }
     return render(request,
                   'flutype/index.html', context)
 
-#login_required
+@login_required
 def users_view(request):
     users = User.objects.all()
     context = {

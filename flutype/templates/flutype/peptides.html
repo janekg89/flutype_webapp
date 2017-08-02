@@ -19,7 +19,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for p in peptides.all %}
+                {% for p in peptides.all() %}
                     <tr>
                         <td class="warning"><b>{{p.sid }}</b></td>
                         <td>{{ p.linker }}</td>
