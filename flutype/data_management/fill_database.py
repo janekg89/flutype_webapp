@@ -431,9 +431,6 @@ if __name__ == "__main__":
     # the path to the master folder
     path_master = "master/"
 
-
-
-
     # all sid of microarray collections
     collection_ids = ["2017-05-19_E5_X31",
                       "2017-05-19_E6_untenliegend_X31",
@@ -450,8 +447,6 @@ if __name__ == "__main__":
                       "2017-05-12_MTP_R1",
                       "2017-06-13_MTP"
                       ]
-                                 
-
 
     print("-" * 80)
     print("Filling database")
@@ -464,10 +459,7 @@ if __name__ == "__main__":
     data_tables = ma.read_data_tables()
     db.fill_dt(data_tables)
 
-
-
-
-    #loads collection
+    # loads collection
     for collection_id in collection_ids:
         #fill raw collection
         dic_data_dj = ma.read_raw_collection(collection_id)
