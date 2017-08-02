@@ -2,8 +2,6 @@
 
 {% block content %}
     <!-- RENDERS RAWSPOTCOLLECTION OR QUANTIFIEDSPOTCOLLECTION -->
-
-
     <div class="row">
         <div class="col-lg-12">
             {%  if type == "raw" %}
@@ -14,7 +12,6 @@
         </div>
     </div>
 
-
     <!-- Raw Image & General information -->
     <div class="row">
 
@@ -22,7 +19,7 @@
         <div class="col-lg-2">
             {% if collection.image %}
                 <a href="{{ collection.image.url }}" target="_blank">
-                    <img src={{ collection.image.url }} alt="Scan" height="800">
+                    <img src={{ collection.image.url }} alt="Scan" width="250">
                 </a>
             {% else %}
                 <center><i class="fa fa-5x fa-ban"></i><br />
@@ -35,15 +32,15 @@
             {%  if type == "raw" %}
                 <h2>Quantified Collections</h2>
                 <p>
-                    {% for sc in collection.spotcollection_set.all %}
-                        <a href="{% url "qspotcollectionview" pk=sc.id %}"><b>QuantifiedCollection:{{ sc.sid }}</b></a><br />
+                    {% for sc in collection.spotcollection_set.all() %}
+                        <a href="{{ url('qspotcollectionview', args=[sc.id]) }}"><b>QuantifiedCollection:{{ sc.sid }}</b></a><br />
                     {% endfor %}
                 </p>
             {% else %}
 
                 <h2>Raw Collection</h2>
                 <p>
-                    <a href="{% url "rawspotcollectionview" pk=collection.pk %}"><b>RawCollection:{{ collection.sid }}</b></a><br />
+                    <a href="{{ url('rawspotcollectionview', args=[collection.pk]) }}"><b>RawCollection:{{ collection.sid }}</b></a><br />
                 </p>
 
             {% endif %}
@@ -56,21 +53,27 @@
                     <td><b>Functionalization</b></td><td>{{collection.functionalization}}</td>
                 </tr><tr>
                     <td><b>Manufacturer</b></td><td>{{collection.manufacturer}}</td>
-                </tr><tr>
-                    <td><b>Spotting</b></td><td>{{collection.process.spotting.method}}</td>
-                </tr><tr>
-                    <td><b>Quenching</b></td><td>{{collection.process.quenching.method}}</td>
-                </tr><tr>
-                    <td><b>Incubating</b></td><td>{{collection.process.incubating.method}}</td>
-                </tr><tr>
-                </tr><tr>
+                </tr>
+
+                {% with process=collection.process %}
+
+                <tr>
+                    <td><b>Spotting</b></td><td>{% if process.spotting %}{{ process.spotting.method }}{% endif %}</td>
+                </tr>
+                <tr>
+                    <td><b>Quenching</b></td><td>{% if process.quenching %}{{ process.quenching.method }}{% endif %}</td>
+                </tr>
+                <tr>
+                    <td><b>Incubating</b></td><td>{% if process.incubating %}{{ process.incubating.method }}{% endif %}</td>
+                </tr>
+                {%  endwith %}
+
+                <tr>
                     <td><b>RawSpotCollection Batch</b></td><td>{{ collection.batch }}</td>
                 </tr>
             </table>
 
         <img src="./heatmap" width="400" >
-
-
 
         </div>
 
@@ -91,31 +94,16 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for peptide in collection.peptides.all %}
+                {% for peptide in collection.peptides.all() %}
                     <tr>
-                        <td>
-                            {{ peptide.sid|default_if_none:"" }}
-                        <td>
-                            {{ peptide.linker|default_if_none:"" }}
-                        </td>
-                        <td>
-                            {{ peptide.spacer|default_if_none:"" }}
-                        </td>
-                        <td>
-                            {{ peptide.sequence|default_if_none:"" }}
-                        </td>
-                        <td>
-                            {{ peptide.c_terminus|default_if_none:"" }}
-                        </td>
-                        <td>
-                            {{ peptide.name|default_if_none:"" }}
-                        </td>
-                        <td>
-                            {{ peptide.pep_type|default_if_none:"" }}
-                        </td>
-                        <td>
-                            {{ peptide.comment|default_if_none:"" }}
-                        </td>
+                        <td>{{ peptide.sid }}</td>
+                        <td>{{ peptide.linker }}</td>
+                        <td>{{ peptide.spacer }}</td>
+                        <td>{{ peptide.sequence }}</td>
+                        <td>{{ peptide.c_terminus }}</td>
+                        <td>{{ peptide.name }}</td>
+                        <td>{{ peptide.pep_type }}</td>
+                        <td>{{ peptide.comment }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -134,22 +122,13 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for virus in collection.viruses.all %}
+                {% for virus in collection.viruses.all() %}
                     <tr>
-                        <td>
-                            {{ virus.sid|default_if_none:"" }}
-                        <td>
-                            {{ virus.subgroup|default_if_none:"" }}
-                        </td>
-                        <td>
-                            {{ virus.country|default_if_none:"" }}
-                        </td>
-                        <td>
-                            {{ virus.date_of_appearance|default_if_none:"" }}
-                        </td>
-                        <td>
-                            {{ virus.strain|default_if_none:"" }}
-                        </td>
+                        <td>{{ virus.sid }}</td>
+                        <td>{{ virus.subgroup }}</td>
+                        <td>{{ virus.country }}</td>
+                        <td>{{ virus.date_of_appearance }}</td>
+                        <td>{{ virus.strain }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -166,8 +145,6 @@
     {% endif %}
    </div>
     </div>
-
-
 
 {% endblock %}
 
