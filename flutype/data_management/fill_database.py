@@ -19,7 +19,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flutype_webapp.settings")
 import django
 django.setup()
 
-
 # the path to the master folder
 path_master = os.path.join(path, "master/")
 
@@ -43,6 +42,7 @@ collection_ids = ["2017-05-19_E5_X31",
 
 
 ###########################################################
+from django.contrib.auth.models import User
 from flutype.data_management.fill_master import Master
 from flutype.models import (Peptide,
                             PeptideBatch,
@@ -236,10 +236,17 @@ class Database(object):
             quenching = Quenching.objects.get(sid=meta["Quenching"])
         except:
             quenching = None
+        try:
+            user = User.objects.get(username=meta["ProcessUser"])
+        except:
+            user = None
+
 
         process, created = Process.objects.get_or_create(spotting=spotting,
                                                          incubating=incubating,
-                                                         quenching=quenching)
+                                                         quenching=quenching,
+                                                         user=user)
+
         return process, created
 
 

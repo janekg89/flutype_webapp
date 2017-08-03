@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^virusbatches/$', views.virus_batch_view, name='virusbatches'),
     url(r'^viruses/$', views.virus_view, name='viruses'),
     url(r'^test/$', views.test_view, name='test'),
+    url(r'^password/$', views.change_password_view, name='change_password'),
 
     # renders spot collections
     url(r'^rawspotcollection/(?P<pk>[0-9]+)/$', views.raw_spot_collection, name='rawspotcollectionview'),

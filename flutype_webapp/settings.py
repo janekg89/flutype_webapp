@@ -82,6 +82,8 @@ TEMPLATES = [
     },
 ]
 
+
+
 WSGI_APPLICATION = 'flutype_webapp.wsgi.application'
 
 
