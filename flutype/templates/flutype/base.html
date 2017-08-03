@@ -60,6 +60,7 @@
                     <li class="dropdown active" >
                         <a data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user fa-fw" ></i> {{ request.user.get_username() }}  <span class="caret"></span> </a>
                         <ul class="dropdown-menu" role="menu">
+                        <li> <a href="{{ url('my_index')}}"> <i class="fa fa-user fa-fw" aria-hidden="true"></i> My Experiments </a> </li>
 						<li> <a href="{{ url('change_password')}}"> <i  class="fa fa-key"></i> Change Password </a> </li>
 						<li> <a href="{{ url('logout') }}?next={{ request.path }}"> <i class="fa fa-sign-out fa-fw"> </i> Logout</a> </li>
 					    </ul>
