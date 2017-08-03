@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Create users in the database.
 """
@@ -24,6 +25,11 @@ UserDef = namedtuple('UserDef', ['username', 'first_name', 'last_name', 'email']
 user_defs = [
     UserDef("janekg89", "Jan", "Grzegorzewski", "janekg89@hotmail.de"),
     UserDef("mkoenig", "Matthias", "Koenig", "konigmatt@googlemail.com"),
+    UserDef("hmemczak", "Henry", "Memczak", "memczak@uni-potsdam.de"),
+    UserDef("mhovestaedt", "Marc", "Hovestädt","hovestaedt@uni-potsdam.de"),
+    UserDef("ssaenger", "Sandra", "Sänger", "SaengerS@rki.de"),
+    UserDef("bay", "Bernhard", "Ay","aybernha@uni-potsdam.de")
+
 ]
 ########################################################
 

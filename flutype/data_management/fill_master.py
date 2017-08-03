@@ -31,7 +31,7 @@ FIXME: make it possible to update data_tables and not only overwrite them.
   dic_data: a dictionary containing one of the following keys. Their values contain the corresponding data:
                            keys (data_format):     gal_ligand   (pandas.DataFrame -> Columns: "Row", "Column", "Name")
                                                    gal_virus    (pandas.DataFrame -> Columns: "Row", "Column", "Name")
-                                                   meta         (dictionary -> keys: Manfacturer,	HolderType,	Spotting, Incubating,	HolderBatch, SID, SurfaceSubstance, Quenching)
+                                                   meta         (dictionary -> keys: Manfacturer,	HolderType,	Spotting, Incubating,	HolderBatch, SID, SurfaceSubstance, Quenching, ProcessUser)
                 (optional)                         image        (cv2 image file in grayscale)
                 (important for q_collection)       intensity    (pandas.DataFrame -> Columns: "Columns" Index:"Row" Value: Intenstities)
                 (optional for q_collection)        std          (pandas.DataFrame -> Columns: "Columns" Index:"Row" Value: Standard deviation)
@@ -211,9 +211,10 @@ class Master(object):
 
         path_file = os.path.join(self.collections_path, collection_id, 'meta.csv')
         with open(path_file, 'w') as f:
-            w = csv.DictWriter(f, meta.keys(), delimiter="\t")
-            w.writeheader()
-            w.writerow(meta)
+            writer = csv.writer(f,delimiter="\t")
+            for key , value in meta.items():
+                writer.writerow([key,value])
+
 
 
     def read_meta(self,collection_id):
@@ -224,9 +225,8 @@ class Master(object):
         """
         path_file = os.path.join(self.collections_path, collection_id, 'meta.csv')
         with open(path_file, 'r') as f:
-            reader = csv.DictReader(f, delimiter="\t")
-            for row in reader:
-                meta = row
+            reader = csv.reader(f, delimiter="\t")
+            meta = dict(reader)
         return meta
 
     def create_or_update_image(self,image_data, collection_id):
