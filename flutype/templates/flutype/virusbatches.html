@@ -34,11 +34,15 @@
                         <!-- virus information -->
                         {%  with v=virusbatch.virus %}
                         {% if v %}
-                        <td class="danger">{{ v.sid }}</td>
-                        <td class="danger">{{ v.subgroup }}</td>
-                        <td class="danger">{{ v.country }}</td>
-                        <td class="danger">{{ v.date_of_appearance }}</td>
-                        <td class="danger">{{ v.strain }}</td>
+                            {% if v.sid == "NO" %}
+                                <td class="warning"><b>{{ v.sid }}</b></td>
+                            {% else %}
+                                <td class="warning"><a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ v.sid }}"><b>{{ v.sid }}</b></a></td>
+                            {% endif %}
+                            <td class="danger">{{ v.subgroup }}</td>
+                            <td class="danger">{{ v.country }}</td>
+                            <td class="danger">{{ v.date_of_appearance }}</td>
+                            <td class="danger">{{ v.strain }}</td>
                         {%  else %}
                             {% for k in range(5) %}
                         <td class="danger">-</td>
