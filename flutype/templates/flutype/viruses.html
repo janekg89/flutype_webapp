@@ -19,7 +19,11 @@
                 <tbody>
                 {% for virus in viruses %}
                     <tr>
-                        <td class="warning"><b>{{ virus.sid }}</b></td>
+                        {% if virus.sid == "NO" %}
+                            <td class="warning"><b>{{ virus.sid }}</b></td>
+                        {% else %}
+                            <td class="warning"><a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ virus.sid }}"><b>{{ virus.sid }}</b></a></td>
+                        {% endif %}
                         <td>{{ virus.subgroup }}</td>
                         <td>{{ virus.country }}</td>
                         <td>{{ virus.date_of_appearance }}</td>
