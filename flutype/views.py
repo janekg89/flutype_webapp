@@ -5,7 +5,7 @@ from django.shortcuts import render
 # Create your views here.
 from django.http import HttpResponse
 from django.contrib.auth.models import User
-from .models import RawSpotCollection,SpotCollection, PeptideBatch, Peptide, VirusBatch, Virus
+from .models import RawSpotCollection,SpotCollection, PeptideBatch, Peptide, VirusBatch, Virus, Process
 from django.views import generic
 from django.shortcuts import render, get_object_or_404
 
@@ -31,6 +31,18 @@ def index_view(request):
     collections = RawSpotCollection.objects.all()
 
     context = {
+        'type': 'all',
+        'collections': collections,
+    }
+    return render(request,
+                  'flutype/index.html', context)
+@login_required
+def my_index_view(request):
+    user_process = Process.objects.filter(user=request.user)
+    collections = RawSpotCollection.objects.filter(process=user_process)
+
+    context = {
+        'type': 'my',
         'collections': collections,
     }
     return render(request,
