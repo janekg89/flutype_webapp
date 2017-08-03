@@ -124,7 +124,11 @@
                 <tbody>
                 {% for virus in collection.viruses.all() %}
                     <tr>
-                        <td>{{ virus.sid }}</td>
+                        {% if virus.sid == "NO" %}
+                            <td><b>{{ virus.sid }}</b></td>
+                        {% else %}
+                            <td><a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ virus.sid }}"><b>{{ virus.sid }}</b></a></td>
+                        {% endif %}
                         <td>{{ virus.subgroup }}</td>
                         <td>{{ virus.country }}</td>
                         <td>{{ virus.date_of_appearance }}</td>
