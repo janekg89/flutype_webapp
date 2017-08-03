@@ -26,6 +26,8 @@ fs = FileSystemStorage(location=MEDIA_ROOT)
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.db import models
+from django.contrib.auth.models import User
+
 
 CHAR_MAX_LENGTH = 50
 
@@ -38,16 +40,6 @@ class OverwriteStorage(FileSystemStorage):
         if self.exists(name):
             os.remove(os.path.join(settings.MEDIA_ROOT, name))
         return name
-
-
-# TODO: remove this from the model. It is confusing
-class User(models.Model):
-    """
-    User model
-    """
-    # FIXME: use the django user model: see https://docs.djangoproject.com/en/1.11/topics/auth/
-    name = models.CharField(max_length=50)
-
 
 class PeptideType(DjangoChoices):
     """
@@ -207,6 +199,7 @@ class Process(models.Model):
     spotting = models.ForeignKey(Spotting,null=True, blank=True)
     incubating = models.ForeignKey(Incubating,null=True, blank=True)
     quenching = models.ForeignKey(Quenching,null=True, blank=True)
+    user = models.ForeignKey(User, null=True, blank=True )
 
 ######################################################################
 
