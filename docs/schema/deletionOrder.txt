@@ -15,11 +15,11 @@ flutype_drying
 flutype_antibodybatch
 flutype_antibody
 flutype_rawspot
-flutype_step
 flutype_spotcollection
+flutype_step
 flutype_rawspotcollection
 flutype_ligandbatch
 flutype_experiment
 flutype_process
-flutype_galligand
+flutype_galfile
 flutype_ligand
