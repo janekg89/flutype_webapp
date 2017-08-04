@@ -229,7 +229,7 @@ class Drying(Step):
 
 class Spotting(Step):
     """ Spotting method and media related to spotting. """
-    order = models.IntegerField(default=0, blank=True, null=True)
+    pas
 
 
 class Incubating(Step):

@@ -1,4 +1,4 @@
-// dot 2.38.0 on Linux 4.4.0-89-generic
+// dot 2.38.0 on Linux 4.10.0-27-generic
 // SchemaSpy rev 590
 digraph "oneDegreeRelationshipsDiagram" {
   graph [
@@ -54,6 +54,7 @@ digraph "oneDegreeRelationshipsDiagram" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">flutype_process</TD></TR>
       <TR><TD PORT="id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD></TR>
+      <TR><TD PORT="sid" COLSPAN="3" ALIGN="LEFT">sid</TD></TR>
       <TR><TD PORT="user_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">user_id</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">2 &gt;</TD></TR>
     </TABLE>>
@@ -66,8 +67,8 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">flutype_rawspotcollection</TD></TR>
       <TR><TD PORT="experiment_ptr_id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">experiment_ptr_id</TD></TR>
       <TR><TD PORT="image" COLSPAN="3" ALIGN="LEFT">image</TD></TR>
-      <TR><TD PORT="gal_ligand1_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">gal_ligand1_id</TD></TR>
-      <TR><TD PORT="gal_ligand2_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">gal_ligand2_id</TD></TR>
+      <TR><TD PORT="gal_file1_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">gal_file1_id</TD></TR>
+      <TR><TD PORT="gal_file2_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">gal_file2_id</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 3</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">4 &gt;</TD></TR>
     </TABLE>>
     URL="flutype_rawspotcollection.html"
