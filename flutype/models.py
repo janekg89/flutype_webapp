@@ -208,8 +208,7 @@ class Step(models.Model):
 
     # FIXME: make steps index unique in process.
 
-    class Meta:
-        abstract = True
+
 
     def _get_step_type(self):
         """ Type of step."""
@@ -266,6 +265,7 @@ class Process(models.Model):
         for step in self.steps.all():
             users.append(step.user)
         return users
+
 
 
 

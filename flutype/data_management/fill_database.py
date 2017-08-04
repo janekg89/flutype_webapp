@@ -48,8 +48,8 @@ from flutype.models import (Peptide,
                             PeptideBatch,
                             Virus,
                             VirusBatch,
-                            AntiBody,
-                            AntiBodyBatch,
+                            Antibody,
+                            AntibodyBatch,
                             Ligand,
                             RawSpotCollection,
                             SpotCollection,
@@ -59,42 +59,52 @@ from flutype.models import (Peptide,
                             Quenching,
                             Incubating,
                             Process,
-                            GalLigand,
-                            GalVirus)
+                            GalFile
+                            )
 
 
 class Database(object):
     """ Database """
 
     def create_or_update_virus(self, virus):
-        vir, created = Virus.objects.get_or_create(subgroup=virus["SubGroup"],
-                                                   country=virus["Country"],
-                                                   date_of_appearance=virus["Date"],
+        vir, created = Virus.objects.get_or_create(sid=virus["Taxonomy ID"],
+                                                   tax_id=virus["Taxonomy ID"],
+                                                   link_db=virus["Link_db"],
+                                                   subtype=virus["SubGroup"],
+                                                   isolation_country=virus["Country"],
+                                                   collection_date=virus["Date"],
                                                    strain=virus["Strain Name"],
-                                                   sid=virus["Taxonomy ID"]
+
                                                  )
         return vir, created
 
     def create_or_update_virus_batch(self, virus_batch):
-        try:
-            virus = Virus.objects.get(sid=virus_batch["Taxonomy ID"])
-
-        except:
+        if "Taxonomy ID" in virus_batch:
+            ligand = Ligand.objects.get(sid=virus_batch["Taxonomy ID"])
+        else:
             virus = None
             # prints all virus batches without foreignkey to a virus in the database
             print("No virus found for virus batch with sid:" + virus_batch["Batch ID"])
 
+        if "user" in virus_batch:
+            user = User.objects.get(username=virus_batch["user"])
+        else:
+            user = None
         # fills virus batches
         virus_b, created = VirusBatch.objects.get_or_create(sid=virus_batch["Batch ID"],
+                                                            labeling=virus_batch["Labeling"],
+                                                            concentration=virus_batch["Concentration [mg/ml]"],
+                                                            buffer=virus_batch["Buffer"],
+                                                            ph=virus_batch["pH"],
+                                                            purity=virus_batch["purity"],
+                                                            produced_by=user,
+                                                            production_date=virus_batch["Production Date"],
+                                                            comment=virus_batch["Comment"],
+
                                                             passage_history=virus_batch["Passage History"],
                                                             active=virus_batch["Active"],
-                                                            labeling=virus_batch["Labeling"],
                                                             virus=virus,
-                                                            concentration=virus_batch["Concentration [mg/ml]"],
-                                                            ph=virus_batch["pH"],
-                                                            buffer=virus_batch["Buffer"],
-                                                            production_date=virus_batch["Production Date"],
-                                                            comment=virus_batch["Comment"]
+
                                                             )
         return virus_b, created
 
@@ -136,8 +146,9 @@ class Database(object):
                                                         )
         return peptide_b, created
 
+
     def create_or_update_anti_body(self,antibody):
-        antibod,created = AntiBody.objects.get_or_create(sid=antibody["Ligand id"],
+        antibod,created = Antibody.objects.get_or_create(sid=antibody["Ligand id"],
                                                          )
 
 
