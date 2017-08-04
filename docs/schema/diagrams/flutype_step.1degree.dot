@@ -19,8 +19,13 @@ digraph "oneDegreeRelationshipsDiagram" {
   edge [
     arrowsize="0.8"
   ];
+  "flutype_drying":"step_ptr_id":w -> "flutype_step":"id.type":e [arrowhead=none dir=back arrowtail=teeodot];
+  "flutype_incubating":"step_ptr_id":w -> "flutype_step":"id.type":e [arrowhead=none dir=back arrowtail=teeodot];
   "flutype_process_steps":"step_id":w -> "flutype_step":"id.type":e [arrowhead=none dir=back arrowtail=crowodot];
+  "flutype_quenching":"step_ptr_id":w -> "flutype_step":"id.type":e [arrowhead=none dir=back arrowtail=teeodot];
+  "flutype_spotting":"step_ptr_id":w -> "flutype_step":"id.type":e [arrowhead=none dir=back arrowtail=teeodot];
   "flutype_step":"user_id":w -> "public.auth_user":"id":e [arrowhead=none dir=back arrowtail=crowodot];
+  "flutype_washing":"step_ptr_id":w -> "flutype_step":"id.type":e [arrowhead=none dir=back arrowtail=teeodot];
   "public.auth_user" [
     label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
@@ -36,9 +41,32 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="is_staff" COLSPAN="3" ALIGN="LEFT">is_staff</TD></TR>
       <TR><TD PORT="is_active" COLSPAN="3" ALIGN="LEFT">is_active</TD></TR>
       <TR><TD PORT="date_joined" COLSPAN="3" ALIGN="LEFT">date_joined</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">8 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">3 &gt;</TD></TR>
     </TABLE>>
     tooltip="public.auth_user"
+  ];
+  "flutype_drying" [
+    label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">flutype_drying</TD></TR>
+      <TR><TD PORT="step_ptr_id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">step_ptr_id</TD></TR>
+      <TR><TD PORT="substance" COLSPAN="3" ALIGN="LEFT">substance</TD></TR>
+      <TR><TD PORT="duration" COLSPAN="3" ALIGN="LEFT">duration</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+    </TABLE>>
+    URL="flutype_drying.html"
+    tooltip="flutype_drying"
+  ];
+  "flutype_incubating" [
+    label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">flutype_incubating</TD></TR>
+      <TR><TD PORT="step_ptr_id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">step_ptr_id</TD></TR>
+      <TR><TD PORT="duration" COLSPAN="3" ALIGN="LEFT">duration</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+    </TABLE>>
+    URL="flutype_incubating.html"
+    tooltip="flutype_incubating"
   ];
   "flutype_process_steps" [
     label=<
@@ -52,6 +80,29 @@ digraph "oneDegreeRelationshipsDiagram" {
     URL="flutype_process_steps.html"
     tooltip="flutype_process_steps"
   ];
+  "flutype_quenching" [
+    label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">flutype_quenching</TD></TR>
+      <TR><TD PORT="step_ptr_id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">step_ptr_id</TD></TR>
+      <TR><TD PORT="duration" COLSPAN="3" ALIGN="LEFT">duration</TD></TR>
+      <TR><TD PORT="substance" COLSPAN="3" ALIGN="LEFT">substance</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+    </TABLE>>
+    URL="flutype_quenching.html"
+    tooltip="flutype_quenching"
+  ];
+  "flutype_spotting" [
+    label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">flutype_spotting</TD></TR>
+      <TR><TD PORT="step_ptr_id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">step_ptr_id</TD></TR>
+      <TR><TD PORT="order" COLSPAN="3" ALIGN="LEFT">order</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+    </TABLE>>
+    URL="flutype_spotting.html"
+    tooltip="flutype_spotting"
+  ];
   "flutype_step" [
     label=<
     <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
@@ -63,9 +114,21 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="date_time" COLSPAN="2" ALIGN="LEFT">date_time</TD><TD PORT="date_time.type" ALIGN="LEFT">timestamptz[35,6]</TD></TR>
       <TR><TD PORT="comment" COLSPAN="2" ALIGN="LEFT">comment</TD><TD PORT="comment.type" ALIGN="LEFT">text[2147483647]</TD></TR>
       <TR><TD PORT="user_id" COLSPAN="2" BGCOLOR="#f4f7da" ALIGN="LEFT">user_id</TD><TD PORT="user_id.type" ALIGN="LEFT">int4[10]</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">1 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">6 &gt;</TD></TR>
     </TABLE>>
     URL="flutype_step.html"
     tooltip="flutype_step"
+  ];
+  "flutype_washing" [
+    label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">flutype_washing</TD></TR>
+      <TR><TD PORT="step_ptr_id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">step_ptr_id</TD></TR>
+      <TR><TD PORT="substance" COLSPAN="3" ALIGN="LEFT">substance</TD></TR>
+      <TR><TD PORT="duration" COLSPAN="3" ALIGN="LEFT">duration</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+    </TABLE>>
+    URL="flutype_washing.html"
+    tooltip="flutype_washing"
   ];
 }

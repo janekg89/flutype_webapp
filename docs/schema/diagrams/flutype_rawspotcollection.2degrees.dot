@@ -26,8 +26,8 @@ digraph "twoDegreesRelationshipsDiagram" {
   "flutype_rawspot":"ligand2_id":w -> "flutype_ligandbatch":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "flutype_rawspot":"raw_spot_collection_id":w -> "flutype_rawspotcollection":"experiment_ptr_id.type":e [arrowhead=none dir=back arrowtail=crowodot];
   "flutype_rawspotcollection":"experiment_ptr_id":w -> "flutype_experiment":"id":e [arrowhead=none dir=back arrowtail=teeodot];
-  "flutype_rawspotcollection":"gal_ligand1_id":w -> "flutype_galligand":"id":e [arrowhead=none dir=back arrowtail=crowodot];
-  "flutype_rawspotcollection":"gal_ligand2_id":w -> "flutype_galligand":"id":e [arrowhead=none dir=back arrowtail=crowodot];
+  "flutype_rawspotcollection":"gal_file1_id":w -> "flutype_galfile":"id":e [arrowhead=none dir=back arrowtail=crowodot];
+  "flutype_rawspotcollection":"gal_file2_id":w -> "flutype_galfile":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "flutype_rawspotcollection_ligands1":"ligand_id":w -> "flutype_ligand":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "flutype_rawspotcollection_ligands1":"rawspotcollection_id":w -> "flutype_rawspotcollection":"experiment_ptr_id.type":e [arrowhead=none dir=back arrowtail=crowodot];
   "flutype_rawspotcollection_ligands2":"ligand_id":w -> "flutype_ligand":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
@@ -62,17 +62,17 @@ digraph "twoDegreesRelationshipsDiagram" {
     URL="flutype_experiment.html"
     tooltip="flutype_experiment"
   ];
-  "flutype_galligand" [
+  "flutype_galfile" [
     label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
-      <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">flutype_galligand</TD></TR>
+      <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">flutype_galfile</TD></TR>
       <TR><TD PORT="id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD></TR>
       <TR><TD PORT="sid" COLSPAN="3" ALIGN="LEFT">sid</TD></TR>
       <TR><TD PORT="file" COLSPAN="3" ALIGN="LEFT">file</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">2 &gt;</TD></TR>
     </TABLE>>
-    URL="flutype_galligand.html"
-    tooltip="flutype_galligand"
+    URL="flutype_galfile.html"
+    tooltip="flutype_galfile"
   ];
   "flutype_ligand" [
     label=<
@@ -125,8 +125,8 @@ digraph "twoDegreesRelationshipsDiagram" {
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">flutype_rawspotcollection</TD></TR>
       <TR><TD PORT="experiment_ptr_id" COLSPAN="2" BGCOLOR="#bed1b8" ALIGN="LEFT">experiment_ptr_id</TD><TD PORT="experiment_ptr_id.type" ALIGN="LEFT">int4[10]</TD></TR>
       <TR><TD PORT="image" COLSPAN="2" ALIGN="LEFT">image</TD><TD PORT="image.type" ALIGN="LEFT">varchar[100]</TD></TR>
-      <TR><TD PORT="gal_ligand1_id" COLSPAN="2" BGCOLOR="#f4f7da" ALIGN="LEFT">gal_ligand1_id</TD><TD PORT="gal_ligand1_id.type" ALIGN="LEFT">int4[10]</TD></TR>
-      <TR><TD PORT="gal_ligand2_id" COLSPAN="2" BGCOLOR="#f4f7da" ALIGN="LEFT">gal_ligand2_id</TD><TD PORT="gal_ligand2_id.type" ALIGN="LEFT">int4[10]</TD></TR>
+      <TR><TD PORT="gal_file1_id" COLSPAN="2" BGCOLOR="#f4f7da" ALIGN="LEFT">gal_file1_id</TD><TD PORT="gal_file1_id.type" ALIGN="LEFT">int4[10]</TD></TR>
+      <TR><TD PORT="gal_file2_id" COLSPAN="2" BGCOLOR="#f4f7da" ALIGN="LEFT">gal_file2_id</TD><TD PORT="gal_file2_id.type" ALIGN="LEFT">int4[10]</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 3</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">4 &gt;</TD></TR>
     </TABLE>>
     URL="flutype_rawspotcollection.html"

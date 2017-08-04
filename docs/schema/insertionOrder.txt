@@ -1,11 +1,11 @@
 flutype_ligand
-flutype_galligand
+flutype_galfile
 flutype_process
 flutype_experiment
 flutype_ligandbatch
 flutype_rawspotcollection
-flutype_spotcollection
 flutype_step
+flutype_spotcollection
 flutype_rawspot
 flutype_antibody
 flutype_antibodybatch
