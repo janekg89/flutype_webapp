@@ -25,7 +25,7 @@ digraph "compactRelationshipsDiagram" {
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">public.auth_user</TD></TR>
       <TR><TD PORT="id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">8 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">3 &gt;</TD></TR>
     </TABLE>>
     tooltip="public.auth_user"
   ];
@@ -54,8 +54,7 @@ digraph "compactRelationshipsDiagram" {
     label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">flutype_drying</TD></TR>
-      <TR><TD PORT="id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD></TR>
-      <TR><TD PORT="user_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">user_id</TD></TR>
+      <TR><TD PORT="step_ptr_id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">step_ptr_id</TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
     </TABLE>>
@@ -84,23 +83,22 @@ digraph "compactRelationshipsDiagram" {
     URL="tables/flutype_experiment.html"
     tooltip="flutype_experiment"
   ];
-  "flutype_galligand" [
+  "flutype_galfile" [
     label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
-      <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">flutype_galligand</TD></TR>
+      <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">flutype_galfile</TD></TR>
       <TR><TD PORT="id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">2 &gt;</TD></TR>
     </TABLE>>
-    URL="tables/flutype_galligand.html"
-    tooltip="flutype_galligand"
+    URL="tables/flutype_galfile.html"
+    tooltip="flutype_galfile"
   ];
   "flutype_incubating" [
     label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">flutype_incubating</TD></TR>
-      <TR><TD PORT="id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD></TR>
-      <TR><TD PORT="user_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">user_id</TD></TR>
+      <TR><TD PORT="step_ptr_id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">step_ptr_id</TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
     </TABLE>>
@@ -158,6 +156,7 @@ digraph "compactRelationshipsDiagram" {
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">flutype_process</TD></TR>
       <TR><TD PORT="id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD></TR>
       <TR><TD PORT="user_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">user_id</TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">2 &gt;</TD></TR>
     </TABLE>>
     URL="tables/flutype_process.html"
@@ -179,8 +178,7 @@ digraph "compactRelationshipsDiagram" {
     label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">flutype_quenching</TD></TR>
-      <TR><TD PORT="id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD></TR>
-      <TR><TD PORT="user_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">user_id</TD></TR>
+      <TR><TD PORT="step_ptr_id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">step_ptr_id</TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
     </TABLE>>
@@ -207,8 +205,8 @@ digraph "compactRelationshipsDiagram" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">flutype_rawspotcollection</TD></TR>
       <TR><TD PORT="experiment_ptr_id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">experiment_ptr_id</TD></TR>
-      <TR><TD PORT="gal_ligand1_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">gal_ligand1_id</TD></TR>
-      <TR><TD PORT="gal_ligand2_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">gal_ligand2_id</TD></TR>
+      <TR><TD PORT="gal_file1_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">gal_file1_id</TD></TR>
+      <TR><TD PORT="gal_file2_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">gal_file2_id</TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 3</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">4 &gt;</TD></TR>
     </TABLE>>
@@ -268,8 +266,7 @@ digraph "compactRelationshipsDiagram" {
     label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">flutype_spotting</TD></TR>
-      <TR><TD PORT="id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD></TR>
-      <TR><TD PORT="user_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">user_id</TD></TR>
+      <TR><TD PORT="step_ptr_id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">step_ptr_id</TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
     </TABLE>>
@@ -283,7 +280,7 @@ digraph "compactRelationshipsDiagram" {
       <TR><TD PORT="id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD></TR>
       <TR><TD PORT="user_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">user_id</TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">1 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">6 &gt;</TD></TR>
     </TABLE>>
     URL="tables/flutype_step.html"
     tooltip="flutype_step"
@@ -314,8 +311,7 @@ digraph "compactRelationshipsDiagram" {
     label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">flutype_washing</TD></TR>
-      <TR><TD PORT="id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD></TR>
-      <TR><TD PORT="user_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">user_id</TD></TR>
+      <TR><TD PORT="step_ptr_id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">step_ptr_id</TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
     </TABLE>>
@@ -324,10 +320,10 @@ digraph "compactRelationshipsDiagram" {
   ];
   "flutype_antibody":"ligand_ptr_id":w -> "flutype_ligand":"id":e [arrowhead=none dir=back arrowtail=teeodot];
   "flutype_antibodybatch":"ligandbatch_ptr_id":w -> "flutype_ligandbatch":"id":e [arrowhead=none dir=back arrowtail=teeodot];
-  "flutype_drying":"user_id":w -> "public.auth_user":"id":e [arrowhead=none dir=back arrowtail=crowodot];
+  "flutype_drying":"step_ptr_id":w -> "flutype_step":"id":e [arrowhead=none dir=back arrowtail=teeodot];
   "flutype_elisa":"experiment_ptr_id":w -> "flutype_experiment":"id":e [arrowhead=none dir=back arrowtail=teeodot];
   "flutype_experiment":"process_id":w -> "flutype_process":"id":e [arrowhead=none dir=back arrowtail=crowodot];
-  "flutype_incubating":"user_id":w -> "public.auth_user":"id":e [arrowhead=none dir=back arrowtail=crowodot];
+  "flutype_incubating":"step_ptr_id":w -> "flutype_step":"id":e [arrowhead=none dir=back arrowtail=teeodot];
   "flutype_ligandbatch":"ligand_id":w -> "flutype_ligand":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "flutype_ligandbatch":"produced_by_id":w -> "public.auth_user":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "flutype_peptide":"ligand_ptr_id":w -> "flutype_ligand":"id":e [arrowhead=none dir=back arrowtail=teeodot];
@@ -335,13 +331,13 @@ digraph "compactRelationshipsDiagram" {
   "flutype_process":"user_id":w -> "public.auth_user":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "flutype_process_steps":"process_id":w -> "flutype_process":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "flutype_process_steps":"step_id":w -> "flutype_step":"id":e [arrowhead=none dir=back arrowtail=crowodot];
-  "flutype_quenching":"user_id":w -> "public.auth_user":"id":e [arrowhead=none dir=back arrowtail=crowodot];
+  "flutype_quenching":"step_ptr_id":w -> "flutype_step":"id":e [arrowhead=none dir=back arrowtail=teeodot];
   "flutype_rawspot":"ligand1_id":w -> "flutype_ligandbatch":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "flutype_rawspot":"ligand2_id":w -> "flutype_ligandbatch":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "flutype_rawspot":"raw_spot_collection_id":w -> "flutype_rawspotcollection":"experiment_ptr_id":e [arrowhead=none dir=back arrowtail=crowodot];
   "flutype_rawspotcollection":"experiment_ptr_id":w -> "flutype_experiment":"id":e [arrowhead=none dir=back arrowtail=teeodot];
-  "flutype_rawspotcollection":"gal_ligand1_id":w -> "flutype_galligand":"id":e [arrowhead=none dir=back arrowtail=crowodot];
-  "flutype_rawspotcollection":"gal_ligand2_id":w -> "flutype_galligand":"id":e [arrowhead=none dir=back arrowtail=crowodot];
+  "flutype_rawspotcollection":"gal_file1_id":w -> "flutype_galfile":"id":e [arrowhead=none dir=back arrowtail=crowodot];
+  "flutype_rawspotcollection":"gal_file2_id":w -> "flutype_galfile":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "flutype_rawspotcollection_ligands1":"ligand_id":w -> "flutype_ligand":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "flutype_rawspotcollection_ligands1":"rawspotcollection_id":w -> "flutype_rawspotcollection":"experiment_ptr_id":e [arrowhead=none dir=back arrowtail=crowodot];
   "flutype_rawspotcollection_ligands2":"ligand_id":w -> "flutype_ligand":"id":e [arrowhead=none dir=back arrowtail=crowodot];
@@ -349,9 +345,9 @@ digraph "compactRelationshipsDiagram" {
   "flutype_spot":"raw_spot_id":w -> "flutype_rawspot":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "flutype_spot":"spot_collection_id":w -> "flutype_spotcollection":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "flutype_spotcollection":"raw_spot_collection_id":w -> "flutype_rawspotcollection":"experiment_ptr_id":e [arrowhead=none dir=back arrowtail=crowodot];
-  "flutype_spotting":"user_id":w -> "public.auth_user":"id":e [arrowhead=none dir=back arrowtail=crowodot];
+  "flutype_spotting":"step_ptr_id":w -> "flutype_step":"id":e [arrowhead=none dir=back arrowtail=teeodot];
   "flutype_step":"user_id":w -> "public.auth_user":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "flutype_virus":"ligand_ptr_id":w -> "flutype_ligand":"id":e [arrowhead=none dir=back arrowtail=teeodot];
   "flutype_virusbatch":"ligandbatch_ptr_id":w -> "flutype_ligandbatch":"id":e [arrowhead=none dir=back arrowtail=teeodot];
-  "flutype_washing":"user_id":w -> "public.auth_user":"id":e [arrowhead=none dir=back arrowtail=crowodot];
+  "flutype_washing":"step_ptr_id":w -> "flutype_step":"id":e [arrowhead=none dir=back arrowtail=teeodot];
 }

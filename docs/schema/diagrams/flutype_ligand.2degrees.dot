@@ -39,7 +39,7 @@ digraph "twoDegreesRelationshipsDiagram" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">public.auth_user</TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">8 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">3 &gt;</TD></TR>
     </TABLE>>
     tooltip="public.auth_user"
   ];
@@ -50,6 +50,7 @@ digraph "twoDegreesRelationshipsDiagram" {
       <TR><TD PORT="ligand_ptr_id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">ligand_ptr_id</TD></TR>
       <TR><TD PORT="target" COLSPAN="3" ALIGN="LEFT">target</TD></TR>
       <TR><TD PORT="name" COLSPAN="3" ALIGN="LEFT">name</TD></TR>
+      <TR><TD PORT="link_db" COLSPAN="3" ALIGN="LEFT">link_db</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
     </TABLE>>
     URL="flutype_antibody.html"
@@ -172,9 +173,11 @@ digraph "twoDegreesRelationshipsDiagram" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">flutype_virus</TD></TR>
       <TR><TD PORT="ligand_ptr_id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">ligand_ptr_id</TD></TR>
-      <TR><TD PORT="subgroup" COLSPAN="3" ALIGN="LEFT">subgroup</TD></TR>
-      <TR><TD PORT="country" COLSPAN="3" ALIGN="LEFT">country</TD></TR>
-      <TR><TD PORT="date_of_appearance" COLSPAN="3" ALIGN="LEFT">date_of_appearance</TD></TR>
+      <TR><TD PORT="tax_id" COLSPAN="3" ALIGN="LEFT">tax_id</TD></TR>
+      <TR><TD PORT="link_db" COLSPAN="3" ALIGN="LEFT">link_db</TD></TR>
+      <TR><TD PORT="subtype" COLSPAN="3" ALIGN="LEFT">subtype</TD></TR>
+      <TR><TD PORT="isolation_country" COLSPAN="3" ALIGN="LEFT">isolation_country</TD></TR>
+      <TR><TD PORT="collection_date" COLSPAN="3" ALIGN="LEFT">collection_date</TD></TR>
       <TR><TD PORT="strain" COLSPAN="3" ALIGN="LEFT">strain</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
     </TABLE>>
