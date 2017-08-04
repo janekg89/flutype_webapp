@@ -1,4 +1,4 @@
-	Queching ID	Quenching Method	Washing_Q_ID	Comment
-0	NO	No Quenching	no	
-1	Q01	Magermilch	WQ04	
-2	Q02			
+	sid	method	index	user	date_time	comment	duration	substance
+0	Q01	Magermilch						
+1	Q02							
+2								
