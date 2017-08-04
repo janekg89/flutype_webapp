@@ -62,142 +62,204 @@ from flutype.models import (Peptide,
                             GalFile
                             )
 
+def get_user_or_none(dict):
+    if "user" in dict:
+        user = User.objects.get(username=dict["user"])
+    else:
+        user = None
+        return user
 
 class Database(object):
     """ Database """
+    ##### helper functions  ########
+    def get_user_or_none(dict):
+        if "user" in dict:
+            user = User.objects.get(username=dict["user"])
+        else:
+            user = None
 
+        return user
+    ##### create_or_update datables realted data ####
     def create_or_update_virus(self, virus):
-        vir, created = Virus.objects.get_or_create(sid=virus["Taxonomy ID"],
-                                                   tax_id=virus["Taxonomy ID"],
-                                                   link_db=virus["Link_db"],
-                                                   subtype=virus["SubGroup"],
-                                                   isolation_country=virus["Country"],
-                                                   collection_date=virus["Date"],
-                                                   strain=virus["Strain Name"],
-
-                                                 )
+        vir, created = Virus.objects.get_or_create(sid=virus["sid"],
+                                                   comment=virus["comment"],
+                                                   tax_id=virus[""],
+                                                   link_db=virus["link_db"],
+                                                   subtype=virus["subtype"],
+                                                   isolation_country=virus["isolation_country"],
+                                                   collection_date=virus["collection_date"],
+                                                   strain=virus["strain"]
+                                                   )
         return vir, created
 
     def create_or_update_virus_batch(self, virus_batch):
-        if "Taxonomy ID" in virus_batch:
-            ligand = Ligand.objects.get(sid=virus_batch["Taxonomy ID"])
+        if "tax_id" in virus_batch:
+            virus = Virus.objects.get(sid=virus_batch["tax_id"])
         else:
             virus = None
             # prints all virus batches without foreignkey to a virus in the database
-            print("No virus found for virus batch with sid:" + virus_batch["Batch ID"])
+            print("No virus found for virus batch with sid:" + virus_batch["sid"])
 
-        if "user" in virus_batch:
-            user = User.objects.get(username=virus_batch["user"])
-        else:
-            user = None
+        user = get_user_or_none(virus_batch)
         # fills virus batches
-        virus_b, created = VirusBatch.objects.get_or_create(sid=virus_batch["Batch ID"],
-                                                            labeling=virus_batch["Labeling"],
-                                                            concentration=virus_batch["Concentration [mg/ml]"],
-                                                            buffer=virus_batch["Buffer"],
-                                                            ph=virus_batch["pH"],
+        virus_b, created = VirusBatch.objects.get_or_create(sid=virus_batch["sid"],
+                                                            labeling=virus_batch["labeling"],
+                                                            concentration=virus_batch["concentration"],
+                                                            buffer=virus_batch["buffer"],
+                                                            ph=virus_batch["ph"],
                                                             purity=virus_batch["purity"],
                                                             produced_by=user,
-                                                            production_date=virus_batch["Production Date"],
-                                                            comment=virus_batch["Comment"],
-
-                                                            passage_history=virus_batch["Passage History"],
-                                                            active=virus_batch["Active"],
-                                                            virus=virus,
-
+                                                            production_date=virus_batch["production_date"],
+                                                            comment=virus_batch["comment"],
+                                                            passage_history=virus_batch["passage_history"],
+                                                            active=virus_batch["active"],
+                                                            ligand=virus
                                                             )
         return virus_b, created
 
 
     def create_or_update_peptide(self, peptide):
         # fills peptides
-        peptide, created = Peptide.objects.get_or_create(sid=peptide["Peptide ID"],
-                                                         name=peptide["Name"],
-                                                         linker=peptide["Linker"],
-                                                         spacer=peptide["Spacer"],
-                                                         sequence=peptide["Sequence"],
-                                                         c_terminus=peptide["C-terminus"],
-                                                         pep_type=peptide["Types"],
-                                                         comment=peptide["Comment"]
+        peptide, created = Peptide.objects.get_or_create(sid=peptide["sid"],
+                                                         comment=peptide["comment"],
+                                                         name=peptide["name"],
+                                                         linker=peptide["linker"],
+                                                         spacer=peptide["spacer"],
+                                                         sequence=peptide["sequence"],
+                                                         c_terminus=peptide["c-terminus"],
                                                          )
         return peptide, created
 
 
 
     def create_or_update_peptide_batch(self,peptide_batch):
-        try:
-            peptide = Peptide.objects.get(sid=peptide_batch["Peptide ID"])
+        if "pep_sid" in peptide_batch:
+            peptide = Peptide.objects.get(sid=peptide_batch["pep_sid"])
 
-        except:
+        else:
             peptide = None
-            # prints all peptide batches without foreignkey to a virus in the database
-            print("No peptide found for peptide batch with sid:" +peptide_batch["Ligand id"])
+            # prints all peptide batches without foreignkey to a peptide in the database
+            print("No peptide found for peptide batch with sid:" + peptide_batch["sid"])
+
+        user = get_user_or_none(peptide_batch)
 
         # fills peptide_batches
-        peptide_b, created = PeptideBatch.objects.get_or_create(sid=peptide_batch["Ligand id"],
-                                                        peptide=peptide,
-                                                        concentration=peptide_batch["Concentration [mg/ml]"],
-                                                        ph=peptide_batch["pH"],
-                                                        purity=peptide_batch["Purity (MS)"],
-                                                        buffer=peptide_batch["Buffer"],
-                                                        produced_by=peptide_batch["Synthesized by"],
-                                                        production_date=peptide_batch["Synthesization Date"],
-                                                        comment=peptide_batch["Comment"]
-                                                        )
+        peptide_b, created = PeptideBatch.objects.get_or_create(sid=peptide_batch["sid"],
+                                                                ligand=peptide,
+                                                                concentration=peptide_batch["concentration"],
+                                                                ph=peptide_batch["ph"],
+                                                                purity=peptide_batch["purity"],
+                                                                buffer=peptide_batch["buffer"],
+                                                                produced_by=user,
+                                                                production_date=peptide_batch["production_date"],
+                                                                comment=peptide_batch["comment"],
+                                                                )
         return peptide_b, created
 
 
-    def create_or_update_anti_body(self,antibody):
-        antibod,created = Antibody.objects.get_or_create(sid=antibody["Ligand id"],
-                                                         )
+    def create_or_update_antibody(self,antibody):
 
+        antibod, created = Antibody.objects.get_or_create(sid=antibody["ab_id"],
+                                                         target=antibody["target"],
+                                                         name=antibody["name"],
+                                                         link_db=antibody["link_db"]
+                                                         )
+        return antibod, created
+
+    def create_or_update_antibody_batch(self,antibody_batch):
+
+        if "ab_sid" in antibody_batch:
+            antibody = Antibody.objects.get(sid=antibody_batch["ab_sid"])
+
+        else:
+            antibody = None
+            # prints all antibody batches without foreignkey to a antibody in the database
+            print("No antibody found for antibody batch with sid:" + antibody_batch["sid"])
+
+        user = get_user_or_none(antibody_batch)
+
+        antibody_b, created =AntibodyBatch.objects.get_or_create(sid=antibody_batch["sid"],
+                                                                 ligand=antibody,
+                                                                 concentration=antibody_batch["concentration"],
+                                                                 ph=antibody_batch["ph"],
+                                                                 purity=antibody_batch["purity"],
+                                                                 buffer=antibody_batch["buffer"],
+                                                                 produced_by=user,
+                                                                 production_date=antibody_batch["production_date"],
+                                                                 comment=antibody_batch["comment"]
+                                                                 )
+        return  antibody_b, created
+
+    def create_or_update_washing(self,washing):
+        user = get_user_or_none(washing)
+        quench, created = Quenching.objects.get_or_create(sid=washing["sid"],
+                                                          method=washing["method"],
+                                                          index=washing["index"],
+                                                          user=user,
+                                                          date_time=washing["date_time"],
+                                                          comment=washing["comment"],
+                                                          duration=washing["duration"],
+                                                          substance=washing["substance"])
+        return quench , created
+
+    def create_or_update_quenching(self, quenching):
+        return self.create_or_update_washing(self, quenching)
+
+    def create_or_update_drying(self, drying):
+        return self.create_or_update_washing(self, drying)
+
+
+    def create_or_update_spotting(self, spotting):
+        user = get_user_or_none(spotting)
+        spotti, created = Spotting.objects.get_or_create(sid=spotting["sid"],
+                                                         method=spotting["method"],
+                                                         index=spotting["index"],
+                                                         user=user,
+                                                         date_time=None,
+                                                         comment=spotting["comment"])
+        return spotti, created
 
 
 
     def create_or_update_incubating(self, incubating):
-        incub, created = Incubating.objects.get_or_create(sid=incubating["Incubating ID"],
-                                                         method=incubating["Incubation Method"],
-                                                         date_time=None,
-                                                         user=None,
-                                                         comment=incubating["Comment"])
+        user = get_user_or_none(incubating)
+        incub, created = Incubating.objects.get_or_create(sid=incubating["sid"],
+                                                          method=incubating["method"],
+                                                          index=incubating["index"],
+                                                          user=user,
+                                                          date_time=None,
+                                                          comment=incubating["comment"],
+                                                          duration=incubating["duration"]
+                                                          )
         return incub, created
 
 
 
-    def create_or_update_quenching(self,quenching):
-        quench, created = Quenching.objects.get_or_create(sid=quenching["Queching ID"],
-                                                        method=quenching["Quenching Method"],
-                                                        date_time=None,
-                                                        user=None,
-                                                        comment=quenching["Comment"])
-        return quench , created
 
-    def create_or_update_spotting(self, spotting):
-        spotti, created = Spotting.objects.get_or_create(sid=spotting["Spotting ID"],
-                                                    method=spotting["Spotting Method"],
-                                                    date_time=None,
-                                                    user=None,
-                                                    comment=spotting["Comment"])
-        return spotti, created
+
+
 
 
     def fill_dt(self,data_tables):
         # Stores informations if any new media was loaded.
-
-        created_pb = []
         created_p = []
+        created_pb = []
         created_v = []
         created_vb = []
+        created_a = []
+        created_ab = []
+
         #treatments
         created_s = []
         created_q = []
         created_i = []
+        created_w = []
+        created_d = []
 
-        # fills viruses
+        # fills ligands #############################
         for k, virus in data_tables["virus"].iterrows():
             _, created = self.create_or_update_virus(virus)
             created_v.append(created)
-
 
         for k, virus_batch in data_tables["virus_batch"].iterrows():
            _, created = self.create_or_update_virus_batch(virus_batch)
@@ -211,10 +273,21 @@ class Database(object):
             _,created = self.create_or_update_peptide_batch(peptide_batch)
             created_pb.append(created)
 
-        for k, peptide_batch in data_tables["peptide_batch"].iterrows():
-            _,created = self.create_or_update_peptide_batch(peptide_batch)
-            created_pb.append(created)
+        for k, antibody in data_tables["antibody"].iterrows():
+            _,created = self.create_or_update_antibody(antibody)
+            created_a.append(created)
 
+        for k, antibody_batch in data_tables["antibody_batch"].iterrows():
+            _,created = self.create_or_update_antibody_batch(antibody_batch)
+            created_ab.append(created)
+
+        ############################################
+        for k, washing in data_tables["washing"].iterrows():
+            _, created = self.create_or_update_washing(washing)
+            created_w.append(created)
+        for k, drying in data_tables["drying"].iterrows():
+            _, created = self.create_or_update_drying(drying)
+            created_d.append(created)
         for k, spotting in data_tables["spotting"].iterrows():
             _, created = self.create_or_update_spotting(spotting)
             created_s.append(created)
