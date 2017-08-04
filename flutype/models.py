@@ -41,48 +41,39 @@ class OverwriteStorage(FileSystemStorage):
             os.remove(os.path.join(settings.MEDIA_ROOT, name))
         return name
 
-class PeptideType(DjangoChoices):
-    """
-    peptide type model
-    """
-    #p_types = models.CharField(max_length=30)
-    peptide = ChoiceItem("PEP")
-    buffer = ChoiceItem("BUF")
-    empty = ChoiceItem("EMP")
-    refrence = ChoiceItem("REF")
-    antibody =ChoiceItem("AB")
-
+#############################################################
+# Helper models, i.e., choices
+#############################################################
 
 class Buffer(DjangoChoices):
     """
     buffer model
     """
-    #name = models.CharField(max_length=50)
     na = ChoiceItem("NA")
     pbst = ChoiceItem("PBST")
     natriumhydrogencarbonat = ChoiceItem("Natriumhydrogencarbonat")
+
 
 class Substance(DjangoChoices):
     """
     substance model
     """
-    #name = models.CharField(max_length=50,blank=True,null=True)
     nhs_3d=ChoiceItem("3D-NHS")
 
-class HolderType(DjangoChoices):
+
+class ExperimentType(DjangoChoices):
     """
     holder type model
     """
-    #holder_type=models.CharField(max_length=30,blank=True,null=True)
-
     microarray = ChoiceItem("microarray")
     microwell = ChoiceItem("microwell")
+    elisa = ChoiceItem("elisa")
+
 
 class Manufacturer(DjangoChoices):
     """
     manufacturer model
     """
-    #name = models.CharField(max_length=30, null=True , blank=True)
     polyan= ChoiceItem("PolyAn")
 
 
@@ -90,37 +81,65 @@ class ProcessingType(DjangoChoices):
     substract_buffer= ChoiceItem("sub_buf")
 
 
-class Peptide(models.Model):
+########################################
+# Ligand
+########################################
+
+class Ligand(models.Model):
     """
-    Pepide model
+    Generic ligand.
+    This can be for instance a peptide, virus or antibody.
     """
-    sid= models.CharField(max_length=CHAR_MAX_LENGTH, null=True)
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH, null=True)
+    comment = models.TextField(blank=True, null=True)
+
+class Peptide(Ligand):
+    """
+    Pepide ligand.
+    """
     linker = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     spacer = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     sequence = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     c_terminus = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
-    pep_type = models.CharField(max_length=5,choices=PeptideType.choices, blank=True, null=True)
-    comment = models.TextField(blank=True, null=True)
 
 
-class Virus(models.Model):
+class Virus(Ligand):
     """
-    virus model
-
-    sid is the taxonomy id
+    Virus ligand
     """
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    # FIXME: extend/change the virus model
+    # tax_id
+    # fludb_id
     subgroup = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     country = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    # FIXME: wrong, i.ei, date_of_collection
     date_of_appearance = models.CharField(max_length=10, blank=True, null=True)
     strain = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
 
+class Antibody(Ligand):
+    target = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    # FIXME: monoclonal/polyclonal
+    # FIXME: db_link
+
+
+########################################
+# Batch
+########################################
 
 class Batch(models.Model):
     """
-    Batch model as abstract class not stored in the database
+    Batch model as abstract class not stored in database.
+    The various ligand batches inherit from this class.
+
+    labeling:  This is labeling after the batch was finished, e.g., giving labeled antibody to virus batch.
+                This also handles the flurofix (fluorescent peptides)
+
     """
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    labeling = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+
     concentration = models.FloatField(validators=[MinValueValidator(0)],
                                       blank=True, null=True)
     buffer = models.CharField(max_length=CHAR_MAX_LENGTH,choices=Buffer.choices, blank=True, null=True)
@@ -131,105 +150,187 @@ class Batch(models.Model):
     produced_by = models.ForeignKey(User, blank=True, null=True)
     production_date = models.DateField(blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
+
     class Meta:
         abstract = True
 
 
-class VirusBatch(Batch):
+class LigandBatch(Batch):
+    """
+    Generic batch of a given ligand.
+    This can be for instance a peptide, virus or antibody.
+
+        mobile: is the ligand immobilized on surface, or in solution (other options ?)
+    """
+    ligand = models.ForeignKey(Ligand)
+    mobile = models.BooleanField()
+
+
+class VirusBatch(LigandBatch):
     """
     Virus batch model
     """
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
-    virus = models.ForeignKey(Virus, blank=True, null=True)
     passage_history = models.CharField(max_length=CHAR_MAX_LENGTH, blank= True ,null=True)
     active = models.NullBooleanField(blank=True, null=True)
-    labeling = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True,null=True)
 
 
-class PeptideBatch(Batch):
+class PeptideBatch(LigandBatch):
     """
     peptide batch model
     """
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
-    peptide = models.ForeignKey(Peptide, blank=True, null=True)
+    pass
 
+class AntibodyBatch(LigandBatch):
+    """
+    peptide batch model
+    """
+    pass
 
-##########################################################
+########################################
+# Process & Treatment
+########################################
+# The steps in the process.
 
+class Step(models.Model):
+    """
+    Steps in the process.
 
-class Treatment(models.Model):
+        index: number of steps which gives the order
+    """
     sid = models.CharField(max_length=CHAR_MAX_LENGTH,null=True, blank=True)
     method = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
-    order = models.IntegerField(blank=True, null=True)
-    date_time = models.DateTimeField(null=True, blank=True)
+    index = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(User, null=True, blank=True)
+    date_time = models.DateTimeField(null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
+
+
+class Step(models.Model):
+    """
+    Steps in the process.
+
+        index: number of steps which gives the order
+    """
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH,null=True, blank=True)
+    method = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
+    index = models.IntegerField(blank=True, null=True)
+    user = models.ForeignKey(User, null=True, blank=True)
+    date_time = models.DateTimeField(null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
+
+    # FIXME: make steps index unique in process.
 
     class Meta:
         abstract = True
 
+    def _get_step_type(self):
+        """ Type of step."""
+        return self.__class__.__name__
 
-class Washing(Treatment):
+    step_type = property(_get_step_type)
+
+
+class Washing(Step):
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
 
 
-class Drying(Treatment):
+class Drying(Step):
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
 
 
-class Spotting(Treatment):
+class Spotting(Step):
     """ Spotting method and media related to spotting. """
     order = models.IntegerField(default=0, blank=True, null=True)
 
 
-class Incubating(Treatment):
+class Incubating(Step):
     duration = models.DurationField(null=True, blank=True)
 
 
-class Quenching(Treatment):
+class Quenching(Step):
     duration = models.DurationField(null=True, blank=True)
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
 
 
 class Process(models.Model):
-    washing = models.ForeignKey(Washing,null=True, blank=True)
-    drying = models.ForeignKey(Drying,null=True, blank=True)
-    spotting = models.ForeignKey(Spotting,null=True, blank=True)
-    incubating = models.ForeignKey(Incubating,null=True, blank=True)
-    quenching = models.ForeignKey(Quenching,null=True, blank=True)
+    """
+        user: is the main user responsible for the experiment
+    """
+    steps = models.ManyToManyField(Step)
+
+    # washing = models.ForeignKey(Washing,null=True, blank=True)
+    # drying = models.ForeignKey(Drying,null=True, blank=True)
+    # spotting = models.ForeignKey(Spotting,null=True, blank=True)
+    # incubating = models.ForeignKey(Incubating,null=True, blank=True)
+    # quenching = models.ForeignKey(Quenching,null=True, blank=True)
+
+    # TODO: check what is best solution to store user
     user = models.ForeignKey(User, null=True, blank=True )
 
-######################################################################
+    # FIXME: property all users involved in the process, i.e.
+    # everybody involved in any step in the process
+    def users(self):
+        pass
+
+# TODO: find a clever solution to check if two processes are identical
+# independet of user & date (requires consistency in data)
+# Not sure if on model level or afterwards.
 
 
-class GalVirus(models.Model):
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
-    file = models.FileField(upload_to="gal_vir", null=True, blank=True, storage=OverwriteStorage())
-
-
+########################################
+# Gal files
+########################################
 class GalLigand(models.Model):
     sid = models.CharField(max_length=CHAR_MAX_LENGTH)
     file = models.FileField(upload_to="gal_lig", null=True, blank=True, storage=OverwriteStorage())
 
+# class GalVirus(models.Model):
+#    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
+#    file = models.FileField(upload_to="gal_vir", null=True, blank=True, storage=OverwriteStorage())
 
-class RawSpotCollection(models.Model):
+
+# probably measurement ?
+class Experiment(models.Model):
+    """
+    FIXME: an experiment can have multiple image/data files
+    """
+
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
+    experiment_type = models.CharField(max_length=CHAR_MAX_LENGTH, choices=ExperimentType.choices)
+    batch = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
+    functionalization = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Substance.choices)
+    manufacturer = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Manufacturer.choices)
+    process = models.ForeignKey(Process, blank=True, null=True)
+    comment = models.TextField(null=True, blank=True)
+
+class Elisa(Experiment):
+    pass
+
+
+class RawSpotCollection(Experiment):
     """
     A collection of raw spots: Information for a Collection of Spots collected at once for one microarray, one microwellplate
     """
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
-    batch = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
-    holder_type = models.CharField(max_length=CHAR_MAX_LENGTH, choices=HolderType.choices)
-    functionalization = models.CharField(max_length=CHAR_MAX_LENGTH,choices=Substance.choices)
-    manufacturer = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Manufacturer.choices)
     image = models.ImageField(upload_to="image", null=True, blank=True, storage=OverwriteStorage())
+    gal_ligand1 = models.ForeignKey(GalLigand, null=True, blank=True, related_name='gal_ligand1')
+    gal_ligand2 = models.ForeignKey(GalLigand, null=True, blank=True, related_name='gal_ligand2')
 
-    gal_virus = models.ForeignKey(GalVirus,null=True, blank=True)
-    gal_ligand = models.ForeignKey(GalLigand, null=True, blank=True)
-    process = models.ForeignKey(Process,blank=True, null=True)
-    viruses = models.ManyToManyField(Virus)
-    peptides = models.ManyToManyField(Peptide)
+    ligands1 = models.ManyToManyField(Ligand, related_name="ligands1")
+    ligands2 = models.ManyToManyField(Ligand, related_name="ligands2")
+
+
+    def viruses1(self):
+        # TODO: filter by the ligand type
+        return self.ligands1
+
+    def viruses2(self):
+        # TODO: filter by the ligand type
+        return self.ligands2
+
+    # TODO: also for peptides and antibodies
+
 
     def is_spot_collection(self):
         result = True
@@ -237,6 +338,7 @@ class RawSpotCollection(models.Model):
             result = False
         return result
 
+    # TODO: refactor analyis function
     def analysis(self):
         """ Returns the analysis object. """
         d = {'data_id': self.sid}
@@ -248,7 +350,7 @@ class RawSpotCollection(models.Model):
         for raw_spot in self.rawspot_set.all():
             row.append(raw_spot.row)
             column.append(raw_spot.column)
-            pep_name.append(raw_spot.peptide_batch.sid)
+            pep_name.append(raw_spot.ligand.peptide_batch.sid)
             vir_name.append(raw_spot.virus_batch.sid)
 
         data = pd.DataFrame(row, columns=["Row"])
@@ -264,6 +366,37 @@ class RawSpotCollection(models.Model):
         ana = analysis.Analysis(d)
 
         return ana
+
+
+class RawSpot(models.Model):
+    """
+    spot model
+    """
+    raw_spot_collection = models.ForeignKey(RawSpotCollection)
+    ligand1 = models.ForeignKey(LigandBatch, related_name="ligand1")
+    ligand2 = models.ForeignKey(LigandBatch, related_name="ligand2")
+    column = models.IntegerField()
+    row = models.IntegerField()
+
+    class Meta:
+        unique_together = ('column', 'row', 'raw_spot_collection')
+
+
+#####################################
+# Quantified interaction strength
+#####################################
+# perhaps name Interaction
+class Spot(models.Model):
+    """
+    spot model
+    """
+    raw_spot = models.ForeignKey(RawSpot)
+
+    ############in results#########################
+    intensity = models.FloatField(null=True, blank=True)
+    std = models.FloatField(null=True, blank=True)
+    spot_collection = models.ForeignKey(SpotCollection)
+    #TODO: add Coordinates on Image
 
 
 class SpotCollection(models.Model):
@@ -290,7 +423,7 @@ class SpotCollection(models.Model):
         for spot in self.spot_set.all():
             raw.append(spot.raw_spot.row)
             column.append(spot.raw_spot.column)
-            pep_name.append(spot.raw_spot.peptide_batch.sid)
+            pep_name.append(spot.raw_spot.ligand.peptide_batch.sid)
             vir_name.append(spot.raw_spot.virus_batch.sid)
 
         data["Row"] = raw
@@ -306,37 +439,6 @@ class SpotCollection(models.Model):
         ana = analysis.Analysis(d)
 
         return ana
-
-
-class RawSpot(models.Model):
-    """
-    spot model
-    """
-    peptide_batch = models.ForeignKey(PeptideBatch)
-    virus_batch = models.ForeignKey(VirusBatch)
-    raw_spot_collection = models.ForeignKey(RawSpotCollection)
-    column = models.IntegerField()
-    row = models.IntegerField()
-
-    class Meta:
-        unique_together = ('column', 'row', 'raw_spot_collection')
-
-
-class Spot(models.Model):
-    """
-    spot model
-    """
-    raw_spot = models.ForeignKey(RawSpot)
-    ############in results#########################
-    intensity = models.FloatField(null=True, blank=True)
-    std = models.FloatField(null=True, blank=True)
-    spot_collection = models.ForeignKey(SpotCollection)
-    #TODO: add Coordinates on Image
-
-
-
-
-
 
 
 
