@@ -6,14 +6,13 @@ Django models for the flutype webapp.
 from __future__ import absolute_import, print_function, unicode_literals
 
 import os
-import warnings
 import pandas as pd
 
-from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User as DUser
 from djchoices import DjangoChoices, ChoiceItem
 from django.core.files.storage import FileSystemStorage
+from django.db.utils import IntegrityError
 
 from django_pandas.io import read_frame
 
@@ -27,7 +26,8 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.db.models.signals import m2m_changed
+from django.dispatch import receiver
 
 CHAR_MAX_LENGTH = 50
 
@@ -109,19 +109,20 @@ class Virus(Ligand):
     Virus ligand
     """
     # FIXME: extend/change the virus model
-    # tax_id
+    tax_id = models.CharField(max_length=CHAR_MAX_LENGTH, null=True)
+    link_db = models.URLField()
     # fludb_id
-    subgroup = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
-    country = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    subtype = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    isolation_country = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     # FIXME: wrong, i.ei, date_of_collection
-    date_of_appearance = models.CharField(max_length=10, blank=True, null=True)
+    collection_date = models.CharField(max_length=10, blank=True, null=True)
     strain = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
 
 class Antibody(Ligand):
     target = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     # FIXME: monoclonal/polyclonal
-    # FIXME: db_link
+    link_db =  models.URLField()
 
 
 ########################################
@@ -191,19 +192,6 @@ class AntibodyBatch(LigandBatch):
 ########################################
 # The steps in the process.
 
-class Step(models.Model):
-    """
-    Steps in the process.
-
-        index: number of steps which gives the order
-    """
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH,null=True, blank=True)
-    method = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
-    index = models.IntegerField(blank=True, null=True)
-    user = models.ForeignKey(User, null=True, blank=True)
-    date_time = models.DateTimeField(null=True, blank=True)
-    comment = models.TextField(null=True, blank=True)
-
 
 class Step(models.Model):
     """
@@ -258,7 +246,8 @@ class Process(models.Model):
     """
         user: is the main user responsible for the experiment
     """
-    steps = models.ManyToManyField(Step)
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
+    steps = models.ManyToManyField(Step, db_index=True)
 
     # washing = models.ForeignKey(Washing,null=True, blank=True)
     # drying = models.ForeignKey(Drying,null=True, blank=True)
@@ -266,13 +255,28 @@ class Process(models.Model):
     # incubating = models.ForeignKey(Incubating,null=True, blank=True)
     # quenching = models.ForeignKey(Quenching,null=True, blank=True)
 
+
     # TODO: check what is best solution to store user
-    user = models.ForeignKey(User, null=True, blank=True )
+    user = models.ForeignKey(User, null=True, blank=True)
 
     # FIXME: property all users involved in the process, i.e.
     # everybody involved in any step in the process
     def users(self):
-        pass
+        users = []
+        for step in self.steps.all():
+            users.append(step.user)
+        return users
+
+
+
+"""
+@receiver(m2m_changed, sender=Process.steps.trough)
+def verify_uniqueness(sender, **kwargs):
+    index = kwargs.get("index", None)
+    for step in steps:
+"""
+
+
 
 # TODO: find a clever solution to check if two processes are identical
 # independet of user & date (requires consistency in data)
@@ -282,7 +286,7 @@ class Process(models.Model):
 ########################################
 # Gal files
 ########################################
-class GalLigand(models.Model):
+class GalFile(models.Model):
     sid = models.CharField(max_length=CHAR_MAX_LENGTH)
     file = models.FileField(upload_to="gal_lig", null=True, blank=True, storage=OverwriteStorage())
 
@@ -314,8 +318,8 @@ class RawSpotCollection(Experiment):
     A collection of raw spots: Information for a Collection of Spots collected at once for one microarray, one microwellplate
     """
     image = models.ImageField(upload_to="image", null=True, blank=True, storage=OverwriteStorage())
-    gal_ligand1 = models.ForeignKey(GalLigand, null=True, blank=True, related_name='gal_ligand1')
-    gal_ligand2 = models.ForeignKey(GalLigand, null=True, blank=True, related_name='gal_ligand2')
+    gal_file1 = models.ForeignKey(GalFile, null=True, blank=True, related_name='gal_file1')
+    gal_file2 = models.ForeignKey(GalFile, null=True, blank=True, related_name='gal_file2')
 
     ligands1 = models.ManyToManyField(Ligand, related_name="ligands1")
     ligands2 = models.ManyToManyField(Ligand, related_name="ligands2")
@@ -385,19 +389,6 @@ class RawSpot(models.Model):
 #####################################
 # Quantified interaction strength
 #####################################
-# perhaps name Interaction
-class Spot(models.Model):
-    """
-    spot model
-    """
-    raw_spot = models.ForeignKey(RawSpot)
-
-    ############in results#########################
-    intensity = models.FloatField(null=True, blank=True)
-    std = models.FloatField(null=True, blank=True)
-    spot_collection = models.ForeignKey(SpotCollection)
-    #TODO: add Coordinates on Image
-
 
 class SpotCollection(models.Model):
     sid = models.CharField(max_length=CHAR_MAX_LENGTH)
@@ -439,6 +430,23 @@ class SpotCollection(models.Model):
         ana = analysis.Analysis(d)
 
         return ana
+
+
+# perhaps name Interaction
+class Spot(models.Model):
+    """
+    spot model
+    """
+    raw_spot = models.ForeignKey(RawSpot)
+
+    ############in results#########################
+    intensity = models.FloatField(null=True, blank=True)
+    std = models.FloatField(null=True, blank=True)
+    spot_collection = models.ForeignKey(SpotCollection)
+    #TODO: add Coordinates on Image
+
+
+
 
 
 
