@@ -48,6 +48,9 @@ from flutype.models import (Peptide,
                             PeptideBatch,
                             Virus,
                             VirusBatch,
+                            AntiBody,
+                            AntiBodyBatch,
+                            Ligand,
                             RawSpotCollection,
                             SpotCollection,
                             RawSpot,
@@ -110,6 +113,7 @@ class Database(object):
         return peptide, created
 
 
+
     def create_or_update_peptide_batch(self,peptide_batch):
         try:
             peptide = Peptide.objects.get(sid=peptide_batch["Peptide ID"])
@@ -131,6 +135,12 @@ class Database(object):
                                                         comment=peptide_batch["Comment"]
                                                         )
         return peptide_b, created
+
+    def create_or_update_anti_body(self,antibody):
+        antibod,created = AntiBody.objects.get_or_create(sid=antibody["Ligand id"],
+                                                         )
+
+
 
 
     def create_or_update_incubating(self, incubating):
@@ -185,6 +195,10 @@ class Database(object):
         for k, peptide in data_tables["peptide"].iterrows():
             _, created = self.create_or_update_peptide(peptide)
             created_p.append(created)
+
+        for k, peptide_batch in data_tables["peptide_batch"].iterrows():
+            _,created = self.create_or_update_peptide_batch(peptide_batch)
+            created_pb.append(created)
 
         for k, peptide_batch in data_tables["peptide_batch"].iterrows():
             _,created = self.create_or_update_peptide_batch(peptide_batch)
