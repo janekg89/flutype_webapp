@@ -93,6 +93,10 @@ class Ligand(models.Model):
     sid = models.CharField(max_length=CHAR_MAX_LENGTH, null=True)
     comment = models.TextField(blank=True, null=True)
 
+    def _get_ligand_type(self):
+        """ Type of ligand."""
+        return self.__class__.__name__
+
 class Peptide(Ligand):
     """
     Pepide ligand.
@@ -110,7 +114,7 @@ class Virus(Ligand):
     """
     # FIXME: extend/change the virus model
     tax_id = models.CharField(max_length=CHAR_MAX_LENGTH, null=True)
-    link_db = models.URLField()
+    link_db = models.URLField(blank=True, null=True)
     # fludb_id
     subtype = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     isolation_country = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
@@ -122,7 +126,7 @@ class Antibody(Ligand):
     target = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     # FIXME: monoclonal/polyclonal
-    link_db =  models.URLField()
+    link_db =  models.URLField(blank=True, null=True)
 
 
 ########################################
@@ -163,8 +167,8 @@ class LigandBatch(Batch):
 
         mobile: is the ligand immobilized on surface, or in solution (other options ?)
     """
-    ligand = models.ForeignKey(Ligand)
-    mobile = models.BooleanField()
+    ligand = models.ForeignKey(Ligand, blank=True, null=True)
+    mobile = models.NullBooleanField(blank=True, null=True)
 
 
 class VirusBatch(LigandBatch):
@@ -200,11 +204,8 @@ class Step(models.Model):
         index: number of steps which gives the order
     """
     sid = models.CharField(max_length=CHAR_MAX_LENGTH,null=True, blank=True)
-    method = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
-    index = models.IntegerField(blank=True, null=True)
-    user = models.ForeignKey(User, null=True, blank=True)
-    date_time = models.DateTimeField(null=True, blank=True)
-    comment = models.TextField(null=True, blank=True)
+    method = models.CharField(max_length=300, null=True, blank=True)
+
 
     # FIXME: make steps index unique in process.
 
@@ -240,13 +241,14 @@ class Quenching(Step):
     duration = models.DurationField(null=True, blank=True)
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
 
+"""
+
 
 class Process(models.Model):
-    """
+    '''
         user: is the main user responsible for the experiment
-    """
+    '''
     sid = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
-    steps = models.ManyToManyField(Step, db_index=True)
 
     # washing = models.ForeignKey(Washing,null=True, blank=True)
     # drying = models.ForeignKey(Drying,null=True, blank=True)
@@ -269,7 +271,9 @@ class Process(models.Model):
 
 
 
-"""
+
+
+
 @receiver(m2m_changed, sender=Process.steps.trough)
 def verify_uniqueness(sender, **kwargs):
     index = kwargs.get("index", None)
@@ -306,11 +310,48 @@ class Experiment(models.Model):
     batch = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     functionalization = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Substance.choices)
     manufacturer = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Manufacturer.choices)
-    process = models.ForeignKey(Process, blank=True, null=True)
+    process = models.ForeignKey("Process", blank=True, null=True)
+    #steps = models.ManyToManyField(Step, db_index=True, through='ProcessStep')
     comment = models.TextField(null=True, blank=True)
 
+class Process(models.Model):
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
+    steps = models.ManyToManyField(Step, db_index=True, through='ProcessStep')
+
+    def users(self):
+        users = []
+        for step in self.steps.all():
+            users.append(step.user)
+        return users
+
+class ProcessStep(models.Model):
+    process = models.ForeignKey(Process)
+    #experiment = models.ForeignKey(Experiment)
+    step = models.ForeignKey(Step)
+    user = models.ForeignKey(User, null=True, blank=True)
+    date_time = models.DateTimeField(null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
+    index = models.IntegerField(blank=True, null=True)
+    # FIXME: property all users involved in the process, i.e.
+    # everybody involved in any step in the process
+
+
+    class Meta:
+        unique_together = ('process', 'step', 'index')
+
+
+"""
 class Elisa(Experiment):
     pass
+
+class MicrowellPlate(Experiment):
+    pass
+
+class Microarray(Experiment):
+    pass
+
+"""
+
 
 
 class RawSpotCollection(Experiment):

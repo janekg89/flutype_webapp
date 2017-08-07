@@ -127,7 +127,6 @@ class Master(object):
             d_file = os.path.join(self.data_tables_path,fn)
             data_tables_dic[key.group(1)] = pd.read_csv(d_file, sep="\t", encoding='utf-8')
             data_tables_dic[key.group(1)].replace([np.NaN], [None] , inplace=True)
-
         return data_tables_dic
 
     def create_or_update_gal_ligand(self, gal_ligand, collection_id):
@@ -420,8 +419,8 @@ class Master(object):
         """
         dic_data = {}
         dic_data["meta"]=self.read_meta(collection_id)
-        dic_data["gal_ligand"] = self.read_gal_ligand(collection_id, format="dj")
-        dic_data["gal_virus"] = self.read_gal_virus(collection_id, format="dj")
+        dic_data["gal_ligand1"] = self.read_gal_ligand(collection_id, format="dj")
+        dic_data["gal_ligand2"] = self.read_gal_virus(collection_id, format="dj")
         # FIXME: IF dic_data["meta"][holdertype]=microarray ...
         # or think how to show and or store rawcollection/quantified colelction.
         try:
@@ -436,16 +435,16 @@ class Master(object):
 
     def read_dic_spots(self, collection_id):
         dic_data = {}
-        dic_data["gal_ligand"] = self.read_gal_ligand(collection_id)[0]
-        dic_data["gal_virus"] = self.read_gal_virus(collection_id)[0]
+        dic_data["gal_ligand1"] = self.read_gal_ligand(collection_id)[0]
+        dic_data["gal_ligand2"] = self.read_gal_virus(collection_id)[0]
         dic_data["meta"] = self.read_meta(collection_id)
         return dic_data
 
     def read_q_collection(self,collection_id, q_collection_id):
         #FIXME: Read q_meta
         dic_data = {}
-        dic_data["gal_ligand"] = self.read_gal_ligand(collection_id)[0]
-        dic_data["gal_virus"] = self.read_gal_virus(collection_id)[0]
+        dic_data["gal_ligand1"] = self.read_gal_ligand(collection_id)[0]
+        dic_data["gal_ligand2"] = self.read_gal_virus(collection_id)[0]
         dic_data["meta"] = self.read_meta(collection_id)
         dic_data["intensity"] = self.read_intensity(collection_id,q_collection_id)
         try:

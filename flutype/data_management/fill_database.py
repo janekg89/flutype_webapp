@@ -58,17 +58,35 @@ from flutype.models import (Peptide,
                             Spotting,
                             Quenching,
                             Incubating,
+                            Washing,
+                            Drying,
+                            ProcessStep,
                             Process,
-                            GalFile
+                            GalFile,
+                            Step,
+                            Experiment
                             )
 
 def get_user_or_none(dict):
     if "user" in dict:
-        user = User.objects.get(username=dict["user"])
+        if dict["user"] is None:
+            user = None
+        else:
+            user = User.objects.get(username=dict["user"])
     else:
         user = None
 
     return user
+def get_step_or_none(dict):
+    if "sid" in dict:
+        if dict["sid"] is None:
+            step = None
+        else:
+            step = Step.objects.get(sid=dict["sid"])
+    else:
+        step = None
+
+    return step
 
 
 
@@ -91,7 +109,11 @@ class Database(object):
 
     def create_or_update_virus_batch(self, virus_batch):
         if "lig_id" in virus_batch:
-            virus = Virus.objects.get(sid=virus_batch["lig_id"])
+            print(virus_batch["lig_id"])
+            if virus_batch["lig_id"] is None:
+                virus = None
+            else:
+                virus = Virus.objects.get(sid=virus_batch["lig_id"])
         else:
             virus = None
             # prints all virus batches without foreignkey to a virus in the database
@@ -157,7 +179,7 @@ class Database(object):
 
     def create_or_update_antibody(self,antibody):
 
-        antibod, created = Antibody.objects.get_or_create(sid=antibody["ab_id"],
+        antibod, created = Antibody.objects.get_or_create(sid=antibody["sid"],
                                                          target=antibody["target"],
                                                          name=antibody["name"],
                                                          link_db=antibody["link_db"]
@@ -189,44 +211,38 @@ class Database(object):
         return  antibody_b, created
 
     def create_or_update_washing(self,washing):
-        user = get_user_or_none(washing)
-        quench, created = Quenching.objects.get_or_create(sid=washing["sid"],
+        washing, created = Washing.objects.get_or_create(sid=washing["sid"],
                                                           method=washing["method"],
-                                                          index=washing["index"],
-                                                          user=user,
-                                                          date_time=washing["date_time"],
-                                                          comment=washing["comment"],
                                                           duration=washing["duration"],
                                                           substance=washing["substance"])
-        return quench , created
+        return washing , created
 
     def create_or_update_quenching(self, quenching):
-        return self.create_or_update_washing(self, quenching)
+        quenching, created = Quenching.objects.get_or_create(sid=quenching["sid"],
+                                                         method=quenching["method"],
+                                                         duration=quenching["duration"],
+                                                         substance=quenching["substance"])
+        return quenching, created
 
     def create_or_update_drying(self, drying):
-        return self.create_or_update_washing(self, drying)
+        drying, created = Drying.objects.get_or_create(sid=drying["sid"],
+                                                         method=drying["method"],
+                                                         duration=drying["duration"],
+                                                         substance=drying["substance"])
+        return drying, created
 
 
     def create_or_update_spotting(self, spotting):
-        user = get_user_or_none(spotting)
         spotti, created = Spotting.objects.get_or_create(sid=spotting["sid"],
                                                          method=spotting["method"],
-                                                         index=spotting["index"],
-                                                         user=user,
-                                                         date_time=None,
-                                                         comment=spotting["comment"])
+                                                        )
         return spotti, created
 
 
 
     def create_or_update_incubating(self, incubating):
-        user = get_user_or_none(incubating)
         incub, created = Incubating.objects.get_or_create(sid=incubating["sid"],
                                                           method=incubating["method"],
-                                                          index=incubating["index"],
-                                                          user=user,
-                                                          date_time=None,
-                                                          comment=incubating["comment"],
                                                           duration=incubating["duration"]
                                                           )
         return incub, created
@@ -281,6 +297,7 @@ class Database(object):
 
         ############################################
         for k, washing in data_tables["washing"].iterrows():
+            print(washing)
             _, created = self.create_or_update_washing(washing)
             created_w.append(created)
         for k, drying in data_tables["drying"].iterrows():
@@ -304,46 +321,65 @@ class Database(object):
         print("spotting:", any(created_s))
         print("quenching:", any(created_q))
         print("incubating:", any(created_i))
+        print("washing:", any(created_w))
+        print("drying:", any(created_d))
 
-    def fill_process(self, meta):
+    def create_or_update_process(self,steps):
+        steps_in_process = []
+
+        for index, step in steps.iterrows():
+            process_step = Step.objects.get(sid=dict["sid"])
+            steps_in_process.append(process_step)
+
+        max_id = 0
+        for process in Process.objects.all():
+            if process.sid > max_id:
+                max_id = process.sid
+            steps = list(process.steps.all())
+            if steps == steps_in_process:
+                return process , False
+
+        process, created = Process.objects.get_or_create(sid=max_id)
+
+        return process, created
+
+
+
+    def create_or_update_process_and_process_steps(self, meta):
         """
         :param meta: (dictionary -> keys with corresponding value ->  meta.csv)
                     keys :Manfacturer
                           HolderType
-                          Spotting
                           HolderBatch
-                          Incubating
                           SID
                           SurfaceSubstance
-                          Quenching
+                          Steps
+
 
 
         :return: process (Django.model object), created (True if created, False if found)
         """
-        try:
-            spotting = Spotting.objects.get(sid=meta["spotting"])
-        except:
-            spotting = None
-        try:
-            incubating = Incubating.objects.get(sid=meta["incubating"])
-        except:
-            incubating = None
-        try:
-            quenching = Quenching.objects.get(sid=meta["quenching"])
-        except:
-            quenching = None
-        try:
-            user = User.objects.get(username=meta["process_user"])
-        except:
-            user = None
 
 
-        process, created = Process.objects.get_or_create(spotting=spotting,
-                                                         incubating=incubating,
-                                                         quenching=quenching,
-                                                         user=user)
+        process, _ =self.create_or_update_process(meta["steps"])
 
-        return process, created
+
+
+        #experiment = Experiment.objects.get(sid=meta["sid"])
+        for index,step in  meta["steps"].iterrows():
+            process_step = get_step_or_none(step["sid"])
+            user = get_user_or_none(step["user"])
+            process_step, created = ProcessStep.objects.get_or_create(process = process,
+                                                                      step=process_step,
+                                                                      index=index,
+                                                                      user=user,
+                                                                      date=step["date"]
+                                                                      )
+        return process_step, created
+
+
+
+
 
 
 
@@ -362,7 +398,9 @@ class Database(object):
         print("-" * 80)
         print("Filling Collection with sid <{}>".format(dic_data["meta"]["sid"]))
 
-        process, priocess_created = self.fill_process(dic_data["meta"])
+
+        process, process_created = self.create_or_update_process_and_process_steps(dic_data["meta"])
+
         gal_vir, gal_vir_created = self.fill_gal_vir(dic_data["gal_virus"][0],dic_data["gal_virus"][1])
         gal_lig, gal_lig_created = self.fill_gal_lig(dic_data["gal_ligand"][0],dic_data["gal_ligand"][1])
 
@@ -489,8 +527,8 @@ class Database(object):
 
     def get_spots_of_collection(self, dic_data):
         """ """
-        vir_cor = dic_data["gal_virus"].pivot(index="Row", columns="Column", values="Name")
-        pep_cor = dic_data["gal_ligand"].pivot(index="Row", columns="Column", values="Name")
+        vir_cor = dic_data["gal_ligand2"].pivot(index="Row", columns="Column", values="Name")
+        pep_cor = dic_data["gal_ligand1"].pivot(index="Row", columns="Column", values="Name")
 
         # merge raw  spot information.
         vir_cor_unstacked = vir_cor.unstack()
@@ -525,6 +563,7 @@ class Database(object):
                     rsc.peptides.add(Peptide.objects.get(sid=peptide_id))
                 except:
                     pass
+
 
     def fill_raw_collection_and_related_raw_spots(self, dic_data, dic_spots):
         """ """
@@ -566,6 +605,8 @@ def fill_database(path_master, collection_ids):
     db = Database()
     data_tables = ma.read_data_tables()
     db.fill_dt(data_tables)
+
+    exit()
 
     # loads collection
     for collection_id in collection_ids:

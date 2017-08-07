@@ -19,7 +19,6 @@ digraph "twoDegreesRelationshipsDiagram" {
   edge [
     arrowsize="0.8"
   ];
-  "flutype_elisa":"elipses":w -> "flutype_experiment":"id":e [arrowhead=none dir=back arrowtail=teeodot];
   "flutype_experiment":"process_id":w -> "flutype_process":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "flutype_ligandbatch":"elipses":w -> "flutype_ligand":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "flutype_rawspot":"ligand1_id":w -> "flutype_ligandbatch":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
@@ -35,16 +34,6 @@ digraph "twoDegreesRelationshipsDiagram" {
   "flutype_spot":"elipses":w -> "flutype_rawspot":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "flutype_spot":"elipses":w -> "flutype_spotcollection":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "flutype_spotcollection":"raw_spot_collection_id":w -> "flutype_rawspotcollection":"experiment_ptr_id.type":e [arrowhead=none dir=back arrowtail=crowodot];
-  "flutype_elisa" [
-    label=<
-    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
-      <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">flutype_elisa</TD></TR>
-      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
-    </TABLE>>
-    URL="flutype_elisa.html"
-    tooltip="flutype_elisa"
-  ];
   "flutype_experiment" [
     label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
@@ -57,7 +46,7 @@ digraph "twoDegreesRelationshipsDiagram" {
       <TR><TD PORT="manufacturer" COLSPAN="3" ALIGN="LEFT">manufacturer</TD></TR>
       <TR><TD PORT="comment" COLSPAN="3" ALIGN="LEFT">comment</TD></TR>
       <TR><TD PORT="process_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">process_id</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">2 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">1 &gt;</TD></TR>
     </TABLE>>
     URL="flutype_experiment.html"
     tooltip="flutype_experiment"
@@ -99,7 +88,7 @@ digraph "twoDegreesRelationshipsDiagram" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">flutype_process</TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">2 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">2 &gt;</TD></TR>
     </TABLE>>
     URL="flutype_process.html"
     tooltip="flutype_process"

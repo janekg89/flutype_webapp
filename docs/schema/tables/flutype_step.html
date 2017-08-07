@@ -100,7 +100,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </tr>
 </thead>
 <tbody valign='top'>
-<tr class='odd'>
+<tr class='even'>
  <td class='primaryKey' title='Primary Key'>id</td>
  <td class='detail'>serial</td>
  <td class='detail' align='right'>10</td>
@@ -109,37 +109,37 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail' align='right'>nextval('flutype_step_id_seq'::regclass)</td>
  <td class='detail'>
   <table border='0' width='100%' cellspacing='0' cellpadding='0'>
-   <tr class='relative odd' valign='top'>
+   <tr class='relative even' valign='top'>
     <td class='relatedTable detail' title="flutype_drying.step_ptr_id refs flutype_step.id via flutype_drying_step_ptr_id_b7a288d7_fk_flutype_step_id"><a href='flutype_drying.html'>flutype_drying</a><span class='relatedKey'>.step_ptr_id</span>
     </td>
     <td class='constraint detail'>flutype_drying_step_ptr_id_b7a288d7_fk_flutype_step_id<span title='Restrict delete:
  Parent cannot be deleted if children exist'>&nbsp;R</span></td>
    </tr>
-   <tr class='relative odd' valign='top'>
+   <tr class='relative even' valign='top'>
     <td class='relatedTable detail' title="flutype_incubating.step_ptr_id refs flutype_step.id via flutype_incubating_step_ptr_id_3acf64b5_fk_flutype_step_id"><a href='flutype_incubating.html'>flutype_incubating</a><span class='relatedKey'>.step_ptr_id</span>
     </td>
     <td class='constraint detail'>flutype_incubating_step_ptr_id_3acf64b5_fk_flutype_step_id<span title='Restrict delete:
  Parent cannot be deleted if children exist'>&nbsp;R</span></td>
    </tr>
-   <tr class='relative odd' valign='top'>
-    <td class='relatedTable detail' title="flutype_process_steps.step_id refs flutype_step.id via flutype_process_steps_step_id_09e23c2c_fk_flutype_step_id"><a href='flutype_process_steps.html'>flutype_process_steps</a><span class='relatedKey'>.step_id</span>
+   <tr class='relative even' valign='top'>
+    <td class='relatedTable detail' title="flutype_processstep.step_id refs flutype_step.id via flutype_processstep_step_id_45298222_fk_flutype_step_id"><a href='flutype_processstep.html'>flutype_processstep</a><span class='relatedKey'>.step_id</span>
     </td>
-    <td class='constraint detail'>flutype_process_steps_step_id_09e23c2c_fk_flutype_step_id<span title='Restrict delete:
+    <td class='constraint detail'>flutype_processstep_step_id_45298222_fk_flutype_step_id<span title='Restrict delete:
  Parent cannot be deleted if children exist'>&nbsp;R</span></td>
    </tr>
-   <tr class='relative odd' valign='top'>
+   <tr class='relative even' valign='top'>
     <td class='relatedTable detail' title="flutype_quenching.step_ptr_id refs flutype_step.id via flutype_quenching_step_ptr_id_72e45334_fk_flutype_step_id"><a href='flutype_quenching.html'>flutype_quenching</a><span class='relatedKey'>.step_ptr_id</span>
     </td>
     <td class='constraint detail'>flutype_quenching_step_ptr_id_72e45334_fk_flutype_step_id<span title='Restrict delete:
  Parent cannot be deleted if children exist'>&nbsp;R</span></td>
    </tr>
-   <tr class='relative odd' valign='top'>
+   <tr class='relative even' valign='top'>
     <td class='relatedTable detail' title="flutype_spotting.step_ptr_id refs flutype_step.id via flutype_spotting_step_ptr_id_5bc0693e_fk_flutype_step_id"><a href='flutype_spotting.html'>flutype_spotting</a><span class='relatedKey'>.step_ptr_id</span>
     </td>
     <td class='constraint detail'>flutype_spotting_step_ptr_id_5bc0693e_fk_flutype_step_id<span title='Restrict delete:
  Parent cannot be deleted if children exist'>&nbsp;R</span></td>
    </tr>
-   <tr class='relative odd' valign='top'>
+   <tr class='relative even' valign='top'>
     <td class='relatedTable detail' title="flutype_washing.step_ptr_id refs flutype_step.id via flutype_washing_step_ptr_id_35c87eb0_fk_flutype_step_id"><a href='flutype_washing.html'>flutype_washing</a><span class='relatedKey'>.step_ptr_id</span>
     </td>
     <td class='constraint detail'>flutype_washing_step_ptr_id_35c87eb0_fk_flutype_step_id<span title='Restrict delete:
@@ -150,7 +150,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='even'>
+<tr class='odd'>
  <td class='detail'>sid</td>
  <td class='detail'>varchar</td>
  <td class='detail' align='right'>50</td>
@@ -161,78 +161,19 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='odd'>
+<tr class='even'>
  <td class='detail'>method</td>
  <td class='detail'>varchar</td>
- <td class='detail' align='right'>50</td>
+ <td class='detail' align='right'>300</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'></td>
  <td class='detail' align='right'>null</td>
  <td class='detail'></td>
  <td class='detail'> </td>
- <td class='comment detail'></td>
-</tr>
-<tr class='even'>
- <td class='detail'>index</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
- <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
- <td class='detail' align='center'></td>
- <td class='detail' align='right'>null</td>
- <td class='detail'></td>
- <td class='detail'> </td>
- <td class='comment detail'></td>
-</tr>
-<tr class='odd'>
- <td class='detail'>date_time</td>
- <td class='detail'>timestamptz</td>
- <td class='detail' align='right'>35,6</td>
- <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
- <td class='detail' align='center'></td>
- <td class='detail' align='right'>null</td>
- <td class='detail'></td>
- <td class='detail'> </td>
- <td class='comment detail'></td>
-</tr>
-<tr class='even'>
- <td class='detail'>comment</td>
- <td class='detail'>text</td>
- <td class='detail' align='right'>2147483647</td>
- <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
- <td class='detail' align='center'></td>
- <td class='detail' align='right'>null</td>
- <td class='detail'></td>
- <td class='detail'> </td>
- <td class='comment detail'></td>
-</tr>
-<tr class='odd'>
- <td class='indexedColumn' title='Indexed'>user_id</td>
- <td class='detail'>int4</td>
- <td class='detail' align='right'>10</td>
- <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
- <td class='detail' align='center'></td>
- <td class='detail' align='right'>null</td>
- <td class='detail'></td>
- <td class='detail'>
-  <table border='0' width='100%' cellspacing='0' cellpadding='0'>
-   <tr class='relative odd' valign='top'>
-    <td class='relatedTable detail' title="flutype_step.user_id refs auth_user.id in public via flutype_step_user_id_f9f29ca7_fk_auth_user_id"><a href=''>auth_user</a><span class='relatedKey'>.id</span>
-    </td>
-    <td class='constraint detail'>flutype_step_user_id_f9f29ca7_fk_auth_user_id<span title='Restrict delete:
- Parent cannot be deleted if children exist'>&nbsp;R</span></td>
-   </tr>
-  </table>
- </td>
  <td class='comment detail'></td>
 </tr>
 </table>
-<<<<<<< HEAD
-<p title='7 columns'>Table contained 0 rows at Fri Aug 04 18:50 CEST 2017<p/>
-||||||| merged common ancestors
-<p title='7 columns'>Table contained 0 rows at Fri Aug 04 17:52 CEST 2017<p/>
-=======
-<p title='7 columns'>Table contained 0 rows at Fri Aug 04 18:21 CEST 2017<p/>
->>>>>>> 6cc61551dcc3a09407b726b50adbbdd15c26a82c
+<p title='3 columns'>Table contained 0 rows at Mon Aug 07 19:37 CEST 2017<p/>
 </td></tr></table>
 <div class='indent'>
 <b>Indexes:</b>
@@ -252,39 +193,31 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
   <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span></td>
   <td class='constraint' style='text-align:left;'>flutype_step_pkey</td>
  </tr>
- <tr>
-  <td class='indexedColumn'>user_id</td>
-  <td class='detail'>Performance</td>
-  <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span></td>
-  <td class='constraint' style='text-align:left;'>flutype_step_user_id_f9f29ca7</td>
- </tr>
 </table>
 </div>
 <table width='100%' border='0'><tr><td class='container'>
 <br><form action='get'><b>Close relationships</b><span class='degrees' id='degrees' title='Detail diminishes with increased separation from flutype_step'>
 &nbsp;within <label for='oneDegree'><input type='radio' name='degrees' id='oneDegree' checked>one</label>  <label for='twoDegrees'><input type='radio' name='degrees' id='twoDegrees'>two degrees</label> of separation</span><b>:</b></form>
 <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="flutype_drying.html" title="flutype_drying" alt="" coords="483,5,603,136">
-<area shape="rect" id="node2" href="flutype_step.html" title="flutype_step" alt="" coords="184,373,413,605">
-<area shape="rect" id="node7" title="public.auth_user" alt="" coords="5,520,140,843">
-<area shape="rect" id="node3" href="flutype_incubating.html" title="flutype_incubating" alt="" coords="471,153,616,260">
-<area shape="rect" id="node4" href="flutype_process_steps.html" title="flutype_process_steps" alt="" coords="457,277,629,408">
-<area shape="rect" id="node5" href="flutype_quenching.html" title="flutype_quenching" alt="" coords="470,425,617,556">
-<area shape="rect" id="node6" href="flutype_spotting.html" title="flutype_spotting" alt="" coords="478,573,609,680">
-<area shape="rect" id="node8" href="flutype_washing.html" title="flutype_washing" alt="" coords="477,697,610,828">
+<area shape="rect" id="node1" href="flutype_drying.html" title="flutype_drying" alt="" coords="265,5,385,136">
+<area shape="rect" id="node2" href="flutype_step.html" title="flutype_step" alt="" coords="5,457,203,593">
+<area shape="rect" id="node3" href="flutype_incubating.html" title="flutype_incubating" alt="" coords="253,153,398,260">
+<area shape="rect" id="node4" href="flutype_processstep.html" title="flutype_processstep" alt="" coords="247,277,404,504">
+<area shape="rect" id="node5" href="flutype_quenching.html" title="flutype_quenching" alt="" coords="252,521,399,652">
+<area shape="rect" id="node6" href="flutype_spotting.html" title="flutype_spotting" alt="" coords="260,669,391,752">
+<area shape="rect" id="node7" href="flutype_washing.html" title="flutype_washing" alt="" coords="259,769,392,900">
 </map>
   <a name='diagram'><img id='oneDegreeImg' src='../diagrams/flutype_step.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
 <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="flutype_drying.html" title="flutype_drying" alt="" coords="483,425,603,556">
-<area shape="rect" id="node2" href="flutype_step.html" title="flutype_step" alt="" coords="184,372,413,604">
-<area shape="rect" id="node5" title="public.auth_user" alt="" coords="5,621,140,944">
-<area shape="rect" id="node3" href="flutype_incubating.html" title="flutype_incubating" alt="" coords="471,573,616,680">
-<area shape="rect" id="node4" href="flutype_ligandbatch.html" title="flutype_ligandbatch" alt="" coords="222,621,375,704">
-<area shape="rect" id="node6" href="flutype_process.html" title="flutype_process" alt="" coords="233,721,365,804">
-<area shape="rect" id="node7" href="flutype_process_steps.html" title="flutype_process_steps" alt="" coords="457,697,629,828">
-<area shape="rect" id="node8" href="flutype_quenching.html" title="flutype_quenching" alt="" coords="470,5,617,136">
-<area shape="rect" id="node9" href="flutype_spotting.html" title="flutype_spotting" alt="" coords="478,153,609,260">
-<area shape="rect" id="node10" href="flutype_washing.html" title="flutype_washing" alt="" coords="477,277,610,408">
+<area shape="rect" id="node1" href="flutype_drying.html" title="flutype_drying" alt="" coords="265,401,385,532">
+<area shape="rect" id="node2" href="flutype_step.html" title="flutype_step" alt="" coords="5,325,203,461">
+<area shape="rect" id="node3" href="flutype_incubating.html" title="flutype_incubating" alt="" coords="253,549,398,656">
+<area shape="rect" id="node4" href="flutype_processstep.html" title="flutype_processstep" alt="" coords="247,673,404,900">
+<area shape="rect" id="node5" href="flutype_process.html" title="flutype_process" alt="" coords="39,743,169,825">
+<area shape="rect" id="node6" title="public.auth_user" alt="" coords="37,843,171,925">
+<area shape="rect" id="node7" href="flutype_quenching.html" title="flutype_quenching" alt="" coords="252,5,399,136">
+<area shape="rect" id="node8" href="flutype_spotting.html" title="flutype_spotting" alt="" coords="260,153,391,236">
+<area shape="rect" id="node9" href="flutype_washing.html" title="flutype_washing" alt="" coords="259,253,392,384">
 </map>
 
   <a name='diagram'><img id='twoDegreesImg' src='../diagrams/flutype_step.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
