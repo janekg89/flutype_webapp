@@ -7,7 +7,7 @@
          </column>
          <column autoUpdated="false" digits="0" id="1" name="target" nullable="true" remarks="" size="50" type="varchar"/>
          <column autoUpdated="false" digits="0" id="2" name="name" nullable="true" remarks="" size="50" type="varchar"/>
-         <column autoUpdated="false" digits="0" id="3" name="link_db" nullable="false" remarks="" size="200" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="3" name="link_db" nullable="true" remarks="" size="200" type="varchar"/>
          <primaryKey column="ligand_ptr_id" sequenceNumberInPK="1"/>
          <index name="flutype_antibody_pkey" unique="true">
             <column ascending="true" name="ligand_ptr_id"/>
@@ -33,18 +33,8 @@
             <column ascending="true" name="step_ptr_id"/>
          </index>
       </table>
-      <table name="flutype_elisa" numRows="0" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="false" digits="0" id="0" name="experiment_ptr_id" nullable="false" remarks="" size="10" type="int4">
-            <parent column="id" foreignKey="flutype_elisa_experiment_ptr_id_80288ccc_fk_flutype_e" implied="false" onDeleteCascade="false" table="flutype_experiment"/>
-         </column>
-         <primaryKey column="experiment_ptr_id" sequenceNumberInPK="1"/>
-         <index name="flutype_elisa_pkey" unique="true">
-            <column ascending="true" name="experiment_ptr_id"/>
-         </index>
-      </table>
       <table name="flutype_experiment" numRows="0" remarks="" schema="public" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('flutype_experiment_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
-            <child column="experiment_ptr_id" foreignKey="flutype_elisa_experiment_ptr_id_80288ccc_fk_flutype_e" implied="false" onDeleteCascade="false" table="flutype_elisa"/>
             <child column="experiment_ptr_id" foreignKey="flutype_rawspotcolle_experiment_ptr_id_27c389df_fk_flutype_e" implied="false" onDeleteCascade="false" table="flutype_rawspotcollection"/>
          </column>
          <column autoUpdated="false" digits="0" id="1" name="sid" nullable="false" remarks="" size="50" type="varchar"/>
@@ -118,8 +108,8 @@
          <column autoUpdated="false" digits="17" id="6" name="purity" nullable="true" remarks="" size="17" type="float8"/>
          <column autoUpdated="false" digits="0" id="7" name="production_date" nullable="true" remarks="" size="13" type="date"/>
          <column autoUpdated="false" digits="0" id="8" name="comment" nullable="true" remarks="" size="2147483647" type="text"/>
-         <column autoUpdated="false" digits="0" id="9" name="mobile" nullable="false" remarks="" size="1" type="bool"/>
-         <column autoUpdated="false" digits="0" id="10" name="ligand_id" nullable="false" remarks="" size="10" type="int4">
+         <column autoUpdated="false" digits="0" id="9" name="mobile" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="10" name="ligand_id" nullable="true" remarks="" size="10" type="int4">
             <parent column="id" foreignKey="flutype_ligandbatch_ligand_id_4301e9c7_fk_flutype_ligand_id" implied="false" onDeleteCascade="false" table="flutype_ligand"/>
          </column>
          <column autoUpdated="false" digits="0" id="11" name="produced_by_id" nullable="true" remarks="" size="10" type="int4">
@@ -162,41 +152,45 @@
       <table name="flutype_process" numRows="0" remarks="" schema="public" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('flutype_process_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
             <child column="process_id" foreignKey="flutype_experiment_process_id_26f7c09b_fk_flutype_process_id" implied="false" onDeleteCascade="false" table="flutype_experiment"/>
-            <child column="process_id" foreignKey="flutype_process_steps_process_id_4bd70b94_fk_flutype_process_id" implied="false" onDeleteCascade="false" table="flutype_process_steps"/>
+            <child column="process_id" foreignKey="flutype_processstep_process_id_86c1338c_fk_flutype_process_id" implied="false" onDeleteCascade="false" table="flutype_processstep"/>
          </column>
-         <column autoUpdated="false" digits="0" id="1" name="sid" nullable="true" remarks="" size="50" type="varchar"/>
-         <column autoUpdated="false" digits="0" id="2" name="user_id" nullable="true" remarks="" size="10" type="int4">
-            <parent column="id" foreignKey="flutype_process_user_id_6856de13_fk_auth_user_id" implied="false" onDeleteCascade="false" table="auth_user"/>
-         </column>
+         <column autoUpdated="false" digits="0" id="1" name="sid" nullable="false" remarks="" size="50" type="varchar"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="flutype_process_pkey" unique="true">
             <column ascending="true" name="id"/>
          </index>
-         <index name="flutype_process_user_id_6856de13" unique="false">
-            <column ascending="true" name="user_id"/>
-         </index>
       </table>
-      <table name="flutype_process_steps" numRows="0" remarks="" schema="public" type="TABLE">
-         <column autoUpdated="true" defaultValue="nextval('flutype_process_steps_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
-         <column autoUpdated="false" digits="0" id="1" name="process_id" nullable="false" remarks="" size="10" type="int4">
-            <parent column="id" foreignKey="flutype_process_steps_process_id_4bd70b94_fk_flutype_process_id" implied="false" onDeleteCascade="false" table="flutype_process"/>
+      <table name="flutype_processstep" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('flutype_processstep_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="6" id="1" name="date_time" nullable="true" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="2" name="comment" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="index" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="4" name="process_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="flutype_processstep_process_id_86c1338c_fk_flutype_process_id" implied="false" onDeleteCascade="false" table="flutype_process"/>
          </column>
-         <column autoUpdated="false" digits="0" id="2" name="step_id" nullable="false" remarks="" size="10" type="int4">
-            <parent column="id" foreignKey="flutype_process_steps_step_id_09e23c2c_fk_flutype_step_id" implied="false" onDeleteCascade="false" table="flutype_step"/>
+         <column autoUpdated="false" digits="0" id="5" name="step_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="flutype_processstep_step_id_45298222_fk_flutype_step_id" implied="false" onDeleteCascade="false" table="flutype_step"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="6" name="user_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="flutype_processstep_user_id_01cf6020_fk_auth_user_id" implied="false" onDeleteCascade="false" table="auth_user"/>
          </column>
          <primaryKey column="id" sequenceNumberInPK="1"/>
-         <index name="flutype_process_steps_pkey" unique="true">
+         <index name="flutype_processstep_pkey" unique="true">
             <column ascending="true" name="id"/>
          </index>
-         <index name="flutype_process_steps_process_id_4bd70b94" unique="false">
+         <index name="flutype_processstep_process_id_86c1338c" unique="false">
             <column ascending="true" name="process_id"/>
          </index>
-         <index name="flutype_process_steps_process_id_step_id_8b110b56_uniq" unique="true">
+         <index name="flutype_processstep_process_id_step_id_index_04320a93_uniq" unique="true">
             <column ascending="true" name="process_id"/>
             <column ascending="true" name="step_id"/>
+            <column ascending="true" name="index"/>
          </index>
-         <index name="flutype_process_steps_step_id_09e23c2c" unique="false">
+         <index name="flutype_processstep_step_id_45298222" unique="false">
             <column ascending="true" name="step_id"/>
+         </index>
+         <index name="flutype_processstep_user_id_01cf6020" unique="false">
+            <column ascending="true" name="user_id"/>
          </index>
       </table>
       <table name="flutype_quenching" numRows="0" remarks="" schema="public" type="TABLE">
@@ -360,7 +354,6 @@
          <column autoUpdated="false" digits="0" id="0" name="step_ptr_id" nullable="false" remarks="" size="10" type="int4">
             <parent column="id" foreignKey="flutype_spotting_step_ptr_id_5bc0693e_fk_flutype_step_id" implied="false" onDeleteCascade="false" table="flutype_step"/>
          </column>
-         <column autoUpdated="false" digits="0" id="1" name="order" nullable="true" remarks="" size="10" type="int4"/>
          <primaryKey column="step_ptr_id" sequenceNumberInPK="1"/>
          <index name="flutype_spotting_pkey" unique="true">
             <column ascending="true" name="step_ptr_id"/>
@@ -370,25 +363,16 @@
          <column autoUpdated="true" defaultValue="nextval('flutype_step_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
             <child column="step_ptr_id" foreignKey="flutype_drying_step_ptr_id_b7a288d7_fk_flutype_step_id" implied="false" onDeleteCascade="false" table="flutype_drying"/>
             <child column="step_ptr_id" foreignKey="flutype_incubating_step_ptr_id_3acf64b5_fk_flutype_step_id" implied="false" onDeleteCascade="false" table="flutype_incubating"/>
-            <child column="step_id" foreignKey="flutype_process_steps_step_id_09e23c2c_fk_flutype_step_id" implied="false" onDeleteCascade="false" table="flutype_process_steps"/>
+            <child column="step_id" foreignKey="flutype_processstep_step_id_45298222_fk_flutype_step_id" implied="false" onDeleteCascade="false" table="flutype_processstep"/>
             <child column="step_ptr_id" foreignKey="flutype_quenching_step_ptr_id_72e45334_fk_flutype_step_id" implied="false" onDeleteCascade="false" table="flutype_quenching"/>
             <child column="step_ptr_id" foreignKey="flutype_spotting_step_ptr_id_5bc0693e_fk_flutype_step_id" implied="false" onDeleteCascade="false" table="flutype_spotting"/>
             <child column="step_ptr_id" foreignKey="flutype_washing_step_ptr_id_35c87eb0_fk_flutype_step_id" implied="false" onDeleteCascade="false" table="flutype_washing"/>
          </column>
          <column autoUpdated="false" digits="0" id="1" name="sid" nullable="true" remarks="" size="50" type="varchar"/>
-         <column autoUpdated="false" digits="0" id="2" name="method" nullable="true" remarks="" size="50" type="varchar"/>
-         <column autoUpdated="false" digits="0" id="3" name="index" nullable="true" remarks="" size="10" type="int4"/>
-         <column autoUpdated="false" digits="6" id="4" name="date_time" nullable="true" remarks="" size="35" type="timestamptz"/>
-         <column autoUpdated="false" digits="0" id="5" name="comment" nullable="true" remarks="" size="2147483647" type="text"/>
-         <column autoUpdated="false" digits="0" id="6" name="user_id" nullable="true" remarks="" size="10" type="int4">
-            <parent column="id" foreignKey="flutype_step_user_id_f9f29ca7_fk_auth_user_id" implied="false" onDeleteCascade="false" table="auth_user"/>
-         </column>
+         <column autoUpdated="false" digits="0" id="2" name="method" nullable="true" remarks="" size="300" type="varchar"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="flutype_step_pkey" unique="true">
             <column ascending="true" name="id"/>
-         </index>
-         <index name="flutype_step_user_id_f9f29ca7" unique="false">
-            <column ascending="true" name="user_id"/>
          </index>
       </table>
       <table name="flutype_virus" numRows="0" remarks="" schema="public" type="TABLE">
@@ -396,7 +380,7 @@
             <parent column="id" foreignKey="flutype_virus_ligand_ptr_id_5fec9c5f_fk_flutype_ligand_id" implied="false" onDeleteCascade="false" table="flutype_ligand"/>
          </column>
          <column autoUpdated="false" digits="0" id="1" name="tax_id" nullable="true" remarks="" size="50" type="varchar"/>
-         <column autoUpdated="false" digits="0" id="2" name="link_db" nullable="false" remarks="" size="200" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="link_db" nullable="true" remarks="" size="200" type="varchar"/>
          <column autoUpdated="false" digits="0" id="3" name="subtype" nullable="true" remarks="" size="50" type="varchar"/>
          <column autoUpdated="false" digits="0" id="4" name="isolation_country" nullable="true" remarks="" size="50" type="varchar"/>
          <column autoUpdated="false" digits="0" id="5" name="collection_date" nullable="true" remarks="" size="10" type="varchar"/>

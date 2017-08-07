@@ -1,7 +1,7 @@
+flutype_processstep
 flutype_spot
 flutype_rawspotcollection_ligands2
 flutype_rawspotcollection_ligands1
-flutype_process_steps
 flutype_washing
 flutype_virusbatch
 flutype_virus
@@ -10,16 +10,15 @@ flutype_quenching
 flutype_peptidebatch
 flutype_peptide
 flutype_incubating
-flutype_elisa
 flutype_drying
 flutype_antibodybatch
 flutype_antibody
 flutype_rawspot
 flutype_spotcollection
-flutype_step
 flutype_rawspotcollection
 flutype_ligandbatch
 flutype_experiment
 flutype_process
 flutype_galfile
+flutype_step
 flutype_ligand
