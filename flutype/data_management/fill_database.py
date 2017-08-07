@@ -67,23 +67,20 @@ def get_user_or_none(dict):
         user = User.objects.get(username=dict["user"])
     else:
         user = None
-        return user
+
+    return user
+
+
 
 class Database(object):
     """ Database """
     ##### helper functions  ########
-    def get_user_or_none(dict):
-        if "user" in dict:
-            user = User.objects.get(username=dict["user"])
-        else:
-            user = None
 
-        return user
     ##### create_or_update datables realted data ####
     def create_or_update_virus(self, virus):
         vir, created = Virus.objects.get_or_create(sid=virus["sid"],
                                                    comment=virus["comment"],
-                                                   tax_id=virus[""],
+                                                   tax_id=virus["tax_id"],
                                                    link_db=virus["link_db"],
                                                    subtype=virus["subtype"],
                                                    isolation_country=virus["isolation_country"],
@@ -93,8 +90,8 @@ class Database(object):
         return vir, created
 
     def create_or_update_virus_batch(self, virus_batch):
-        if "tax_id" in virus_batch:
-            virus = Virus.objects.get(sid=virus_batch["tax_id"])
+        if "lig_id" in virus_batch:
+            virus = Virus.objects.get(sid=virus_batch["lig_id"])
         else:
             virus = None
             # prints all virus batches without foreignkey to a virus in the database
@@ -103,6 +100,7 @@ class Database(object):
         user = get_user_or_none(virus_batch)
         # fills virus batches
         virus_b, created = VirusBatch.objects.get_or_create(sid=virus_batch["sid"],
+
                                                             labeling=virus_batch["labeling"],
                                                             concentration=virus_batch["concentration"],
                                                             buffer=virus_batch["buffer"],
@@ -133,8 +131,8 @@ class Database(object):
 
 
     def create_or_update_peptide_batch(self,peptide_batch):
-        if "pep_sid" in peptide_batch:
-            peptide = Peptide.objects.get(sid=peptide_batch["pep_sid"])
+        if "lig_sid" in peptide_batch:
+            peptide = Peptide.objects.get(sid=peptide_batch["lig_sid"])
 
         else:
             peptide = None
@@ -168,8 +166,8 @@ class Database(object):
 
     def create_or_update_antibody_batch(self,antibody_batch):
 
-        if "ab_sid" in antibody_batch:
-            antibody = Antibody.objects.get(sid=antibody_batch["ab_sid"])
+        if "lig_sid" in antibody_batch:
+            antibody = Antibody.objects.get(sid=antibody_batch["lig_sid"])
 
         else:
             antibody = None
@@ -323,19 +321,19 @@ class Database(object):
         :return: process (Django.model object), created (True if created, False if found)
         """
         try:
-            spotting = Spotting.objects.get(sid=meta["Spotting"])
+            spotting = Spotting.objects.get(sid=meta["spotting"])
         except:
             spotting = None
         try:
-            incubating = Incubating.objects.get(sid=meta["Incubating"])
+            incubating = Incubating.objects.get(sid=meta["incubating"])
         except:
             incubating = None
         try:
-            quenching = Quenching.objects.get(sid=meta["Quenching"])
+            quenching = Quenching.objects.get(sid=meta["quenching"])
         except:
             quenching = None
         try:
-            user = User.objects.get(username=meta["ProcessUser"])
+            user = User.objects.get(username=meta["process_user"])
         except:
             user = None
 
@@ -362,7 +360,7 @@ class Database(object):
         :return:
         """
         print("-" * 80)
-        print("Filling Collection with sid <{}>".format(dic_data["meta"]["SID"]))
+        print("Filling Collection with sid <{}>".format(dic_data["meta"]["sid"]))
 
         process, priocess_created = self.fill_process(dic_data["meta"])
         gal_vir, gal_vir_created = self.fill_gal_vir(dic_data["gal_virus"][0],dic_data["gal_virus"][1])
@@ -370,16 +368,16 @@ class Database(object):
 
 
         # gets or creates raw_spot_collection
-        raw_spot_collection, _ = RawSpotCollection.objects.get_or_create(sid=dic_data["meta"]["SID"],
-                                                                             batch=dic_data["meta"]["HolderBatch"],
-                                                                             holder_type=dic_data["meta"]["HolderType"],
-                                                                             functionalization=dic_data["meta"]['SurfaceSubstance'],
-                                                                             manufacturer=dic_data["meta"]['Manfacturer'],
+        raw_spot_collection, _ = RawSpotCollection.objects.get_or_create(sid=dic_data["meta"]["sid"],
+                                                                             batch=dic_data["meta"]["holder_batch"],
+                                                                             holder_type=dic_data["meta"]["holder_type"],
+                                                                             functionalization=dic_data["meta"]['surface_substance'],
+                                                                             manufacturer=dic_data["meta"]['manfacturer'],
                                                                              gal_ligand=gal_lig,
                                                                              gal_virus=gal_vir,
                                                                              process=process)
         if "image" in dic_data:
-            raw_spot_collection.image.save(dic_data["meta"]["SID"]+".jpg", dic_data["image"])
+            raw_spot_collection.image.save(dic_data["meta"]["sid"]+".jpg", dic_data["image"])
 
 
     def fill_spot_collection(self, collection_id, q_collection_id):
@@ -402,18 +400,18 @@ class Database(object):
         raw_spot_collection = RawSpotCollection.objects.get(sid=collection_id)
 
 
-        raw_spot, created = RawSpot.objects.get_or_create(peptide_batch=PeptideBatch.objects.get(sid=raw_spot["Ligand"]),
-                                                          virus_batch=VirusBatch.objects.get(sid=raw_spot["Virus"]),
+        raw_spot, created = RawSpot.objects.get_or_create(peptide_batch=PeptideBatch.objects.get(sid=raw_spot["ligand"]),
+                                                          virus_batch=VirusBatch.objects.get(sid=raw_spot["virus"]),
                                                           raw_spot_collection=raw_spot_collection,
-                                                          column=raw_spot["Column"],
-                                                          row=raw_spot["Row"]
+                                                          column=raw_spot["column"],
+                                                          row=raw_spot["row"]
                                                           )
         return raw_spot, created
 
     def fill_spot(self, raw_spot,spot_collection, spot):
         spo, created = Spot.objects.get_or_create(raw_spot=raw_spot,
-                                          intensity=spot["Intensity"],
-                                          std=spot["Std"],
+                                          intensity=spot["intensity"],
+                                          std=spot["std"],
                                           spot_collection=spot_collection)
         return spo, created
 
@@ -428,10 +426,10 @@ class Database(object):
         """
 
         try:
-            gal_ligand = GalLigand.objects.get(sid=fname_gal_lig)
+            gal_ligand = GalFile.objects.get(sid=fname_gal_lig)
             created = False
         except:
-            gal_ligand, created = GalLigand.objects.get_or_create(sid=fname_gal_lig)
+            gal_ligand, created = GalFile.objects.get_or_create(sid=fname_gal_lig)
             gal_ligand.file.save(fname_gal_lig, File(gal_lig))
 
         return gal_ligand, created
@@ -447,10 +445,10 @@ class Database(object):
         """
 
         try:
-            gal_virus = GalVirus.objects.get(sid=fname_gal_vir)
+            gal_virus = GalFile.objects.get(sid=fname_gal_vir)
             created = False
         except:
-            gal_virus, created = GalVirus.objects.get_or_create(sid=fname_gal_vir)
+            gal_virus, created = GalFile.objects.get_or_create(sid=fname_gal_vir)
             gal_virus.file.save(fname_gal_vir, File(gal_vir))
 
         return gal_virus, created
@@ -534,13 +532,13 @@ class Database(object):
         # fill raw spots
         raw_spots = self.get_spots_of_collection(dic_spots)
         for k, raw_spot in raw_spots.iterrows():
-            self.fill_raw_spot(dic_data["meta"]["SID"], raw_spot)
+            self.fill_raw_spot(dic_data["meta"]["sid"], raw_spot)
 
 
 
     def fill_q_collection_and_related_spots(self, dic_data_q, q_collection_id):
         """ """
-        spot_collection, created, raw_spot_collection = self.fill_spot_collection(dic_data_q["meta"]["SID"],
+        spot_collection, created, raw_spot_collection = self.fill_spot_collection(dic_data_q["meta"]["sid"],
                                                                                 q_collection_id)
         spots = self.get_spots_of_collection(dic_data_q)
         for k, spot in spots.iterrows():
