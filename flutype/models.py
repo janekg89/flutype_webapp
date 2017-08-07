@@ -229,7 +229,7 @@ class Drying(Step):
 
 class Spotting(Step):
     """ Spotting method and media related to spotting. """
-    pas
+    pass
 
 
 class Incubating(Step):
