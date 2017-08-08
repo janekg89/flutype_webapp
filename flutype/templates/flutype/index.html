@@ -15,14 +15,14 @@
                     <tr>
                         <th>Sid</th>
                         <th>Batch</th>
-                        <th>Holder Type</th>
+                        <th>Experiment Type</th>
                         <th>Functionalization</th>
                         <th>Manufacturer</th>
                         <th>Image</th>
                         <th>Quantified Collection</th>
                         <th>Virus</th>
-                        <th>Gal Virus</th>
-                        <th>Gal Ligand</th>
+                        <th>Gal Mobile</th>
+                        <th>Gal Fixed</th>
                         <th>Process</th>
                         <th>User</th>
                     </tr>
@@ -33,12 +33,12 @@
                             <td class="warning">
                                 <b><a href="{{ url('rawspotcollectionview', args=[c.id]) }}"> {{ c.sid }}</a></b>
                             <td>{{ c.batch }}</td>
-                            <td>{% if c.holder_type == "microwell" %}
+                            <td>{% if c.experiment_type == "microwell" %}
                                     <i class="fa fa-building-o"></i>&nbsp;
-                                {% elif c.holder_type == "microarray" %}
+                                {% elif c.experiment_type == "microarray" %}
                                     <i class="fa fa-building"></i>&nbsp;
                                 {% endif %}
-                                {{ c.holder_type }}</td>
+                                {{ c.experiment_type }}</td>
                             <td>{{ c.functionalization }}</td>
                             <td>{{ c.manufacturer }}</td>
                             <td>{% if c.image %}
@@ -56,16 +56,25 @@
                                 {% else %}
                                     <i class="fa fa-ban text-danger"></i>
                                 {%  endif %}</td>
-                            <td>{% for virus in c.viruses.all() %}
-                                    {{ virus.subgroup }} ({{ virus.strain }})&nbsp;
+                            <td>{% for ligand2 in c.ligands2.all() %}
+                                    {% if ligand2._get_ligand_type() == "Virus" %}
+                                        {{ ligand2.subtype }} ({{ ligand2.strain }})&nbsp;
+                                    {% endif %}
                                 {% endfor %}</td>
-                            <td><a href="{{ c.gal_virus.file.url }}" target="_blank">
-                                    {{ c.gal_virus.sid }}</a></td>
-                            <td><a href="{{ c.gal_ligand.file.url }}" target="_blank">
-                                    {{ c.gal_ligand.sid }}</a></td>
-                            <td>{{ c.process.id }}</td>
-                            {% if c.process.user %}
-                            <td>{{ c.process.user.first_name }} {{ c.process.user.last_name }}</td>
+                            <td><a href="{{ c.gal_file2.file.url }}" target="_blank">
+                                    {{ c.gal_file2.sid }}</a></td>
+                            <td><a href="{{ c.gal_file1.file.url }}" target="_blank">
+                                    {{ c.gal_file1.sid }}</a></td>
+
+                            <td>{{ c.process.sid }}</td>
+                            {% if c.process.users %}
+
+                                <td>
+                                {% for processstep in c.process.processstep_set.all() %}
+                                {{ processstep.user.first_name }} {{ processstep.user.last_name }}
+                                {% endfor %}
+                                </td>
+
                                 {% else %}
                                 <td></td>
                             {% endif %}
