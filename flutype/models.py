@@ -367,7 +367,8 @@ class RawSpotCollection(Experiment):
 
     def viruses1(self):
         # TODO: filter by the ligand type
-        return self.ligands1
+
+        return self.ligands1.filter(self._get_ligand_type()=="Virus")
 
     def viruses2(self):
         # TODO: filter by the ligand type
