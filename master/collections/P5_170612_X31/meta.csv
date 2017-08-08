@@ -1,8 +1,5 @@
-Manfacturer	
-HolderType	microarray
-Spotting	
-Incubating	
-HolderBatch	
-SID	P5_170612_X31
-SurfaceSubstance	
-Quenching	
+manfacturer	
+holder_type	microarray
+sid	P5_170612_X31
+surface_substance	
+holder_batch	

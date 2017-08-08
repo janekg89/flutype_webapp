@@ -7,7 +7,7 @@ import os
 import sys
 from django.core.files import File
 import warnings
-
+import re
 ###########################################################
 # setup django (add current path to sys.path)
 path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../'))
@@ -51,6 +51,7 @@ from flutype.models import (Peptide,
                             Antibody,
                             AntibodyBatch,
                             Ligand,
+                            LigandBatch,
                             RawSpotCollection,
                             SpotCollection,
                             RawSpot,
@@ -78,6 +79,8 @@ def get_user_or_none(dict):
 
     return user
 def get_step_or_none(dict):
+    print(dict.keys())
+    exit()
     if "sid" in dict:
         if dict["sid"] is None:
             step = None
@@ -113,7 +116,7 @@ class Database(object):
             if virus_batch["lig_id"] is None:
                 virus = None
             else:
-                virus = Virus.objects.get(sid=virus_batch["lig_id"])
+                virus = Virus.objects.get(sid=int(virus_batch["lig_id"]))
         else:
             virus = None
             # prints all virus batches without foreignkey to a virus in the database
@@ -326,26 +329,32 @@ class Database(object):
 
     def create_or_update_process(self,steps):
         steps_in_process = []
-
         for index, step in steps.iterrows():
-            process_step = Step.objects.get(sid=dict["sid"])
+            process_step = Step.objects.get(sid=step["sid"])
             steps_in_process.append(process_step)
 
-        max_id = 0
+        max_name = 0
         for process in Process.objects.all():
-            if process.sid > max_id:
-                max_id = process.sid
+            result = re.search('P(.*)', process.sid)
+            #if result
+            if bool(result):
+                if int(result.group(1)) > max_name:
+                    print()
+                    max_name = int(result.group(1))
             steps = list(process.steps.all())
+            print("This process steps:",steps_in_process)
+            print(" the steps of one process in all processes:",steps)
+
             if steps == steps_in_process:
                 return process , False
-
-        process, created = Process.objects.get_or_create(sid=max_id)
+        new_sid = "P"+'{:03}'.format(max_name + 1)
+        process, created = Process.objects.get_or_create(sid=new_sid)
 
         return process, created
 
 
 
-    def create_or_update_process_and_process_steps(self, meta):
+    def create_or_update_process_and_process_steps(self, steps):
         """
         :param meta: (dictionary -> keys with corresponding value ->  meta.csv)
                     keys :Manfacturer
@@ -360,22 +369,23 @@ class Database(object):
         :return: process (Django.model object), created (True if created, False if found)
         """
 
-
-        process, _ =self.create_or_update_process(meta["steps"])
+        process, created = self.create_or_update_process(steps)
 
 
 
         #experiment = Experiment.objects.get(sid=meta["sid"])
-        for index,step in  meta["steps"].iterrows():
-            process_step = get_step_or_none(step["sid"])
-            user = get_user_or_none(step["user"])
+        for index,step in  steps.iterrows():
+            #process_step = get_step_or_none(step)
+            process_step = Step.objects.get(sid=step["sid"])
+            user = get_user_or_none(step)
             process_step, created = ProcessStep.objects.get_or_create(process = process,
                                                                       step=process_step,
                                                                       index=index,
                                                                       user=user,
-                                                                      date=step["date"]
+                                                                      start=step["start"],
+                                                                      finish=step["finish"]
                                                                       )
-        return process_step, created
+        return process, created
 
 
 
@@ -396,24 +406,24 @@ class Database(object):
         :return:
         """
         print("-" * 80)
+        print(dic_data["meta"])
         print("Filling Collection with sid <{}>".format(dic_data["meta"]["sid"]))
 
+        process, process_created = self.create_or_update_process_and_process_steps(dic_data["steps"])
 
-        process, process_created = self.create_or_update_process_and_process_steps(dic_data["meta"])
-
-        gal_vir, gal_vir_created = self.fill_gal_vir(dic_data["gal_virus"][0],dic_data["gal_virus"][1])
-        gal_lig, gal_lig_created = self.fill_gal_lig(dic_data["gal_ligand"][0],dic_data["gal_ligand"][1])
+        gal_vir, gal_vir_created = self.fill_gal_lig2(dic_data["gal_ligand2"][0], dic_data["gal_ligand2"][1])
+        gal_lig, gal_lig_created = self.fill_gal_lig1(dic_data["gal_ligand1"][0], dic_data["gal_ligand1"][1])
 
 
         # gets or creates raw_spot_collection
         raw_spot_collection, _ = RawSpotCollection.objects.get_or_create(sid=dic_data["meta"]["sid"],
-                                                                             batch=dic_data["meta"]["holder_batch"],
-                                                                             holder_type=dic_data["meta"]["holder_type"],
-                                                                             functionalization=dic_data["meta"]['surface_substance'],
-                                                                             manufacturer=dic_data["meta"]['manfacturer'],
-                                                                             gal_ligand=gal_lig,
-                                                                             gal_virus=gal_vir,
-                                                                             process=process)
+                                                                         batch=dic_data["meta"]["holder_batch"],
+                                                                         experiment_type=dic_data["meta"]["holder_type"],
+                                                                         functionalization=dic_data["meta"]['surface_substance'],
+                                                                         manufacturer=dic_data["meta"]['manfacturer'],
+                                                                         gal_file1=gal_lig,
+                                                                         gal_file2=gal_vir,
+                                                                         process=process)
         if "image" in dic_data:
             raw_spot_collection.image.save(dic_data["meta"]["sid"]+".jpg", dic_data["image"])
 
@@ -436,26 +446,36 @@ class Database(object):
     def fill_raw_spot(self, collection_id, raw_spot):
 
         raw_spot_collection = RawSpotCollection.objects.get(sid=collection_id)
+        try:
+            ligand1=LigandBatch.objects.get(sid=raw_spot["Ligand1"])
+        except:
+            print("No Ligand found for Ligandbatch with sid:" + raw_spot["Ligand1"])
+            ligand1 = None
+        try:
+            ligand2=LigandBatch.objects.get(sid=raw_spot["Ligand2"])
+        except:
+            print("No Ligand found for Ligandbatch with sid:" + raw_spot["Ligand2"])
+            ligand2 = None
 
 
-        raw_spot, created = RawSpot.objects.get_or_create(peptide_batch=PeptideBatch.objects.get(sid=raw_spot["ligand"]),
-                                                          virus_batch=VirusBatch.objects.get(sid=raw_spot["virus"]),
+        raw_spot, created = RawSpot.objects.get_or_create(ligand1=ligand1,
+                                                          ligand2=ligand2,
                                                           raw_spot_collection=raw_spot_collection,
-                                                          column=raw_spot["column"],
-                                                          row=raw_spot["row"]
+                                                          column=raw_spot["Column"],
+                                                          row=raw_spot["Row"]
                                                           )
         return raw_spot, created
 
     def fill_spot(self, raw_spot,spot_collection, spot):
         spo, created = Spot.objects.get_or_create(raw_spot=raw_spot,
-                                          intensity=spot["intensity"],
-                                          std=spot["std"],
+                                          intensity=spot["Intensity"],
+                                          std=spot["Std"],
                                           spot_collection=spot_collection)
         return spo, created
 
 
 
-    def fill_gal_lig(self,gal_lig, fname_gal_lig):
+    def fill_gal_lig1(self, gal_lig, fname_gal_lig):
         """
 
         :param  fname_gal_lig: name of _gal_ligand
@@ -473,23 +493,23 @@ class Database(object):
         return gal_ligand, created
 
 
-    def fill_gal_vir(self, gal_vir, fname_gal_vir):
+    def fill_gal_lig2(self, gal_ligand, fname_gal_lig2):
         """
 
-        :param fname_gal_vir: name of gal_vir
+        :param fname_gal_lig2: name of gal_vir
         :param gal_vir : (django File format !)
         :return: gal_virus, created
 
         """
 
         try:
-            gal_virus = GalFile.objects.get(sid=fname_gal_vir)
+            gal_lig2 = GalFile.objects.get(sid=fname_gal_lig2)
             created = False
         except:
-            gal_virus, created = GalFile.objects.get_or_create(sid=fname_gal_vir)
-            gal_virus.file.save(fname_gal_vir, File(gal_vir))
+            gal_lig2, created = GalFile.objects.get_or_create(sid=fname_gal_lig2)
+            gal_lig2.file.save(fname_gal_lig2, File(gal_ligand))
 
-        return gal_virus, created
+        return gal_lig2, created
 
 
     def get_peptide_set(self,RawSpotCollection):
@@ -511,19 +531,67 @@ class Database(object):
         :return: a set of viruses which were used in RawSpotCollection
         """
         raw_spots = RawSpotCollection.rawspot_set.all()
-        unique_virus_sid = []
-
+        unique_ligand_sid = []
         for raw_spot in raw_spots:
-            virus = raw_spot.virus_batch.virus
-            if not hasattr(virus, 'sid'):
+            ligand = raw_spot.ligand_batch.ligand
+            if not hasattr(ligand, 'sid'):
                 warnings.warn(
-                    "No connection between virus and virus batch for virus_batch: {}".format(raw_spot.virus_batch.sid))
+                    "No connection between ligand and ligand batch for ligand_batch: {}".format(
+                        raw_spot.ligand_batch.sid))
             else:
-                if virus.sid in unique_virus_sid:
+                if ligand.sid in unique_ligand_sid:
                     pass
                 else:
-                    unique_virus_sid.append(raw_spot.virus_batch.virus.sid)
-        return unique_virus_sid
+                    print(ligand._get_ligand_type())
+                    exit()
+                    if ligand._get_ligand_type() == "Virus":
+                        unique_ligand_sid.append(raw_spot.ligand_batch.ligand.sid)
+        return unique_ligand_sid
+
+    def get_ligand1_set(self,RawSpotCollection):
+
+        raw_spots = RawSpotCollection.rawspot_set.all()
+        unique_ligand = []
+        unique_ligand_sid = []
+
+        for raw_spot in raw_spots:
+            ligand1 = raw_spot.ligand1.ligand
+            if not hasattr(ligand1, 'sid'):
+                warnings.warn(
+                    "No connection between ligand and ligand batch for ligand_batch: {}".format(raw_spot.ligand1.sid))
+            else:
+                if ligand1.sid in unique_ligand_sid:
+                    pass
+                else:
+
+                    #if ligand._get_ligand_type() == "Antibody":
+                        unique_ligand.append(ligand1)
+                        unique_ligand_sid.append(ligand1.sid)
+
+        return unique_ligand
+
+    def get_ligand2_set(self, RawSpotCollection):
+
+        raw_spots = RawSpotCollection.rawspot_set.all()
+        unique_ligand_sid = []
+        unique_ligand = []
+        for raw_spot in raw_spots:
+            ligand2 = raw_spot.ligand2.ligand
+            if not hasattr(ligand2, 'sid'):
+                warnings.warn(
+                    "No connection between ligand and ligand batch for ligand_batch: {}".format(
+                        raw_spot.ligand2.sid))
+            else:
+                if ligand2.sid in unique_ligand_sid:
+                    pass
+                else:
+
+                    # if ligand._get_ligand_type() == "Antibody":
+                    unique_ligand_sid.append(ligand2.sid)
+                    unique_ligand.append(ligand2)
+
+        return unique_ligand
+
 
     def get_spots_of_collection(self, dic_data):
         """ """
@@ -534,8 +602,8 @@ class Database(object):
         vir_cor_unstacked = vir_cor.unstack()
         spot = pep_cor.unstack()
         spot = spot.reset_index()
-        spot = spot.rename(columns={0: "Ligand"})
-        spot["Virus"] = vir_cor_unstacked.values
+        spot = spot.rename(columns={0: "Ligand1"})
+        spot["Ligand2"] = vir_cor_unstacked.values
         if "intensity" in dic_data:
             spot["Intensity"]= dic_data["intensity"].unstack().values
 
@@ -550,19 +618,14 @@ class Database(object):
     def fillmany2many_rawspots_peptides_viruses(self):
         """ """
         for rsc in RawSpotCollection.objects.all():
-            virus_ids = self.get_virus_set(rsc)
-            peptide_ids = self.get_peptide_set(rsc)
+            ligand2 = self.get_ligand2_set(rsc)
+            ligand1 = self.get_ligand1_set(rsc)
 
-            for virus_id in virus_ids:
-                try:
-                    rsc.viruses.add(Virus.objects.get(sid=virus_id))
-                except:
-                    pass
-            for peptide_id in peptide_ids:
-                try:
-                    rsc.peptides.add(Peptide.objects.get(sid=peptide_id))
-                except:
-                    pass
+            for ligand2 in ligand2:
+                rsc.ligands2.add(ligand2)
+            for ligand1 in ligand1:
+                rsc.ligands1.add(ligand1)
+
 
 
     def fill_raw_collection_and_related_raw_spots(self, dic_data, dic_spots):
@@ -606,14 +669,19 @@ def fill_database(path_master, collection_ids):
     data_tables = ma.read_data_tables()
     db.fill_dt(data_tables)
 
-    exit()
+
 
     # loads collection
     for collection_id in collection_ids:
         #fill raw collection
         dic_data_dj = ma.read_raw_collection(collection_id)
+
         dic_spots = ma.read_dic_spots(collection_id)
+
+
         db.fill_raw_collection_and_related_raw_spots(dic_data_dj, dic_spots)
+
+
         #fill_q_collection
         q_collection_ids = ma.read_all_q_collection_ids_for_collection(collection_id)
         for q_collection_id in q_collection_ids:

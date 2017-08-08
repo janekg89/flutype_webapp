@@ -93,8 +93,8 @@ class Master(object):
         self.path = path
         self.data_tables_path = os.path.join(self.path, "data_tables")
         self.collections_path = os.path.join(self.path, "collections")
-        self.unique_vir_gal_path = os.path.join(self.path, "unique_gal_virus")
-        self.unique_lig_gal_path = os.path.join(self.path, "unique_gal_ligand")
+        self.unique_vir_gal_path = os.path.join(self.path, "unique_gal_ligand2")
+        self.unique_lig_gal_path = os.path.join(self.path, "unique_gal_ligand1")
 
     def write_data_tables(self, data_tables_dic):
         """
@@ -129,6 +129,12 @@ class Master(object):
             data_tables_dic[key.group(1)].replace([np.NaN], [None] , inplace=True)
         return data_tables_dic
 
+    def read_steps(self, collection_id):
+        file_path = os.path.join(self.collections_path, collection_id, "steps.csv")
+        steps = pd.read_csv(file_path, sep="\t", encoding='utf-8')
+        steps.replace([np.NaN], [None] , inplace=True)
+        return steps
+
     def create_or_update_gal_ligand(self, gal_ligand, collection_id):
         """
         saves gal ligand
@@ -150,7 +156,7 @@ class Master(object):
         """
         collection_path = os.path.join(self.collections_path, collection_id)
         for fn in os.listdir(collection_path):
-            result = re.search( 'lig(.*).txt', fn)
+            result = re.search( 'lig_fix_(.*).txt', fn)
             if bool(result):
                 f_name = fn
                 break
@@ -187,7 +193,7 @@ class Master(object):
         """
         collection_path = os.path.join(self.collections_path, collection_id)
         for fn in os.listdir(collection_path):
-            result = re.search('vir(.*).txt', fn)
+            result = re.search('lig_mob_(.*).txt', fn)
             if bool(result):
                 f_name = fn
                 break
@@ -419,6 +425,7 @@ class Master(object):
         """
         dic_data = {}
         dic_data["meta"]=self.read_meta(collection_id)
+        dic_data["steps"]=self.read_steps(collection_id)
         dic_data["gal_ligand1"] = self.read_gal_ligand(collection_id, format="dj")
         dic_data["gal_ligand2"] = self.read_gal_virus(collection_id, format="dj")
         # FIXME: IF dic_data["meta"][holdertype]=microarray ...
@@ -474,7 +481,7 @@ class Master(object):
         created = False
         # search if any file in unique_lig_gal_path matches 'lig(.*).txt'.
         for fn in os.listdir(self.unique_lig_gal_path):
-            result = re.search('lig(.*).txt', fn)
+            result = re.search('lig_fix_(.*).txt', fn)
             if int(result.group(1)) > max_name:
                 max_name = int(result.group(1))
 
@@ -490,7 +497,7 @@ class Master(object):
         else:
             #else: create  a new file
             created = True
-            fname = 'lig' + '{:03}'.format(max_name + 1) + '.txt'
+            fname = 'lig_fix_' + '{:03}'.format(max_name + 1) + '.txt'
             fpath = os.path.join(self.unique_lig_gal_path, fname)
             gal_lig.to_csv(fpath, sep='\t')
         return fname, fpath, created
@@ -529,7 +536,7 @@ class Master(object):
         max_name = 0
         created = False
         for fn in os.listdir(self.unique_vir_gal_path):
-            result = re.search('vir(.*).txt', fn)
+            result = re.search('lig_mob_(.*).txt', fn)
             if int(result.group(1)) > max_name:
                 max_name = int(result.group(1))
 
@@ -541,7 +548,7 @@ class Master(object):
                 break
         else:
             created = True
-            fname = 'vir' + '{:03}'.format(max_name + 1) + '.txt'
+            fname = 'lig_mob_' + '{:03}'.format(max_name + 1) + '.txt'
             fpath = os.path.join(self.unique_vir_gal_path, fname)
             gal_vir.to_csv(fpath, sep='\t')
 
