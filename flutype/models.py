@@ -175,6 +175,7 @@ class VirusBatch(LigandBatch):
     """
     Virus batch model
     """
+
     passage_history = models.CharField(max_length=CHAR_MAX_LENGTH, blank= True ,null=True)
     active = models.NullBooleanField(blank=True, null=True)
 
@@ -292,7 +293,7 @@ def verify_uniqueness(sender, **kwargs):
 ########################################
 class GalFile(models.Model):
     sid = models.CharField(max_length=CHAR_MAX_LENGTH)
-    file = models.FileField(upload_to="gal_lig", null=True, blank=True, storage=OverwriteStorage())
+    file = models.FileField(upload_to="gal_file", null=True, blank=True, storage=OverwriteStorage())
 
 # class GalVirus(models.Model):
 #    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
@@ -317,7 +318,6 @@ class Experiment(models.Model):
 class Process(models.Model):
     sid = models.CharField(max_length=CHAR_MAX_LENGTH)
     steps = models.ManyToManyField(Step, db_index=True, through='ProcessStep')
-
     def users(self):
         users = []
         for step in self.steps.all():
@@ -329,13 +329,12 @@ class ProcessStep(models.Model):
     #experiment = models.ForeignKey(Experiment)
     step = models.ForeignKey(Step)
     user = models.ForeignKey(User, null=True, blank=True)
-    date_time = models.DateTimeField(null=True, blank=True)
+    start = models.DateTimeField(null=True, blank=True)
+    finish = models.DateTimeField(null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
     index = models.IntegerField(blank=True, null=True)
     # FIXME: property all users involved in the process, i.e.
     # everybody involved in any step in the process
-
-
     class Meta:
         unique_together = ('process', 'step', 'index')
 
