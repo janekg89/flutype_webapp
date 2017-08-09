@@ -24,7 +24,7 @@
                         <th>Gal Mobile</th>
                         <th>Gal Fixed</th>
                         <th>Process</th>
-                        <th>User</th>
+                        <th>Process Users</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -39,7 +39,7 @@
                                     <i class="fa fa-building"></i>&nbsp;
                                 {% endif %}
                                 {{ c.experiment_type }}</td>
-                            <td>{{ c.functionalization }}</td>
+                            <td>{{ c.functionalization}}</td>
                             <td>{{ c.manufacturer }}</td>
                             <td>{% if c.image %}
                                  <a alt="{{ c.image }}" href="{{ c.image.url }}" target="_blank">
@@ -48,19 +48,23 @@
                                 {% else %}
                                         <i class="fa fa-ban fa-stack text-danger"></i>
                                 {%  endif %}</td>
-                            <td>{% if c.is_spot_collection %}
-                                     <a>
-                                         <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                            <td>{% if c.is_spot_collection() %}
+                                     <a><i class="fa fa-check-square-o" aria-hidden="true"></i>
                                      </a>
+                                    {% for s in c.spotcollection_set.all() %}
+                                     {{ s.sid }}
+                                     {% endfor %}
 
                                 {% else %}
                                     <i class="fa fa-ban text-danger"></i>
                                 {%  endif %}</td>
-                            <td>{% for ligand2 in c.ligands2.all() %}
-                                    {% if ligand2._get_ligand_type() == "Virus" %}
-                                        {{ ligand2.subtype }} ({{ ligand2.strain }})&nbsp;
+                            <td>
+                                {%  for virus in c.viruses2().all()%}
+                                    {% if virus.strain %}
+                                    {{ virus.strain}}
                                     {% endif %}
-                                {% endfor %}</td>
+                                    {% endfor %}
+                            </td>
                             <td><a href="{{ c.gal_file2.file.url }}" target="_blank">
                                     {{ c.gal_file2.sid }}</a></td>
                             <td><a href="{{ c.gal_file1.file.url }}" target="_blank">
@@ -68,13 +72,11 @@
 
                             <td>{{ c.process.sid }}</td>
                             {% if c.process.users %}
-
                                 <td>
-                                {% for processstep in c.process.processstep_set.all() %}
-                                {{ processstep.user.first_name }} {{ processstep.user.last_name }}
+                                 {% for user in c.process.users %}
+                                {{ user.first_name }} {{ user.last_name }}
                                 {% endfor %}
                                 </td>
-
                                 {% else %}
                                 <td></td>
                             {% endif %}

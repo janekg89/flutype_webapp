@@ -542,9 +542,9 @@ class Database(object):
                 if ligand.sid in unique_ligand_sid:
                     pass
                 else:
-                    print(ligand._get_ligand_type())
-                    exit()
-                    if ligand._get_ligand_type() == "Virus":
+                    print(ligand.get_ligand_type)
+
+                    if ligand.get_ligand_type == "Virus":
                         unique_ligand_sid.append(raw_spot.ligand_batch.ligand.sid)
         return unique_ligand_sid
 
