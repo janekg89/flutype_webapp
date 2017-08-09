@@ -26,6 +26,7 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.contrib.auth.models import User
+from model_utils.managers import InheritanceManager
 from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
 
@@ -90,22 +91,27 @@ class Ligand(models.Model):
     Generic ligand.
     This can be for instance a peptide, virus or antibody.
     """
+    objects = InheritanceManager()
     sid = models.CharField(max_length=CHAR_MAX_LENGTH, null=True)
     comment = models.TextField(blank=True, null=True)
 
-    def _get_ligand_type(self):
-        """ Type of ligand."""
-        return self.__class__.__name__
+
+
+
+
 
 class Peptide(Ligand):
     """
     Pepide ligand.
     """
+
     linker = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     spacer = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     sequence = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     c_terminus = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+
+
 
 
 class Virus(Ligand):
@@ -127,6 +133,9 @@ class Antibody(Ligand):
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     # FIXME: monoclonal/polyclonal
     link_db =  models.URLField(blank=True, null=True)
+
+
+
 
 
 ########################################
@@ -318,11 +327,13 @@ class Experiment(models.Model):
 class Process(models.Model):
     sid = models.CharField(max_length=CHAR_MAX_LENGTH)
     steps = models.ManyToManyField(Step, db_index=True, through='ProcessStep')
+
+    @property
     def users(self):
-        users = []
-        for step in self.steps.all():
-            users.append(step.user)
-        return users
+        user_ids = self.processstep_set.values_list("user", flat="True").distinct()
+        return User.objects.filter(id__in=user_ids)
+
+
 
 class ProcessStep(models.Model):
     process = models.ForeignKey(Process)
@@ -335,6 +346,7 @@ class ProcessStep(models.Model):
     index = models.IntegerField(blank=True, null=True)
     # FIXME: property all users involved in the process, i.e.
     # everybody involved in any step in the process
+
     class Meta:
         unique_together = ('process', 'step', 'index')
 
@@ -366,15 +378,25 @@ class RawSpotCollection(Experiment):
 
 
     def viruses1(self):
-        # TODO: filter by the ligand type
+        return self.ligands1.all().select_subclasses(Virus)
 
-        return self.ligands1.filter(self._get_ligand_type()=="Virus")
 
     def viruses2(self):
-        # TODO: filter by the ligand type
-        return self.ligands2
+        return self.ligands2.all().select_subclasses(Virus)
 
-    # TODO: also for peptides and antibodies
+    def antibody1(self):
+        return self.ligands1.all().select_subclasses(Antibody)
+
+
+    def antibody2(self):
+        return self.ligands2.all().select_subclasses(Antibody)
+
+    def peptide1(self):
+        return self.ligands1.all().select_subclasses(Peptide)
+
+
+    def peptide2(self):
+        return self.ligands2.all().select_subclasses(Peptide)
 
 
     def is_spot_collection(self):

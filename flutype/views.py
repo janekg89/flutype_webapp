@@ -38,9 +38,10 @@ def index_view(request):
                   'flutype/index.html', context)
 @login_required
 def my_index_view(request):
-    user_process = Process.objects.filter(user=request.user)
-    collections = RawSpotCollection.objects.filter(process=user_process)
 
+    collections = RawSpotCollection.objects.filter(process__processstep__user=request.user).distinct()
+
+    print(collections.values_list("sid", flat=True))
     context = {
         'type': 'my',
         'collections': collections,
