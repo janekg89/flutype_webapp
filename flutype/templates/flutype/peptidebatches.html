@@ -20,6 +20,7 @@
                     <th>Buffer</th>
                     <th>pH</th>
                     <th>Purity</th>
+                    <th>Labeling</th>
                     <th>Produced by</th>
                     <th>Production Date</th>
                     <th>Comment</th>
@@ -32,7 +33,7 @@
                             <b>{{ peptidebatch.sid }}</b>
                         </td>
                         <!-- peptide information -->
-                        {% with p=peptidebatch.peptide %}
+                        {% with p=peptidebatch.ligand %}
                         <td class="danger">{{ p.sid }}</td>
                         <td class="danger">{{ p.linker }}</td>
                         <td class="danger">{{ p.spacer }}</td>
@@ -46,6 +47,7 @@
                         <td>{{ peptidebatch.buffer }}</td>
                         <td>{{ peptidebatch.ph }}</td>
                         <td>{{ peptidebatch.purity }}</td>
+                        <td>{{ peptidebatch.labeling }}</td>
                         <td>{{ peptidebatch.produced_by }}</td>
                         <td>{{ peptidebatch.production_date }}</td>
                         <td>{{ peptidebatch.comment }}</td>
