@@ -4,39 +4,37 @@
     <div class="row">
         <div class="col-lg-12">
             {% if type == "fixed" %}
-                <h1>Fixed Peptides</h1>
+                <h1>Fixed Antibodies</h1>
             {% elif type == "mobile"%}
-                <h1>Mobile Peptides</h1>
+                <h1>Mobile Antibodies</h1>
             {% else %}
-                <h1>Peptides</h1>
+                <h1>Antibodies</h1>
             {% endif %}
-            {% if peptides %}
-            <table id="peptides" class="table table-striped">
+            {% if antibodies %}
+
+            <table id="antibodies" class="table table-striped">
                 <thead>
                 <tr>
-                    <th>sid Peptide</th>
-                    <th>Linker</th>
-                    <th>Spacer</th>
-                    <th>Sequence</th>
-                    <th>C-Terminus</th>
+                    <th>Sid</th>
+                    <th>Target</th>
                     <th>Name</th>
+                    <th>Database Link</th>
                     <th>Comment</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for p in peptides.all() %}
+                {% for antibody in antibodies %}
                     <tr>
-                        <td class="warning"> <b> {{p.sid }}</b> </td>
-                        <td>{{ p.linker }}</td>
-                        <td>{{ p.spacer }}</td>
-                        <td>{{ p.sequence }}</td>
-                        <td>{{ p.c_terminus }}</td>
-                        <td>{{ p.name }}</td>
-                        <td>{{ p.comment }}</td>
+                        <td class="warning"><b>{{ antibody.sid }}</b></td>
+                        <td>{{ antibody.target }}</td>
+                        <td>{{ antibody.name }}</td>
+                        <td>{{ antibody.link_db }}</td>
+                        <td>{{ antibody.comment }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
+
             {% else %}
                 <p>No entries in database.</p>
             {% endif %}
@@ -48,7 +46,7 @@
 {% block javascript %}
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
-            $('#peptides').DataTable();
+            $('#antibodies').DataTable();
         });
     </script>
 {% endblock %}

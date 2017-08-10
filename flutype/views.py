@@ -5,7 +5,7 @@ from django.shortcuts import render
 # Create your views here.
 from django.http import HttpResponse
 from django.contrib.auth.models import User
-from .models import RawSpotCollection,SpotCollection, PeptideBatch, Peptide, VirusBatch, Virus, Process
+from .models import RawSpotCollection,SpotCollection, PeptideBatch, Peptide, VirusBatch, Virus, AntibodyBatch, Antibody
 from django.views import generic
 from django.shortcuts import render, get_object_or_404
 
@@ -75,6 +75,7 @@ def peptide_batch_view(request):
 def peptide_batch_mobile_view(request):
     peptide_batches = PeptideBatch.objects.filter(ligand2__isnull=False).distinct()
     context = {
+        'type': "mobile",
         'peptide_batches': peptide_batches,
     }
     return render(request,
@@ -83,6 +84,7 @@ def peptide_batch_mobile_view(request):
 def peptide_batch_fixed_view(request):
     peptide_batches = PeptideBatch.objects.filter(ligand1__isnull=False).distinct()
     context = {
+        'type': "fixed",
         'peptide_batches': peptide_batches,
     }
     return render(request,
@@ -102,6 +104,7 @@ def peptide_view(request):
 def peptide_mobile_view(request):
     peptides = Peptide.objects.filter(ligands2__isnull=False).distinct()
     context = {
+        'type': "mobile",
         'peptides': peptides,
     }
     return render(request,
@@ -111,6 +114,7 @@ def peptide_fixed_view(request):
     peptides = Peptide.objects.filter(ligands1__isnull=False).distinct()
 
     context = {
+        'type': "fixed",
         'peptides': peptides,
     }
     return render(request,
@@ -131,25 +135,91 @@ def virus_batch_view(request):
 def virus_batch_mobile_view(request):
     virus_batches = VirusBatch.objects.filter(ligand2__isnull=False).distinct()
     context = {
+
+        'type': "mobile",
         'virus_batches': virus_batches,
     }
     return render(request,
                   'flutype/virusbatches.html', context)
-@login_required
 
+@login_required
 def virus_batch_fixed_view(request):
     virus_batches = VirusBatch.objects.filter(ligand1__isnull=False).distinct()
     context = {
+        'type': "fixed",
         'virus_batches': virus_batches,
     }
     return render(request,
                   'flutype/virusbatches.html', context)
+
+@login_required
+def antibody_batch_view(request):
+    antibody_batches = AntibodyBatch.objects.all()
+    context = {
+        'antibody_batches': antibody_batches,
+    }
+    return render(request,
+                  'flutype/antibodybatches.html', context)
+
+
+@login_required
+def antibody_batch_mobile_view(request):
+    antibody_batches = AntibodyBatch.objects.filter(ligand2__isnull=False).distinct()
+    context = {
+        'type': "mobile",
+
+        'antibody_batches': antibody_batches,
+    }
+    return render(request,
+                  'flutype/antibodybatches.html', context)
+
+@login_required
+def antibody_batch_fixed_view(request):
+    antibody_batches = AntibodyBatch.objects.filter(ligand1__isnull=False).distinct()
+    context = {
+        'type': "fixed",
+        'antibody_batches': antibody_batches,
+    }
+    return render(request,
+                  'flutype/antibodybatches.html', context)
+@login_required
+def antibody_view(request):
+    antibodies = Antibody.objects.all()
+    context = {
+        'antibodies': antibodies,
+    }
+    return render(request,
+                  'flutype/antibodies.html', context)
+
+
+@login_required
+def antibody_mobile_view(request):
+    antibodies = Antibody.objects.filter(ligands2__isnull=False).distinct()
+    context = {
+        'type': "mobile",
+        'antibodies': antibodies,
+    }
+    return render(request,
+                  'flutype/antibodies.html', context)
+
+
+@login_required
+def antibody_fixed_view(request):
+    antibodies = Antibody.objects.filter(ligands1__isnull=False).distinct()
+    context = {
+        'type': "fixed",
+
+        'antibodies': antibodies,
+    }
+    return render(request,
+                  'flutype/antibodies.html', context)
 
 
 @login_required
 def virus_view(request):
     viruses = Virus.objects.all()
     context = {
+
         'viruses': viruses,
     }
     return render(request,
@@ -158,6 +228,7 @@ def virus_view(request):
 def virus_mobile_view(request):
     viruses = Virus.objects.filter(ligands2__isnull=False).distinct()
     context = {
+        'type': "mobile",
         'viruses': viruses,
     }
     return render(request,
@@ -167,6 +238,7 @@ def virus_fixed_view(request):
     viruses = Virus.objects.filter(ligands1__isnull=False).distinct()
 
     context = {
+        'type': "fixed",
         'viruses': viruses,
     }
     return render(request,

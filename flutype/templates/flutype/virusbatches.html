@@ -3,7 +3,13 @@
     <!-- LIST OF RAWSPOTCOLLECTION -->
     <div class="row">
         <div class="col-lg-12">
-            <h1>Virus Batches</h1>
+            {% if type == "fixed" %}
+                <h1>Fixed Virus Batches</h1>
+            {% elif type == "mobile"%}
+                <h1>Mobile Virus Batches</h1>
+            {% else %}
+                <h1>Virus Batches</h1>
+            {% endif %}
             {% if virus_batches %}
             <table id="peptide_batches" class="table table-striped">
                 <thead>
