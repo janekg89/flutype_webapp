@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^myexperiments/$', views.my_index_view, name='my_index'),
     url(r'^users/$', views.users_view, name='users'),
     url(r'^about/$', views.about_view, name='about'),
+
     url(r'^peptidebatches/$', views.peptide_batch_view, name='peptidebatches'),
     url(r'^peptidebatches_mobile/$', views.peptide_batch_mobile_view, name='peptidebatches_mobile'),
     url(r'^peptidebatches_fixed/$', views.peptide_batch_fixed_view, name='peptidebatches_fixed'),
@@ -22,6 +23,14 @@ urlpatterns = [
     url(r'^viruses/$', views.virus_view, name='viruses'),
     url(r'^viruses_mobile/$', views.virus_mobile_view, name='viruses_mobile'),
     url(r'^viruses_fixed/$', views.virus_fixed_view, name='viruses_fixed'),
+
+    url(r'^antibodies/$', views.antibody_view, name='antibodies'),
+    url(r'^antibodies_mobile/$', views.antibody_mobile_view, name='antibodies_mobile'),
+    url(r'^antibodies_fixed/$', views.antibody_fixed_view, name='antibodies_fixed'),
+
+    url(r'^antibodybatches/$', views.antibody_batch_view, name='antibodybatches'),
+    url(r'^antibodybatches_mobile/$', views.antibody_batch_mobile_view, name='antibodybatches_mobile'),
+    url(r'^antibodybatches_fixed/$', views.antibody_batch_fixed_view, name='antibodybatches_fixed'),
 
     url(r'^test/$', views.test_view, name='test'),
     url(r'^password/$', views.change_password_view, name='change_password'),

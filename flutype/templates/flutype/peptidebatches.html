@@ -3,13 +3,19 @@
     <!-- LIST OF RAWSPOTCOLLECTION -->
     <div class="row">
         <div class="col-lg-12">
-            <h1>Peptide Batches</h1>
+            {% if type == "fixed" %}
+                <h1>Fixed Peptide Batches</h1>
+            {% elif type == "mobile"%}
+                <h1>Mobile Peptide Batches</h1>
+            {% else %}
+                <h1>Peptide Batches</h1>
+            {% endif %}
             {% if peptide_batches %}
             <table id="peptide_batches" class="table table-striped">
                 <thead>
                 <tr>
-                    <th>sid Peptide Batch</th>
-                    <th>sid Peptide</th>
+                    <th>Sid Peptide Batch</th>
+                    <th>Sid Peptide</th>
                     <th>Linker</th>
                     <th>Spacer</th>
                     <th>Sequence</th>
