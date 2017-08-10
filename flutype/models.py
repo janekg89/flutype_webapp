@@ -387,26 +387,28 @@ class RawSpotCollection(Experiment):
     ligands1 = models.ManyToManyField(Ligand, related_name="ligands1")
     ligands2 = models.ManyToManyField(Ligand, related_name="ligands2")
 
-
+    @property
     def viruses1(self):
         return self.ligands1.instance_of(Virus)
 
-
+    @property
     def viruses2(self):
         return self.ligands2.instance_of(Virus)
 
-    def antibody1(self):
+    @property
+    def antibodies1(self):
         return self.ligands1.instance_of(Antibody)
 
-
-    def antibody2(self):
+    @property
+    def antibodies2(self):
         return self.ligands2.instance_of(Antibody)
 
-    def peptide1(self):
+    @property
+    def peptides1(self):
         return self.ligands1.instance_of(Peptide)
 
-
-    def peptide2(self):
+    @property
+    def peptides2(self):
         return self.ligands2.instance_of(Peptide)
 
 

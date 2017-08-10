@@ -28,7 +28,7 @@
         </div>
 
         <!-- Process Information -->
-        <div class="col-lg-3">
+        <div class="col-lg-2">
             {%  if type == "raw" %}
                 <h2>Quantified Collections</h2>
                 <p>
@@ -45,17 +45,14 @@
 
             {% endif %}
 
-            <h2>Process</h2>
+            <h2>Experiment</h2>
             <table>
-                <tr>
-                    <td><b>Holder Type</b></td><td>{{collection.holder_type}}</td>
-                </tr><tr>
-                    <td><b>Functionalization</b></td><td>{{collection.functionalization}}</td>
-                </tr><tr>
-                    <td><b>Manufacturer</b></td><td>{{collection.manufacturer}}</td>
-                </tr>
+               <tr><td><b>Manufacturer</b></td><td>{{collection.manufacturer}}</td></tr>
+                <tr><td><b>RawSpotCollection Batch</b></td><td>{{collection.batch}}</td></tr>
+                <tr><td><b>Functionalization</b></td><td>{{collection.functionalization}}</td></tr>
+                <tr><td><b>Manufacturer</b></td><td>{{collection.manufacturer}}</td></tr>
 
-                {% with process=collection.process %}
+                {# {% with process=collection.process %}
 
                 <tr>
                     <td><b>Spotting</b></td><td>{% if process.spotting %}{{ process.spotting.method }}{% endif %}</td>
@@ -66,77 +63,201 @@
                 <tr>
                     <td><b>Incubating</b></td><td>{% if process.incubating %}{{ process.incubating.method }}{% endif %}</td>
                 </tr>
-                {%  endwith %}
+                {%  endwith %} #}
 
-                <tr>
-                    <td><b>RawSpotCollection Batch</b></td><td>{{ collection.batch }}</td>
-                </tr>
             </table>
 
-        <img src="./heatmap" width="400" >
+            <img src="./heatmap" width="400" >
 
         </div>
 
-        <!-- Peptides & Viruses -->
-        <div class="col-lg-7">
-            <h2>Peptides</h2>
-            <table id="peptides" class="table table-striped">
+        <!-- Fixed Ligands -->
+        <div class="col-lg-4">
+            <h2>Fixed Ligands</h2>
+            {% if collection.peptides1 %}
+            <h3>Peptides</h3>
+            <table id="fixed_peptides" class="table table-striped">
                 <thead>
                 <tr>
-                    <th>sid</th>
-                    <th>linker</th>
-                    <th>spacer</th>
-                    <th>sequence</th>
-                    <th>c_terminus</th>
-                    <th>name</th>
-                    <th>pep_type</th>
-                    <th>comment</th>
+                    <th>sid Peptide</th>
+                    <th>Linker</th>
+                    <th>Spacer</th>
+                    <th>Sequence</th>
+                    <th>C-Terminus</th>
+                    <th>Name</th>
+                    <th>Comment</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for peptide in collection.peptides.all() %}
+                {% for p in collection.peptides1.all() %}
                     <tr>
-                        <td>{{ peptide.sid }}</td>
-                        <td>{{ peptide.linker }}</td>
-                        <td>{{ peptide.spacer }}</td>
-                        <td>{{ peptide.sequence }}</td>
-                        <td>{{ peptide.c_terminus }}</td>
-                        <td>{{ peptide.name }}</td>
-                        <td>{{ peptide.pep_type }}</td>
-                        <td>{{ peptide.comment }}</td>
+                        <td class="warning"> <b> {{p.sid }}</b> </td>
+                        <td>{{ p.linker }}</td>
+                        <td>{{ p.spacer }}</td>
+                        <td>{{ p.sequence }}</td>
+                        <td>{{ p.c_terminus }}</td>
+                        <td>{{ p.name }}</td>
+                        <td>{{ p.comment }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
-
-            <h2>Viruses</h2>
-
-            <table id="viruses" class="table table-striped">
+            {% endif %}
+            {% if collection.viruses1 %}
+            <h3>Viruses</h3>
+            <table id="fixed_viruses" class="table table-striped">
                 <thead>
                 <tr>
-                    <th>sid</th>
-                    <th>subgroup</th>
-                    <th>country</th>
-                    <th>date of appearance</th>
-                    <th>strain</th>
+                    <th>Sid</th>
+                    <th>Tax Id</th>
+                    <th>Subtype</th>
+                    <th>Isolation Country</th>
+                    <th>Collection Date</th>
+                    <th>Strain</th>
+                    <th>Comment</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for virus in collection.viruses.all() %}
+                {% for virus in collection.viruses1.all() %}
                     <tr>
                         {% if virus.sid == "NO" %}
-                            <td><b>{{ virus.sid }}</b></td>
+                            <td class="warning"><b>{{ virus.sid }}</b></td>
                         {% else %}
-                            <td><a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ virus.sid }}"><b>{{ virus.sid }}</b></a></td>
+                            <td class="warning"><a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ virus.sid }}"><b>{{ virus.sid }}</b></a></td>
                         {% endif %}
-                        <td>{{ virus.subgroup }}</td>
-                        <td>{{ virus.country }}</td>
-                        <td>{{ virus.date_of_appearance }}</td>
+                        <td>{{ virus.tax_id }}</td>
+                        <td>{{ virus.subtype }}</td>
+                        <td>{{ virus.isolation_country }}</td>
+                        <td>{{ virus.collection_date }}</td>
                         <td>{{ virus.strain }}</td>
+                        <td>{{ virus.comment }}</td>
+
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
+            {% endif %}
+            {% if collection.antibodies1 %}
+                <h3>Antibodies</h3>
+                <table id="fixed_antibodies" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Sid</th>
+                        <th>Target</th>
+                        <th>Name</th>
+                        <th>Database Link</th>
+                        <th>Comment</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for antibody in collection.antibodies1.all() %}
+                        <tr>
+                            <td class="warning"><b>{{ antibody.sid }}</b></td>
+                            <td>{{ antibody.target }}</td>
+                            <td>{{ antibody.name }}</td>
+                            <td>{{ antibody.link_db }}</td>
+                            <td>{{ antibody.comment }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+
+
+        <!-- MObile Ligands -->
+        <div class="col-lg-4">
+            <h2>Mobile Ligands</h2>
+            {% if collection.peptides2 %}
+            <h3>Peptides</h3>
+            <table id="mobile_peptides" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>sid Peptide</th>
+                    <th>Linker</th>
+                    <th>Spacer</th>
+                    <th>Sequence</th>
+                    <th>C-Terminus</th>
+                    <th>Name</th>
+                    <th>Comment</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for p in collection.peptides2.all() %}
+                    <tr>
+                        <td class="warning"> <b> {{p.sid }}</b> </td>
+                        <td>{{ p.linker }}</td>
+                        <td>{{ p.spacer }}</td>
+                        <td>{{ p.sequence }}</td>
+                        <td>{{ p.c_terminus }}</td>
+                        <td>{{ p.name }}</td>
+                        <td>{{ p.comment }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+
+            {% if collection.viruses2 %}
+            <h3>Viruses</h3>
+            <table id="mobile_viruses" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Sid</th>
+                    <th>Tax Id</th>
+                    <th>Subtype</th>
+                    <th>Isolation Country</th>
+                    <th>Collection Date</th>
+                    <th>Strain</th>
+                    <th>Comment</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for virus in collection.viruses2.all() %}
+                    <tr>
+                        {% if virus.sid == "NO" %}
+                            <td class="warning"><b>{{ virus.sid }}</b></td>
+                        {% else %}
+                            <td class="warning"><a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ virus.sid }}"><b>{{ virus.sid }}</b></a></td>
+                        {% endif %}
+                        <td>{{ virus.tax_id }}</td>
+                        <td>{{ virus.subtype }}</td>
+                        <td>{{ virus.isolation_country }}</td>
+                        <td>{{ virus.collection_date }}</td>
+                        <td>{{ virus.strain }}</td>
+                        <td>{{ virus.comment }}</td>
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+
+            {% if collection.antibodies2 %}
+                <h3>Antibodies</h3>
+                <table id="mobile_antibodies" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Sid</th>
+                        <th>Target</th>
+                        <th>Name</th>
+                        <th>Database Link</th>
+                        <th>Comment</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for antibody in collection.antibodies2.all() %}
+                        <tr>
+                            <td class="warning"><b>{{ antibody.sid }}</b></td>
+                            <td>{{ antibody.target }}</td>
+                            <td>{{ antibody.name }}</td>
+                            <td>{{ antibody.link_db }}</td>
+                            <td>{{ antibody.comment }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
         </div>
 
     </div>
@@ -155,13 +276,39 @@
 {% block javascript %}
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
-            $('#peptides').DataTable();
+            $('#fixed_peptides').DataTable();
         });
     </script>
 
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
-            $('#viruses').DataTable();
+            $('#mobile_peptides').DataTable();
         });
     </script>
+
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#fixed_viruses').DataTable();
+        });
+    </script>
+
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#mobile_viruses').DataTable();
+        });
+    </script>
+
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#fixed_antibodies').DataTable();
+        });
+    </script>
+
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#mobile_antibodies').DataTable();
+        });
+    </script>
+
+
 {% endblock %}

@@ -283,11 +283,6 @@ def raw_spot_collection_detail_view(request, pk):
     return render(request,
                   'flutype/spotcollection.html', context)
 
-
-class SpotCollectionView(generic.DetailView):
-    model = SpotCollection
-    template_name = 'flutype/spotcollection.html'
-
 @login_required
 def heatmap_view(request, pk):
     """ View to render a heatmap as png response.
