@@ -27,6 +27,7 @@ from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.contrib.auth.models import User
 from model_utils.managers import InheritanceManager
+from polymorphic.models import PolymorphicModel
 from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
 
@@ -86,14 +87,16 @@ class ProcessingType(DjangoChoices):
 # Ligand
 ########################################
 
-class Ligand(models.Model):
+class Ligand(PolymorphicModel):
     """
     Generic ligand.
     This can be for instance a peptide, virus or antibody.
     """
-    objects = InheritanceManager()
+    #objects = InheritanceManager()
     sid = models.CharField(max_length=CHAR_MAX_LENGTH, null=True)
     comment = models.TextField(blank=True, null=True)
+
+
 
 
 
@@ -110,6 +113,8 @@ class Peptide(Ligand):
     sequence = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     c_terminus = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+
+
 
 
 
@@ -180,6 +185,11 @@ class LigandBatch(Batch):
     mobile = models.NullBooleanField(blank=True, null=True)
 
 
+
+
+
+
+
 class VirusBatch(LigandBatch):
     """
     Virus batch model
@@ -189,11 +199,12 @@ class VirusBatch(LigandBatch):
     active = models.NullBooleanField(blank=True, null=True)
 
 
+
 class PeptideBatch(LigandBatch):
     """
     peptide batch model
     """
-    pass
+
 
 class AntibodyBatch(LigandBatch):
     """
@@ -378,25 +389,25 @@ class RawSpotCollection(Experiment):
 
 
     def viruses1(self):
-        return self.ligands1.all().select_subclasses(Virus)
+        return self.ligands1.instance_of(Virus)
 
 
     def viruses2(self):
-        return self.ligands2.all().select_subclasses(Virus)
+        return self.ligands2.instance_of(Virus)
 
     def antibody1(self):
-        return self.ligands1.all().select_subclasses(Antibody)
+        return self.ligands1.instance_of(Antibody)
 
 
     def antibody2(self):
-        return self.ligands2.all().select_subclasses(Antibody)
+        return self.ligands2.instance_of(Antibody)
 
     def peptide1(self):
-        return self.ligands1.all().select_subclasses(Peptide)
+        return self.ligands1.instance_of(Peptide)
 
 
     def peptide2(self):
-        return self.ligands2.all().select_subclasses(Peptide)
+        return self.ligands2.instance_of(Peptide)
 
 
     def is_spot_collection(self):
