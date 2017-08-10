@@ -430,8 +430,8 @@ class RawSpotCollection(Experiment):
         for raw_spot in self.rawspot_set.all():
             row.append(raw_spot.row)
             column.append(raw_spot.column)
-            pep_name.append(raw_spot.ligand.peptide_batch.sid)
-            vir_name.append(raw_spot.virus_batch.sid)
+            pep_name.append(raw_spot.ligand1.sid)
+            vir_name.append(raw_spot.ligand1.sid)
 
         data = pd.DataFrame(row, columns=["Row"])
         data["Column"] = column
@@ -490,8 +490,8 @@ class SpotCollection(models.Model):
         for spot in self.spot_set.all():
             raw.append(spot.raw_spot.row)
             column.append(spot.raw_spot.column)
-            pep_name.append(spot.raw_spot.ligand.peptide_batch.sid)
-            vir_name.append(spot.raw_spot.virus_batch.sid)
+            pep_name.append(spot.raw_spot.ligand1.sid)
+            vir_name.append(spot.raw_spot.ligand2.sid)
 
         data["Row"] = raw
         data["Column"] = column
