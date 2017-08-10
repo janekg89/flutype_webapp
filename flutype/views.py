@@ -72,6 +72,25 @@ def peptide_batch_view(request):
                   'flutype/peptidebatches.html', context)
 
 @login_required
+def peptide_batch_mobile_view(request):
+    peptide_batches = PeptideBatch.objects.filter(ligand2__isnull=False).distinct()
+    context = {
+        'peptide_batches': peptide_batches,
+    }
+    return render(request,
+                  'flutype/peptidebatches.html', context)
+@login_required
+def peptide_batch_fixed_view(request):
+    peptide_batches = PeptideBatch.objects.filter(ligand1__isnull=False).distinct()
+    context = {
+        'peptide_batches': peptide_batches,
+    }
+    return render(request,
+                  'flutype/peptidebatches.html', context)
+
+
+
+@login_required
 def peptide_view(request):
     peptides = Peptide.objects.all()
     context = {
@@ -79,6 +98,24 @@ def peptide_view(request):
     }
     return render(request,
                   'flutype/peptides.html', context)
+@login_required
+def peptide_mobile_view(request):
+    peptides = Peptide.objects.filter(ligands2__isnull=False).distinct()
+    context = {
+        'peptides': peptides,
+    }
+    return render(request,
+                  'flutype/peptides.html', context)
+@login_required
+def peptide_fixed_view(request):
+    peptides = Peptide.objects.filter(ligands1__isnull=False).distinct()
+
+    context = {
+        'peptides': peptides,
+    }
+    return render(request,
+                  'flutype/peptides.html', context)
+
 
 @login_required
 def virus_batch_view(request):
@@ -89,9 +126,46 @@ def virus_batch_view(request):
     return render(request,
                   'flutype/virusbatches.html', context)
 
+
+@login_required
+def virus_batch_mobile_view(request):
+    virus_batches = VirusBatch.objects.filter(ligand2__isnull=False).distinct()
+    context = {
+        'virus_batches': virus_batches,
+    }
+    return render(request,
+                  'flutype/virusbatches.html', context)
+@login_required
+
+def virus_batch_fixed_view(request):
+    virus_batches = VirusBatch.objects.filter(ligand1__isnull=False).distinct()
+    context = {
+        'virus_batches': virus_batches,
+    }
+    return render(request,
+                  'flutype/virusbatches.html', context)
+
+
 @login_required
 def virus_view(request):
     viruses = Virus.objects.all()
+    context = {
+        'viruses': viruses,
+    }
+    return render(request,
+                  'flutype/viruses.html', context)
+@login_required
+def virus_mobile_view(request):
+    viruses = Virus.objects.filter(ligands2__isnull=False).distinct()
+    context = {
+        'viruses': viruses,
+    }
+    return render(request,
+                  'flutype/viruses.html', context)
+@login_required
+def virus_fixed_view(request):
+    viruses = Virus.objects.filter(ligands1__isnull=False).distinct()
+
     context = {
         'viruses': viruses,
     }

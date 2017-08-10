@@ -9,10 +9,11 @@
             <table id="viruses" class="table table-striped">
                 <thead>
                 <tr>
-                    <th>sid</th>
-                    <th>Subgroup</th>
-                    <th>Country</th>
-                    <th>Date of Appearance</th>
+                    <th>Sid</th>
+                    <th>Tax Id</th>
+                    <th>Subtype</th>
+                    <th>Isolation Country</th>
+                    <th>Collection Date</th>
                     <th>Strain</th>
                 </tr>
                 </thead>
@@ -24,9 +25,10 @@
                         {% else %}
                             <td class="warning"><a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ virus.sid }}"><b>{{ virus.sid }}</b></a></td>
                         {% endif %}
-                        <td>{{ virus.subgroup }}</td>
-                        <td>{{ virus.country }}</td>
-                        <td>{{ virus.date_of_appearance }}</td>
+                        <td>{{ virus.tax_id }}</td>
+                        <td>{{ virus.subtype }}</td>
+                        <td>{{ virus.isolation_country }}</td>
+                        <td>{{ virus.collection_date }}</td>
                         <td>{{ virus.strain }}</td>
                     </tr>
                 {% endfor %}
