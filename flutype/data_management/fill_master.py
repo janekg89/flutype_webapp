@@ -125,7 +125,7 @@ class Master(object):
         for fn in os.listdir(self.data_tables_path):
             key = re.search('(.*).csv', fn)
             d_file = os.path.join(self.data_tables_path,fn)
-            data_tables_dic[key.group(1)] = pd.read_csv(d_file, sep="\t", encoding='utf-8')
+            data_tables_dic[key.group(1)] = pd.read_csv(d_file, sep="\t", encoding='utf-8',dtype=str)
             data_tables_dic[key.group(1)].replace([np.NaN], [None] , inplace=True)
         return data_tables_dic
 

@@ -15,7 +15,6 @@
                     <th>Sequence</th>
                     <th>C-Terminus</th>
                     <th>Name</th>
-                    <th>Peptide Type</th>
                     <th>Concentration</th>
                     <th>Buffer</th>
                     <th>pH</th>
@@ -33,14 +32,13 @@
                             <b>{{ peptidebatch.sid }}</b>
                         </td>
                         <!-- peptide information -->
-                        {% with p=peptidebatch.ligand %}
+                        {% with p=peptidebatch.ligand%}
                         <td class="danger">{{ p.sid }}</td>
                         <td class="danger">{{ p.linker }}</td>
                         <td class="danger">{{ p.spacer }}</td>
                         <td class="danger">{{ p.sequence }}</td>
                         <td class="danger">{{ p.c_terminus }}</td>
                         <td class="danger">{{ p.name }}</td>
-                        <td class="danger">{{ p.pep_type }}</td>
                         {%  endwith %}
                         <!-- batch information -->
                         <td>{{ peptidebatch.concentration }}</td>
