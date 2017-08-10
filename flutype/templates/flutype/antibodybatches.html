@@ -1,0 +1,74 @@
+{% extends "flutype/base.html" %}
+{% block content %}
+    <!-- LIST OF RAWSPOTCOLLECTION -->
+    <div class="row">
+        <div class="col-lg-12">
+            {% if type == "fixed" %}
+                <h1>Fixed Antibodies Batches</h1>
+            {% elif type == "mobile"%}
+                <h1>Mobile Antibodies Batches</h1>
+            {% else %}
+                <h1>Antibodies Batches</h1>
+            {% endif %}
+            {% if antibody_batches %}
+            <table id="antibody_batches" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Sid Antibody Batch</th>
+                    <th>Sid Antibody</th>
+                    <th>Target</th>
+                    <th>Name</th>
+                    <th>Database Link</th>
+                    <th>Concentration</th>
+                    <th>Buffer</th>
+                    <th>pH</th>
+                    <th>Purity</th>
+                    <th>Labeling</th>
+                    <th>Produced by</th>
+                    <th>Production Date</th>
+                    <th>Comment</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for antibodybatch in antibody_batches.all() %}
+                    <tr>
+                        <td class="warning">
+                            <b>{{ antibodybatch.sid }}</b>
+                        </td>
+                        <!-- peptide information -->
+                        {% with a=antibodybatch.ligand%}
+                        <td class="danger">{{ a.target }}</td>
+                        <td class="danger">{{ a.name }}</td>
+                        <td class="danger">{{ a.link_db }}</td>
+                        <td class="danger">{{ a.comment }}</td>
+
+                        {%  endwith %}
+                        <!-- batch information -->
+                        <td>{{ antibodybatch.concentration }}</td>
+                        <td>{{ antibodybatch.buffer }}</td>
+                        <td>{{ antibodybatch.ph }}</td>
+                        <td>{{ antibodybatch.purity }}</td>
+                        <td>{{ antibodybatch.labeling }}</td>
+                        <td>{{ antibodybatch.produced_by }}</td>
+                        <td>{{ antibodybatch.production_date }}</td>
+                        <td>{{ antibodybatch.comment }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {% else %}
+                <p>No entries in database.</p>
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#antibody_batches').DataTable();
+        });
+    </script>
+{% endblock %}

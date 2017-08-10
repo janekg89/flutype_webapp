@@ -3,7 +3,13 @@
     <!-- LIST OF RAWSPOTCOLLECTION -->
     <div class="row">
         <div class="col-lg-12">
-            <h1>Viruses</h1>
+            {% if type == "fixed" %}
+                <h1>Fixed Viruses</h1>
+            {% elif type =="mobile"%}
+                <h1>Mobile Viruses</h1>
+            {% else %}
+                <h1>Viruses</h1>
+            {% endif %}
             {% if viruses %}
 
             <table id="viruses" class="table table-striped">
@@ -15,6 +21,8 @@
                     <th>Isolation Country</th>
                     <th>Collection Date</th>
                     <th>Strain</th>
+                    <th>Comment</th>
+
                 </tr>
                 </thead>
                 <tbody>
@@ -30,6 +38,8 @@
                         <td>{{ virus.isolation_country }}</td>
                         <td>{{ virus.collection_date }}</td>
                         <td>{{ virus.strain }}</td>
+                        <td>{{ virus.comment }}</td>
+
                     </tr>
                 {% endfor %}
                 </tbody>
