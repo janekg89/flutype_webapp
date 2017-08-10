@@ -156,6 +156,9 @@ class Database(object):
 
 
     def create_or_update_peptide_batch(self,peptide_batch):
+        if peptide_batch["sid"] == "NO":
+            peptide_batch["sid"] = None
+
         if "lig_sid" in peptide_batch:
             peptide = Peptide.objects.get(sid=peptide_batch["lig_sid"])
 
@@ -167,6 +170,7 @@ class Database(object):
         user = get_user_or_none(peptide_batch)
 
         # fills peptide_batches
+
         peptide_b, created = PeptideBatch.objects.get_or_create(sid=peptide_batch["sid"],
                                                                 ligand=peptide,
                                                                 concentration=peptide_batch["concentration"],
@@ -447,12 +451,19 @@ class Database(object):
 
         raw_spot_collection = RawSpotCollection.objects.get(sid=collection_id)
         try:
-            ligand1=LigandBatch.objects.get(sid=raw_spot["Ligand1"])
+            if raw_spot["Ligand1"]=="NO":
+                ligand1 = None
+            else:
+                ligand1=LigandBatch.objects.get(sid=raw_spot["Ligand1"])
         except:
             print("No Ligand found for Ligandbatch with sid:" + raw_spot["Ligand1"])
             ligand1 = None
         try:
-            ligand2=LigandBatch.objects.get(sid=raw_spot["Ligand2"])
+            if raw_spot["Ligand2"]=="NO":
+                ligand2 = None
+            else:
+                ligand2=LigandBatch.objects.get(sid=raw_spot["Ligand2"])
+
         except:
             print("No Ligand found for Ligandbatch with sid:" + raw_spot["Ligand2"])
             ligand2 = None
@@ -555,18 +566,22 @@ class Database(object):
         unique_ligand_sid = []
 
         for raw_spot in raw_spots:
-            ligand1 = raw_spot.ligand1.ligand
-            if not hasattr(ligand1, 'sid'):
-                warnings.warn(
-                    "No connection between ligand and ligand batch for ligand_batch: {}".format(raw_spot.ligand1.sid))
-            else:
-                if ligand1.sid in unique_ligand_sid:
-                    pass
-                else:
+            try:
+                ligand1 = raw_spot.ligand1.ligand
 
-                    #if ligand._get_ligand_type() == "Antibody":
-                        unique_ligand.append(ligand1)
-                        unique_ligand_sid.append(ligand1.sid)
+                if not hasattr(ligand1, 'sid'):
+                    warnings.warn(
+                        "No connection between ligand and ligand batch for ligand_batch: {}".format(raw_spot.ligand1.sid))
+                else:
+                    if ligand1.sid in unique_ligand_sid:
+                        pass
+                    else:
+
+                        #if ligand._get_ligand_type() == "Antibody":
+                            unique_ligand.append(ligand1)
+                            unique_ligand_sid.append(ligand1.sid)
+            except:
+                pass
 
         return unique_ligand
 
@@ -576,19 +591,27 @@ class Database(object):
         unique_ligand_sid = []
         unique_ligand = []
         for raw_spot in raw_spots:
-            ligand2 = raw_spot.ligand2.ligand
-            if not hasattr(ligand2, 'sid'):
-                warnings.warn(
-                    "No connection between ligand and ligand batch for ligand_batch: {}".format(
-                        raw_spot.ligand2.sid))
-            else:
-                if ligand2.sid in unique_ligand_sid:
-                    pass
-                else:
+            try:
+                ligand2 = raw_spot.ligand2.ligand
 
-                    # if ligand._get_ligand_type() == "Antibody":
-                    unique_ligand_sid.append(ligand2.sid)
-                    unique_ligand.append(ligand2)
+                if not hasattr(ligand2, 'sid'):
+                    warnings.warn(
+                        "No connection between ligand and ligand batch for ligand_batch: {}".format(
+                            raw_spot.ligand2.sid))
+                else:
+                    if ligand2.sid in unique_ligand_sid:
+                        pass
+                    else:
+
+                        # if ligand._get_ligand_type() == "Antibody":
+                        unique_ligand_sid.append(ligand2.sid)
+                        unique_ligand.append(ligand2)
+            except:
+
+                pass
+
+
+
 
         return unique_ligand
 
