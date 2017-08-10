@@ -430,8 +430,14 @@ class RawSpotCollection(Experiment):
         for raw_spot in self.rawspot_set.all():
             row.append(raw_spot.row)
             column.append(raw_spot.column)
-            pep_name.append(raw_spot.ligand1.sid)
-            vir_name.append(raw_spot.ligand1.sid)
+            if not hasattr(raw_spot.ligand1, 'sid'):
+                pep_name.append("")
+            else:
+                pep_name.append(raw_spot.ligand1.sid)
+            if not hasattr(raw_spot.ligand2, 'sid'):
+                pep_name.append("")
+            else:
+                vir_name.append(raw_spot.ligand2.sid)
 
         data = pd.DataFrame(row, columns=["Row"])
         data["Column"] = column
@@ -453,8 +459,8 @@ class RawSpot(models.Model):
     spot model
     """
     raw_spot_collection = models.ForeignKey(RawSpotCollection)
-    ligand1 = models.ForeignKey(LigandBatch, related_name="ligand1")
-    ligand2 = models.ForeignKey(LigandBatch, related_name="ligand2")
+    ligand1 = models.ForeignKey(LigandBatch, related_name="ligand1",null=True, blank=True)
+    ligand2 = models.ForeignKey(LigandBatch, related_name="ligand2",null=True, blank=True)
     column = models.IntegerField()
     row = models.IntegerField()
 
@@ -490,8 +496,14 @@ class SpotCollection(models.Model):
         for spot in self.spot_set.all():
             raw.append(spot.raw_spot.row)
             column.append(spot.raw_spot.column)
-            pep_name.append(spot.raw_spot.ligand1.sid)
-            vir_name.append(spot.raw_spot.ligand2.sid)
+            if not hasattr(spot.raw_spot.ligand1, 'sid'):
+                pep_name.append("")
+            else:
+                pep_name.append(spot.raw_spot.ligand1.sid)
+            if not hasattr(spot.raw_spot.ligand2, 'sid'):
+                pep_name.append("")
+            else:
+                vir_name.append(spot.raw_spot.ligand2.sid)
 
         data["Row"] = raw
         data["Column"] = column
