@@ -229,13 +229,12 @@ class Step(models.Model):
     method = models.CharField(max_length=300, null=True, blank=True)
 
 
-
-    def _get_step_type(self):
+    @property
+    def get_step_type(self):
         """ Type of step."""
         subclass_object = Step.objects.get_subclass(id=self.id)
-        print(subclass_object.__class__)
         return subclass_object
-    step_type = property(_get_step_type)
+
 
 
 class Washing(Step):
@@ -334,6 +333,7 @@ class Experiment(models.Model):
     #steps = models.ManyToManyField(Step, db_index=True, through='ProcessStep')
     comment = models.TextField(null=True, blank=True)
 
+
 class Process(models.Model):
     sid = models.CharField(max_length=CHAR_MAX_LENGTH)
     steps = models.ManyToManyField(Step, db_index=True, through='ProcessStep')
@@ -342,6 +342,11 @@ class Process(models.Model):
     def users(self):
         user_ids = self.processstep_set.values_list("user", flat="True").distinct()
         return User.objects.filter(id__in=user_ids)
+    def is_steps_in_process(self):
+        result = True
+        if self.steps.all().count() == 0:
+            result = False
+        return result
 
 
 
@@ -359,7 +364,7 @@ class ProcessStep(models.Model):
 
     class Meta:
         unique_together = ('process', 'step', 'index')
-
+        ordering = ['index',]
 
 """
 class Elisa(Experiment):

@@ -18,8 +18,7 @@
                 <tbody>
                 {% for process in processes %}
                     <tr>
-
-                        <td><a href="{{ url('processview', args=[process.id]) }}"> {{ process.sid }}  </a></td>
+                        <td> <a href="{{ url('processview', args=[process.id])}}"> {{ process.sid }}  </a> </td>
                         <td>{% for step in process.steps.all()%}
                                 {{ step.sid }}
                                 {% endfor %}

@@ -1,56 +1,81 @@
 {% extends "flutype/base.html" %}
 {% block content %}
     <!-- one process in detail -->
-    <div class="row">
-        <div class="col-lg-12">
-            <h1>Process {{ process.sid }}</h1>
-            <table id="process" class="table table-striped">
-                <thead>
-                    <tr>
-                     {% for prostep in process.processstep_set.all()%}
-                         <th>Step {{prostep.index + 1}} </th>
-                     {% endfor %}
-                    <th>RawSpot Collections</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-
-
-                        {% for prostep in process.processstep_set.all()%}
-                            <td>
-                                {{ prostep.step.sid }}
-                            </td>
-                        {% endfor %}
-                    </tr>
-                    <tr>
-
-
-                        {% for prostep in process.processstep_set.all()%}
-                            <td>
-                                {{ prostep.step.method }}
-                            </td>
-                        {% endfor %}
-                    </tr>
-                     <tr>
-
-
-                        {% for prostep in process.processstep_set.all()%}
-                            <td>
-                                {{ prostep.step._get_step_type() }}
-                            </td>
-                        {% endfor %}
-                    </tr>
-                </tbody>
+    <div class="col-lg-12">
+        <h2>Process: {{ process.sid }}</h2>
+        {% if process.is_steps_in_process()%}
+            <table id="process" class="cell-border">
+                {% with prosteps = process.processstep_set.all() %}
+                    <thead>
+                        <tr>
+                            <th></th>
+                            {% for prostep in prosteps%}
+                                {% with p = prostep.step.get_step_type %}
+                                    {% if  prostep.step.get_step_type.__class__.__name__ == "Washing" %}
+                                        <th><p> # {{ prostep.index + 1 }}  <i class="fa fa-shower" aria-hidden="true"> </i> </p> {{p.__class__.__name__ }}</th>
+                                    {% elif  p.__class__.__name__ == "Drying" %}
+                                        <th> <p> # {{ prostep.index + 1 }} <i class="fa fa-bullhorn" aria-hidden="true"></i> </p>{{p.__class__.__name__ }}</th>
+                                    {% elif  p.__class__.__name__ == "Spotting" %}
+                                        <th> <p> # {{ prostep.index + 1 }} <i class="fa fa-tint" aria-hidden="true"></i> </p>{{p.__class__.__name__ }}</th>
+                                    {% elif  p.__class__.__name__ == "Quenching" %}
+                                        <th> <p> # {{ prostep.index + 1 }} <i class="fa fa-chain-broken" aria-hidden="true"></i> </p> {{p.__class__.__name__ }}</th>
+                                    {% elif  p.__class__.__name__ == "Incubating" %}
+                                        <th> <p> # {{ prostep.index + 1 }} <i class="fa fa-link" aria-hidden="true"></i> </p> {{p.__class__.__name__ }}</th>
+                                    {% endif %}
+                                {% endwith %}
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>Sid</th>
+                            {% for prostep in prosteps%}
+                                <td> {{prostep.step.get_step_type.sid }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th>Method</th>
+                            {% for prostep in prosteps%}
+                                <td> {{prostep.step.get_step_type.method }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th>Substance</th>
+                            {% for prostep in prosteps%}
+                                {% if  prostep.step.get_step_type.substance %}
+                                    <td> {{prostep.step.get_step_type.substance }}</td>
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th>Duration</th>
+                            {% for prostep in prosteps%}
+                                {% if  prostep.step.get_step_type.duration %}
+                                    <td> {{prostep.step.get_step_type.duration }}</td>
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    </tbody>
+                {% endwith %}
             </table>
-        </div>
-    </div>
+        {% else %}
+            No process steps avialable for {{ collection.process.sid }} process.
+        {% endif %}
+            </div>
 {% endblock %}
 
 {% block javascript %}
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
-            $('#process').DataTable();
+        $('#process').DataTable({
+            searching: false,
+            paging: false,
+            info : false,
+            "order": []});
         });
     </script>
 {% endblock %}

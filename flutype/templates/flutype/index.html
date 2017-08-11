@@ -70,7 +70,7 @@
                             <td><a href="{{ c.gal_file1.file.url }}" target="_blank">
                                     {{ c.gal_file1.sid }}</a></td>
 
-                            <td><a href={{ url('processesview')}} taget="_blank">{{ c.process.sid }}</a></td>
+                            <td><a href="{{ url('processview', args=[c.process.id]) }}"> {{ c.process.sid }}  </a></td>
                             {% if c.process.users %}
                                 <td>
                                  {% for user in c.process.users %}
