@@ -292,17 +292,6 @@ def quantified_spot_collection(request, pk):
     return render(request,
                   'flutype/spotcollection.html', context)
 
-@login_required
-def raw_spot_collection_detail_view(request, pk):
-    """ Renders detailed RawSpotCollection View. """
-
-    rsc = get_object_or_404(RawSpotCollection, id=pk)
-    context = {
-        'type': 'rawspotcollection',
-        'rawspotcollection': rsc,
-    }
-    return render(request,
-                  'flutype/spotcollection.html', context)
 
 @login_required
 def heatmap_view(request, pk):
