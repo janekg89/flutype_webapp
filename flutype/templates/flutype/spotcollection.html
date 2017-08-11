@@ -1,268 +1,409 @@
 {% extends "flutype/base.html" %}
-
+<!-- RENDERS RAWSPOTCOLLECTION OR QUANTIFIEDSPOTCOLLECTION -->
 {% block content %}
-    <!-- RENDERS RAWSPOTCOLLECTION OR QUANTIFIEDSPOTCOLLECTION -->
+    <!-- Title -->
     <div class="row">
         <div class="col-lg-12">
             {%  if type == "raw" %}
                 <h1>Raw: {{ collection.sid }} </h1>
             {%  else %}
-                <h1>Quantified: {{ q_collection.pk }}</h1>
+                <h1>Quantified: {{ q_collection.sid }}</h1>
             {%  endif %}
         </div>
     </div>
-
-    <!-- Raw Image & General information -->
+    <!-- First Block -->
     <div class="row">
-
-        <!-- Raw Image -->
+        <!-- Collection/QCollection Info and Experiment Information -->
         <div class="col-lg-2">
+               {%  if type == "raw" %}
+                        <h2>Quantified Collections</h2>
+                            {% if collection.is_spot_collection() %}
+                                <p>
+                                    {% for sc in collection.spotcollection_set.all() %}
+                                        <a href="{{ url('qspotcollectionview', args=[sc.id]) }}"><b>QuantifiedCollection:{{ sc.sid }}</b></a><br />
+                                    {% endfor %}
+                                </p>
+                            {% else %}
+                                No quantified collection available
+                            {% endif %}
+                    {% else %}
+
+                        <h2>Raw Collection</h2>
+                        <p>
+                            <a href="{{ url('rawspotcollectionview', args=[collection.pk]) }}"><b>RawCollection:{{ collection.sid }}</b></a><br />
+                        </p>
+
+                    {% endif %}
+
+                    <h2>Experiment Information</h2>
+                    <table id="experiment" class="cell-border">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% if collection.experiment_type%}
+                            <tr><td><b>Experiment Type</b></td><td>{{collection.experiment_type}}</td></tr>
+                        {% endif %}
+                        {% if collection.batch%}
+                            <tr><td><b>RawSpotCollection Batch</b></td><td>{{collection.batch}}</td></tr>
+                        {% endif %}
+                        {% if collection.functionalization%}
+                            <tr><td><b>Functionalization</b></td><td>{{collection.functionalization}}</td></tr>
+                        {% endif %}
+                        {% if collection.manufacturer%}
+                            <tr><td><b>Manufacturer</b></td><td>{{collection.manufacturer}}</td></tr>
+                        {% endif %}
+                        {% if type == 'raw'%}
+                            {% if collection.comment%}
+                             <tr><td><b>Comment</b></td><td>{{collection.comment}}</td></tr>
+                            {% endif %}
+                        {% elif type == 'quantified'%}
+                            {% if q_collection.image2numeric_version%}
+                             <tr><td><b>Image2Numeric Version</b></td><td>{{q_collection.image2numeric_version}}</td></tr>
+                            {% endif %}
+
+                            {% if q_collection.processing_type%}
+                             <tr><td><b>Processing Type</b></td><td>{{q_collection.processing_type}}</td></tr>
+                            {% endif %}
+
+                            {% if q_collection.comment%}
+                             <tr><td><b>Comment</b></td><td>{{q_collection.comment}}</td></tr>
+                            {% endif %}
+
+                        {% endif %}
+
+
+
+
+
+
+
+                        </tbody>
+                    </table>
+        </div>
+        <!-- Process Information -->
+        <div class="col-lg-6">
+                {% with process = collection.process %}
+                    <h2>Process: {{ process.sid }}</h2>
+                    {% if process.is_steps_in_process()%}
+                        <table id="processes" class="cell-border">
+                            {% with prosteps = process.processstep_set.all() %}
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        {% for prostep in prosteps%}
+                                            {% with p = prostep.step.get_step_type %}
+                                                {% if  prostep.step.get_step_type.__class__.__name__ == "Washing" %}
+                                                    <th><p> # {{ prostep.index + 1 }}  <i class="fa fa-shower" aria-hidden="true"> </i> </p> {{p.__class__.__name__ }}</th>
+                                                {% elif  p.__class__.__name__ == "Drying" %}
+                                                    <th> <p> # {{ prostep.index + 1 }} <i class="fa fa-bullhorn" aria-hidden="true"></i> </p>{{p.__class__.__name__ }}</th>
+                                                {% elif  p.__class__.__name__ == "Spotting" %}
+                                                    <th> <p> # {{ prostep.index + 1 }} <i class="fa fa-tint" aria-hidden="true"></i> </p>{{p.__class__.__name__ }}</th>
+                                                {% elif  p.__class__.__name__ == "Quenching" %}
+                                                    <th> <p> # {{ prostep.index + 1 }} <i class="fa fa-chain-broken" aria-hidden="true"></i> </p> {{p.__class__.__name__ }}</th>
+                                                {% elif  p.__class__.__name__ == "Incubating" %}
+                                                    <th> <p> # {{ prostep.index + 1 }} <i class="fa fa-link" aria-hidden="true"></i> </p> {{p.__class__.__name__ }}</th>
+                                                {% endif %}
+                                            {% endwith %}
+                                        {% endfor %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>Sid</th>
+                                        {% for prostep in prosteps%}
+                                            <td> {{prostep.step.get_step_type.sid }}</td>
+                                        {% endfor %}
+                                    </tr>
+                                    <tr>
+                                        <th>Method</th>
+                                        {% for prostep in prosteps%}
+                                            <td> {{prostep.step.get_step_type.method }}</td>
+                                        {% endfor %}
+                                    </tr>
+                                    <tr>
+                                        <th>Substance</th>
+                                        {% for prostep in prosteps%}
+                                            {% if  prostep.step.get_step_type.substance %}
+                                                <td> {{prostep.step.get_step_type.substance }}</td>
+                                            {% else %}
+                                                <td></td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                    <tr>
+                                        <th>Duration</th>
+                                        {% for prostep in prosteps%}
+                                            {% if  prostep.step.get_step_type.duration %}
+                                                <td> {{prostep.step.get_step_type.duration }}</td>
+                                            {% else %}
+                                                <td></td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+
+                                    <tr>
+                                        <th>User</th>
+                                        {% for prostep in prosteps%}
+                                            {% if  prostep.user %}
+                                                <td> {{prostep.user }}</td>
+                                            {% else %}
+                                                <td></td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                    <tr>
+                                        <th>Start</th>
+                                        {% for prostep in prosteps%}
+                                            {% if  prostep.start %}
+                                                <td> {{prostep.start }}</td>
+                                            {% else %}
+                                                <td></td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                    <tr>
+                                        <th>Finish</th>
+                                        {% for prostep in prosteps%}
+                                            {% if  prostep.finish %}
+                                                <td> {{prostep.finish }}</td>
+                                            {% else %}
+                                                <td></td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+
+                                    <tr>
+                                        <th>Comment</th>
+                                        {% for prostep in prosteps%}
+                                            {% if  prostep.comment %}
+                                                <td> {{prostep.comment }}</td>
+                                            {% else %}
+                                                <td></td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+
+
+                                </tbody>
+                            {% endwith %}
+                        </table>
+                    {% else %}
+                        No process steps avialable for process: {{ collection.process.sid }}.
+                    {% endif %}
+                {% endwith %}
+        </div>
+        <!-- Raw Image -->
+        <div class="col-lg-2 middle">
             {% if collection.image %}
                 <a href="{{ collection.image.url }}" target="_blank">
                     <img src={{ collection.image.url }} alt="Scan" width="250">
                 </a>
             {% else %}
-                <center><i class="fa fa-5x fa-ban"></i><br />
-                    <b>No image available</b></center>
+                <p class="middle">
+                <i class="fa fa-5x fa-ban"></i><br/>
+                    <b>No image available</b>
+                </p>
             {% endif %}
         </div>
-
-        <!-- Process Information -->
+         <!-- Heat map  -->
         <div class="col-lg-2">
-            {%  if type == "raw" %}
-                <h2>Quantified Collections</h2>
-                <p>
-                    {% for sc in collection.spotcollection_set.all() %}
-                        <a href="{{ url('qspotcollectionview', args=[sc.id]) }}"><b>QuantifiedCollection:{{ sc.sid }}</b></a><br />
-                    {% endfor %}
-                </p>
-            {% else %}
-
-                <h2>Raw Collection</h2>
-                <p>
-                    <a href="{{ url('rawspotcollectionview', args=[collection.pk]) }}"><b>RawCollection:{{ collection.sid }}</b></a><br />
-                </p>
-
-            {% endif %}
-
-            <h2>Experiment</h2>
-            <table>
-               <tr><td><b>Manufacturer</b></td><td>{{collection.manufacturer}}</td></tr>
-                <tr><td><b>RawSpotCollection Batch</b></td><td>{{collection.batch}}</td></tr>
-                <tr><td><b>Functionalization</b></td><td>{{collection.functionalization}}</td></tr>
-                <tr><td><b>Manufacturer</b></td><td>{{collection.manufacturer}}</td></tr>
-
-                {# {% with process=collection.process %}
-
-                <tr>
-                    <td><b>Spotting</b></td><td>{% if process.spotting %}{{ process.spotting.method }}{% endif %}</td>
-                </tr>
-                <tr>
-                    <td><b>Quenching</b></td><td>{% if process.quenching %}{{ process.quenching.method }}{% endif %}</td>
-                </tr>
-                <tr>
-                    <td><b>Incubating</b></td><td>{% if process.incubating %}{{ process.incubating.method }}{% endif %}</td>
-                </tr>
-                {%  endwith %} #}
-
-            </table>
-
             <img src="./heatmap" width="400" >
-
         </div>
-
-        <!-- Fixed Ligands -->
-        <div class="col-lg-4">
-            <h2>Fixed Ligands</h2>
-            {% if collection.peptides1 %}
-            <h3>Peptides</h3>
-            <table id="fixed_peptides" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>sid Peptide</th>
-                    <th>Linker</th>
-                    <th>Spacer</th>
-                    <th>Sequence</th>
-                    <th>C-Terminus</th>
-                    <th>Name</th>
-                    <th>Comment</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for p in collection.peptides1.all() %}
-                    <tr>
-                        <td class="warning"> <b> {{p.sid }}</b> </td>
-                        <td>{{ p.linker }}</td>
-                        <td>{{ p.spacer }}</td>
-                        <td>{{ p.sequence }}</td>
-                        <td>{{ p.c_terminus }}</td>
-                        <td>{{ p.name }}</td>
-                        <td>{{ p.comment }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            {% endif %}
-            {% if collection.viruses1 %}
-            <h3>Viruses</h3>
-            <table id="fixed_viruses" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Sid</th>
-                    <th>Tax Id</th>
-                    <th>Subtype</th>
-                    <th>Isolation Country</th>
-                    <th>Collection Date</th>
-                    <th>Strain</th>
-                    <th>Comment</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for virus in collection.viruses1.all() %}
-                    <tr>
-                        {% if virus.sid == "NO" %}
-                            <td class="warning"><b>{{ virus.sid }}</b></td>
-                        {% else %}
-                            <td class="warning"><a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ virus.sid }}"><b>{{ virus.sid }}</b></a></td>
-                        {% endif %}
-                        <td>{{ virus.tax_id }}</td>
-                        <td>{{ virus.subtype }}</td>
-                        <td>{{ virus.isolation_country }}</td>
-                        <td>{{ virus.collection_date }}</td>
-                        <td>{{ virus.strain }}</td>
-                        <td>{{ virus.comment }}</td>
-
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            {% endif %}
-            {% if collection.antibodies1 %}
-                <h3>Antibodies</h3>
-                <table id="fixed_antibodies" class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>Sid</th>
-                        <th>Target</th>
-                        <th>Name</th>
-                        <th>Database Link</th>
-                        <th>Comment</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for antibody in collection.antibodies1.all() %}
-                        <tr>
-                            <td class="warning"><b>{{ antibody.sid }}</b></td>
-                            <td>{{ antibody.target }}</td>
-                            <td>{{ antibody.name }}</td>
-                            <td>{{ antibody.link_db }}</td>
-                            <td>{{ antibody.comment }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% endif %}
-        </div>
-
-
-        <!-- MObile Ligands -->
-        <div class="col-lg-4">
-            <h2>Mobile Ligands</h2>
-            {% if collection.peptides2 %}
-            <h3>Peptides</h3>
-            <table id="mobile_peptides" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>sid Peptide</th>
-                    <th>Linker</th>
-                    <th>Spacer</th>
-                    <th>Sequence</th>
-                    <th>C-Terminus</th>
-                    <th>Name</th>
-                    <th>Comment</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for p in collection.peptides2.all() %}
-                    <tr>
-                        <td class="warning"> <b> {{p.sid }}</b> </td>
-                        <td>{{ p.linker }}</td>
-                        <td>{{ p.spacer }}</td>
-                        <td>{{ p.sequence }}</td>
-                        <td>{{ p.c_terminus }}</td>
-                        <td>{{ p.name }}</td>
-                        <td>{{ p.comment }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            {% endif %}
-
-            {% if collection.viruses2 %}
-            <h3>Viruses</h3>
-            <table id="mobile_viruses" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Sid</th>
-                    <th>Tax Id</th>
-                    <th>Subtype</th>
-                    <th>Isolation Country</th>
-                    <th>Collection Date</th>
-                    <th>Strain</th>
-                    <th>Comment</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for virus in collection.viruses2.all() %}
-                    <tr>
-                        {% if virus.sid == "NO" %}
-                            <td class="warning"><b>{{ virus.sid }}</b></td>
-                        {% else %}
-                            <td class="warning"><a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ virus.sid }}"><b>{{ virus.sid }}</b></a></td>
-                        {% endif %}
-                        <td>{{ virus.tax_id }}</td>
-                        <td>{{ virus.subtype }}</td>
-                        <td>{{ virus.isolation_country }}</td>
-                        <td>{{ virus.collection_date }}</td>
-                        <td>{{ virus.strain }}</td>
-                        <td>{{ virus.comment }}</td>
-
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            {% endif %}
-
-            {% if collection.antibodies2 %}
-                <h3>Antibodies</h3>
-                <table id="mobile_antibodies" class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>Sid</th>
-                        <th>Target</th>
-                        <th>Name</th>
-                        <th>Database Link</th>
-                        <th>Comment</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for antibody in collection.antibodies2.all() %}
-                        <tr>
-                            <td class="warning"><b>{{ antibody.sid }}</b></td>
-                            <td>{{ antibody.target }}</td>
-                            <td>{{ antibody.name }}</td>
-                            <td>{{ antibody.link_db }}</td>
-                            <td>{{ antibody.comment }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% endif %}
-        </div>
-
     </div>
+    <!-- Second Block -->
+    <div class="row">
+        <!-- Fixed Ligands -->
+        <div class="col-lg-6">
+    <h2>Fixed Ligands</h2>
+    {% if collection.peptides1 %}
+    <h3>Peptides</h3>
+    <table id="fixed_peptides" class="table table-striped">
+        <thead>
+        <tr>
+            <th>sid Peptide</th>
+            <th>Linker</th>
+            <th>Spacer</th>
+            <th>Sequence</th>
+            <th>C-Terminus</th>
+            <th>Name</th>
+            <th>Comment</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for p in collection.peptides1.all() %}
+            <tr>
+                <td class="warning"> <b> {{p.sid }}</b> </td>
+                <td>{{ p.linker }}</td>
+                <td>{{ p.spacer }}</td>
+                <td>{{ p.sequence }}</td>
+                <td>{{ p.c_terminus }}</td>
+                <td>{{ p.name }}</td>
+                <td>{{ p.comment }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+    {% if collection.viruses1 %}
+    <h3>Viruses</h3>
+    <table id="fixed_viruses" class="table table-striped">
+        <thead>
+        <tr>
+            <th>Sid</th>
+            <th>Tax Id</th>
+            <th>Subtype</th>
+            <th>Isolation Country</th>
+            <th>Collection Date</th>
+            <th>Strain</th>
+            <th>Comment</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for virus in collection.viruses1.all() %}
+            <tr>
+                {% if virus.sid == "NO" %}
+                    <td class="warning"><b>{{ virus.sid }}</b></td>
+                {% else %}
+                    <td class="warning"><a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ virus.sid }}"><b>{{ virus.sid }}</b></a></td>
+                {% endif %}
+                <td>{{ virus.tax_id }}</td>
+                <td>{{ virus.subtype }}</td>
+                <td>{{ virus.isolation_country }}</td>
+                <td>{{ virus.collection_date }}</td>
+                <td>{{ virus.strain }}</td>
+                <td>{{ virus.comment }}</td>
 
-    <!-- Heatmap & Peptide/Virus table -->
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+    {% if collection.antibodies1 %}
+        <h3>Antibodies</h3>
+        <table id="fixed_antibodies" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Sid</th>
+                <th>Target</th>
+                <th>Name</th>
+                <th>Database Link</th>
+                <th>Comment</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for antibody in collection.antibodies1.all() %}
+                <tr>
+                    <td class="warning"><b>{{ antibody.sid }}</b></td>
+                    <td>{{ antibody.target }}</td>
+                    <td>{{ antibody.name }}</td>
+                    <td>{{ antibody.link_db }}</td>
+                    <td>{{ antibody.comment }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+        <!-- Mobile Ligands -->
+        <div class="col-lg-6">
+        <h2>Mobile Ligands</h2>
+        {% if collection.peptides2 %}
+        <h3>Peptides</h3>
+        <table id="mobile_peptides" class="table table-striped">
+            <thead>
+            <tr>
+                <th>sid Peptide</th>
+                <th>Linker</th>
+                <th>Spacer</th>
+                <th>Sequence</th>
+                <th>C-Terminus</th>
+                <th>Name</th>
+                <th>Comment</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for p in collection.peptides2.all() %}
+                <tr>
+                    <td class="warning"> <b> {{p.sid }}</b> </td>
+                    <td>{{ p.linker }}</td>
+                    <td>{{ p.spacer }}</td>
+                    <td>{{ p.sequence }}</td>
+                    <td>{{ p.c_terminus }}</td>
+                    <td>{{ p.name }}</td>
+                    <td>{{ p.comment }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        {% if collection.viruses2 %}
+        <h3>Viruses</h3>
+        <table id="mobile_viruses" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Sid</th>
+                <th>Tax Id</th>
+                <th>Subtype</th>
+                <th>Isolation Country</th>
+                <th>Collection Date</th>
+                <th>Strain</th>
+                <th>Comment</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for virus in collection.viruses2.all() %}
+                <tr>
+                    {% if virus.sid == "NO" %}
+                        <td class="warning"><b>{{ virus.sid }}</b></td>
+                    {% else %}
+                        <td class="warning"><a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ virus.sid }}"><b>{{ virus.sid }}</b></a></td>
+                    {% endif %}
+                    <td>{{ virus.tax_id }}</td>
+                    <td>{{ virus.subtype }}</td>
+                    <td>{{ virus.isolation_country }}</td>
+                    <td>{{ virus.collection_date }}</td>
+                    <td>{{ virus.strain }}</td>
+                    <td>{{ virus.comment }}</td>
+
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        {% if collection.antibodies2 %}
+            <h3>Antibodies</h3>
+            <table id="mobile_antibodies" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Sid</th>
+                    <th>Target</th>
+                    <th>Name</th>
+                    <th>Database Link</th>
+                    <th>Comment</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for antibody in collection.antibodies2.all() %}
+                    <tr>
+                        <td class="warning"><b>{{ antibody.sid }}</b></td>
+                        <td>{{ antibody.target }}</td>
+                        <td>{{ antibody.name }}</td>
+                        <td>{{ antibody.link_db }}</td>
+                        <td>{{ antibody.comment }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+    </div>
+    <!-- Peptide/Virus table -->
     <div class="row">
         <div class="col-lg-12">
     {% if type == "quantified" %}
@@ -270,9 +411,7 @@
     {% endif %}
    </div>
     </div>
-
 {% endblock %}
-
 {% block javascript %}
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
@@ -310,5 +449,24 @@
         });
     </script>
 
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+        $('#processes').DataTable({
+            searching: false,
+            paging: false,
+            info : false,
+            "order": []});
+        });
+    </script>
+
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+        $('#experiment').DataTable({
+            searching: false,
+            paging: false,
+            info : false,
+            "order": []});
+        });
+    </script>
 
 {% endblock %}
