@@ -49,10 +49,10 @@
                                         <i class="fa fa-ban fa-stack text-danger"></i>
                                 {%  endif %}</td>
                             <td>{% if c.is_spot_collection() %}
-                                     <a><i class="fa fa-check-square-o" aria-hidden="true"></i>
-                                     </a>
+                                     <i class="fa fa-check-square-o" style="color:green" aria-hidden="true"></i>
+
                                     {% for s in c.spotcollection_set.all() %}
-                                     {{ s.sid }}
+                                     <a href={{ url('qspotcollectionview', args=[s.id]) }} target="_blank"> {{ s.sid }} </a>
                                      {% endfor %}
 
                                 {% else %}
@@ -70,7 +70,7 @@
                             <td><a href="{{ c.gal_file1.file.url }}" target="_blank">
                                     {{ c.gal_file1.sid }}</a></td>
 
-                            <td>{{ c.process.sid }}</td>
+                            <td><a href={{ url('processesview')}} taget="_blank">{{ c.process.sid }}</a></td>
                             {% if c.process.users %}
                                 <td>
                                  {% for user in c.process.users %}

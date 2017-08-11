@@ -1,0 +1,56 @@
+{% extends "flutype/base.html" %}
+{% block content %}
+    <!-- one process in detail -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1>Process {{ process.sid }}</h1>
+            <table id="process" class="table table-striped">
+                <thead>
+                    <tr>
+                     {% for prostep in process.processstep_set.all()%}
+                         <th>Step {{prostep.index + 1}} </th>
+                     {% endfor %}
+                    <th>RawSpot Collections</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+
+
+                        {% for prostep in process.processstep_set.all()%}
+                            <td>
+                                {{ prostep.step.sid }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+
+
+                        {% for prostep in process.processstep_set.all()%}
+                            <td>
+                                {{ prostep.step.method }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                     <tr>
+
+
+                        {% for prostep in process.processstep_set.all()%}
+                            <td>
+                                {{ prostep.step._get_step_type() }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#process').DataTable();
+        });
+    </script>
+{% endblock %}

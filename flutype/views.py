@@ -2,10 +2,9 @@
 from __future__ import unicode_literals
 from django.shortcuts import render
 
-# Create your views here.
 from django.http import HttpResponse
 from django.contrib.auth.models import User
-from .models import RawSpotCollection,SpotCollection, PeptideBatch, Peptide, VirusBatch, Virus, AntibodyBatch, Antibody
+from .models import RawSpotCollection,SpotCollection,Process, PeptideBatch, Peptide, VirusBatch, Virus, AntibodyBatch, Antibody
 from django.views import generic
 from django.shortcuts import render, get_object_or_404
 
@@ -15,6 +14,8 @@ from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render, redirect
+
+# Create your views here.
 
 # @login_required
 def test_view(request):
@@ -36,6 +37,26 @@ def index_view(request):
     }
     return render(request,
                   'flutype/index.html', context)
+
+@login_required
+def processes_view(request):
+    processes = Process.objects.all()
+
+    context = {
+        'processes': processes,
+    }
+    return render(request,
+                  'flutype/processes.html', context)
+@login_required
+def process_view(request,pk):
+    process = get_object_or_404(Process, id=pk)
+
+    context = {
+        'process': process,
+    }
+    return render(request,
+                  'flutype/process.html', context)
+
 @login_required
 def my_index_view(request):
 

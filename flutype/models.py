@@ -224,18 +224,17 @@ class Step(models.Model):
 
         index: number of steps which gives the order
     """
+    objects = InheritanceManager()
     sid = models.CharField(max_length=CHAR_MAX_LENGTH,null=True, blank=True)
     method = models.CharField(max_length=300, null=True, blank=True)
-
-
-    # FIXME: make steps index unique in process.
 
 
 
     def _get_step_type(self):
         """ Type of step."""
-        return self.__class__.__name__
-
+        subclass_object = Step.objects.get_subclass(id=self.id)
+        print(subclass_object.__class__)
+        return subclass_object
     step_type = property(_get_step_type)
 
 
