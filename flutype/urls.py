@@ -8,6 +8,9 @@ urlpatterns = [
     url(r'^users/$', views.users_view, name='users'),
     url(r'^about/$', views.about_view, name='about'),
 
+    url(r'^processes/$', views.processes_view, name='processesview'),
+    url(r'^process/(?P<pk>[0-9]+)/$', views.process_view, name='processview'),
+
     url(r'^peptidebatches/$', views.peptide_batch_view, name='peptidebatches'),
     url(r'^peptidebatches_mobile/$', views.peptide_batch_mobile_view, name='peptidebatches_mobile'),
     url(r'^peptidebatches_fixed/$', views.peptide_batch_fixed_view, name='peptidebatches_fixed'),
