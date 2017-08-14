@@ -16,11 +16,11 @@
                                     {% elif  p.__class__.__name__ == "Drying" %}
                                         <th> <p> # {{ prostep.index + 1 }} <i class="fa fa-bullhorn" aria-hidden="true"></i> </p>{{p.__class__.__name__ }}</th>
                                     {% elif  p.__class__.__name__ == "Spotting" %}
-                                        <th> <p> # {{ prostep.index + 1 }} <i class="fa fa-tint" aria-hidden="true"></i> </p>{{p.__class__.__name__ }}</th>
+                                        <th> <p> # {{ prostep.index + 1 }} <i class="fa fa-anchor fa-fw" aria-hidden="true"></i> </p>{{p.__class__.__name__ }} / Immobilization</th>
                                     {% elif  p.__class__.__name__ == "Quenching" %}
                                         <th> <p> # {{ prostep.index + 1 }} <i class="fa fa-chain-broken" aria-hidden="true"></i> </p> {{p.__class__.__name__ }}</th>
                                     {% elif  p.__class__.__name__ == "Incubating" %}
-                                        <th> <p> # {{ prostep.index + 1 }} <i class="fa fa-link" aria-hidden="true"></i> </p> {{p.__class__.__name__ }}</th>
+                                        <th> <p> # {{ prostep.index + 1 }} <i class="fa fa-tint" aria-hidden="true"></i> </p> {{p.__class__.__name__ }}</th>
                                     {% endif %}
                                 {% endwith %}
                             {% endfor %}

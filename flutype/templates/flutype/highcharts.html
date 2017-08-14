@@ -1,0 +1,80 @@
+{% extends "flutype/base.html" %}
+<!-- RENDERS RAWSPOTCOLLECTION OR QUANTIFIEDSPOTCOLLECTION -->
+{% block head %}
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/heatmap.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<div id="container" style="height: 500px; min-width: 50px; max-width: 1200px; margin: 0 auto"></div>
+<!--javascript for charts
+-->
+
+<script>
+Highcharts.chart('container', {
+
+    chart: {
+        type: 'heatmap',
+        marginTop: 40,
+        marginBottom: 80,
+        plotBorderWidth: 1
+    },
+
+
+    title: {
+        text: 'Ligands Arrangement'
+    },
+
+    xAxis: {
+
+        categories: {{row_list|safe}},
+        title: "rows",
+        type: "category"
+    },
+
+    yAxis: {
+        categories: {{column_list|safe}},
+        title: null
+    },
+
+    colorAxis: {
+        reversed: false,
+        min: 0,
+        minColor: Highcharts.getOptions().colors[7],
+        maxColor: '#FFFFFF',
+
+    },
+
+    legend: {
+        align: 'right',
+        layout: 'vertical',
+        margin: 0,
+        verticalAlign: 'bottom',
+        y: -53,
+        symbolHeight: 280
+    },
+
+    tooltip: {
+        formatter: function () {
+            return '<b>' + this.series.xAxis.categories[this.point.x] + '</b> sold <br><b>' +
+                this.point.value + '</b> items on <br><b>' + this.series.yAxis.categories[this.point.y] + '</b>';
+        }
+    },
+
+    series: [{
+        animation: true,
+        name: 'Ligands Arrangement',
+        borderWidth: 1,
+        data: {{ data }},
+        dataLabels: {
+            enabled: false
+        }
+    }]
+
+});
+</script>
+{% endblock %}
+

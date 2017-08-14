@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'polymorphic',
     'imagekit',
+    'rest_framework',
+    'highcharts',
 
 ]
 

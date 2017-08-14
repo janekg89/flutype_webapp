@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.shortcuts import render
-
-from django.http import HttpResponse
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from .models import RawSpotCollection,SpotCollection,Process, PeptideBatch, Peptide, VirusBatch, Virus, AntibodyBatch, Antibody
-from django.views import generic
 from django.shortcuts import render, get_object_or_404
 
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -15,7 +14,14 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render, redirect
 
-from PIL import Image
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import JSONParser
+from .serializers import RawSpotCollectionSerializer, RawSpotSerializer
+from django.db.models import Max
+import json
+
+
 
 # Create your views here.
 
@@ -285,11 +291,31 @@ def quantified_spot_collection(request, pk):
 
     q_collection = get_object_or_404(SpotCollection, id=pk)
     collection = q_collection.raw_spot_collection
+    def empty_list(max):
+        list =[]
+        for n in range(max):
+            list.append('')
+        return list
+
+    spots = q_collection.spot_set.all()
+
+    row_max= spots.aggregate(Max('raw_spot__row'))
+    column_max= spots.aggregate(Max('raw_spot__column'))
+
+    row_list = empty_list(row_max["raw_spot__row__max"])
+    column_list = empty_list(column_max["raw_spot__column__max"])
+    data = []
+    for spot in spots:
+        data.append([spot.raw_spot.row - 1, spot.raw_spot.column - 1, spot.intensity])
+
     context = {
 
         'type': 'quantified',
         'collection': collection,
         'q_collection': q_collection,
+        'data': json.dumps(data),
+        'row_list': json.dumps(row_list),
+        'column_list': json.dumps(column_list),
     }
     return render(request,
                   'flutype/spotcollection.html', context)
@@ -372,8 +398,55 @@ def barplot_view(request, pk):
     canvas = FigureCanvas(fig)
     response = HttpResponse(content_type='image/png')
     canvas.print_png(response)
-
     return response
+
+
+
+
+@login_required
+def highcharts_view(request,pk):
+
+    def empty_list(max):
+        list =[]
+        for n in range(max):
+            list.append('')
+        return list
+
+    sc = get_object_or_404(SpotCollection, id=pk)
+    spots = sc.spot_set.all()
+
+    row_max= spots.aggregate(Max('raw_spot__row'))
+    column_max= spots.aggregate(Max('raw_spot__column'))
+
+    row_list = empty_list(row_max["raw_spot__row__max"])
+    column_list = empty_list(column_max["raw_spot__column__max"])
+    data = []
+    for spot in spots:
+        data.append([spot.raw_spot.row - 1, spot.raw_spot.column - 1, spot.intensity])
+
+
+    context = {
+        'data': json.dumps(data),
+        'row_list':json.dumps(row_list),
+        'column_list':json.dumps(column_list),
+        'type': 'all',
+        'spots':spots,
+    }
+    return render(request,
+                  'flutype/highcharts.html', context)
+
+@csrf_exempt
+def heatmap_highchart_view(request,pk):
+    """
+    List all code snippets, or create a new snippet.
+    """
+    rsc = get_object_or_404(RawSpotCollection, id=pk)
+
+    rawspots=rsc.rawspot_set.all()
+    serializer = RawSpotSerializer(instance=rawspots, many=True)
+    return JsonResponse(serializer.data,safe=False)
+
+
 
 @login_required
 def change_password_view(request):

@@ -46,4 +46,8 @@ urlpatterns = [
     url(r'^rawspotcollection/(?P<pk>[0-9]+)/heatmap$', views.desciptmap_view, name='desciptmapview'),
     url(r'^qspotcollection/(?P<pk>[0-9]+)/heatmap$', views.heatmap_view, name='heatmapview'),
     url(r'^qspotcollection/(?P<pk>[0-9]+)/barplot$', views.barplot_view, name='barplotview'),
-    ]
+
+    #url(r'^highchart/$', views.highcharts_view, name='highcharts'),
+    url(r'^highchart/(?P<pk>[0-9]+)/$', views.highcharts_view,name='heatmap_highchart'),
+]
+
