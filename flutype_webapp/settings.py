@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'flutype.apps.FlutypeConfig',
     'debug_toolbar',
     'polymorphic',
+    'imagekit',
 
 ]
 
