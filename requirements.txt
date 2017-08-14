@@ -12,3 +12,4 @@ psycopg2
 jinja2
 django-model-utils
 django-polymorphic
+django-imagekit

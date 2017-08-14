@@ -4,11 +4,13 @@
 
 {% block content %}
   <h1>Login</h1>
-  <form method="post">
-  <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-    {# {% csrf_token %} #}
+    <div class="form-group row">
+        <form method="post">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            {# {% csrf_token %} #}
 
-    {{ form.as_p() }}
-    <button type="submit">Login</button>
-  </form>
+         {{ form.as_p() }}
+          <button type="submit">Login</button>
+        </form>
+    </div>
 {% endblock %}

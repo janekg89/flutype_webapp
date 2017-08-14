@@ -12,7 +12,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User as DUser
 from djchoices import DjangoChoices, ChoiceItem
 from django.core.files.storage import FileSystemStorage
-from django.db.utils import IntegrityError
 
 from django_pandas.io import read_frame
 
@@ -28,8 +27,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from model_utils.managers import InheritanceManager
 from polymorphic.models import PolymorphicModel
-from django.db.models.signals import m2m_changed
-from django.dispatch import receiver
+from imagekit.models import ImageSpecField
+from imagekit.processors import Transpose, ResizeToFit
+
 
 CHAR_MAX_LENGTH = 50
 
@@ -385,6 +385,9 @@ class RawSpotCollection(Experiment):
     A collection of raw spots: Information for a Collection of Spots collected at once for one microarray, one microwellplate
     """
     image = models.ImageField(upload_to="image", null=True, blank=True, storage=OverwriteStorage())
+    image_90 =  ImageSpecField(source='image',
+                               processors=[Transpose(Transpose.ROTATE_90),ResizeToFit(350,100)],
+                               )
     gal_file1 = models.ForeignKey(GalFile, null=True, blank=True, related_name='gal_file1')
     gal_file2 = models.ForeignKey(GalFile, null=True, blank=True, related_name='gal_file2')
 

@@ -15,6 +15,8 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render, redirect
 
+from PIL import Image
+
 # Create your views here.
 
 # @login_required
@@ -283,8 +285,8 @@ def quantified_spot_collection(request, pk):
 
     q_collection = get_object_or_404(SpotCollection, id=pk)
     collection = q_collection.raw_spot_collection
-
     context = {
+
         'type': 'quantified',
         'collection': collection,
         'q_collection': q_collection,
