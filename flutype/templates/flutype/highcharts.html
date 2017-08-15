@@ -12,9 +12,14 @@
 <div id="container" style="height: 500px; min-width: 50px; max-width: 1200px; margin: 0 auto"></div>
 <!--javascript for charts
 -->
+    <script>
 
-<script>
-Highcharts.chart('container', {
+    var lig1 = {{ lig1|safe}};
+    var lig2 = {{ lig2|safe}};
+    var con1 = {{ con1|safe}};
+    var con2 = {{ con2|safe}};
+
+    Highcharts.chart('container', {
 
     chart: {
         type: 'heatmap',
@@ -22,7 +27,6 @@ Highcharts.chart('container', {
         marginBottom: 80,
         plotBorderWidth: 1
     },
-
 
     title: {
         text: 'Ligands Arrangement'
@@ -58,11 +62,15 @@ Highcharts.chart('container', {
     },
 
     tooltip: {
+        useHTML: true,
         formatter: function () {
-            return '<b>' + this.series.xAxis.categories[this.point.x] + '</b> sold <br><b>' +
-                this.point.value + '</b> items on <br><b>' + this.series.yAxis.categories[this.point.y] + '</b>';
+            return '<small> Information </small><table>'+
+                '<tr><td> Fixed Ligand: </td>        <td style="text-align: right"> <b>' + lig1[this.point.x][this.point.y] + '</b></td>    <td style="text-align: right"> ' + '['+con1[this.point.x][this.point.y]+']'+ ' </td></tr>' +
+                '<tr><td> Mobile Ligand:</td>     <td style="text-align: right"> <b>' + lig2[this.point.x][this.point.y] + '</b></td>    <td style="text-align: right"> ' + '['+con2[this.point.x][this.point.y]+']'+ ' </td></tr>' +
+                '</table>';
         }
     },
+
 
     series: [{
         animation: true,
@@ -70,11 +78,13 @@ Highcharts.chart('container', {
         borderWidth: 1,
         data: {{ data }},
         dataLabels: {
-            enabled: false
+            enable:true,
+
         }
     }]
 
 });
 </script>
+
 {% endblock %}
 

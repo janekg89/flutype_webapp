@@ -22,6 +22,11 @@ from django.db.models import Max
 import json
 
 
+def empty_list(max):
+    list = []
+    for n in range(max):
+        list.append('')
+    return list
 
 # Create your views here.
 
@@ -278,9 +283,26 @@ def raw_spot_collection(request, pk):
     """ Renders detailed RawSpotCollection View. """
 
     collection = get_object_or_404(RawSpotCollection, id=pk)
+
+    spots = collection.rawspot_set.all()
+    row_max = spots.aggregate(Max('row'))
+    column_max = spots.aggregate(Max('column'))
+    row_list = empty_list(row_max["row__max"])
+    column_list = empty_list(column_max["column__max"])
+
+    data = []
+    for spot in spots:
+        data.append([spot.column - 1, spot.row - 1, 0])
     context = {
+        'lig1': json.dumps(collection.pivot_ligand1().values.tolist()),
+        'lig2': json.dumps(collection.pivot_ligand2().values.tolist()),
+        'con1': json.dumps(collection.pivot_concentration1().values.tolist()),
+        'con2': json.dumps(collection.pivot_concentration2().values.tolist()),
         'type': 'raw',
         'collection': collection,
+        'data': json.dumps(data),
+        'row_list': json.dumps(row_list),
+        'column_list': json.dumps(column_list),
     }
     return render(request,
                   'flutype/spotcollection.html', context)
@@ -289,15 +311,11 @@ def raw_spot_collection(request, pk):
 def quantified_spot_collection(request, pk):
     """ Renders detailed SpotCollection View. """
 
-    q_collection = get_object_or_404(SpotCollection, id=pk)
-    collection = q_collection.raw_spot_collection
-    def empty_list(max):
-        list =[]
-        for n in range(max):
-            list.append('')
-        return list
+    sc = get_object_or_404(SpotCollection, id=pk)
+    collection = sc.raw_spot_collection
 
-    spots = q_collection.spot_set.all()
+
+    spots = sc.spot_set.all()
 
     row_max= spots.aggregate(Max('raw_spot__row'))
     column_max= spots.aggregate(Max('raw_spot__column'))
@@ -306,13 +324,16 @@ def quantified_spot_collection(request, pk):
     column_list = empty_list(column_max["raw_spot__column__max"])
     data = []
     for spot in spots:
-        data.append([spot.raw_spot.row - 1, spot.raw_spot.column - 1, spot.intensity])
+        data.append([spot.raw_spot.column - 1, spot.raw_spot.row - 1, spot.intensity])
 
     context = {
-
+        'lig1': json.dumps(sc.raw_spot_collection.pivot_ligand1().values.tolist()),
+        'lig2': json.dumps(sc.raw_spot_collection.pivot_ligand2().values.tolist()),
+        'con1': json.dumps(sc.raw_spot_collection.pivot_concentration1().values.tolist()),
+        'con2': json.dumps(sc.raw_spot_collection.pivot_concentration2().values.tolist()),
         'type': 'quantified',
         'collection': collection,
-        'q_collection': q_collection,
+        'q_collection': sc,
         'data': json.dumps(data),
         'row_list': json.dumps(row_list),
         'column_list': json.dumps(column_list),
@@ -405,16 +426,8 @@ def barplot_view(request, pk):
 
 @login_required
 def highcharts_view(request,pk):
-
-    def empty_list(max):
-        list =[]
-        for n in range(max):
-            list.append('')
-        return list
-
     sc = get_object_or_404(SpotCollection, id=pk)
-    spots = sc.spot_set.all()
-
+    spots=sc.spot_set.all()
     row_max= spots.aggregate(Max('raw_spot__row'))
     column_max= spots.aggregate(Max('raw_spot__column'))
 
@@ -423,14 +436,14 @@ def highcharts_view(request,pk):
     data = []
     for spot in spots:
         data.append([spot.raw_spot.row - 1, spot.raw_spot.column - 1, spot.intensity])
-
-
     context = {
+        'lig1': json.dumps(sc.raw_spot_collection.pivot_ligand1().values.tolist()),
+        'lig2': json.dumps(sc.raw_spot_collection.pivot_ligand2().values.tolist()),
+        'con1': json.dumps(sc.raw_spot_collection.pivot_concentration1().values.tolist()),
+        'con2': json.dumps(sc.raw_spot_collection.pivot_concentration2().values.tolist()),
         'data': json.dumps(data),
         'row_list':json.dumps(row_list),
         'column_list':json.dumps(column_list),
-        'type': 'all',
-        'spots':spots,
     }
     return render(request,
                   'flutype/highcharts.html', context)

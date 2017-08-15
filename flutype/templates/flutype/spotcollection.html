@@ -105,9 +105,11 @@
                         {% endif %}
             </div>
         <!-- Heat map  -->
-            <div class="row">
-                <img src="./heatmap" width="400" >
-            </div>
+{#            <div class="row">#}
+{#                <img src="./heatmap" width="400" >#}
+{#            </div>#}
+            <div class="row" id="container" style="height: 650px; min-width: 50px; max-width: 250px; margin: 0 auto"></div>
+
         </div>
         <div class="col-lg-1">  </div>
         <div class="col-lg-9">
@@ -240,7 +242,6 @@
                             {% endif %}
                         {% endwith %}
                 </div>
-            <div id="container" style="height: 500px; min-width: 50px; max-width: 1200px; margin: 0 auto"></div>
             <div class="row">
                 <!-- Fixed Ligands -->
                     <div class="col-lg-6 img-rounded img-thumbnail">
@@ -498,8 +499,14 @@
         });
     </script>
 
-    <script>
-Highcharts.chart('container', {
+        <script>
+
+    var lig1 = {{ lig1|safe}};
+    var lig2 = {{ lig2|safe}};
+    var con1 = {{ con1|safe}};
+    var con2 = {{ con2|safe}};
+
+    Highcharts.chart('container', {
 
     chart: {
         type: 'heatmap',
@@ -508,20 +515,15 @@ Highcharts.chart('container', {
         plotBorderWidth: 1
     },
 
-
-    title: {
-        text: 'Ligands Arrangement'
-    },
-
     xAxis: {
 
-        categories: {{row_list|safe}},
+        categories: {{column_list|safe}},
         title: "rows",
         type: "category"
     },
 
     yAxis: {
-        categories: {{column_list|safe}},
+        categories: {{row_list|safe}},
         title: null
     },
 
@@ -532,30 +534,43 @@ Highcharts.chart('container', {
         maxColor: '#FFFFFF',
 
     },
-
     legend: {
+        {%if type == "raw"%}
+        enabled: false,
+        {% endif %}
         align: 'right',
         layout: 'vertical',
         margin: 0,
         verticalAlign: 'bottom',
         y: -53,
-        symbolHeight: 280
+        symbolHeight: 520
+    },
+
+    title: {
+        text: ''
     },
 
     tooltip: {
+        useHTML: true,
         formatter: function () {
-            return '<b>' + this.series.xAxis.categories[this.point.x] + '</b> sold <br><b>' +
-                this.point.value + '</b> items on <br><b>' + this.series.yAxis.categories[this.point.y] + '</b>';
+            return '<small> Information </small><table>'+
+                '<tr><td> Fixed Ligand: </td>        <td style="text-align: right"> <b>' + lig1[this.point.y][this.point.x] + '</b></td>    <td style="text-align: right"> ' + '['+con1[this.point.y][this.point.x]+']'+ ' </td></tr>' +
+                '<tr><td> Mobile Ligand:</td>     <td style="text-align: right"> <b>' + lig2[this.point.y][this.point.x] + '</b></td>    <td style="text-align: right"> ' + '['+con2[this.point.y][this.point.x]+']'+ ' </td></tr>' +
+                '<tr><td> Intensity:</td>     <td style="text-align: right"> <b>' + this.point.value + '</b></td>    <td style="text-align: right">  </td></tr>' +
+
+                '</table>';
         }
     },
 
+
     series: [{
         animation: true,
-        name: 'Ligands Arrangement',
+        name: 'Heatmap',
         borderWidth: 1,
         data: {{ data }},
         dataLabels: {
-            enabled: false
+            enable:true,
+
         }
     }]
 
