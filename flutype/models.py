@@ -425,6 +425,34 @@ class RawSpotCollection(Experiment):
             result = False
         return result
 
+    def pivot_ligand1(self):
+        data = read_frame(self.rawspot_set.all(), fieldnames=["row","column","ligand1__ligand__sid"])
+        lig1 = data.pivot(index="row", columns="column", values="ligand1__ligand__sid")
+        lig1.fillna(value="", inplace=True)
+        return lig1
+
+    def pivot_ligand2(self):
+        try:
+            data = read_frame(self.rawspot_set.all(), fieldnames=["row","column","ligand2__ligand__virus__subtype"])
+            lig2 = data.pivot(index="row", columns="column", values="ligand2__ligand__virus__subtype")
+        except:
+            data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "ligand2__ligand__sid"])
+            lig2 = data.pivot(index="row", columns="column", values="ligand2__ligand__sid")
+        lig2.fillna(value="", inplace=True)
+        return lig2
+
+    def pivot_concentration1(self):
+        data = read_frame(self.rawspot_set.all(), fieldnames=["row","column","ligand1__concentration"])
+        concentration = data.pivot(index="row", columns="column", values="ligand1__concentration")
+        concentration.fillna(value="", inplace=True)
+        return concentration
+
+    def pivot_concentration2(self):
+        data = read_frame(self.rawspot_set.all(), fieldnames=["row","column","ligand2__concentration"])
+        concentration = data.pivot(index="row", columns="column", values="ligand2__concentration")
+        concentration.fillna(value="", inplace=True)
+        return concentration
+
     # TODO: refactor analyis function
     def analysis(self):
         """ Returns the analysis object. """
@@ -523,7 +551,6 @@ class SpotCollection(models.Model):
         d["gal_pep"] = pep_data.copy()
         d["data"] = data.pivot(index="Row", columns="Column", values="intensity")
         ana = analysis.Analysis(d)
-
         return ana
 
 
