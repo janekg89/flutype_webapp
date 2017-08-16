@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from rest_framework.views import APIView
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
@@ -20,8 +20,9 @@ from rest_framework.parsers import JSONParser
 from .serializers import RawSpotCollectionSerializer, RawSpotSerializer
 from django.db.models import Max
 import json
-
-
+import plotly.tools as tls
+from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+import itertools
 def empty_list(max):
     list = []
     for n in range(max):
@@ -29,6 +30,50 @@ def empty_list(max):
     return list
 
 # Create your views here.
+@login_required
+@api_view(['GET'])
+def barplot_plotly_view(request, pk):
+        sc = get_object_or_404(SpotCollection, id=pk)
+        all_spots= sc.spot_set.all()
+        spot_lig1 = all_spots.values_list("raw_spot__ligand1__sid", flat=True)
+        spot_lig2 = all_spots.values_list("raw_spot__ligand2__sid", flat=True)
+        spot_column = all_spots.values_list("raw_spot__column", flat=True)
+        spot_row = all_spots.values_list("raw_spot__row", flat=True)
+        spot_intensity = all_spots.values_list("intensity", flat=True)
+
+        liq1=spot_lig1.distinct()
+        lig2=spot_lig2.distinct()
+        uniq_lig_comps=itertools.product(liq1,lig2)
+
+        value_list=[]
+        for uniq_lig_comp in uniq_lig_comps:
+            a={}
+            values_unique_combination=all_spots.filter(raw_spot__ligand1__sid=uniq_lig_comp[0],raw_spot__ligand2__sid=uniq_lig_comp[1]).values_list("intensity", flat=True)
+            a["ligs"]=uniq_lig_comp
+            a["values"]=(values_unique_combination)
+            value_list.append(a)
+
+        box_list=[]
+        for lig in liq1:
+            a={}
+            a["intensity"]=all_spots.filter(raw_spot__ligand1__sid=lig).values_list("intensity", flat=True)
+            a["lig2"] = all_spots.filter(raw_spot__ligand1__sid=lig).values_list("raw_spot__ligand2__sid", flat=True)
+            box_list.append(a)
+
+
+        data = {
+            "spot_rows": spot_row ,
+            "spot_column":spot_column,
+            "spot_intensity":spot_intensity,
+            "spot_ligand1":spot_lig1,
+            "spot_ligand2":spot_lig2,
+            "value_list":value_list,
+            "box_list":box_list,
+            "lig1":lig1
+            }
+
+
+        return Response(data)
 
 # @login_required
 def test_view(request):
@@ -325,7 +370,9 @@ def quantified_spot_collection(request, pk):
     data = []
     for spot in spots:
         data.append([spot.raw_spot.column - 1, spot.raw_spot.row - 1, spot.intensity])
+##################################################################################
 
+################################
     context = {
         'lig1': json.dumps(sc.raw_spot_collection.pivot_ligand1().values.tolist()),
         'lig2': json.dumps(sc.raw_spot_collection.pivot_ligand2().values.tolist()),
@@ -415,11 +462,10 @@ def barplot_view(request, pk):
 
 
     fig = ana.barplot(align="vir", scale="log", figsize=(20, 10))
+    plotly_fig = tls.mpl_to_plotly(fig)
+    div = plot(plotly_fig, auto_open=False, output_type='div')
 
-    canvas = FigureCanvas(fig)
-    response = HttpResponse(content_type='image/png')
-    canvas.print_png(response)
-    return response
+    return context
 
 
 
