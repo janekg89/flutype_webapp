@@ -5,13 +5,58 @@
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/heatmap.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 {% endblock %}
 
 {% block content %}
 
 <div id="container" style="height: 500px; min-width: 50px; max-width: 1200px; margin: 0 auto"></div>
+    <div id="myDiv" style="height: 500px; min-width: 50px; max-width: 1200px; margin: 0 auto"></div>
 <!--javascript for charts
 -->
+    <script>
+    var endpoint = './data';
+
+    $.ajax({
+    method: "GET",
+    url: endpoint,
+    success: function(data){
+        dataPlot = data
+        Chart()
+    console.log(data)
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+         },
+    })
+    function Chart() {
+        var data1 = [];
+        for (i = 0; i < dataPlot.box_list.length; i++) {
+            var trace1 = {
+                y: dataPlot.box_list[i].intensity,
+                x: dataPlot.box_list[i].lig2,
+                name: dataPlot.lig1[i],
+                marker: {color: '#3D9970'},
+                type: 'box'
+            };
+            data1.push(trace1);
+        }
+
+
+        var layout = {
+            yaxis: {
+                title: 'normalized moisture',
+                zeroline: false
+            },
+            boxmode: 'group'
+        };
+
+        Plotly.newPlot('myDiv', data, layout);
+    }
+
+</script>
+
     <script>
 
     var lig1 = {{ lig1|safe}};
