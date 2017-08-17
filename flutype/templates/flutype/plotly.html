@@ -5,3 +5,42 @@
 {% block content %}
 {% endblock %}
 
+{#
+    <script>
+    var endpoint = './data';
+
+    $.ajax({
+    method: "GET",
+    url: endpoint,
+    success: function(data){
+        dataPlot = data;
+        Chart();
+    console.log(data)
+    },
+    error: function(error_data){
+        console.log("error");
+        console.log(error_data)
+         }
+    })
+
+    function Chart(){
+        var data1 = [];
+        console.log(dataPlot.box_list[i].intensity);
+        for (var i = 0; i < dataPlot.box_list.length; i++) {
+            var trace1 = {
+                y: dataPlot.box_list[i].intensity,
+                x: dataPlot.box_list[i].lig2,
+                name: dataPlot.lig1[i],
+                type: 'box'
+            };
+            data1.push(trace1);
+        };
+        var layout = {
+            yaxis: {
+                title: 'normalized moisture',
+                zeroline: false
+            },
+            boxmode: 'group'
+        };
+        Plotly.newPlot('myDiv', data, layout);
+    } #}
