@@ -32,27 +32,11 @@ def empty_list(max):
 # Create your views here.
 @login_required
 @api_view(['GET'])
-def barplot_plotly_view(request, pk):
+def barplot_data_view(request, pk):
         sc = get_object_or_404(SpotCollection, id=pk)
         all_spots= sc.spot_set.all()
         spot_lig1 = all_spots.values_list("raw_spot__ligand1__sid", flat=True)
-        spot_lig2 = all_spots.values_list("raw_spot__ligand2__sid", flat=True)
-        spot_column = all_spots.values_list("raw_spot__column", flat=True)
-        spot_row = all_spots.values_list("raw_spot__row", flat=True)
-        spot_intensity = all_spots.values_list("intensity", flat=True)
-
         lig1=spot_lig1.distinct()
-        lig2=spot_lig2.distinct()
-        uniq_lig_comps=itertools.product(lig1,lig2)
-
-        value_list=[]
-        for uniq_lig_comp in uniq_lig_comps:
-            a={}
-            values_unique_combination=all_spots.filter(raw_spot__ligand1__sid=uniq_lig_comp[0],raw_spot__ligand2__sid=uniq_lig_comp[1]).values_list("intensity", flat=True)
-            a["ligs"]=uniq_lig_comp
-            a["values"]=(values_unique_combination)
-            value_list.append(a)
-
         box_list=[]
         for lig in lig1:
             a={}
@@ -60,17 +44,8 @@ def barplot_plotly_view(request, pk):
             a["lig2"] = all_spots.filter(raw_spot__ligand1__sid=lig).values_list("raw_spot__ligand2__sid", flat=True)
             a["lig1"] = all_spots.filter(raw_spot__ligand1__sid=lig).values_list("raw_spot__ligand1__ligand__sid").first()
             a["lig1_con"] = all_spots.filter(raw_spot__ligand1__sid=lig).values_list("raw_spot__ligand1__concentration").first()
-
             box_list.append(a)
-
-
         data = {
-            "spot_rows": spot_row ,
-            "spot_column":spot_column,
-            "spot_intensity":spot_intensity,
-            "spot_ligand1":spot_lig1,
-            "spot_ligand2":spot_lig2,
-            "value_list":value_list,
             "box_list":box_list,
             "lig1":lig1,
             }
