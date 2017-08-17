@@ -41,9 +41,9 @@ def barplot_plotly_view(request, pk):
         spot_row = all_spots.values_list("raw_spot__row", flat=True)
         spot_intensity = all_spots.values_list("intensity", flat=True)
 
-        liq1=spot_lig1.distinct()
+        lig1=spot_lig1.distinct()
         lig2=spot_lig2.distinct()
-        uniq_lig_comps=itertools.product(liq1,lig2)
+        uniq_lig_comps=itertools.product(lig1,lig2)
 
         value_list=[]
         for uniq_lig_comp in uniq_lig_comps:
@@ -54,10 +54,13 @@ def barplot_plotly_view(request, pk):
             value_list.append(a)
 
         box_list=[]
-        for lig in liq1:
+        for lig in lig1:
             a={}
             a["intensity"]=all_spots.filter(raw_spot__ligand1__sid=lig).values_list("intensity", flat=True)
             a["lig2"] = all_spots.filter(raw_spot__ligand1__sid=lig).values_list("raw_spot__ligand2__sid", flat=True)
+            a["lig1"] = all_spots.filter(raw_spot__ligand1__sid=lig).values_list("raw_spot__ligand1__ligand__sid").first()
+            a["lig1_con"] = all_spots.filter(raw_spot__ligand1__sid=lig).values_list("raw_spot__ligand1__concentration").first()
+
             box_list.append(a)
 
 
@@ -69,10 +72,8 @@ def barplot_plotly_view(request, pk):
             "spot_ligand2":spot_lig2,
             "value_list":value_list,
             "box_list":box_list,
-            "lig1":lig1
+            "lig1":lig1,
             }
-
-
         return Response(data)
 
 # @login_required

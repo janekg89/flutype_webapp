@@ -5,55 +5,95 @@
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/heatmap.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 {% endblock %}
 
 {% block content %}
 
 <div id="container" style="height: 500px; min-width: 50px; max-width: 1200px; margin: 0 auto"></div>
+
     <div id="myDiv" style="height: 500px; min-width: 50px; max-width: 1200px; margin: 0 auto"></div>
+
+<div  id="top" style="margin:0 auto">
+    <button id="lin"> lin</button>
+    <button id="log"> log</button>
+</div>
 <!--javascript for charts
 -->
-    <script>
+
+<script>
     var endpoint = './data';
 
-    $.ajax({
+$.ajax({
     method: "GET",
     url: endpoint,
     success: function(data){
-        dataPlot = data
-        Chart()
-    console.log(data)
+        dataPlot = data;
+        Plotly.newPlot('myDiv', Chart(dataPlot));
     },
     error: function(error_data){
-        console.log("error")
+        console.log("error");
         console.log(error_data)
-         },
-    })
-    function Chart() {
-        var data1 = [];
-        for (i = 0; i < dataPlot.box_list.length; i++) {
-            var trace1 = {
-                y: dataPlot.box_list[i].intensity,
-                x: dataPlot.box_list[i].lig2,
-                name: dataPlot.lig1[i],
-                marker: {color: '#3D9970'},
-                type: 'box'
-            };
-            data1.push(trace1);
-        }
+         }
+    });
 
-
-        var layout = {
-            yaxis: {
-                title: 'normalized moisture',
-                zeroline: false
-            },
-            boxmode: 'group'
-        };
-
-        Plotly.newPlot('myDiv', data, layout);
+$('#lin').click(function(){
+    var update ={
+        "layout.yaxis.type" : "lin"
     }
+    var myDiv = document.getElementById("myDiv");
+    myDiv.layout.yaxis.type = "lin" ;
+
+    Plotly.restyle("myDiv",update);
+});
+
+$('#log').click(function(){
+    var update ={
+        "layout.yaxis.type" : "log"
+    }
+    var myDiv = document.getElementById("myDiv");
+    myDiv.layout.yaxis.type = "log" ;
+
+    Plotly.restyle("myDiv", update);
+});
+
+function Chart(dataPlot) {
+    var data = []
+    for (var i = 0; i < dataPlot.box_list.length; i++) {
+        if (dataPlot.lig1[i] == null) {
+            var name = "Empty"
+        } else {
+            var name = dataPlot.box_list[i].lig1 + " [" + dataPlot.box_list[i].lig1_con + "]";
+        };
+        var trace1 = {
+            y: dataPlot.box_list[i].intensity,
+            x: dataPlot.box_list[i].lig2,
+            boxpoints: 'all',
+            name: name,
+            type: 'box',
+            jitter: 0.5,
+            fillcolor: 'cls',
+            marker: {
+              size: 3
+            },
+        };
+        data.push(trace1);
+    }
+
+    var layout = {
+        yaxis: {
+            type: "log",
+            title: 'Intensity',
+            zeroline: false
+        },
+        boxmode: 'group'
+    };
+
+    return {
+        data:data,
+        layout:layout
+            }
+}
 
 </script>
 
