@@ -9,18 +9,19 @@ from flutype.data_management.fill_users import create_users, user_defs
 from flutype.data_management.fill_database import fill_database, path_master
 
 from .models import RawSpotCollection, SpotCollection, Process
-
-import sys
-
+import json
 
 class ViewTestCaseNoDataLogOut(TestCase):
+
     def setUp(self):
+
         # only create once
         create_users(user_defs=user_defs)
         self.c = Client()
 
     def tearDown(self):
         create_users(user_defs=None, delete_all=True)
+
 
     def test_login_view(self):
         response = self.c.post('/login/', {})
@@ -146,13 +147,17 @@ class ViewTestCaseNoDataLogOut(TestCase):
         self.assertEqual(status, 302, "index view 302")
 
 class ViewTestCaseNoDataLogedIn(TestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        create_users(user_defs=user_defs)
+
     def setUp(self):
         # only create once
-        create_users(user_defs=user_defs)
         self.c = Client()
         self.c.login(username='mkoenig', password=DEFAULT_USER_PASSWORD)
 
-    def tearDown(self):
+    def tearDowns(self):
         create_users(user_defs=None, delete_all=True)
 
     def test_index_view_200(self):
@@ -296,14 +301,22 @@ class ViewTestCaseNoDataLogedIn(TestCase):
         self.assertEqual(status, 200, "index view 200")
         self.assertTrue("No entries in database" in str(response.content))
 
+
+
+
 class ViewTestCaseOneCollectionLogedIn(TestCase):
 
-    def setUp(self):
-        # only create once
+    @classmethod
+    def setUpTestData(cls):
         create_users(user_defs=user_defs)
         fill_database(path_master=path_master, collection_ids=[
-            "2017-05-19_N7_Cal"
+            "2017-05-19_E5_X31"
         ])
+
+    def setUp(self):
+
+        # only create once
+
         self.c = Client()
         self.c.login(username='hmemczak', password=DEFAULT_USER_PASSWORD)
 
@@ -315,7 +328,7 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         status = response.status_code
         self.assertEqual(status, 200, "index view 200")
         self.assertTrue("<h1>Experiments</h1>" in str(response.content))
-        self.assertTrue("2017-05-19_N7" in str(response.content))
+        self.assertTrue("2017-05-19_E5" in str(response.content))
 
     def test_antibody_view_200(self):
         response = self.c.post('/flutype/antibodies_mobile/', {})
@@ -358,13 +371,13 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         response = self.c.post('/flutype/viruses/', {})
         status = response.status_code
         self.assertEqual(status, 200, "index view 200")
-        self.assertTrue("A/California/7/2009" in str(response.content))
+        self.assertTrue("A/Aichi/2/68" in str(response.content))
 
 
         response = self.c.post('/flutype/viruses_mobile/', {})
         status = response.status_code
         self.assertEqual(status, 200, "index view 200")
-        self.assertTrue("A/California/7/2009" in str(response.content))
+        self.assertTrue("A/Aichi/2/68" in str(response.content))
 
 
         response = self.c.post('/flutype/viruses_fixed/', {})
@@ -377,14 +390,14 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         response = self.c.post('/flutype/virusbatches/', {})
         status = response.status_code
         self.assertEqual(status, 200, "index view 200")
-        self.assertTrue("Cal" in str(response.content))
+        self.assertTrue("X31" in str(response.content))
 
 
 
         response = self.c.post('/flutype/virusbatches_mobile/', {})
         status = response.status_code
         self.assertEqual(status, 200, "index view 200")
-        self.assertTrue("Cal" in str(response.content))
+        self.assertTrue("X31" in str(response.content))
 
 
         response = self.c.post('/flutype/virusbatches_fixed/', {})
@@ -435,7 +448,7 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         response = self.c.post('/flutype/processes/', {})
         status = response.status_code
         self.assertEqual(status, 200, "index view 200")
-        self.assertTrue("2017-05-19_N7" in str(response.content))
+        self.assertTrue("2017-05-19_E5" in str(response.content))
 
     def test_process_view_200(self):
         id=Process.objects.first().id
@@ -444,6 +457,14 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
 
         self.assertEqual(status, 200, "index view 200")
         self.assertTrue("No process steps avialable for P001 process." in str(response.content))
+
+    def test_process_with_process_steps_view_200(self):
+        fill_database(path_master=path_master, collection_ids=["2017-06-13_MTP"])
+        id=Process.objects.last().id
+        response = self.c.post('/flutype/process/'+str(id)+"/", {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("Spotting" in str(response.content))
 
 
     def test_users_view_200(self):
@@ -465,4 +486,34 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         status = response.status_code
         self.assertEqual(status, 200, "index view 200")
         self.assertTrue("170613" in str(response.content))
+
+    def test_rawspotcollection_view_200(self):
+        fill_database(path_master=path_master, collection_ids=["2017-06-13_MTP"])
+        id = RawSpotCollection.objects.first().id
+        response = self.c.post('/flutype/rawspotcollection/'+str(id)+'/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("<h1>Raw: 2017-05-19_E5 </h1>" in str(response.content))
+        self.assertTrue("No process steps avialable for process: P001" in str(response.content))
+        self.assertTrue("Dye001" in str(response.content))
+        self.assertTrue("A001" in str(response.content))
+        self.assertTrue("<td>A/Aichi/2/68 </td>" in str(response.content))
+
+    def test_qspotcollection_view_200(self):
+        fill_database(path_master=path_master, collection_ids=["2017-06-13_MTP"])
+        id = SpotCollection.objects.first().id
+        response = self.c.post('/flutype/qspotcollection/'+str(id)+'/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("<b>RawCollection:2017-05-19_E5</b>" in str(response.content))
+        self.assertTrue("A001" in str(response.content))
+        self.assertTrue("<td>A/Aichi/2/68 </td>" in str(response.content))
+
+    def test_qspotcollection_data_view_200(self):
+        fill_database(path_master=path_master, collection_ids=["2017-06-13_MTP"])
+        id = SpotCollection.objects.first().id
+        response = self.c.get('/flutype/qspotcollection/'+str(id)+'/data', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertContains(response, "Dye001")
 
