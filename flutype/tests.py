@@ -8,9 +8,10 @@ from django.test import Client
 from flutype.data_management.fill_users import create_users, user_defs
 from flutype.data_management.fill_database import fill_database, path_master
 
+from .models import RawSpotCollection, SpotCollection, Process
+
 import sys
-reload(sys)
-sys.setdefaultencoding('utf8')
+
 
 class ViewTestCaseNoDataLogOut(TestCase):
     def setUp(self):
@@ -155,18 +156,145 @@ class ViewTestCaseNoDataLogedIn(TestCase):
         create_users(user_defs=None, delete_all=True)
 
     def test_index_view_200(self):
-        response = self.c.post('/flutype/')
+        response = self.c.post('/flutype/', {})
         status = response.status_code
         self.assertEqual(status, 200, "index view 200")
         self.assertTrue("<h1>Experiments</h1>" in str(response.content))
         self.assertTrue("No entries in database" in str(response.content))
 
     def test_antibody_view_200(self):
+        response = self.c.post('/flutype/antibodies_mobile/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+        response = self.c.post('/flutype/antibodies_fixed/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
 
         response = self.c.post('/flutype/antibodies/', {})
         status = response.status_code
         self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
 
+
+    def test_antibodybatches_view_200(self):
+        response = self.c.post('/flutype/antibodybatches/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+
+        response = self.c.post('/flutype/antibodybatches_mobile/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+
+        response = self.c.post('/flutype/antibodybatches_fixed/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+
+    def test_viruses_view_200(self):
+        response = self.c.post('/flutype/viruses/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+
+        response = self.c.post('/flutype/viruses_mobile/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+
+        response = self.c.post('/flutype/viruses_fixed/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+
+    def test_virusbatches_view_200(self):
+        response = self.c.post('/flutype/virusbatches/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+
+
+        response = self.c.post('/flutype/virusbatches_mobile/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+
+        response = self.c.post('/flutype/virusbatches_fixed/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+
+    def test_peptides_view_200(self):
+        response = self.c.post('/flutype/peptides/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+
+        response = self.c.post('/flutype/peptides_mobile/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+
+        response = self.c.post('/flutype/peptides_fixed/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+
+    def test_peptidebatches_view_200(self):
+        response = self.c.post('/flutype/peptidebatches/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+
+        response = self.c.post('/flutype/peptidebatches_mobile/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+
+        response = self.c.post('/flutype/peptidebatches_fixed/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+
+    def test_processes_view_200(self):
+        response = self.c.post('/flutype/processes/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+
+    def test_users_view_200(self):
+        response = self.c.post('/flutype/users/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("mkoenig" in str(response.content))
+
+
+    def test_myexperiments_view_200(self):
+        response = self.c.post('/flutype/myexperiments/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
 
 class ViewTestCaseOneCollectionLogedIn(TestCase):
 
@@ -177,14 +305,164 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
             "2017-05-19_N7_Cal"
         ])
         self.c = Client()
-        self.c.login(username='mkoenig', password=DEFAULT_USER_PASSWORD)
+        self.c.login(username='hmemczak', password=DEFAULT_USER_PASSWORD)
 
     def tearDown(self):
         create_users(user_defs=None, delete_all=True)
 
-    def test_index_view_data(self):
-        response = self.c.post('/flutype/')
+    def test_index_view_200(self):
+        response = self.c.post('/flutype/', {})
         status = response.status_code
         self.assertEqual(status, 200, "index view 200")
         self.assertTrue("<h1>Experiments</h1>" in str(response.content))
         self.assertTrue("2017-05-19_N7" in str(response.content))
+
+    def test_antibody_view_200(self):
+        response = self.c.post('/flutype/antibodies_mobile/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+        response = self.c.post('/flutype/antibodies_fixed/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("A001" in str(response.content))
+
+
+        response = self.c.post('/flutype/antibodies/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("A001" in str(response.content))
+
+
+    def test_antibodybatches_view_200(self):
+        response = self.c.post('/flutype/antibodybatches/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("" in str(response.content))
+
+
+        response = self.c.post('/flutype/antibodybatches_mobile/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+
+        response = self.c.post('/flutype/antibodybatches_fixed/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("AK025" in str(response.content))
+
+
+    def test_viruses_view_200(self):
+        response = self.c.post('/flutype/viruses/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("A/California/7/2009" in str(response.content))
+
+
+        response = self.c.post('/flutype/viruses_mobile/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("A/California/7/2009" in str(response.content))
+
+
+        response = self.c.post('/flutype/viruses_fixed/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+
+    def test_virusbatches_view_200(self):
+        response = self.c.post('/flutype/virusbatches/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("Cal" in str(response.content))
+
+
+
+        response = self.c.post('/flutype/virusbatches_mobile/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("Cal" in str(response.content))
+
+
+        response = self.c.post('/flutype/virusbatches_fixed/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+
+    def test_peptides_view_200(self):
+        response = self.c.post('/flutype/peptides/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("Dye001" in str(response.content))
+
+
+        response = self.c.post('/flutype/peptides_mobile/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+
+        response = self.c.post('/flutype/peptides_fixed/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("Dye001" in str(response.content))
+
+
+    def test_peptidebatches_view_200(self):
+        response = self.c.post('/flutype/peptidebatches/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("DYE100" in str(response.content))
+
+
+        response = self.c.post('/flutype/peptidebatches_mobile/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+
+        response = self.c.post('/flutype/peptidebatches_fixed/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("DYE100" in str(response.content))
+
+
+    def test_processes_view_200(self):
+        response = self.c.post('/flutype/processes/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("2017-05-19_N7" in str(response.content))
+
+    def test_process_view_200(self):
+        id=Process.objects.first().id
+        response = self.c.post('/flutype/process/'+str(id)+"/", {})
+        status = response.status_code
+
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No process steps avialable for P001 process." in str(response.content))
+
+
+    def test_users_view_200(self):
+        response = self.c.post('/flutype/users/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("konigmatt@googlemail.com" in str(response.content))
+
+
+    def test_myexperiments_view_200(self):
+        response = self.c.post('/flutype/myexperiments/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("No entries in database" in str(response.content))
+
+    def test_myexperiments_view_200_one_collection(self):
+        fill_database(path_master=path_master, collection_ids=["2017-06-13_MTP"])
+        response = self.c.post('/flutype/myexperiments/', {})
+        status = response.status_code
+        self.assertEqual(status, 200, "index view 200")
+        self.assertTrue("170613" in str(response.content))
+
