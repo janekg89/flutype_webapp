@@ -9,7 +9,7 @@ from flutype.data_management.fill_users import create_users, user_defs
 from flutype.data_management.fill_database import fill_database, path_master
 
 from .models import RawSpotCollection, SpotCollection, Process
-import json
+
 
 class ViewTestCaseNoDataLogOut(TestCase):
 
