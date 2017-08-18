@@ -15,14 +15,12 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render, redirect
 
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
-from .serializers import RawSpotCollectionSerializer, RawSpotSerializer
+
 from django.db.models import Max
 import json
 import plotly.tools as tls
 from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
-import itertools
+
 def empty_list(max):
     list = []
     for n in range(max):

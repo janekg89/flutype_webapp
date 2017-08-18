@@ -8,7 +8,7 @@ from django.test import Client
 from flutype.data_management.fill_users import create_users, user_defs
 from flutype.data_management.fill_database import fill_database, path_master
 
-from .models import RawSpotCollection, SpotCollection, Process
+from flutype.models import RawSpotCollection, SpotCollection, Process
 
 
 class ViewTestCaseNoDataLogOut(TestCase):
@@ -46,6 +46,10 @@ class ViewTestCaseNoDataLogOut(TestCase):
         response = self.c.post('/flutype/', {})
         status = response.status_code
         self.assertEqual(status, 302, "index view 302")
+
+    def test_redirect_if_not_logged_in(self):
+        response = self.c.get('/flutype/', {})
+        self.assertRedirects(response, '/login/?next=/flutype/')
 
     def test_antibody_view_302(self):
         response = self.c.post('/flutype/antibodies_mobile/', {})
@@ -498,6 +502,7 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         self.assertTrue("Dye001" in str(response.content))
         self.assertTrue("A001" in str(response.content))
         self.assertTrue("<td>A/Aichi/2/68 </td>" in str(response.content))
+
 
     def test_qspotcollection_view_200(self):
         fill_database(path_master=path_master, collection_ids=["2017-06-13_MTP"])
