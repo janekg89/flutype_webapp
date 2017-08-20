@@ -16,6 +16,8 @@ urlpatterns = [
     url(r'^peptidebatches_fixed/$', views.peptide_batch_fixed_view, name='peptidebatches_fixed'),
 
     url(r'^peptides/$', views.peptide_view, name='peptides'),
+    url(r'^peptides/new/$', views.peptide_new, name='peptide_new'),
+
     url(r'^peptides_mobile/$', views.peptide_mobile_view, name='peptides_mobile'),
     url(r'^peptides_fixed/$', views.peptide_fixed_view, name='peptides_fixed'),
 

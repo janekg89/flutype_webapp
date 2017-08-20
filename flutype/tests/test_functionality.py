@@ -28,7 +28,7 @@ class SeleniumTestCase(LiveServerTestCase):
     def tearDown(self):
         self.selenium.quit()
 
-    def test_login(self):
+    def test_login_and_redirect(self):
         expected_url='%s%s' % (self.live_server_url, '/flutype/viruses/')
         self.selenium.get(expected_url)
         self.selenium.find_element_by_id('id_username').send_keys("hmemczak")
@@ -40,7 +40,7 @@ class SeleniumTestCase(LiveServerTestCase):
 
 
     def test_virussid_links_web_database(self):
-        self.test_login()
+        self.test_login_and_redirect()
         self.selenium.get('%s%s' %(self.live_server_url,"/flutype/viruses/"))
         self.selenium.save_screenshot('flutype/tests/screenshot.png')
         self.selenium.find_element_by_link_text("387139").click()
