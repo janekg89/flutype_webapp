@@ -440,8 +440,8 @@
                         <h2>Boxplot</h2>
                         <div class="row" id="myDiv" style="height: 700px; min-width: 50px; max-width: 1500px; margin: 0 auto"></div>
                         <div  class="row" id="top" style="margin:0 auto">
-                            <button id="lin"> lin</button>
-                            <button id="log"> log</button>
+                            <button id="lin"  class="btn btn-info"> lin</button>
+                            <button id="log"  class="btn btn-info"> log</button>
                         </div>
                     </div>
             {% endif %}
@@ -562,7 +562,7 @@
     tooltip: {
         useHTML: true,
         formatter: function () {
-            return '<small> Information </small><table>'+
+            return '<small> Information </small><table id="detail_spot" class="cell-border">'+
                 '<tr><td> Fixed Ligand: </td>        <td style="text-align: right"> <b>' + lig1[this.point.y][this.point.x] + '</b></td>    <td style="text-align: right"> ' + '['+con1[this.point.y][this.point.x]+']'+ ' </td></tr>' +
                 '<tr><td> Mobile Ligand:</td>     <td style="text-align: right"> <b>' + lig2[this.point.y][this.point.x] + '</b></td>    <td style="text-align: right"> ' + '['+con2[this.point.y][this.point.x]+']'+ ' </td></tr>' +
                 '<tr><td> Intensity:</td>     <td style="text-align: right"> <b>' + this.point.value + '</b></td>    <td style="text-align: right">  </td></tr>' +
@@ -584,6 +584,7 @@
     }]
 
 });
+
 </script>
 
 <script>
