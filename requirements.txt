@@ -16,3 +16,4 @@ django-imagekit
 djangorestframework
 matplotlib
 selenium==2.53.6
+django-crispy-forms

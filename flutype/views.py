@@ -1,20 +1,27 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
+from django.template.context_processors import csrf
+from django.views.decorators.csrf import csrf_exempt
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
+
+from .forms import PeptideForm
 from .models import RawSpotCollection,SpotCollection,Process, PeptideBatch, Peptide, VirusBatch, Virus, AntibodyBatch, Antibody
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404, render_to_response,render, redirect
 
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
-from django.shortcuts import render, redirect
 
-from django.views.decorators.csrf import csrf_exempt
+from django.views.generic.list import ListView
+from django.views.generic.edit import ModelFormMixin
+
 
 from django.db.models import Max
 import json
@@ -437,7 +444,7 @@ def barplot_view(request, pk):
 
     fig = ana.barplot(align="vir", scale="log", figsize=(20, 10))
     plotly_fig = tls.mpl_to_plotly(fig)
-    div = plot(plotly_fig, auto_open=False, output_type='div')
+    context = plot(plotly_fig, auto_open=False, output_type='div')
 
     return context
 
@@ -468,17 +475,6 @@ def highcharts_view(request,pk):
     return render(request,
                   'flutype/highcharts.html', context)
 
-@csrf_exempt
-def heatmap_highchart_view(request,pk):
-    """
-    List all code snippets, or create a new snippet.
-    """
-    rsc = get_object_or_404(RawSpotCollection, id=pk)
-
-    rawspots=rsc.rawspot_set.all()
-    serializer = RawSpotSerializer(instance=rawspots, many=True)
-    return JsonResponse(serializer.data,safe=False)
-
 
 
 @login_required
@@ -497,3 +493,15 @@ def change_password_view(request):
     return render(request, 'registration/change_password.html', {
         'form': form
         })
+
+@login_required
+def peptide_new(request):
+    if request.method == 'POST':
+        form = PeptideForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('peptides')
+    else:
+        form = PeptideForm()
+        return render(request,'flutype/create_peptide.html',{'form':form})
+
