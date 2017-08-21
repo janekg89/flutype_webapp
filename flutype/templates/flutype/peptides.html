@@ -22,6 +22,7 @@
                     <th>C-Terminus</th>
                     <th>Name</th>
                     <th>Comment</th>
+                    <th>Edit</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -34,6 +35,8 @@
                         <td>{{ p.c_terminus }}</td>
                         <td>{{ p.name }}</td>
                         <td>{{ p.comment }}</td>
+                        <td><a href="{{url('peptide_edit', args=[p.id])}}" class="top-menu"><span class="fa fa-pencil" aria-hidden="true"></span> </a>
+                            <a href="{{url('peptide_delete', args=[p.id])}}" class="top-menu"><span class="fa fa-trash" aria-hidden="true"></span> </a> </td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -49,7 +52,9 @@
 {% block javascript %}
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
-            $('#peptides').DataTable();
-        });
+    $('#peptides').DataTable( {
+    } );
+} );
+
     </script>
 {% endblock %}
