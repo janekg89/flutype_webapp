@@ -56,7 +56,6 @@ import sys
 import cv2
 import csv
 import re
-from flutype_analysis import utils
 import pandas as pd
 import numpy as np
 from django.core.files import File
@@ -612,7 +611,7 @@ if __name__ == "__main__":
     # read microarrays
     for collection_id in microarray_collection_ids:
         # loading gal_vi,gal_pep, picture,data, data_std
-        dic_data = utils.load_data(collection_id, PATTERN_DIR_MICROARRAY.format(collection_id))
+        #dic_data = utils.load_data(collection_id, PATTERN_DIR_MICROARRAY.format(collection_id))#fixme
 
         # renaming keys
         dic_data = rename_dic(dic_data)
@@ -631,7 +630,7 @@ if __name__ == "__main__":
     # Read microwells
     for collection_id in microwell_collection_ids:
         # loading gal_vi,gal_pep, picture,data, data_std
-        dic_data = utils.load_data(collection_id, PATTERN_DIR_MICROWELL.format(collection_id))
+        #dic_data = utils.load_data(collection_id, PATTERN_DIR_MICROWELL.format(collection_id)) #fixme
         # renaming keys
         dic_data = rename_dic(dic_data)
         # loading procedure data from formular
