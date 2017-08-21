@@ -12,6 +12,7 @@ from django.test import Client
 
 from flutype.models import RawSpotCollection, SpotCollection, Process
 
+
 class SeleniumTestCase(LiveServerTestCase):
 
     @classmethod
@@ -36,8 +37,6 @@ class SeleniumTestCase(LiveServerTestCase):
         self.selenium.find_element_by_name('submit_button').click()
         self.selenium.save_screenshot('flutype/tests/screenshot.png')
         self.assertIn(expected_url, self.selenium.current_url)
-
-
 
     def test_virussid_links_web_database(self):
         self.test_login_and_redirect()
