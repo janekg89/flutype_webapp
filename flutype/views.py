@@ -18,6 +18,7 @@ from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 
+from django.urls import reverse_lazy
 from django.views.generic.edit import DeleteView
 
 
@@ -161,15 +162,12 @@ def peptide_view(request):
     return render(request,
                   'flutype/peptides.html', context)
 
-
+@login_required
 class DeletePeptideView(DeleteView):
-
     model = PeptideForm
     template_name = 'flutype/create_peptide.html'
     #fields = "__all__"
-
-    def get_success_url(self):
-        return reverse('peptides')
+    success_url = reverse_lazy('peptides')
 
 @login_required
 def peptide_mobile_view(request):
@@ -179,7 +177,7 @@ def peptide_mobile_view(request):
         'peptides': peptides,
     }
     return render(request,
-                  'flutype/peptides', context)
+                  'flutype/peptides.html', context)
 @login_required
 def peptide_fixed_view(request):
     peptides = Peptide.objects.filter(ligands1__isnull=False).distinct()
