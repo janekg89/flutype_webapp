@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.template.context_processors import csrf
-from django.views.decorators.csrf import csrf_exempt
+from django.urls.base import reverse
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 
 from .forms import PeptideForm
 from .models import RawSpotCollection,SpotCollection,Process, PeptideBatch, Peptide, VirusBatch, Virus, AntibodyBatch, Antibody
-from django.shortcuts import get_object_or_404, render_to_response,render, redirect
+from django.shortcuts import get_object_or_404,render, redirect
 
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from django.contrib.auth.decorators import login_required
@@ -19,14 +18,13 @@ from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 
-from django.views.generic.list import ListView
-from django.views.generic.edit import ModelFormMixin
+from django.views.generic.edit import DeleteView
 
 
 from django.db.models import Max
 import json
 import plotly.tools as tls
-from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+from plotly.offline import plot
 
 def empty_list(max):
     list = []
@@ -86,6 +84,8 @@ def processes_view(request):
     }
     return render(request,
                   'flutype/processes.html', context)
+
+
 @login_required
 def process_view(request,pk):
     process = get_object_or_404(Process, id=pk)
@@ -160,6 +160,17 @@ def peptide_view(request):
     }
     return render(request,
                   'flutype/peptides.html', context)
+
+
+class DeletePeptideView(DeleteView):
+
+    model = PeptideForm
+    template_name = 'flutype/create_peptide.html'
+    #fields = "__all__"
+
+    def get_success_url(self):
+        return reverse('peptides')
+
 @login_required
 def peptide_mobile_view(request):
     peptides = Peptide.objects.filter(ligands2__isnull=False).distinct()
@@ -168,7 +179,7 @@ def peptide_mobile_view(request):
         'peptides': peptides,
     }
     return render(request,
-                  'flutype/peptides.html', context)
+                  'flutype/peptides', context)
 @login_required
 def peptide_fixed_view(request):
     peptides = Peptide.objects.filter(ligands1__isnull=False).distinct()
@@ -505,3 +516,24 @@ def peptide_new(request):
         form = PeptideForm()
         return render(request,'flutype/create_peptide.html',{'form':form})
 
+@login_required
+def peptide_edit(request,pk):
+    instance = get_object_or_404(Peptide, id=pk)
+    if request.method == 'POST':
+        if request.POST.get('delete'):
+            instance.delete()
+            return redirect('peptides')
+
+        form = PeptideForm(request.POST,instance=instance)
+        if form.is_valid():
+            form.save()
+            return redirect('peptides')
+    else:
+        form = PeptideForm(instance= instance)
+        return render(request,'flutype/create_peptide.html',{'form':form})
+
+
+def delete(request, upload_id):
+    p = Peptide.objects.get(pk=upload_id)
+    p.delete()
+    return HttpResponseRedirect('your-dashboard-url')

@@ -9,7 +9,10 @@ from flutype.data_management.fill_users import create_users, user_defs
 from flutype.data_management.fill_database import fill_database, path_master
 
 from flutype.models import RawSpotCollection, SpotCollection, Process
+import sys
 
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 class ViewTestCaseNoDataLogOut(TestCase):
 
