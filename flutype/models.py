@@ -16,9 +16,6 @@ from djchoices import DjangoChoices, ChoiceItem
 from django.core.files.storage import FileSystemStorage
 
 from django_pandas.io import read_frame
-
-
-from flutype_analysis import analysis
 from flutype_webapp.settings import MEDIA_ROOT
 
 fs = FileSystemStorage(location=MEDIA_ROOT)
