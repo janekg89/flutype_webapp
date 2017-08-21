@@ -1,0 +1,175 @@
+{% extends "flutype/base.html" %}
+<!-- RENDERS RAWSPOTCOLLECTION OR QUANTIFIEDSPOTCOLLECTION -->
+{% block head %}
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/heatmap.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<div id="container" style="height: 500px; min-width: 50px; max-width: 1200px; margin: 0 auto"></div>
+
+    <div id="myDiv" style="height: 500px; min-width: 50px; max-width: 1200px; margin: 0 auto"></div>
+
+<div  id="top" style="margin:0 auto">
+    <button id="lin"> lin</button>
+    <button id="log"> log</button>
+</div>
+<!--javascript for charts
+-->
+
+<script>
+    var endpoint = './data';
+
+$.ajax({
+    method: "GET",
+    url: endpoint,
+    success: function(data){
+        dataPlot = data;
+        Plotly.newPlot('myDiv', Chart(dataPlot));
+    },
+    error: function(error_data){
+        console.log("error");
+        console.log(error_data)
+         }
+    });
+
+$('#lin').click(function(){
+    var update ={
+        "layout.yaxis.type" : "lin"
+    }
+    var myDiv = document.getElementById("myDiv");
+    myDiv.layout.yaxis.type = "lin" ;
+
+    Plotly.restyle("myDiv",update);
+});
+
+$('#log').click(function(){
+    var update ={
+        "layout.yaxis.type" : "log"
+    }
+    var myDiv = document.getElementById("myDiv");
+    myDiv.layout.yaxis.type = "log" ;
+
+    Plotly.restyle("myDiv", update);
+});
+
+function Chart(dataPlot) {
+    var data = []
+    for (var i = 0; i < dataPlot.box_list.length; i++) {
+        if (dataPlot.lig1[i] == null) {
+            var name = "Empty"
+        } else {
+            var name = dataPlot.box_list[i].lig1 + " [" + dataPlot.box_list[i].lig1_con + "]";
+        };
+        var trace1 = {
+            y: dataPlot.box_list[i].intensity,
+            x: dataPlot.box_list[i].lig2,
+            boxpoints: 'all',
+            name: name,
+            type: 'box',
+            jitter: 0.5,
+            fillcolor: 'cls',
+            marker: {
+              size: 3
+            },
+        };
+        data.push(trace1);
+    }
+
+    var layout = {
+        yaxis: {
+            type: "log",
+            title: 'Intensity',
+            zeroline: false
+        },
+        boxmode: 'group'
+    };
+
+    return {
+        data:data,
+        layout:layout
+            }
+}
+
+</script>
+
+    <script>
+
+    var lig1 = {{ lig1|safe}};
+    var lig2 = {{ lig2|safe}};
+    var con1 = {{ con1|safe}};
+    var con2 = {{ con2|safe}};
+
+    Highcharts.chart('container', {
+
+    chart: {
+        type: 'heatmap',
+        marginTop: 40,
+        marginBottom: 80,
+        plotBorderWidth: 1
+    },
+
+    title: {
+        text: 'Ligands Arrangement'
+    },
+
+    xAxis: {
+
+        categories: {{row_list|safe}},
+        title: "rows",
+        type: "category"
+    },
+
+    yAxis: {
+        categories: {{column_list|safe}},
+        title: null
+    },
+
+    colorAxis: {
+        reversed: false,
+        min: 0,
+        minColor: Highcharts.getOptions().colors[7],
+        maxColor: '#FFFFFF',
+
+    },
+
+    legend: {
+        align: 'right',
+        layout: 'vertical',
+        margin: 0,
+        verticalAlign: 'bottom',
+        y: -53,
+        symbolHeight: 280
+    },
+
+    tooltip: {
+        useHTML: true,
+        formatter: function () {
+            return '<small> Information </small><table>'+
+                '<tr><td> Fixed Ligand: </td>        <td style="text-align: right"> <b>' + lig1[this.point.x][this.point.y] + '</b></td>    <td style="text-align: right"> ' + '['+con1[this.point.x][this.point.y]+']'+ ' </td></tr>' +
+                '<tr><td> Mobile Ligand:</td>     <td style="text-align: right"> <b>' + lig2[this.point.x][this.point.y] + '</b></td>    <td style="text-align: right"> ' + '['+con2[this.point.x][this.point.y]+']'+ ' </td></tr>' +
+                '</table>';
+        }
+    },
+
+
+    series: [{
+        animation: true,
+        name: 'Ligands Arrangement',
+        borderWidth: 1,
+        data: {{ data }},
+        dataLabels: {
+            enable:true,
+
+        }
+    }]
+
+});
+</script>
+
+{% endblock %}
+
