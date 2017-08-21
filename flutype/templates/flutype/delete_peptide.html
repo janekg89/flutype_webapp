@@ -5,11 +5,18 @@
 
 <p>Are you sure you want to delete the peptide [{{ peptide.sid }}]?</p>
 
-<form action="" method="post">
+<form method="post">
+<span style="float:left;">
     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
-  <input type="submit" value="Yes, delete." />
-  <a href="{{url('peptides')}}">No, cancel.</a>
+  <input class="btn btn-default"  type="submit" value="Yes, delete." />
+    </span>
 </form>
 
+    <form action={{url('peptides')}}>
+    <span style="float:left;">
+
+    <button class="btn btn-default"> No, cancel.</button>
+        </span>
+    </form>
 {% endblock %}
