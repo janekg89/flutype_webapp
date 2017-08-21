@@ -10,7 +10,7 @@ from flutype.data_management.fill_database import fill_database, path_master
 
 from flutype.models import RawSpotCollection, SpotCollection, Process
 import sys
-
+from imp import reload
 reload(sys)
 sys.setdefaultencoding('utf8')
 

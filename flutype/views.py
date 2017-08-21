@@ -165,8 +165,8 @@ def peptide_view(request):
 @login_required
 class DeletePeptideView(DeleteView):
     model = PeptideForm
-    template_name = 'flutype/create_peptide.html'
-    #fields = "__all__"
+    template_name = 'flutype/delete_peptide.html'
+    fields = "__all__"
     success_url = reverse_lazy('peptides')
 
 @login_required
