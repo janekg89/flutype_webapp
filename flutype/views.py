@@ -151,8 +151,6 @@ def peptide_batch_fixed_view(request):
     return render(request,
                   'flutype/peptidebatches.html', context)
 
-
-
 @login_required
 def peptide_view(request):
     peptides = Peptide.objects.all()
@@ -161,13 +159,6 @@ def peptide_view(request):
     }
     return render(request,
                   'flutype/peptides.html', context)
-
-@login_required
-class DeletePeptideView(DeleteView):
-    model = PeptideForm
-    template_name = 'flutype/delete_peptide.html'
-    fields = "__all__"
-    success_url = reverse_lazy('peptides')
 
 @login_required
 def peptide_mobile_view(request):
@@ -378,88 +369,6 @@ def quantified_spot_collection(request, pk):
     return render(request,
                   'flutype/spotcollection.html', context)
 
-
-@login_required
-def heatmap_view(request, pk):
-    """ View to render a heatmap as png response.
-
-    :param request:
-    :param pk:
-    :return:
-    """
-
-    sc = get_object_or_404(SpotCollection, id=pk)
-
-    # create a matplotlib plot
-    ana = sc.analysis()
-
-    # ! the figure must be created with:
-    # from matplotlib.figure import Figure
-    # fig = Figure(**kwargs)
-
-    fig = ana.heatmap(heatmap=True, descript=False, figsize=(10, 15))
-
-    canvas = FigureCanvas(fig)
-    response = HttpResponse(content_type='image/png')
-    canvas.print_png(response)
-
-    return response
-
-# FIXME: typo
-@login_required
-def desciptmap_view(request, pk):
-    """ View to render a heatmap as png response.
-
-    :param request:
-    :param pk:
-    :return:
-    """
-
-    rsc = get_object_or_404(RawSpotCollection, id=pk)
-
-    # create a matplotlib plot
-    ana = rsc.analysis()
-
-    # ! the figure must be created with:
-    # from matplotlib.figure import Figure
-    # fig = Figure(**kwargs)
-
-    fig = ana.heatmap(heatmap=False, descript=True, figsize=(10, 15))
-
-    canvas = FigureCanvas(fig)
-    response = HttpResponse(content_type='image/png')
-    canvas.print_png(response)
-
-    return response
-
-@login_required
-def barplot_view(request, pk):
-    """ View to render a heatmap as png response.
-
-    :param request:
-    :param pk:
-    :return:
-    """
-
-    sc = get_object_or_404(SpotCollection, id=pk)
-
-    # create a matplotlib plot
-    ana = sc.analysis()
-
-    # ! the figure must be created with:
-    # from matplotlib.figure import Figure
-    # fig = Figure(**kwargs)
-
-
-    fig = ana.barplot(align="vir", scale="log", figsize=(20, 10))
-    plotly_fig = tls.mpl_to_plotly(fig)
-    context = plot(plotly_fig, auto_open=False, output_type='div')
-
-    return context
-
-
-
-
 @login_required
 def highcharts_view(request,pk):
     sc = get_object_or_404(SpotCollection, id=pk)
@@ -516,12 +425,8 @@ def peptide_new(request):
 
 @login_required
 def peptide_edit(request,pk):
-    instance = get_object_or_404(Peptide, id=pk)
+    instance = get_object_or_404(Peptide, pk=pk)
     if request.method == 'POST':
-        if request.POST.get('delete'):
-            instance.delete()
-            return redirect('peptides')
-
         form = PeptideForm(request.POST,instance=instance)
         if form.is_valid():
             form.save()
@@ -530,8 +435,10 @@ def peptide_edit(request,pk):
         form = PeptideForm(instance= instance)
         return render(request,'flutype/create_peptide.html',{'form':form})
 
-
-def delete(request, upload_id):
-    p = Peptide.objects.get(pk=upload_id)
-    p.delete()
-    return HttpResponseRedirect('your-dashboard-url')
+@login_required
+def peptide_delete(request, pk):
+    peptide = get_object_or_404(Peptide, pk=pk)
+    if request.method=='POST':
+        peptide.delete()
+        return redirect('peptides')
+    return render(request, 'flutype/delete_peptide.html',{'peptide':peptide})
