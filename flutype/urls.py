@@ -18,7 +18,7 @@ urlpatterns = [
     url(r'^peptides/$', views.peptide_view, name='peptides'),
     url(r'^peptides/new/$', views.peptide_new, name='peptide_new'),
     url(r'^peptides/edit/(?P<pk>[0-9]+)/$', views.peptide_edit, name='peptide_edit'),
-    url(r'^peptides/delete/(?P<pk>\d+)/$', views.DeletePeptideView,name='peptide_delete' ),
+    url(r'^peptides/delete/(?P<pk>[0-9]+)/$', views.peptide_delete,name='peptide_delete' ),
 
     url(r'^peptides_mobile/$', views.peptide_mobile_view, name='peptides_mobile'),
     url(r'^peptides_fixed/$', views.peptide_fixed_view, name='peptides_fixed'),
@@ -47,9 +47,6 @@ urlpatterns = [
     url(r'^qspotcollection/(?P<pk>[0-9]+)/$', views.quantified_spot_collection, name='qspotcollectionview'),
 
     # render heatmap image
-    url(r'^rawspotcollection/(?P<pk>[0-9]+)/heatmap$', views.desciptmap_view, name='desciptmapview'),
-    url(r'^qspotcollection/(?P<pk>[0-9]+)/heatmap$', views.heatmap_view, name='heatmapview'),
-    url(r'^qspotcollection/(?P<pk>[0-9]+)/barplot$', views.barplot_view, name='barplotview'),
     url(r'^qspotcollection/(?P<pk>[0-9]+)/data$', views.barplot_data_view, name='barplot_plotly'),
     url(r'^qspotcollection/(?P<pk>[0-9]+)/barplot_p$', views.highcharts_view, name='heatmap_highchart'),
     ]
