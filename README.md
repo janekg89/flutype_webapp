@@ -1,7 +1,7 @@
 <img alt="flutype logo" src="./docs/logo/flutype-logo-v3.png" height="75"/>
 
 # flutype webapp
-[![Build Status](https://travis-ci.org/janekg89/flutype_webapp.svg?branch=develop)](https://travis-ci.org/janekg89/flutype_analysis)
+[![Build Status](https://travis-ci.org/janekg89/flutype_webapp.svg?branch=develop)](https://travis-ci.org/janekg89/flutype_webapp)
 ## Introduction
 This project develops a web application for the data management of binding assays for the classification of influenza subtypes.
  
