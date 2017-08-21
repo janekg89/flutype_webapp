@@ -1,19 +1,23 @@
-# flutype_analysis>=0.0.2
-django>=1.11.3
 pyexcel
 pyexcel-ods
-django-pandas
-django-choices
-django-debug-toolbar
+
 opencv-python
 Pillow == 4.1.1
 gunicorn
 psycopg2
 jinja2
+matplotlib
+selenium==2.53.6
+
+django>=1.11.3
+django-pandas
+django-choices
+django-debug-toolbar
 django-model-utils
 django-polymorphic
 django-imagekit
 djangorestframework
-matplotlib
-selenium==2.53.6
 django-crispy-forms
+
+
+
