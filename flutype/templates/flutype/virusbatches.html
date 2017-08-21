@@ -3,13 +3,19 @@
     <!-- LIST OF RAWSPOTCOLLECTION -->
     <div class="row">
         <div class="col-lg-12">
-            <h1>Virus Batches</h1>
+            {% if type == "fixed" %}
+                <h1>Fixed Virus Batches</h1>
+            {% elif type == "mobile"%}
+                <h1>Mobile Virus Batches</h1>
+            {% else %}
+                <h1>Virus Batches</h1>
+            {% endif %}
             {% if virus_batches %}
             <table id="peptide_batches" class="table table-striped">
                 <thead>
                 <tr>
                     <th>sid Virus Batch</th>
-                    <th>sid Virus</th>
+                    <th>Taxonomy ID Virus</th>
                     <th>Subgroup</th>
                     <th>Country</th>
                     <th>Date of Appearance</th>
@@ -32,13 +38,17 @@
                         <td class="warning"><b>{{ virusbatch.sid }}</b></td>
 
                         <!-- virus information -->
-                        {%  with v=virusbatch.virus %}
+                        {%  with v=virusbatch.ligand %}
                         {% if v %}
-                        <td class="danger">{{ v.sid }}</td>
-                        <td class="danger">{{ v.subgroup }}</td>
-                        <td class="danger">{{ v.country }}</td>
-                        <td class="danger">{{ v.date_of_appearance }}</td>
-                        <td class="danger">{{ v.strain }}</td>
+                            {% if v.sid == "NO" %}
+                                <td class="danger"><b>{{ v.tax_id }}</b></td>
+                            {% else %}
+                                <td class="danger"><a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ v.sid }}"><b>{{ v.sid }}</b></a></td>
+                            {% endif %}
+                            <td class="danger">{{ v.subtype }}</td>
+                            <td class="danger">{{ v.isolation_country }}</td>
+                            <td class="danger">{{ v.collection_date }}</td>
+                            <td class="danger">{{ v.strain }}</td>
                         {%  else %}
                             {% for k in range(5) %}
                         <td class="danger">-</td>

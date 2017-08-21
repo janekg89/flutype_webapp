@@ -1,2 +1,5 @@
-HolderBatch	Manfacturer	SurfaceSubstance	Quenching	HolderType	Incubating	SID	Spotting
-				microarray		P3_170612_X31	
+manfacturer	
+holder_type	microarray
+sid	P3_170612_X31
+surface_substance	
+holder_batch	

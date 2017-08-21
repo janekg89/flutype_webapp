@@ -1,4 +1,4 @@
-	Peptide ID	Linker	Spacer	Sequence	C-terminus	Name	Types	Comment
+	sid	linker	spacer	sequence	c-terminus	name	types	comment
 0	Buffer001	NA	NA	NA	NA		BUF	Buffer
 1	Empty	NA	NA	NA	NA		EMP	Empty
 2	Dye001					DY-634	REF	
@@ -22,7 +22,6 @@
 20	P018	ßAKK		FYDYDVFY	amide		PEP	Peptid 15
 21	P019	KKK		FYDYDVFY	amide		PEP	Peptid 16
 22	P020	KKK		FYDYDVFF	amide		PEP	Peptid 17
-23	A001	NA	NA	NA	NA	Anti-Koerper 	AB	
 24	P1						PEP	
 25	P3						PEP	
 26	P4						PEP	

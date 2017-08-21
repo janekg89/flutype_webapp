@@ -1,2 +1,6 @@
-HolderBatch	Manfacturer	SurfaceSubstance	Quenching	HolderType	Incubating	SID	Spotting
-161118	PolyAn	3D-NHS	NO	microwell	I01	170509-00	S01
+manfacturer	PolyAn
+holder_type	microwell
+holder_batch	161118
+sid	170509-00
+surface_substance	3D-NHS
+user	hmemczak

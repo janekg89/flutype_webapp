@@ -1,2 +1,5 @@
-HolderBatch	Manfacturer	SurfaceSubstance	Quenching	HolderType	Incubating	SID	Spotting
-			Q01	microarray	I01	140516	S01
+manfacturer	
+holder_type	microarray
+sid	140516
+surface_substance	
+holder_batch	
