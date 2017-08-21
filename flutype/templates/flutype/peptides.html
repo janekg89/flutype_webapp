@@ -1,9 +1,16 @@
 {% extends "flutype/base.html" %}
 {% block content %}
-    <!-- LIST OF RAWSPOTCOLLECTION -->
     <div class="row">
         <div class="col-lg-12">
-            <h1>Peptides</h1>
+            <a href="{{url('peptide_new')}}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+            {% if type == "fixed" %}
+                <h1>Fixed Peptides</h1>
+            {% elif type == "mobile"%}
+                <h1>Mobile Peptides</h1>
+            {% else %}
+                <h1>Peptides</h1>
+
+            {% endif %}
             {% if peptides %}
             <table id="peptides" class="table table-striped">
                 <thead>
@@ -14,20 +21,18 @@
                     <th>Sequence</th>
                     <th>C-Terminus</th>
                     <th>Name</th>
-                    <th>Peptide Type</th>
                     <th>Comment</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for p in peptides.all() %}
                     <tr>
-                        <td class="warning"><b>{{p.sid }}</b></td>
+                        <td class="warning"> <b> {{p.sid }}</b> </td>
                         <td>{{ p.linker }}</td>
                         <td>{{ p.spacer }}</td>
                         <td>{{ p.sequence }}</td>
                         <td>{{ p.c_terminus }}</td>
                         <td>{{ p.name }}</td>
-                        <td>{{ p.pep_type }}</td>
                         <td>{{ p.comment }}</td>
                     </tr>
                 {% endfor %}

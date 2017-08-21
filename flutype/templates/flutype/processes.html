@@ -1,0 +1,51 @@
+{% extends "flutype/base.html" %}
+{% block content %}
+    <!-- LIST OF Virsuses -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1>Processes</h1>
+            {% if processes %}
+
+            <table id="processes" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Sid</th>
+
+                    <th>Steps</th>
+                    <th>Applied on RawSpot Collections</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for process in processes %}
+                    <tr>
+                        <td> <a href="{{ url('processview', args=[process.id])}}"> {{ process.sid }}  </a> </td>
+                        <td>
+                            {% for step in process.steps.all()%}
+                                {{ step.sid }}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for experiment in process.experiment_set.all()%}
+                                <a href="{{ url('rawspotcollectionview', args=[experiment.id]) }}">{{ experiment.sid}}</a>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {% else %}
+                <p>No entries in database.</p>
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#processes').DataTable();
+        });
+    </script>
+{% endblock %}

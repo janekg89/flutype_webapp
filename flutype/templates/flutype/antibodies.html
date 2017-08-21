@@ -1,0 +1,52 @@
+{% extends "flutype/base.html" %}
+{% block content %}
+    <!-- LIST OF RAWSPOTCOLLECTION -->
+    <div class="row">
+        <div class="col-lg-12">
+            {% if type == "fixed" %}
+                <h1>Fixed Antibodies</h1>
+            {% elif type == "mobile"%}
+                <h1>Mobile Antibodies</h1>
+            {% else %}
+                <h1>Antibodies</h1>
+            {% endif %}
+            {% if antibodies %}
+
+            <table id="antibodies" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Sid</th>
+                    <th>Target</th>
+                    <th>Name</th>
+                    <th>Database Link</th>
+                    <th>Comment</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for antibody in antibodies %}
+                    <tr>
+                        <td class="warning"><b>{{ antibody.sid }}</b></td>
+                        <td>{{ antibody.target }}</td>
+                        <td>{{ antibody.name }}</td>
+                        <td>{{ antibody.link_db }}</td>
+                        <td>{{ antibody.comment }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {% else %}
+                <p>No entries in database.</p>
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#antibodies').DataTable();
+        });
+    </script>
+{% endblock %}
