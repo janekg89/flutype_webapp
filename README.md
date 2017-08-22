@@ -18,8 +18,12 @@ mkvirtualenv flutype_webapp
 (flutype_webapp) python manage.py runserver
 ```
 
-
 ## Testing
+Tests are run via
+```
+(flutype_webapp) python manage.py test
+```
+
 Running the unittests requires `phantomjs` which can be installed via the
 following the instructions on
 https://www.vultr.com/docs/how-to-install-phantomjs-on-ubuntu-16-04
@@ -31,18 +35,25 @@ sudo ln -s /usr/local/share/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/loca
 phantomjs --version
 ```
 
-The tests are run via
-```
-(flutype_webapp) python manage.py test
-```
 
 ## Container & Deployment
+For testing and deployment gunicorn and docker scripts are available. These are still experimental.
 
 ### gunicorn
-gunicorn --bind 0.0.0.0:8000 flutype_webapp.wsgi:application
+To test if gunicorn can serve the WSGI application use
+```
+(flutype_webapp) gunicorn --bind 0.0.0.0:8000 flutype_webapp.wsgi:application
+```
+This will not serve the static files but check if the WSGI django works with gunicorn,
+which is close to the actual deployment setup.
+
+Gunicorn can be installed via
+```
+sudo apt-get install gunicorn
+```
 
 ### Docker
-Install docker via `docker-ce` and `docker-compose` on the system.
+Install `docker-ce` and `docker-compose` on the system.
 
 Run the app via
 ```
