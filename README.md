@@ -8,23 +8,40 @@ This project develops a web application for the data management of binding assay
 The production version is available at
 [http://www.flutype.de](http://www.flutype.de).
 
-## Installation
+## Setup
+To test the webapp with sqlite3 backend just clone the repository
+and run the django development server
 ```
+git clone https://github.com/janekg89/flutype_webapp.git
 mkvirtualenv flutype_webapp
-pip install -r requirements.txt
+(flutype_webapp) pip install -r requirements.txt
+(flutype_webapp) python manage.py runserver
 ```
 
-## Start the App
+
+## Testing
+Running the unittests requires `phantomjs` which can be installed via the
+following the instructions on
+https://www.vultr.com/docs/how-to-install-phantomjs-on-ubuntu-16-04
 ```
-cd flutype_webapp
-./docker-entrypoint.sh
+sudo apt-get install build-essential chrpath libssl-dev libxft-dev libfreetype6-dev libfreetype6 libfontconfig1-dev libfontconfig1 -y
+sudo wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2
+sudo tar xvjf phantomjs-2.1.1-linux-x86_64.tar.bz2 -C /usr/local/share/
+sudo ln -s /usr/local/share/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/
+phantomjs --version
 ```
 
-## pycharm integration
-right click `db.sqlite3` -> As Data Source
+The tests are run via
+```
+(flutype_webapp) python manage.py test
+```
 
+## Container & Deployment
 
-## Docker container
+### gunicorn
+gunicorn --bind 0.0.0.0:8000 flutype_webapp.wsgi:application
+
+### Docker
 Install docker via `docker-ce` and `docker-compose` on the system.
 
 Run the app via
@@ -32,9 +49,9 @@ Run the app via
 docker-compose up
 ```
 
-# gunicorn & deployment
-gunicorn --bind 0.0.0.0:8000 flutype_webapp.wsgi:application
+```
+cd flutype_webapp
+./docker-entrypoint.sh
+```
 
-# install PhantomJS
- follow: https://www.vultr.com/docs/how-to-install-phantomjs-on-ubuntu-16-04
 &copy; 2017 flutype
