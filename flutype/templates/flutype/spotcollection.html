@@ -508,7 +508,7 @@
         });
     </script>
 
-        <script>
+    <script>
 
     var lig1 = {{ lig1|safe}};
     var lig2 = {{ lig2|safe}};
@@ -516,7 +516,6 @@
     var con2 = {{ con2|safe}};
 
     Highcharts.chart('container', {
-
     chart: {
         type: 'heatmap',
         marginTop: 40,
@@ -571,7 +570,6 @@
         }
     },
 
-
     series: [{
         animation: true,
         name: 'Heatmap',
@@ -587,7 +585,7 @@
 
 </script>
 
-<script>
+<script >
 var endpoint = './data';
 
 $.ajax({
@@ -656,6 +654,7 @@ function Chart(dataPlot) {
     };
 
     return {
+
         data:data,
         layout:layout
             }
