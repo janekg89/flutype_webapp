@@ -52,7 +52,6 @@ class SeleniumTestCase(LiveServerTestCase):
         expected_url = '%s%s%s' %(self.live_server_url,'/flutype/qspotcollection/', id)
         self.login(expected_url)
         # keep a watch on jQuery 'active' attribute
-        WebDriverWait(self.driver, 10).until(lambda s: s.execute_script("return jQuery.active == 0"))
         # page should be stable enough now, and we can perform desired actions
         elem = WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of_element_located((By.ID, 'container')))
         retval = self.driver.execute_script("return lig1",elem)
@@ -66,7 +65,6 @@ class SeleniumTestCase(LiveServerTestCase):
         expected_url = '%s%s%s' %(self.live_server_url,'/flutype/qspotcollection/', id)
         self.login(expected_url)
         # keep a watch on jQuery 'active' attribute
-        WebDriverWait(self.driver, 10).until(lambda s: s.execute_script("return jQuery.active == 0"))
         # page should be stable enough now, and we can perform desired actions
         elem = WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of_element_located((By.ID, 'myDiv')))
         retval = self.driver.execute_script("return Chart(dataPlot)",elem)
