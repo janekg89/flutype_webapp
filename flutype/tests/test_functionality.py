@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.by import By
+
 from flutype_webapp.settings import DEFAULT_USER_PASSWORD
 from django.test import LiveServerTestCase
 from selenium import webdriver
@@ -53,6 +54,7 @@ class SeleniumTestCase(LiveServerTestCase):
         self.login(expected_url)
         # keep a watch on jQuery 'active' attribute
         # page should be stable enough now, and we can perform desired actions
+        self.driver.implicitly_wait(10)
         elem = WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of_element_located((By.ID, 'container')))
         retval = self.driver.execute_script("return lig1",elem)
         self.assertEqual(len(retval) , 25)
@@ -66,6 +68,7 @@ class SeleniumTestCase(LiveServerTestCase):
         self.login(expected_url)
         # keep a watch on jQuery 'active' attribute
         # page should be stable enough now, and we can perform desired actions
+        self.driver.implicitly_wait(10)
         elem = WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of_element_located((By.ID, 'myDiv')))
         retval = self.driver.execute_script("return Chart(dataPlot)",elem)
         self.assertEqual(len(retval),2 )
