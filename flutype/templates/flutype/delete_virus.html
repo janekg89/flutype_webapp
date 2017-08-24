@@ -1,0 +1,22 @@
+{% extends "flutype/base.html" %}
+{% block content %}
+
+<h1>Delete Virus</h1>
+
+<p>Are you sure you want to delete the virus [{{ virus.sid }}]?</p>
+
+<form method="post">
+<span style="float:left;">
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+  <input class="btn btn-default"  type="submit" value="Yes, delete." />
+    </span>
+</form>
+
+    <form action={{url('viruses')}}>
+    <span style="float:left;">
+
+    <button class="btn btn-default"> No, cancel.</button>
+        </span>
+    </form>
+{% endblock %}
