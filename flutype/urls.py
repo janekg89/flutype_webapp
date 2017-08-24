@@ -12,6 +12,11 @@ urlpatterns = [
     url(r'^process/(?P<pk>[0-9]+)/$', views.process_view, name='processview'),
 
     url(r'^peptidebatches/$', views.peptide_batch_view, name='peptidebatches'),
+    url(r'^peptidebatches/new/$', views.peptide_batch_new, name='peptide_batch_new'),
+    url(r'^peptidebatches/edit/(?P<pk>[0-9]+)/$', views.peptide_batch_edit, name='peptide_batch_edit'),
+    url(r'^peptidebatches/delete/(?P<pk>[0-9]+)/$', views.peptide_batch_delete, name='peptide_batch_delete'),
+
+
     url(r'^peptidebatches_mobile/$', views.peptide_batch_mobile_view, name='peptidebatches_mobile'),
     url(r'^peptidebatches_fixed/$', views.peptide_batch_fixed_view, name='peptidebatches_fixed'),
 
@@ -24,6 +29,10 @@ urlpatterns = [
     url(r'^peptides_fixed/$', views.peptide_fixed_view, name='peptides_fixed'),
 
     url(r'^virusbatches/$', views.virus_batch_view, name='virusbatches'),
+    url(r'^virusbatches/new/$', views.virus_batch_new, name='virus_batch_new'),
+    url(r'^virusbatches/edit/(?P<pk>[0-9]+)/$', views.virus_batch_edit, name='virus_batch_edit'),
+    url(r'^virusbatches/delete/(?P<pk>[0-9]+)/$', views.virus_batch_delete, name='virus_batch_delete'),
+
     url(r'^virusbatches_mobile/$', views.virus_batch_mobile_view, name='virusbatches_mobile'),
     url(r'^virusbatches_fixed/$', views.virus_batch_fixed_view, name='virusbatches_fixed'),
 
@@ -44,6 +53,10 @@ urlpatterns = [
     url(r'^antibodies_fixed/$', views.antibody_fixed_view, name='antibodies_fixed'),
 
     url(r'^antibodybatches/$', views.antibody_batch_view, name='antibodybatches'),
+    url(r'^antibodybatches/new/$', views.antibody_batch_new, name='antibody_batch_new'),
+    url(r'^antibodybatches/edit/(?P<pk>[0-9]+)/$', views.antibody_batch_edit, name='antibody_batch_edit'),
+    url(r'^antibodybatches/delete/(?P<pk>[0-9]+)/$', views.antibody_batch_delete, name='antibody_batch_delete'),
+
     url(r'^antibodybatches_mobile/$', views.antibody_batch_mobile_view, name='antibodybatches_mobile'),
     url(r'^antibodybatches_fixed/$', views.antibody_batch_fixed_view, name='antibodybatches_fixed'),
 

@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 
-from .forms import PeptideForm, VirusForm ,AntibodyForm
+from .forms import PeptideForm, VirusForm ,AntibodyForm, AntibodyBatchForm, PeptideBatchForm, VirusBatchForm
 from .models import RawSpotCollection,SpotCollection,Process, PeptideBatch, Peptide, VirusBatch, Virus, AntibodyBatch, Antibody
 from django.shortcuts import get_object_or_404,render, redirect
 
@@ -414,6 +414,8 @@ def change_password_view(request):
 
 @login_required
 def peptide_new(request):
+
+
     if request.method == 'POST':
         form = PeptideForm(request.POST)
         if form.is_valid():
@@ -421,9 +423,10 @@ def peptide_new(request):
             return redirect('peptides')
     else:
         form = PeptideForm()
-        return render(request,'flutype/create_peptide.html',{'form':form})
+        return render(request,'flutype/create.html',{'form':form, 'type':'peptide'})
 @login_required
 def virus_new(request):
+
     if request.method == 'POST':
         form = VirusForm(request.POST)
         if form.is_valid():
@@ -431,9 +434,11 @@ def virus_new(request):
             return redirect('viruses')
     else:
         form = VirusForm()
-        return render(request,'flutype/create_virus.html',{'form':form})
+        return render(request,'flutype/create.html',{'form':form, 'type':'virus'})
 @login_required
 def antibody_new(request):
+
+
     if request.method == 'POST':
         form = VirusForm(request.POST)
         if form.is_valid():
@@ -441,7 +446,7 @@ def antibody_new(request):
             return redirect('antibodies')
     else:
         form = AntibodyForm()
-        return render(request,'flutype/create_antibody.html',{'form':form})
+        return render(request,'flutype/create.html',{'form':form, 'type':'antibody'})
 
 
 @login_required
@@ -454,9 +459,10 @@ def peptide_edit(request,pk):
             return redirect('peptides')
     else:
         form = PeptideForm(instance= instance)
-        return render(request,'flutype/create_peptide.html',{'form':form})
+        return render(request,'flutype/create.html',{'form':form,'type':'peptide'})
 @login_required
 def virus_edit(request,pk):
+
     instance = get_object_or_404(Virus, pk=pk)
     if request.method == 'POST':
         form = VirusForm(request.POST,instance=instance)
@@ -465,10 +471,12 @@ def virus_edit(request,pk):
             return redirect('viruses')
     else:
         form = VirusForm(instance= instance)
-        return render(request,'flutype/create_virus.html',{'form':form})
+        return render(request,'flutype/create.html',{'form':form, 'type':'virus'})
 
 @login_required
 def antibody_edit(request,pk):
+
+
     instance = get_object_or_404(Antibody, pk=pk)
     if request.method == 'POST':
         form = AntibodyForm(request.POST,instance=instance)
@@ -476,28 +484,129 @@ def antibody_edit(request,pk):
             form.save()
             return redirect('antibodies')
     else:
+
         form = AntibodyForm(instance= instance)
-        return render(request,'flutype/create_antibody.html',{'form':form})
+        return render(request,'flutype/create.html',{'form':form,'type':'antibody'})
 
 @login_required
 def peptide_delete(request, pk):
+
     peptide = get_object_or_404(Peptide, pk=pk)
     if request.method=='POST':
         peptide.delete()
         return redirect('peptides')
-    return render(request, 'flutype/delete_peptide.html',{'peptide':peptide})
+    return render(request, 'flutype/delete.html',{'peptide':peptide, 'type':'peptide'})
 @login_required
 def virus_delete(request, pk):
+
     virus = get_object_or_404(Virus, pk=pk)
     if request.method=='POST':
         virus.delete()
         return redirect('viruses')
-    return render(request, 'flutype/delete_virus.html',{'virus':virus})
+    return render(request, 'flutype/delete.html',{'virus':virus, 'type':'virus'})
 
 @login_required
 def antibody_delete(request, pk):
+
     antibody = get_object_or_404(Antibody, pk=pk)
     if request.method=='POST':
         antibody.delete()
         return redirect('antibodies')
-    return render(request, 'flutype/delete_antibody.html',{'antibody':antibody})
+    return render(request, 'flutype/delete.html', {'antibody':antibody, 'type': 'antibody'})
+
+@login_required
+def antibody_batch_delete(request, pk):
+
+    antibody_batch = get_object_or_404(AntibodyBatch, pk=pk)
+    if request.method=='POST':
+        antibody_batch.delete()
+        return redirect('antibodybatches')
+    return render(request, 'flutype/delete.html', {'antibody_batch':antibody_batch, 'type': 'antibody_batch'})
+
+@login_required
+def peptide_batch_delete(request, pk):
+    peptide_batch = get_object_or_404(PeptideBatch, pk=pk)
+    if request.method=='POST':
+        peptide_batch.delete()
+        return redirect('peptidebatches')
+    return render(request, 'flutype/delete.html', {'peptide_batch':peptide_batch, 'type': 'peptide_batch'})
+
+@login_required
+def virus_batch_delete(request, pk):
+    virus_batch = get_object_or_404(VirusBatch, pk=pk)
+    if request.method=='POST':
+        virus_batch.delete()
+        return redirect('virusbatches')
+    return render(request, 'flutype/delete.html', {'virus_batch':virus_batch, 'type': 'virus_batch'})
+
+@login_required
+def antibody_batch_edit(request,pk):
+
+
+    instance = get_object_or_404(AntibodyBatch, pk=pk)
+    if request.method == 'POST':
+        form = AntibodyBatchForm(request.POST,instance=instance)
+        if form.is_valid():
+            form.save()
+            return redirect('antibodybatches')
+    else:
+        form = AntibodyBatchForm(instance= instance)
+        return render(request,'flutype/create.html',{'form':form,'type':'antibody_batch'})
+@login_required
+def virus_batch_edit(request,pk):
+
+
+    instance = get_object_or_404(VirusBatch, pk=pk)
+    if request.method == 'POST':
+        form = VirusBatchForm(request.POST,instance=instance)
+        if form.is_valid():
+            form.save()
+            return redirect('virusbatches')
+    else:
+        form = VirusBatchForm(instance= instance)
+        return render(request,'flutype/create.html',{'form':form,'type':'virus_batch'})
+@login_required
+def peptide_batch_edit(request,pk):
+
+    instance = get_object_or_404(PeptideBatch, pk=pk)
+    if request.method == 'POST':
+        form = PeptideBatchForm(request.POST,instance=instance)
+        if form.is_valid():
+            form.save()
+            return redirect('peptidebatches')
+    else:
+        form = PeptideBatchForm(instance= instance)
+        return render(request,'flutype/create.html',{'form':form,'type':'peptide_batch'})
+
+@login_required
+def peptide_batch_new(request):
+    if request.method == 'POST':
+        form = PeptideBatchForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('peptidebatches')
+    else:
+        form = PeptideBatchForm()
+        return render(request,'flutype/create.html',{'form':form, 'type':'peptide_batch'})
+
+@login_required
+def virus_batch_new(request):
+    if request.method == 'POST':
+        form = VirusBatchForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('virusbatches')
+    else:
+        form = VirusBatchForm()
+        return render(request, 'flutype/create.html', {'form': form, 'type': 'virus_batch'})
+
+@login_required
+def antibody_batch_new(request):
+    if request.method == 'POST':
+        form = AntibodyBatchForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('antibodybatches')
+    else:
+        form = AntibodyBatchForm()
+        return render(request,'flutype/create.html',{'form':form, 'type':'antibody_batch'})
