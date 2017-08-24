@@ -508,7 +508,7 @@
         });
     </script>
 
-    <script>
+<script type="text/javascript" charset="utf-8">
 
     var lig1 = {{ lig1|safe}};
     var lig2 = {{ lig2|safe}};
@@ -585,9 +585,8 @@
 
 </script>
 
-<script >
-var endpoint = './data';
-
+<script type="text/javascript" charset="utf-8">
+    var endpoint = './data';
 $.ajax({
     method: "GET",
     url: endpoint,
@@ -604,7 +603,7 @@ $.ajax({
 $('#lin').click(function(){
     var update ={
         "layout.yaxis.type" : "lin"
-    }
+    };
     var myDiv = document.getElementById("myDiv");
     myDiv.layout.yaxis.type = "lin" ;
 
@@ -614,7 +613,7 @@ $('#lin').click(function(){
 $('#log').click(function(){
     var update ={
         "layout.yaxis.type" : "log"
-    }
+    };
     var myDiv = document.getElementById("myDiv");
     myDiv.layout.yaxis.type = "log" ;
 
@@ -622,13 +621,13 @@ $('#log').click(function(){
 });
 
 function Chart(dataPlot) {
-    var data = []
+    var data = [];
     for (var i = 0; i < dataPlot.box_list.length; i++) {
         if (dataPlot.lig1[i] == null) {
             var name = "Empty"
         } else {
             var name = dataPlot.box_list[i].lig1 + " [" + dataPlot.box_list[i].lig1_con + "]";
-        };
+        }
         var trace1 = {
             y: dataPlot.box_list[i].intensity,
             x: dataPlot.box_list[i].lig2,
@@ -639,7 +638,7 @@ function Chart(dataPlot) {
             fillcolor: 'cls',
             marker: {
               size: 3
-            },
+            }
         };
         data.push(trace1);
     }
