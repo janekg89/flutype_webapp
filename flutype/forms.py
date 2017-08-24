@@ -1,6 +1,6 @@
 
 from django import forms
-from .models import Ligand, LigandBatch, Peptide, PeptideBatch, Virus, VirusBatch, Antibody
+from .models import  Peptide, PeptideBatch, Virus, VirusBatch, Antibody, AntibodyBatch, ProcessStep
 
 class PeptideForm(forms.ModelForm):
     class Meta:
@@ -19,4 +19,14 @@ class AntibodyForm(forms.ModelForm):
 class PeptideBatchForm(forms.ModelForm):
     class Meta:
         model = PeptideBatch
+        fields = '__all__'
+
+class VirusBatchForm(forms.ModelForm):
+    class Meta:
+        model = VirusBatch
+        fields = '__all__'
+
+class AntibodyBatchForm(forms.ModelForm):
+    class Meta:
+        model = AntibodyBatch
         fields = '__all__'
