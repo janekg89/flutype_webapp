@@ -28,10 +28,18 @@ urlpatterns = [
     url(r'^virusbatches_fixed/$', views.virus_batch_fixed_view, name='virusbatches_fixed'),
 
     url(r'^viruses/$', views.virus_view, name='viruses'),
+    url(r'^viruses/new/$', views.virus_new, name='virus_new'),
+    url(r'^viruses/edit/(?P<pk>[0-9]+)/$', views.virus_edit, name='virus_edit'),
+    url(r'^viruses/delete/(?P<pk>[0-9]+)/$', views.virus_delete, name='virus_delete'),
+
     url(r'^viruses_mobile/$', views.virus_mobile_view, name='viruses_mobile'),
     url(r'^viruses_fixed/$', views.virus_fixed_view, name='viruses_fixed'),
 
     url(r'^antibodies/$', views.antibody_view, name='antibodies'),
+    url(r'^antibodies/new/$', views.antibody_new, name='antibody_new'),
+    url(r'^antibodies/edit/(?P<pk>[0-9]+)/$', views.antibody_edit, name='antibody_edit'),
+    url(r'^antibodies/delete/(?P<pk>[0-9]+)/$', views.antibody_delete, name='antibody_delete'),
+
     url(r'^antibodies_mobile/$', views.antibody_mobile_view, name='antibodies_mobile'),
     url(r'^antibodies_fixed/$', views.antibody_fixed_view, name='antibodies_fixed'),
 
