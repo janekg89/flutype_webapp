@@ -8,6 +8,11 @@ urlpatterns = [
     url(r'^users/$', views.users_view, name='users'),
     url(r'^about/$', views.about_view, name='about'),
 
+    url(r'^steps/$', views.steps_view, name='steps'),
+    url(r'^steps/new/(?P<class_name>\w+)/$', views.steps_new, name='step_new'),
+    url(r'^steps/edit/(?P<pk>[0-9]+)/$', views.step_edit, name='step_edit'),
+    url(r'^steps/delete/(?P<pk>[0-9]+)/$', views.step_delete, name='step_delete'),
+
     url(r'^processes/$', views.processes_view, name='processesview'),
     url(r'^process/(?P<pk>[0-9]+)/$', views.process_view, name='processview'),
 
@@ -71,6 +76,8 @@ urlpatterns = [
     url(r'^qspotcollection/(?P<pk>[0-9]+)/data$', views.barplot_data_view, name='barplot_plotly'),
     url(r'^qspotcollection/(?P<pk>[0-9]+)/barplot_p$', views.highcharts_view, name='heatmap_highchart'),
     ]
+
+
 
 
 

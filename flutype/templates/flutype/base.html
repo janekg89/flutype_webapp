@@ -74,8 +74,17 @@
 
                         </ul>
                     </li>
-                    <li class="active"><a href={{ url('processesview')}}> <i class="fa fa-magic" aria-hidden="true"></i> Processes <span class="sr-only">(current)</span></a> </li>
+                    <li class="dropdown active" >
+                        <a data-toggle="dropdown" role="button" aria-expanded="false"> <i class="fa fa-magic" aria-hidden="true"></i> Process  <span class="caret"></span> </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href={{ url('processesview')}}> Processes <span class="sr-only">(current)</span></a> </li>
+                            <li><a href={{ url('steps')}}> Process Steps <span class="sr-only">(current)</span></a> </li>
+
+
+                        </ul>
+                    </li>
                     <li class="active"><a href="{{ url('users') }}"> <i class="fa fa-group fa-fw"></i> Users <span class="sr-only">(current)</span></a></li>
+
                 {% endif %}
                 <li class="active"><a href="{{ url('about') }}"><i class="fa fa-info fa-fw"></i> About <span class="sr-only">(current)</span></a></li>
             </ul>

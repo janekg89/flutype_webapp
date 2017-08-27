@@ -8,10 +8,9 @@ from rest_framework.response import Response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 
-from .forms import PeptideForm, VirusForm ,AntibodyForm, AntibodyBatchForm, PeptideBatchForm, VirusBatchForm
-from .models import RawSpotCollection,SpotCollection,Process, PeptideBatch, Peptide, VirusBatch, Virus, AntibodyBatch, Antibody
+from .forms import PeptideForm, VirusForm ,AntibodyForm, AntibodyBatchForm, PeptideBatchForm, VirusBatchForm, StepForm, QuenchingForm, WashingForm, DryingForm, SpottingForm, BlockingForm, IncubatingForm, ScanningForm
+from .models import RawSpotCollection,SpotCollection,Process, PeptideBatch, Peptide, VirusBatch, Virus, AntibodyBatch, Antibody, Step
 from django.shortcuts import get_object_or_404,render, redirect
-
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -610,3 +609,47 @@ def antibody_batch_new(request):
     else:
         form = AntibodyBatchForm()
         return render(request,'flutype/create.html',{'form':form, 'type':'antibody_batch'})
+
+@login_required
+def steps_view(request):
+    steps = Step.objects.all()
+    context = {
+        'steps': steps,
+    }
+    return render(request,
+           'flutype/process_steps.html', context)
+
+@login_required
+def steps_new(request, class_name):
+    if request.method == 'POST':
+
+        form = eval("{}Form(request.POST,instance=instance)".format(class_name))
+        if form.is_valid():
+            form.save()
+            return redirect('steps')
+    else:
+        form = eval("{}Form()".format(class_name))
+        return render(request, 'flutype/create.html', {'form': form, 'type': 'step', "class": class_name})
+
+@login_required
+def step_edit(request,pk):
+    instance = get_object_or_404(Step, pk=pk)
+    instance = instance.get_step_type
+    if request.method == 'POST':
+        form = eval("{}Form(request.POST,instance=instance)".format(instance.__class__.__name__))
+        if form.is_valid():
+            form.save()
+            return redirect('steps')
+    else:
+        form = eval("{}Form(instance=instance)".format(instance.__class__.__name__))
+        return render(request,'flutype/create.html',{'form':form,'type':'step', 'class' : instance.__class__.__name__})
+
+
+@login_required
+def step_delete(request, pk):
+
+    step = get_object_or_404(Step, pk=pk)
+    if request.method=='POST':
+        step.delete()
+        return redirect('steps')
+    return render(request, 'flutype/delete.html', {'step':step, 'type': 'step'})
