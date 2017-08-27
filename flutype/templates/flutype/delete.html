@@ -21,6 +21,10 @@
     {%elif type == "virus_batch"  %}
                         <h1>Delete Virus Batch</h1>
 <p>Are you sure you want to delete the virus_batch [{{ virus_batch.sid }}]?</p>
+
+    {%elif type == "step"  %}
+                        <h1>Delete Step</h1>
+<p>Are you sure you want to delete the {{ step.get_step_type.__class__.__name__ }} step [{{ step.sid }}]?</p>
     {% endif %}
 
 
@@ -49,6 +53,9 @@
 
     {%elif type == "virus_batch"  %}
        <form action={{url('virusbatches')}}>
+
+    {%elif type == "step"  %}
+       <form action={{url('steps')}}>
     {% endif %}
 
     <span style="float:left;">

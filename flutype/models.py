@@ -224,6 +224,8 @@ class Step(models.Model):
     objects = InheritanceManager()
     sid = models.CharField(max_length=CHAR_MAX_LENGTH,null=True, blank=True)
     method = models.CharField(max_length=300, null=True, blank=True)
+    temperature = models.CharField(max_length=300, null=True, blank=True)
+    comment = models.TextField(blank=True, null=True)
 
 
     @property
@@ -237,6 +239,13 @@ class Step(models.Model):
 class Washing(Step):
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
+
+class Blocking(Step):
+    substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
+    duration = models.DurationField(null=True, blank=True)
+
+class Scanning(Step):
+    pass
 
 
 class Drying(Step):
