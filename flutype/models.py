@@ -93,12 +93,6 @@ class Ligand(PolymorphicModel):
     comment = models.TextField(blank=True, null=True)
 
 
-
-
-
-
-
-
 class Peptide(Ligand):
     """
     Pepide ligand.
@@ -108,10 +102,6 @@ class Peptide(Ligand):
     sequence = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     c_terminus = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
-
-
-
-
 
 
 class Virus(Ligand):
@@ -126,14 +116,15 @@ class Virus(Ligand):
     collection_date = models.CharField(max_length=10, blank=True, null=True)
     strain = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
 
+
 class Antibody(Ligand):
     target = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     # FIXME: monoclonal/polyclonal
-    link_db =  models.URLField(blank=True, null=True)
+    link_db = models.URLField(blank=True, null=True)
 
 
-
+# TODO: complex
 
 
 ########################################
@@ -176,6 +167,7 @@ class LigandBatch(Batch):
     """
     ligand = models.ForeignKey(Ligand, blank=True, null=True)
     mobile = models.NullBooleanField(blank=True, null=True)
+
 
 class VirusBatch(LigandBatch):
     """
@@ -225,14 +217,15 @@ class Step(models.Model):
         return subclass_object
 
 
-
 class Washing(Step):
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
 
+
 class Blocking(Step):
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
+
 
 class Scanning(Step):
     pass
@@ -285,6 +278,10 @@ class Experiment(models.Model):
 
 
 class Process(models.Model):
+    """ A process is a collection of process steps.
+    Every step has an index.
+
+    """
     sid = models.CharField(max_length=CHAR_MAX_LENGTH)
     steps = models.ManyToManyField(Step, db_index=True, through='ProcessStep')
 
@@ -302,14 +299,24 @@ class Process(models.Model):
 
     @property
     def identical_ordering(self):
-        data = read_frame(self.processstep_set.all(), fieldnames=["process__sid","index"])
+        """ Creates DataFrame from given steps.
+
+        :return:
+        """
+        data = read_frame(self.processstep_set.all(), fieldnames=["process__sid", "index"])
+        # TODO: sort step id by index, create string S1-S2-S3, use this string to compare
         return data
 
-
-
+    # TODO: overwrite the save method on model to add uniqueness constraint
 
 
 class ProcessStep(models.Model):
+    """ Single step in an actual process.
+        Connecting the Steps to the process, creating an order of the steps.
+
+        index: position of step in the process.
+
+    """
     process = models.ForeignKey(Process)
     step = models.ForeignKey(Step)
     index = models.IntegerField(blank=True, null=True)
@@ -322,11 +329,7 @@ class ProcessStep(models.Model):
 
     class Meta:
         unique_together = ('process', 'step', 'index')
-        ordering = ['index',]
-
-
-
-
+        ordering = ['index', ]
 
 
 class RawSpotCollection(Experiment):

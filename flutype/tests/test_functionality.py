@@ -53,15 +53,15 @@ class SeleniumTestCase(LiveServerTestCase):
 
     def test_heatmap(self):
         id = SpotCollection.objects.first().id
-        expected_url = '%s%s%s' %(self.live_server_url,'/flutype/qspotcollection/', id)
+        expected_url = '%s%s%s' % (self.live_server_url, '/flutype/qspotcollection/', id)
         self.login(expected_url)
         # keep a watch on jQuery 'active' attribute
         # page should be stable enough now, and we can perform desired actions
         self.driver.implicitly_wait(10)
         elem = WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of_element_located((By.ID, 'container')))
-        retval = self.driver.execute_script("return lig1;",elem)
+        retval = self.driver.execute_script("return lig1;", elem)
 
-        self.assertEqual(len(retval) , 25)
+        self.assertEqual(len(retval), 25)
 
     def test_barplot(self):
         id = SpotCollection.objects.first().id
@@ -70,11 +70,12 @@ class SeleniumTestCase(LiveServerTestCase):
         # keep a watch on jQuery 'active' attribute
         # page should be stable enough now, and we can perform desired actions
         elem = WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of_element_located((By.ID, 'myDiv')))
-        #java_script = '$.ajax({ method: "GET", url: endpoint, success: function(data){ dataPlot = data; Plotly.newPlot('myDiv', Chart(dataPlot)); }, error: function(error_data){ console.log("error") console.log(error_data)  }});'
-        #dataPlot = self.driver.execute_async_script("dataPlot",elem)
-        self.driver.save_screenshot('screenshot.png')
 
-        retval = self.driver.execute_script("return Chart(dataPlot);",elem)
+        # java_script = '$.ajax({ method: "GET", url: endpoint, success: function(data){ dataPlot = data; Plotly.newPlot('myDiv', Chart(dataPlot)); }, error: function(error_data){ console.log("error") console.log(error_data)  }});'
+        # dataPlot = self.driver.execute_async_script("dataPlot",elem)
+        # self.driver.save_screenshot('screenshot.png')
+
+        retval = self.driver.execute_script("return Chart(dataPlot);", elem)
 
         self.assertEqual(len(retval),2)
 
