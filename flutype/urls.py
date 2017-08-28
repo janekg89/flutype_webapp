@@ -6,7 +6,8 @@ urlpatterns = [
     url(r'^$', views.index_view, name='index'),
     url(r'^myexperiments/$', views.my_index_view, name='my_index'),
     url(r'^users/$', views.users_view, name='users'),
-    url(r'^about/$', views.about_view, name='about'),
+    url(r'^about/$', views.about_en_view, name='about'),
+    url(r'^about_de/$', views.about_de_view, name='about_de'),
 
     url(r'^steps/$', views.steps_view, name='steps'),
     url(r'^steps/new/(?P<class_name>\w+)/$', views.step_new, name='step_new'),
