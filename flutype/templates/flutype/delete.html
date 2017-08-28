@@ -1,0 +1,67 @@
+{% extends "flutype/base.html" %}
+{% block content %}
+{% if type == "peptide" %}
+            <h1>Delete Peptide</h1>
+<p>Are you sure you want to delete the peptide [{{ peptide.sid }}]?</p>
+    {%elif type == "virus"  %}
+              <h1>Delete Virus</h1>
+<p>Are you sure you want to delete the virus [{{ virus.sid }}]?</p>
+    {%elif type == "antibody"  %}
+        <h1>Delete Antibody</h1>
+<p>Are you sure you want to delete the antibody [{{ antibody.sid }}]?</p>
+
+    {%elif type == "peptide_batch"  %}
+            <h1>Delete Peptide Batch</h1>
+<p>Are you sure you want to delete the peptide_batch [{{ peptide_batch.sid }}]?</p>
+
+    {%elif type == "antibody_batch"  %}
+                   <h1>Delete Antibody Batch</h1>
+<p>Are you sure you want to delete the antibody_batch [{{ antibody_batch.sid }}]?</p>
+
+    {%elif type == "virus_batch"  %}
+                        <h1>Delete Virus Batch</h1>
+<p>Are you sure you want to delete the virus_batch [{{ virus_batch.sid }}]?</p>
+
+    {%elif type == "step"  %}
+                        <h1>Delete Step</h1>
+<p>Are you sure you want to delete the {{ step.get_step_type.__class__.__name__ }} step [{{ step.sid }}]?</p>
+    {% endif %}
+
+
+
+<form method="post">
+<span style="float:left;">
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+  <input class="btn btn-default"  type="submit" value="Yes, delete." />
+    </span>
+</form>
+
+      {% if type == "peptide" %}
+       <form action={{url('peptides')}}>
+    {%elif type == "virus"  %}
+       <form action={{url('viruses')}}>
+
+    {%elif type == "antibody"  %}
+       <form action={{url('antibodies')}}>
+
+    {%elif type == "peptide_batch"  %}
+       <form action={{url('peptidebatches')}}>
+
+    {%elif type == "antibody_batch"  %}
+       <form action={{url('antibodybatches')}}>
+
+    {%elif type == "virus_batch"  %}
+       <form action={{url('virusbatches')}}>
+
+    {%elif type == "step"  %}
+       <form action={{url('steps')}}>
+    {% endif %}
+
+    <span style="float:left;">
+    <button class="btn btn-default"> No, cancel.</button>
+        </span>
+    </form>
+
+
+{% endblock %}
