@@ -11,7 +11,7 @@
                             <th></th>
                             {% for prostep in prosteps%}
                                 {% with p = prostep.step.get_step_type %}
-                                    {% if  prostep.step.get_step_type.__class__.__name__ == "Washing" %}
+                                    {% if  p.__class__.__name__ == "Washing" %}
                                         <th><p> # {{ prostep.index + 1 }}  <i class="fa fa-shower" aria-hidden="true"> </i> </p> {{p.__class__.__name__ }}</th>
                                     {% elif  p.__class__.__name__ == "Drying" %}
                                         <th> <p> # {{ prostep.index + 1 }} <i class="fa fa-bullhorn" aria-hidden="true"></i> </p>{{p.__class__.__name__ }}</th>
@@ -21,6 +21,11 @@
                                         <th> <p> # {{ prostep.index + 1 }} <i class="fa fa-chain-broken" aria-hidden="true"></i> </p> {{p.__class__.__name__ }}</th>
                                     {% elif  p.__class__.__name__ == "Incubating" %}
                                         <th> <p> # {{ prostep.index + 1 }} <i class="fa fa-tint" aria-hidden="true"></i> </p> {{p.__class__.__name__ }}</th>
+                                    {% elif  p.__class__.__name__ == "Blocking" %}
+                                        <th> <p> # {{ prostep.index + 1 }} <i class="fa fa-pause" aria-hidden="true"></i> </p> {{p.__class__.__name__ }}</th>
+                                    {% elif  p.__class__.__name__ == "Scanning" %}
+                                        <th> <p> # {{ prostep.index + 1 }} <i class="fa fa-camera" aria-hidden="true"></i> </p> {{p.__class__.__name__ }}</th>
+
                                     {% endif %}
                                 {% endwith %}
                             {% endfor %}
