@@ -136,7 +136,7 @@
             <div class="row">
                         {% with process = collection.process %}
                             <h2>Process: {{ process.sid }}</h2>
-                            {% if process.is_steps_in_process()%}
+                            {% if process.is_step_in_process()%}
                                 <table id="processes" class="cell-border">
                                     {% with prosteps = process.processstep_set.all() %}
                                         <thead>
