@@ -79,6 +79,7 @@ class ScanningForm(forms.ModelForm):
         fields = '__all__'
 
 class ProcessForm(forms.ModelForm):
+
     class Meta:
         model = Process
         fields = '__all__'
