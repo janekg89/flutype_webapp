@@ -2,8 +2,9 @@
 {% block content %}
     <!-- one process in detail -->
     <div class="col-lg-12">
+
         <h2>Process: {{ process.sid }}</h2>
-        {% if process.is_steps_in_process()%}
+        {% if process.is_step_in_process()%}
             <table id="process" class="cell-border">
                 {% with prosteps = process.processstep_set.all() %}
                     <thead>

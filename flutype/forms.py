@@ -1,6 +1,8 @@
 
 from django import forms
-from .models import  Peptide,PeptideBatch, Virus, VirusBatch, Antibody, AntibodyBatch, ProcessStep, Step, Spotting, Washing,Drying, Quenching, Blocking, Scanning, Incubating
+from .models import Peptide,PeptideBatch, Virus, VirusBatch, Antibody, AntibodyBatch, \
+    ProcessStep, Step, Spotting, Washing,Drying, Quenching, Blocking, Scanning, Incubating,\
+    Process
 
 class PeptideForm(forms.ModelForm):
     class Meta:
@@ -74,4 +76,9 @@ class IncubatingForm(forms.ModelForm):
 class ScanningForm(forms.ModelForm):
     class Meta:
         model = Scanning
+        fields = '__all__'
+
+class ProcessForm(forms.ModelForm):
+    class Meta:
+        model = Process
         fields = '__all__'

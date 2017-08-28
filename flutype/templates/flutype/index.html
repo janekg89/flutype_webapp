@@ -3,11 +3,15 @@
     <!-- LIST OF RAWSPOTCOLLECTION -->
     <div class="row">
         <div class="col-lg-12">
+         <div class ="pull-right">
+            <a href="#" class="top-menu"><span class="fa fa-plus-circle fa-4x text-success"></span></a>
+         </div>
         {% if type == "all" %}
             <h1>Experiments</h1>
         {% elif type == "my" %}
             <h1>My Experiments</h1>
         {% endif %}
+
             {% if collections %}
                 <table id="collections" class="table table-striped">
                     <caption>Raw Spot Collections</caption>
@@ -71,9 +75,9 @@
                                     {{ c.gal_file1.sid }}</a></td>
 
                             <td><a href="{{ url('processview', args=[c.process.id]) }}"> {{ c.process.sid }}  </a></td>
-                            {% if c.process.users %}
+                            {% if c.process.users() %}
                                 <td>
-                                 {% for user in c.process.users %}
+                                 {% for user in c.process.users() %}
                                 {{ user.first_name }} {{ user.last_name }}
                                 {% endfor %}
                                 </td>
