@@ -121,9 +121,11 @@ def users_view(request):
     return render(request,
                   'flutype/users.html', context)
 
-def about_view(request):
-    return render(request,"flutype/about.html")
+def about_en_view(request):
+    return render(request,"flutype/about.html" ,{"language":"en"})
 
+def about_de_view(request):
+    return render(request,"flutype/about.html" ,{"language":"de"})
 
 @login_required
 def peptide_batch_view(request):
