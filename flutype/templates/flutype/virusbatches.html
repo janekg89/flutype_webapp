@@ -3,6 +3,9 @@
     <!-- LIST OF RAWSPOTCOLLECTION -->
     <div class="row">
         <div class="col-lg-12">
+        <div class ="pull-right">
+            <a href="{{url('virus_batch_new')}}" class="top-menu"><span class="fa fa-plus-circle fa-4x text-success"></span></a>
+            </div>
             {% if type == "fixed" %}
                 <h1>Fixed Virus Batches</h1>
             {% elif type == "mobile"%}
@@ -30,6 +33,8 @@
                     <th>Produced by</th>
                     <th>Production Date</th>
                     <th>Comment</th>
+                    <th>Edit</th>
+
                 </tr>
                 </thead>
                 <tbody>
@@ -67,6 +72,8 @@
                         <td>{{ virusbatch.produced_by }}</td>
                         <td>{{ virusbatch.production_date }}</td>
                         <td>{{ virusbatch.comment }}</td>
+                        <td><a href="{{url('virus_batch_edit', args=[virusbatch.id])}}" class="top-menu"><span class="fa fa-pencil" aria-hidden="true"></span> </a>
+                            <a href="{{url('virus_batch_delete', args=[virusbatch.id])}}" class="top-menu"><span class="fa fa-trash text-danger" aria-hidden="true"></span> </a> </td>
                     </tr>
                 {% endfor %}
                 </tbody>
