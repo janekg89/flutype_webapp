@@ -33,7 +33,9 @@ docker-compose up
 ```
 
 # gunicorn & deployment
+```
 gunicorn --bind 0.0.0.0:8000 flutype_webapp.wsgi:application
+```
 
 # install PhantomJS
  follow: https://www.vultr.com/docs/how-to-install-phantomjs-on-ubuntu-16-04
