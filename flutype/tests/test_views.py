@@ -498,7 +498,7 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         status = response.status_code
         self.assertEqual(status, 200, "index view 200")
         self.assertContains(response,"<h1>Raw: 2017-05-19_E5 </h1>" )
-        self.assertContains(response, "No process steps avialable for process: P001")
+        self.assertContains(response, "No process steps available for process.")
         self.assertContains(response, "Dye001")
         self.assertContains(response, "A001")
         self.assertContains(response, "<td>A/Aichi/2/68 </td>" )
