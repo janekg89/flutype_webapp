@@ -22,7 +22,8 @@
         {% else %}
         <h1>Step Information</h1>
         {% endif %}
-
+    {%elif type == "process"  %}
+        <h1> Process Information</h1>
     {% endif %}
 
 
@@ -41,12 +42,10 @@
                   </span>
       </form>
 
-
-        {% if type == "peptide" %}
+    {% if type == "peptide" %}
        <form action={{url('peptides')}}>
     {%elif type == "virus"  %}
        <form action={{url('viruses')}}>
-
     {%elif type == "antibody"  %}
        <form action={{url('antibodies')}}>
 
@@ -60,7 +59,8 @@
        <form action={{url('virusbatches')}}>
     {%elif type == "step"  %}
        <form action={{url('steps')}}>
-
+    {%elif type == "process"  %}
+        <form action={{url('processes')}}>
     {% endif %}
 
     <span style="float:left;">
