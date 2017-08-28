@@ -13,10 +13,9 @@ branches:
 
 install:
   pip install -r requirements.txt
-  python manage.py collectstatic
 
 script:
-  python manage.py test
+  python manage.py collectstatic && python manage.py test
 
 # after_success:
 #   pip install codecov; codecov
