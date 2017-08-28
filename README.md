@@ -55,6 +55,7 @@ sudo apt-get install gunicorn
 ```
 
 ### Docker
+Docker support is currently very experimental.
 Install `docker-ce` and `docker-compose` on the system.
 
 Run the app via
