@@ -76,11 +76,6 @@
                 {% endif %}
 
 
-
-
-
-
-
                             </tbody>
                         </table>
             </div>
@@ -106,11 +101,14 @@
 
                         {% endif %}
             </div>
+
         <!-- Heat map  -->
 {#            <div class="row">#}
 {#                <img src="./heatmap" width="400" >#}
 {#            </div>#}
+        {% if type == "quantified" %}
             <div class="row" id="container" style="height: 650px; min-width: 50px; max-width: 250px; margin: 0 auto"></div>
+        {% endif %}
 
         </div>
         <div class="col-lg-1">  </div>
@@ -234,13 +232,11 @@
                                                     {% endif %}
                                                 {% endfor %}
                                             </tr>
-
-
                                         </tbody>
                                     {% endwith %}
                                 </table>
                             {% else %}
-                                No process steps avialable for process: {{ collection.process.sid }}.
+                                No process steps available for process.
                             {% endif %}
                         {% endwith %}
                 </div>
@@ -305,7 +301,6 @@
                             <td>{{ virus.collection_date }}</td>
                             <td>{{ virus.strain }}</td>
                             <td>{{ virus.comment }}</td>
-
                         </tr>
                     {% endfor %}
                     </tbody>

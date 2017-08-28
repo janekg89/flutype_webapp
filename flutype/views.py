@@ -35,7 +35,7 @@ def empty_list(max):
         list.append('')
     return list
 
-# Create your views here.
+
 @login_required
 @api_view(['GET'])
 def barplot_data_view(request, pk):
