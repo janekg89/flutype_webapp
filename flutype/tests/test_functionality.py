@@ -11,7 +11,7 @@ from selenium import webdriver
 from flutype.data_management.fill_users import create_users, user_defs
 from flutype.data_management.fill_database import fill_database, path_master
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-
+from selenium.common.exceptions import TimeoutException
 from flutype.models import RawSpotCollection, SpotCollection, Process
 
 
@@ -52,7 +52,7 @@ class SeleniumTestCase(LiveServerTestCase):
         self.login(expected_url)
         # keep a watch on jQuery 'active' attribute
         # page should be stable enough now, and we can perform desired actions
-        elem = WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of_element_located((By.ID, 'container')))
+        elem = WebDriverWait(self.driver, 30).until(expected_conditions.visibility_of_element_located((By.ID, 'container')))
         retval = self.driver.execute_script("return lig1;", elem)
         self.assertEqual(len(retval), 25)
 
@@ -62,7 +62,7 @@ class SeleniumTestCase(LiveServerTestCase):
         self.login(expected_url)
         # keep a watch on jQuery 'active' attribute
         # page should be stable enough now, and we can perform desired actions
-        elem = WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of_element_located((By.ID, 'myDiv')))
+        elem = WebDriverWait(self.driver, 30).until(expected_conditions.visibility_of_element_located((By.ID, 'myDiv')))
 
         # java_script = '$.ajax({ method: "GET", url: endpoint, success: function(data){ dataPlot = data; Plotly.newPlot('myDiv', Chart(dataPlot)); }, error: function(error_data){ console.log("error") console.log(error_data)  }});'
         # dataPlot = self.driver.execute_async_script("dataPlot",elem)
