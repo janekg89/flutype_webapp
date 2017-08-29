@@ -18,7 +18,6 @@ django-model-utils
 django-polymorphic>=1.3
 django-imagekit
 djangorestframework
-django-crispy-forms
 
 python-coveralls
 
