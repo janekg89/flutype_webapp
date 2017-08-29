@@ -8,3 +8,9 @@ flutype_webapp/migrations/__pycache__/
 /static/
 flutype_webapp/deploy_settings.py
 dbdata/
+# tests & phantomjs
+ghostdriver.log
+node_modules/
+media/CACHE/
+htmlcov/
+.coverage

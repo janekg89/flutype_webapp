@@ -76,11 +76,6 @@
                 {% endif %}
 
 
-
-
-
-
-
                             </tbody>
                         </table>
             </div>
@@ -106,11 +101,14 @@
 
                         {% endif %}
             </div>
+
         <!-- Heat map  -->
 {#            <div class="row">#}
 {#                <img src="./heatmap" width="400" >#}
 {#            </div>#}
+        {% if type == "quantified" %}
             <div class="row" id="container" style="height: 650px; min-width: 50px; max-width: 250px; margin: 0 auto"></div>
+        {% endif %}
 
         </div>
         <div class="col-lg-1">  </div>
@@ -136,7 +134,7 @@
             <div class="row">
                         {% with process = collection.process %}
                             <h2>Process: {{ process.sid }}</h2>
-                            {% if process.is_steps_in_process()%}
+                            {% if process.is_step_in_process()%}
                                 <table id="processes" class="cell-border">
                                     {% with prosteps = process.processstep_set.all() %}
                                         <thead>
@@ -234,13 +232,11 @@
                                                     {% endif %}
                                                 {% endfor %}
                                             </tr>
-
-
                                         </tbody>
                                     {% endwith %}
                                 </table>
                             {% else %}
-                                No process steps avialable for process: {{ collection.process.sid }}.
+                                No process steps available for process.
                             {% endif %}
                         {% endwith %}
                 </div>
@@ -305,7 +301,6 @@
                             <td>{{ virus.collection_date }}</td>
                             <td>{{ virus.strain }}</td>
                             <td>{{ virus.comment }}</td>
-
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -508,7 +503,7 @@
         });
     </script>
 
-        <script>
+<script type="text/javascript" charset="utf-8">
 
     var lig1 = {{ lig1|safe}};
     var lig2 = {{ lig2|safe}};
@@ -516,7 +511,6 @@
     var con2 = {{ con2|safe}};
 
     Highcharts.chart('container', {
-
     chart: {
         type: 'heatmap',
         marginTop: 40,
@@ -571,7 +565,6 @@
         }
     },
 
-
     series: [{
         animation: true,
         name: 'Heatmap',
@@ -587,9 +580,8 @@
 
 </script>
 
-<script>
-var endpoint = './data';
-
+<script type="text/javascript" charset="utf-8">
+    var endpoint = './data';
 $.ajax({
     method: "GET",
     url: endpoint,
@@ -606,7 +598,7 @@ $.ajax({
 $('#lin').click(function(){
     var update ={
         "layout.yaxis.type" : "lin"
-    }
+    };
     var myDiv = document.getElementById("myDiv");
     myDiv.layout.yaxis.type = "lin" ;
 
@@ -616,7 +608,7 @@ $('#lin').click(function(){
 $('#log').click(function(){
     var update ={
         "layout.yaxis.type" : "log"
-    }
+    };
     var myDiv = document.getElementById("myDiv");
     myDiv.layout.yaxis.type = "log" ;
 
@@ -624,13 +616,13 @@ $('#log').click(function(){
 });
 
 function Chart(dataPlot) {
-    var data = []
+    var data = [];
     for (var i = 0; i < dataPlot.box_list.length; i++) {
         if (dataPlot.lig1[i] == null) {
             var name = "Empty"
         } else {
             var name = dataPlot.box_list[i].lig1 + " [" + dataPlot.box_list[i].lig1_con + "]";
-        };
+        }
         var trace1 = {
             y: dataPlot.box_list[i].intensity,
             x: dataPlot.box_list[i].lig2,
@@ -641,7 +633,7 @@ function Chart(dataPlot) {
             fillcolor: 'cls',
             marker: {
               size: 3
-            },
+            }
         };
         data.push(trace1);
     }
@@ -656,6 +648,7 @@ function Chart(dataPlot) {
     };
 
     return {
+
         data:data,
         layout:layout
             }
