@@ -35,7 +35,7 @@ class SeleniumTestCase(LiveServerTestCase):
         self.driver.find_element_by_id('id_password').send_keys(DEFAULT_USER_PASSWORD)
         self.driver.find_element_by_name('submit_button').click()
 
-    @tag('local')
+    #@tag('local')
     def test_login_and_redirect(self):
         expected_url = '%s%s' % (self.live_server_url, '/flutype/viruses/')
         self.login(expected_url)
@@ -48,7 +48,7 @@ class SeleniumTestCase(LiveServerTestCase):
         self.driver.find_element_by_link_text("387139").click()
         self.assertIn("https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=387139", self.driver.current_url)
 
-    @tag('local')
+    #@tag('local')
     def test_heatmap(self):
         id = SpotCollection.objects.first().id
         expected_url = '%s%s%s' % (self.live_server_url, '/flutype/qspotcollection/', id)
@@ -60,7 +60,7 @@ class SeleniumTestCase(LiveServerTestCase):
         retval = self.driver.execute_script("return lig1;", elem)
         self.assertEqual(len(retval), 25)
 
-    @tag('local')
+    #@tag('local')
     def test_barplot(self):
         id = SpotCollection.objects.first().id
         expected_url = '%s%s%s%s' %(self.live_server_url,'/flutype/qspotcollection/', id,'/')
