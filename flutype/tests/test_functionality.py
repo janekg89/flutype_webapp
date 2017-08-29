@@ -35,11 +35,13 @@ class SeleniumTestCase(LiveServerTestCase):
         self.driver.find_element_by_id('id_password').send_keys(DEFAULT_USER_PASSWORD)
         self.driver.find_element_by_name('submit_button').click()
 
+    @tag('local')
     def test_login_and_redirect(self):
         expected_url = '%s%s' % (self.live_server_url, '/flutype/viruses/')
         self.login(expected_url)
         self.assertIn(expected_url, self.driver.current_url)
 
+    @tag('local')
     def test_virussid_links_web_database(self):
         expected_url = '%s%s' %(self.live_server_url,"/flutype/viruses/")
         self.login(expected_url)
@@ -54,6 +56,7 @@ class SeleniumTestCase(LiveServerTestCase):
         # keep a watch on jQuery 'active' attribute
         # page should be stable enough now, and we can perform desired actions
         elem = WebDriverWait(self.driver, 30).until(expected_conditions.visibility_of_element_located((By.ID, 'container')))
+        #elem = self.driver.find_element_by_id('container')
         retval = self.driver.execute_script("return lig1;", elem)
         self.assertEqual(len(retval), 25)
 
