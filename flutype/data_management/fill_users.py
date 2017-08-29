@@ -14,6 +14,7 @@ if path not in sys.path:
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flutype_webapp.settings")
 
 import django
+
 django.setup()
 from django.contrib.auth.models import User
 from flutype_webapp.settings import DEFAULT_USER_PASSWORD
@@ -26,11 +27,13 @@ user_defs = [
     UserDef("janekg89", "Jan", "Grzegorzewski", "janekg89@hotmail.de"),
     UserDef("mkoenig", "Matthias", "Koenig", "konigmatt@googlemail.com"),
     UserDef("hmemczak", "Henry", "Memczak", "memczak@uni-potsdam.de"),
-    UserDef("mhovestaedt", "Marc", "Hovestädt","hovestaedt@uni-potsdam.de"),
+    UserDef("mhovestaedt", "Marc", "Hovestädt", "hovestaedt@uni-potsdam.de"),
     UserDef("ssaenger", "Sandra", "Sänger", "SaengerS@rki.de"),
-    UserDef("bay", "Bernhard", "Ay","aybernha@uni-potsdam.de")
+    UserDef("bay", "Bernhard", "Ay", "aybernha@uni-potsdam.de")
 
 ]
+
+
 ########################################################
 
 
@@ -49,9 +52,9 @@ def create_users(user_defs, delete_all=True):
 
     # adds user to database
     for user_def in user_defs:
-
         # special pattern for user creation required
-        user = User.objects.create_user(username=user_def.username, email=user_def.email, password=DEFAULT_USER_PASSWORD)
+        user = User.objects.create_user(username=user_def.username, email=user_def.email,
+                                        password=DEFAULT_USER_PASSWORD)
         user.last_name = user_def.last_name
         user.first_name = user_def.first_name
         user.save()

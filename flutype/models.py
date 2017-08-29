@@ -27,18 +27,20 @@ from polymorphic.models import PolymorphicModel
 from imagekit.models import ImageSpecField
 from imagekit.processors import Transpose, ResizeToFit
 
-
 CHAR_MAX_LENGTH = 50
+
 
 class OverwriteStorage(FileSystemStorage):
     """
     Overwrite storage overwrites existing names by deleting the resources.
     ! Use with care. This deletes files from the media folder !
     """
+
     def get_available_name(self, name, **kwargs):
         if self.exists(name):
             os.remove(os.path.join(settings.MEDIA_ROOT, name))
         return name
+
 
 #############################################################
 # Helper models, i.e., choices
@@ -57,7 +59,7 @@ class Substance(DjangoChoices):
     """
     substance model
     """
-    nhs_3d=ChoiceItem("3D-NHS")
+    nhs_3d = ChoiceItem("3D-NHS")
 
 
 class ExperimentType(DjangoChoices):
@@ -73,11 +75,11 @@ class Manufacturer(DjangoChoices):
     """
     manufacturer model
     """
-    polyan= ChoiceItem("PolyAn")
+    polyan = ChoiceItem("PolyAn")
 
 
 class ProcessingType(DjangoChoices):
-    substract_buffer= ChoiceItem("sub_buf")
+    substract_buffer = ChoiceItem("sub_buf")
 
 
 ########################################
@@ -145,7 +147,7 @@ class Batch(models.Model):
 
     concentration = models.FloatField(validators=[MinValueValidator(0)],
                                       blank=True, null=True)
-    buffer = models.CharField(max_length=CHAR_MAX_LENGTH,choices=Buffer.choices, blank=True, null=True)
+    buffer = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Buffer.choices, blank=True, null=True)
     ph = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(14)],
                            blank=True, null=True)
     purity = models.FloatField(validators=[MinValueValidator(0)],
@@ -174,9 +176,8 @@ class VirusBatch(LigandBatch):
     Virus batch model
     """
 
-    passage_history = models.CharField(max_length=CHAR_MAX_LENGTH, blank= True ,null=True)
+    passage_history = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     active = models.NullBooleanField(blank=True, null=True)
-
 
 
 class PeptideBatch(LigandBatch):
@@ -191,6 +192,7 @@ class AntibodyBatch(LigandBatch):
     """
     pass
 
+
 ########################################
 # Process & Treatment
 ########################################
@@ -204,11 +206,10 @@ class Step(models.Model):
         index: number of steps which gives the order
     """
     objects = InheritanceManager()
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH,null=True, blank=True)
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     method = models.CharField(max_length=300, null=True, blank=True)
     temperature = models.CharField(max_length=300, null=True, blank=True)
     comment = models.TextField(blank=True, null=True)
-
 
     @property
     def get_step_type(self):
@@ -257,6 +258,7 @@ class GalFile(models.Model):
     sid = models.CharField(max_length=CHAR_MAX_LENGTH)
     file = models.FileField(upload_to="gal_file", null=True, blank=True, storage=OverwriteStorage())
 
+
 # class GalVirus(models.Model):
 #    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
 #    file = models.FileField(upload_to="gal_vir", null=True, blank=True, storage=OverwriteStorage())
@@ -290,7 +292,6 @@ class Process(models.Model):
         user_ids = self.processstep_set.values_list("user", flat="True").distinct()
         return User.objects.filter(id__in=user_ids)
 
-
     def is_step_in_process(self):
         result = True
         if self.steps.all().count() == 0:
@@ -303,21 +304,18 @@ class Process(models.Model):
         :return:
         """
         data = read_frame(self.processstep_set.all(), fieldnames=["step__sid", "index"])
-        data.sort_values(["index","step__sid"], ascending =[1,0])
+        data.sort_values(["index", "step__sid"], ascending=[1, 0])
         order_steps = data["step__sid"]
         vals = '-'.join(order_steps)
         return vals
 
-
     # TODO: overwrite the save method on model to add uniqueness constraint
     def save(self, *args, **kwargs):
         self.unique_ordering = self.get_unique_ordering
-        super(Process,self).save(*args,**kwargs)
+        super(Process, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.unique_ordering
-
-
 
 
 class ProcessStep(models.Model):
@@ -334,6 +332,7 @@ class ProcessStep(models.Model):
     start = models.DateTimeField(null=True, blank=True)
     finish = models.DateTimeField(null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
+
     # FIXME: property all users involved in the process, i.e.
     # everybody involved in any step in the process
 
@@ -344,12 +343,13 @@ class ProcessStep(models.Model):
 
 class RawSpotCollection(Experiment):
     """
-    A collection of raw spots: Information for a Collection of Spots collected at once for one microarray, one microwellplate
+    A collection of raw spots: Information for a Collection of Spots collected at once for one microarray,
+    one microwellplate
     """
     image = models.ImageField(upload_to="image", null=True, blank=True, storage=OverwriteStorage())
-    image_90 =  ImageSpecField(source='image',
-                               processors=[Transpose(Transpose.ROTATE_90),ResizeToFit(350,100)],
-                               )
+    image_90 = ImageSpecField(source='image',
+                              processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(350, 100)],
+                              )
     gal_file1 = models.ForeignKey(GalFile, null=True, blank=True, related_name='gal_file1')
     gal_file2 = models.ForeignKey(GalFile, null=True, blank=True, related_name='gal_file2')
 
@@ -380,7 +380,6 @@ class RawSpotCollection(Experiment):
     def peptides2(self):
         return self.ligands2.instance_of(Peptide)
 
-
     def is_spot_collection(self):
         result = True
         if self.spotcollection_set.all().count() == 0:
@@ -388,14 +387,14 @@ class RawSpotCollection(Experiment):
         return result
 
     def pivot_ligand1(self):
-        data = read_frame(self.rawspot_set.all(), fieldnames=["row","column","ligand1__ligand__sid"])
+        data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "ligand1__ligand__sid"])
         lig1 = data.pivot(index="row", columns="column", values="ligand1__ligand__sid")
         lig1.fillna(value="", inplace=True)
         return lig1
 
     def pivot_ligand2(self):
         try:
-            data = read_frame(self.rawspot_set.all(), fieldnames=["row","column","ligand2__ligand__virus__subtype"])
+            data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "ligand2__ligand__virus__subtype"])
             lig2 = data.pivot(index="row", columns="column", values="ligand2__ligand__virus__subtype")
         except:
             data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "ligand2__ligand__sid"])
@@ -404,13 +403,13 @@ class RawSpotCollection(Experiment):
         return lig2
 
     def pivot_concentration1(self):
-        data = read_frame(self.rawspot_set.all(), fieldnames=["row","column","ligand1__concentration"])
+        data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "ligand1__concentration"])
         concentration = data.pivot(index="row", columns="column", values="ligand1__concentration")
         concentration.fillna(value="", inplace=True)
         return concentration
 
     def pivot_concentration2(self):
-        data = read_frame(self.rawspot_set.all(), fieldnames=["row","column","ligand2__concentration"])
+        data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "ligand2__concentration"])
         concentration = data.pivot(index="row", columns="column", values="ligand2__concentration")
         concentration.fillna(value="", inplace=True)
         return concentration
@@ -421,8 +420,8 @@ class RawSpot(models.Model):
     spot model
     """
     raw_spot_collection = models.ForeignKey(RawSpotCollection)
-    ligand1 = models.ForeignKey(LigandBatch, related_name="ligand1",null=True, blank=True)
-    ligand2 = models.ForeignKey(LigandBatch, related_name="ligand2",null=True, blank=True)
+    ligand1 = models.ForeignKey(LigandBatch, related_name="ligand1", null=True, blank=True)
+    ligand2 = models.ForeignKey(LigandBatch, related_name="ligand2", null=True, blank=True)
     column = models.IntegerField()
     row = models.IntegerField()
 
@@ -443,9 +442,10 @@ class SpotCollection(models.Model):
                                        blank=True,
                                        null=True)
     comment = models.TextField(default="A spot detecting script has located the spots in the image."
-                                      "The spots are centered in a larger square."
-                                      "The Intesity values are calculated as the total intensity over that square. "
-                                      "The image is not preprocessed.")
+                                       "The spots are centered in a larger square."
+                                       "The Intesity values are calculated as the total intensity over that square. "
+                                       "The image is not preprocessed.")
+
 
 # perhaps name Interaction
 class Spot(models.Model):
@@ -458,9 +458,4 @@ class Spot(models.Model):
     intensity = models.FloatField(null=True, blank=True)
     std = models.FloatField(null=True, blank=True)
     spot_collection = models.ForeignKey(SpotCollection)
-    #TODO: add Coordinates on image
-
-
-
-
-
+    # TODO: add Coordinates on image

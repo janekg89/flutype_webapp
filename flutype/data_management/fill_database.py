@@ -8,6 +8,7 @@ import sys
 from django.core.files import File
 import warnings
 import re
+
 ###########################################################
 # setup django (add current path to sys.path)
 path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../'))
@@ -17,13 +18,13 @@ if path not in sys.path:
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flutype_webapp.settings")
 
 import django
+
 django.setup()
 
 # the path to the master folder
 path_master = os.path.join(path, "master/")
 
 # all sid of microarray collections
-# FIXME: get from folder names
 collection_ids = ["2017-05-19_E5_X31",
                   "2017-05-19_E6_untenliegend_X31",
                   "2017-05-19_N5_X31",
@@ -38,8 +39,7 @@ collection_ids = ["2017-05-19_E5_X31",
                   "2017-05-19_N7_Cal",
                   "2017-05-12_MTP_R1",
                   "2017-06-13_MTP"
-]
-
+                  ]
 
 ###########################################################
 from django.contrib.auth.models import User
@@ -68,6 +68,7 @@ from flutype.models import (Peptide,
                             Experiment
                             )
 
+
 def get_user_or_none(dict):
     if "user" in dict:
         if dict["user"] is None:
@@ -78,6 +79,8 @@ def get_user_or_none(dict):
         user = None
 
     return user
+
+
 def get_step_or_none(dict):
     print(dict.keys())
     exit()
@@ -92,9 +95,9 @@ def get_step_or_none(dict):
     return step
 
 
-
 class Database(object):
     """ Database """
+
     ##### helper functions  ########
 
     ##### create_or_update datables realted data ####
@@ -140,7 +143,6 @@ class Database(object):
                                                             )
         return virus_b, created
 
-
     def create_or_update_peptide(self, peptide):
         # fills peptides
         peptide, created = Peptide.objects.get_or_create(sid=peptide["sid"],
@@ -153,9 +155,7 @@ class Database(object):
                                                          )
         return peptide, created
 
-
-
-    def create_or_update_peptide_batch(self,peptide_batch):
+    def create_or_update_peptide_batch(self, peptide_batch):
         if peptide_batch["sid"] == "NO":
             peptide_batch["sid"] = None
 
@@ -183,17 +183,16 @@ class Database(object):
                                                                 )
         return peptide_b, created
 
-
-    def create_or_update_antibody(self,antibody):
+    def create_or_update_antibody(self, antibody):
 
         antibod, created = Antibody.objects.get_or_create(sid=antibody["sid"],
-                                                         target=antibody["target"],
-                                                         name=antibody["name"],
-                                                         link_db=antibody["link_db"]
-                                                         )
+                                                          target=antibody["target"],
+                                                          name=antibody["name"],
+                                                          link_db=antibody["link_db"]
+                                                          )
         return antibod, created
 
-    def create_or_update_antibody_batch(self,antibody_batch):
+    def create_or_update_antibody_batch(self, antibody_batch):
 
         if "lig_sid" in antibody_batch:
             antibody = Antibody.objects.get(sid=antibody_batch["lig_sid"])
@@ -205,47 +204,44 @@ class Database(object):
 
         user = get_user_or_none(antibody_batch)
 
-        antibody_b, created =AntibodyBatch.objects.get_or_create(sid=antibody_batch["sid"],
-                                                                 ligand=antibody,
-                                                                 concentration=antibody_batch["concentration"],
-                                                                 ph=antibody_batch["ph"],
-                                                                 purity=antibody_batch["purity"],
-                                                                 buffer=antibody_batch["buffer"],
-                                                                 produced_by=user,
-                                                                 production_date=antibody_batch["production_date"],
-                                                                 comment=antibody_batch["comment"]
-                                                                 )
-        return  antibody_b, created
+        antibody_b, created = AntibodyBatch.objects.get_or_create(sid=antibody_batch["sid"],
+                                                                  ligand=antibody,
+                                                                  concentration=antibody_batch["concentration"],
+                                                                  ph=antibody_batch["ph"],
+                                                                  purity=antibody_batch["purity"],
+                                                                  buffer=antibody_batch["buffer"],
+                                                                  produced_by=user,
+                                                                  production_date=antibody_batch["production_date"],
+                                                                  comment=antibody_batch["comment"]
+                                                                  )
+        return antibody_b, created
 
-    def create_or_update_washing(self,washing):
+    def create_or_update_washing(self, washing):
         washing, created = Washing.objects.get_or_create(sid=washing["sid"],
-                                                          method=washing["method"],
-                                                          duration=washing["duration"],
-                                                          substance=washing["substance"])
-        return washing , created
+                                                         method=washing["method"],
+                                                         duration=washing["duration"],
+                                                         substance=washing["substance"])
+        return washing, created
 
     def create_or_update_quenching(self, quenching):
         quenching, created = Quenching.objects.get_or_create(sid=quenching["sid"],
-                                                         method=quenching["method"],
-                                                         duration=quenching["duration"],
-                                                         substance=quenching["substance"])
+                                                             method=quenching["method"],
+                                                             duration=quenching["duration"],
+                                                             substance=quenching["substance"])
         return quenching, created
 
     def create_or_update_drying(self, drying):
         drying, created = Drying.objects.get_or_create(sid=drying["sid"],
-                                                         method=drying["method"],
-                                                         duration=drying["duration"],
-                                                         substance=drying["substance"])
+                                                       method=drying["method"],
+                                                       duration=drying["duration"],
+                                                       substance=drying["substance"])
         return drying, created
-
 
     def create_or_update_spotting(self, spotting):
         spotti, created = Spotting.objects.get_or_create(sid=spotting["sid"],
                                                          method=spotting["method"],
-                                                        )
+                                                         )
         return spotti, created
-
-
 
     def create_or_update_incubating(self, incubating):
         incub, created = Incubating.objects.get_or_create(sid=incubating["sid"],
@@ -254,8 +250,7 @@ class Database(object):
                                                           )
         return incub, created
 
-
-    def fill_dt(self,data_tables):
+    def fill_dt(self, data_tables):
         # Stores informations if any new media was loaded.
         created_p = []
         created_pb = []
@@ -264,7 +259,7 @@ class Database(object):
         created_a = []
         created_ab = []
 
-        #treatments
+        # treatments
         created_s = []
         created_q = []
         created_i = []
@@ -277,23 +272,23 @@ class Database(object):
             created_v.append(created)
 
         for k, virus_batch in data_tables["virus_batch"].iterrows():
-           _, created = self.create_or_update_virus_batch(virus_batch)
-           created_vb.append(created)
+            _, created = self.create_or_update_virus_batch(virus_batch)
+            created_vb.append(created)
 
         for k, peptide in data_tables["peptide"].iterrows():
             _, created = self.create_or_update_peptide(peptide)
             created_p.append(created)
 
         for k, peptide_batch in data_tables["peptide_batch"].iterrows():
-            _,created = self.create_or_update_peptide_batch(peptide_batch)
+            _, created = self.create_or_update_peptide_batch(peptide_batch)
             created_pb.append(created)
 
         for k, antibody in data_tables["antibody"].iterrows():
-            _,created = self.create_or_update_antibody(antibody)
+            _, created = self.create_or_update_antibody(antibody)
             created_a.append(created)
 
         for k, antibody_batch in data_tables["antibody_batch"].iterrows():
-            _,created = self.create_or_update_antibody_batch(antibody_batch)
+            _, created = self.create_or_update_antibody_batch(antibody_batch)
             created_ab.append(created)
 
         ############################################
@@ -325,7 +320,7 @@ class Database(object):
         print("washing:", any(created_w))
         print("drying:", any(created_d))
 
-    def create_or_update_process(self,steps):
+    def create_or_update_process(self, steps):
         steps_in_process = []
         for index, step in steps.iterrows():
             process_step = Step.objects.get(sid=step["sid"])
@@ -334,23 +329,21 @@ class Database(object):
         max_name = 0
         for process in Process.objects.all():
             result = re.search('P(.*)', process.sid)
-            #if result
+            # if result
             if bool(result):
                 if int(result.group(1)) > max_name:
                     print()
                     max_name = int(result.group(1))
             steps = list(process.steps.all())
-            print("This process steps:",steps_in_process)
-            print(" the steps of one process in all processes:",steps)
+            print("This process steps:", steps_in_process)
+            print(" the steps of one process in all processes:", steps)
 
             if steps == steps_in_process:
-                return process , False
-        new_sid = "P"+'{:03}'.format(max_name + 1)
+                return process, False
+        new_sid = "P" + '{:03}'.format(max_name + 1)
         process, created = Process.objects.get_or_create(sid=new_sid)
 
         return process, created
-
-
 
     def create_or_update_process_and_process_steps(self, steps):
         """
@@ -369,14 +362,12 @@ class Database(object):
 
         process, created = self.create_or_update_process(steps)
 
-
-
-        #experiment = Experiment.objects.get(sid=meta["sid"])
-        for index,step in  steps.iterrows():
-            #process_step = get_step_or_none(step)
+        # experiment = Experiment.objects.get(sid=meta["sid"])
+        for index, step in steps.iterrows():
+            # process_step = get_step_or_none(step)
             process_step = Step.objects.get(sid=step["sid"])
             user = get_user_or_none(step)
-            process_step, created = ProcessStep.objects.get_or_create(process = process,
+            process_step, created = ProcessStep.objects.get_or_create(process=process,
                                                                       step=process_step,
                                                                       index=index,
                                                                       user=user,
@@ -386,13 +377,7 @@ class Database(object):
         process.save()
         return process, created
 
-
-
-
-
-
-
-    def fill_raw_collection(self,dic_data):
+    def fill_raw_collection(self, dic_data):
         """
          :param  dic_data: a dictionary containing one of the following keys. Their values contain the corresponding data:
                             keys (data_format):     gal_ligand    tuple (Django File, fname)
@@ -413,19 +398,19 @@ class Database(object):
         gal_vir, gal_vir_created = self.fill_gal_lig2(dic_data["gal_ligand2"][0], dic_data["gal_ligand2"][1])
         gal_lig, gal_lig_created = self.fill_gal_lig1(dic_data["gal_ligand1"][0], dic_data["gal_ligand1"][1])
 
-
         # gets or creates raw_spot_collection
         raw_spot_collection, _ = RawSpotCollection.objects.get_or_create(sid=dic_data["meta"]["sid"],
                                                                          batch=dic_data["meta"]["holder_batch"],
-                                                                         experiment_type=dic_data["meta"]["holder_type"],
-                                                                         functionalization=dic_data["meta"]['surface_substance'],
+                                                                         experiment_type=dic_data["meta"][
+                                                                             "holder_type"],
+                                                                         functionalization=dic_data["meta"][
+                                                                             'surface_substance'],
                                                                          manufacturer=dic_data["meta"]['manfacturer'],
                                                                          gal_file1=gal_lig,
                                                                          gal_file2=gal_vir,
                                                                          process=process)
         if "image" in dic_data:
-            raw_spot_collection.image.save(dic_data["meta"]["sid"]+".jpg", dic_data["image"])
-
+            raw_spot_collection.image.save(dic_data["meta"]["sid"] + ".jpg", dic_data["image"])
 
     def fill_spot_collection(self, collection_id, q_collection_id):
         """
@@ -440,29 +425,28 @@ class Database(object):
                                                                         raw_spot_collection=raw_spot_collection
                                                                         )
 
-        return spot_collection ,created, raw_spot_collection
+        return spot_collection, created, raw_spot_collection
 
     def fill_raw_spot(self, collection_id, raw_spot):
 
         raw_spot_collection = RawSpotCollection.objects.get(sid=collection_id)
         try:
-            if raw_spot["Ligand1"]=="NO":
+            if raw_spot["Ligand1"] == "NO":
                 ligand1 = None
             else:
-                ligand1=LigandBatch.objects.get(sid=raw_spot["Ligand1"])
+                ligand1 = LigandBatch.objects.get(sid=raw_spot["Ligand1"])
         except:
             print("No Ligand found for Ligandbatch with sid:" + raw_spot["Ligand1"])
             ligand1 = None
         try:
-            if raw_spot["Ligand2"]=="NO":
+            if raw_spot["Ligand2"] == "NO":
                 ligand2 = None
             else:
-                ligand2=LigandBatch.objects.get(sid=raw_spot["Ligand2"])
+                ligand2 = LigandBatch.objects.get(sid=raw_spot["Ligand2"])
 
         except:
             print("No Ligand found for Ligandbatch with sid:" + raw_spot["Ligand2"])
             ligand2 = None
-
 
         raw_spot, created = RawSpot.objects.get_or_create(ligand1=ligand1,
                                                           ligand2=ligand2,
@@ -472,14 +456,12 @@ class Database(object):
                                                           )
         return raw_spot, created
 
-    def fill_spot(self, raw_spot,spot_collection, spot):
+    def fill_spot(self, raw_spot, spot_collection, spot):
         spo, created = Spot.objects.get_or_create(raw_spot=raw_spot,
-                                          intensity=spot["Intensity"],
-                                          std=spot["Std"],
-                                          spot_collection=spot_collection)
+                                                  intensity=spot["Intensity"],
+                                                  std=spot["Std"],
+                                                  spot_collection=spot_collection)
         return spo, created
-
-
 
     def fill_gal_lig1(self, gal_lig, fname_gal_lig):
         """
@@ -497,7 +479,6 @@ class Database(object):
             gal_ligand.file.save(fname_gal_lig, File(gal_lig))
 
         return gal_ligand, created
-
 
     def fill_gal_lig2(self, gal_ligand, fname_gal_lig2):
         """
@@ -517,8 +498,7 @@ class Database(object):
 
         return gal_lig2, created
 
-
-    def get_peptide_set(self,RawSpotCollection):
+    def get_peptide_set(self, RawSpotCollection):
         """
         :return: a set of peptides which were used in RawSpotCollection
         """
@@ -532,7 +512,7 @@ class Database(object):
                 unique_peptide_sid.append(raw_spot.peptide_batch.peptide.sid)
         return unique_peptide_sid
 
-    def get_virus_set(self,RawSpotCollection):
+    def get_virus_set(self, RawSpotCollection):
         """
         :return: a set of viruses which were used in RawSpotCollection
         """
@@ -554,7 +534,7 @@ class Database(object):
                         unique_ligand_sid.append(raw_spot.ligand_batch.ligand.sid)
         return unique_ligand_sid
 
-    def get_ligand1_set(self,RawSpotCollection):
+    def get_ligand1_set(self, RawSpotCollection):
 
         raw_spots = RawSpotCollection.rawspot_set.all()
         unique_ligand = []
@@ -566,15 +546,16 @@ class Database(object):
 
                 if not hasattr(ligand1, 'sid'):
                     warnings.warn(
-                        "No connection between ligand and ligand batch for ligand_batch: {}".format(raw_spot.ligand1.sid))
+                        "No connection between ligand and ligand batch for ligand_batch: {}".format(
+                            raw_spot.ligand1.sid))
                 else:
                     if ligand1.sid in unique_ligand_sid:
                         pass
                     else:
 
-                        #if ligand._get_ligand_type() == "Antibody":
-                            unique_ligand.append(ligand1)
-                            unique_ligand_sid.append(ligand1.sid)
+                        # if ligand._get_ligand_type() == "Antibody":
+                        unique_ligand.append(ligand1)
+                        unique_ligand_sid.append(ligand1.sid)
             except:
                 pass
 
@@ -605,11 +586,7 @@ class Database(object):
 
                 pass
 
-
-
-
         return unique_ligand
-
 
     def get_spots_of_collection(self, dic_data):
         """ """
@@ -623,7 +600,7 @@ class Database(object):
         spot = spot.rename(columns={0: "Ligand1"})
         spot["Ligand2"] = vir_cor_unstacked.values
         if "intensity" in dic_data:
-            spot["Intensity"]= dic_data["intensity"].unstack().values
+            spot["Intensity"] = dic_data["intensity"].unstack().values
 
         if "std" in dic_data:
             spot["Std"] = dic_data["std"].unstack().values
@@ -631,7 +608,6 @@ class Database(object):
             spot["Std"] = None
 
         return spot
-
 
     def fillmany2many_rawspots_peptides_viruses(self):
         """ """
@@ -644,8 +620,6 @@ class Database(object):
             for ligand1 in ligand1:
                 rsc.ligands1.add(ligand1)
 
-
-
     def fill_raw_collection_and_related_raw_spots(self, dic_data, dic_spots):
         """ """
         self.fill_raw_collection(dic_data)
@@ -654,12 +628,10 @@ class Database(object):
         for k, raw_spot in raw_spots.iterrows():
             self.fill_raw_spot(dic_data["meta"]["sid"], raw_spot)
 
-
-
     def fill_q_collection_and_related_spots(self, dic_data_q, q_collection_id):
         """ """
         spot_collection, created, raw_spot_collection = self.fill_spot_collection(dic_data_q["meta"]["sid"],
-                                                                                q_collection_id)
+                                                                                  q_collection_id)
         spots = self.get_spots_of_collection(dic_data_q)
         for k, spot in spots.iterrows():
             raw_spo = RawSpot.objects.get(raw_spot_collection=raw_spot_collection,
@@ -694,22 +666,18 @@ def fill_database(path_master, collection_ids):
 
         dic_spots = ma.read_dic_spots(collection_id)
 
-
         db.fill_raw_collection_and_related_raw_spots(dic_data_dj, dic_spots)
 
-
-        #fill_q_collection
+        # fill_q_collection
         q_collection_ids = ma.read_all_q_collection_ids_for_collection(collection_id)
         for q_collection_id in q_collection_ids:
-            dic_data_q = ma.read_q_collection(collection_id,q_collection_id)
+            dic_data_q = ma.read_q_collection(collection_id, q_collection_id)
             db.fill_q_collection_and_related_spots(dic_data_q, q_collection_id)
 
-    #many 2many relation
+    # many 2many relation
     db.fillmany2many_rawspots_peptides_viruses()
 
 
 ##############################################################
 if __name__ == "__main__":
-
     fill_database(path_master=path_master, collection_ids=collection_ids)
-

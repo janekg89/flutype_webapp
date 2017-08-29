@@ -3,45 +3,48 @@
     <!-- LIST OF RAWSPOTCOLLECTION -->
     <div class="row">
         <div class="col-lg-12">
-         <div class ="pull-right">
-            <a href="{{url('antibody_new')}}" class="top-menu"><span class="fa fa-plus-circle fa-4x text-success"></span></a>
-         </div>
+            <div class="pull-right">
+                <a href="{{ url('antibody_new') }}" class="top-menu"><span
+                        class="fa fa-plus-circle fa-4x text-success"></span></a>
+            </div>
             {% if type == "fixed" %}
                 <h1>Fixed Antibodies</h1>
-            {% elif type == "mobile"%}
+            {% elif type == "mobile" %}
                 <h1>Mobile Antibodies</h1>
             {% else %}
                 <h1>Antibodies</h1>
             {% endif %}
             {% if antibodies %}
 
-            <table id="antibodies" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Sid</th>
-                    <th>Target</th>
-                    <th>Name</th>
-                    <th>Database Link</th>
-                    <th>Comment</th>
-                    <th>Edit</th>
-
-                </tr>
-                </thead>
-                <tbody>
-                {% for antibody in antibodies %}
+                <table id="antibodies" class="table table-striped">
+                    <thead>
                     <tr>
-                        <td class="warning"><b>{{ antibody.sid }}</b></td>
-                        <td>{{ antibody.target }}</td>
-                        <td>{{ antibody.name }}</td>
-                        <td>{{ antibody.link_db }}</td>
-                        <td>{{ antibody.comment }}</td>
-                        <td><a href="{{url('antibody_edit', args=[antibody.id])}}" class="top-menu"><span class="fa fa-pencil" aria-hidden="true"></span> </a>
-                            <a href="{{url('antibody_delete', args=[antibody.id])}}" class="top-menu"><span class="fa fa-trash text-danger" aria-hidden="true"></span> </a> </td>
+                        <th>Sid</th>
+                        <th>Target</th>
+                        <th>Name</th>
+                        <th>Database Link</th>
+                        <th>Comment</th>
+                        <th>Edit</th>
 
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {% for antibody in antibodies %}
+                        <tr>
+                            <td class="warning"><b>{{ antibody.sid }}</b></td>
+                            <td>{{ antibody.target }}</td>
+                            <td>{{ antibody.name }}</td>
+                            <td>{{ antibody.link_db }}</td>
+                            <td>{{ antibody.comment }}</td>
+                            <td><a href="{{ url('antibody_edit', args=[antibody.id]) }}" class="top-menu"><span
+                                    class="fa fa-pencil" aria-hidden="true"></span> </a>
+                                <a href="{{ url('antibody_delete', args=[antibody.id]) }}" class="top-menu"><span
+                                        class="fa fa-trash text-danger" aria-hidden="true"></span> </a></td>
+
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
 
             {% else %}
                 <p>No entries in database.</p>
