@@ -383,6 +383,7 @@ class Database(object):
                                                                       start=step["start"],
                                                                       finish=step["finish"]
                                                                       )
+        process.save()
         return process, created
 
 
