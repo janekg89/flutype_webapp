@@ -17,8 +17,8 @@ before_script:
 
   python manage.py collectstatic
 script:
-  - python manage.py test test flutype --exclude-tag=local
- - coverage run --source='.' manage.py test flutype --exclude-tag=local
+- python manage.py test  flutype --exclude-tag=local
+- coverage run --source='.' manage.py test flutype --exclude-tag=local
 
 after_success:
-  - coveralls
+  coveralls
