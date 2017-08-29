@@ -1,0 +1,80 @@
+{% extends "flutype/base.html" %}
+{% block content %}
+    {% if type == "peptide" %}
+    <h1> Peptide Information</h1>
+    {%elif type == "virus"  %}
+        <h1> Virus Information</h1>
+
+    {%elif type == "antibody"  %}
+        <h1> Antibody Information</h1>
+
+    {%elif type == "peptide_batch"  %}
+            <h1> Peptide Batch Information</h1>
+
+    {%elif type == "antibody_batch"  %}
+        <h1> Antibody Batch Information</h1>
+
+    {%elif type == "virus_batch"  %}
+            <h1> Virus Batch Information</h1>
+    {%elif type == "step"  %}
+        {% if class %}
+            <h1> {{ class }} Information</h1>
+        {% else %}
+        <h1>Step Information</h1>
+        {% endif %}
+    {%elif type == "process"  %}
+        <h1> Process Information</h1>
+    {% endif %}
+
+
+
+
+
+      <form method="post" class="post-form">
+          <table id="edit">
+              <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+       {{form.as_table()}}
+           </table>
+                  <span style="float:left;">
+
+              <button class="btn btn-default">Save changes</button>
+                  </span>
+      </form>
+
+    {% if type == "peptide" %}
+       <form action={{url('peptides')}}>
+    {%elif type == "virus"  %}
+       <form action={{url('viruses')}}>
+    {%elif type == "antibody"  %}
+       <form action={{url('antibodies')}}>
+
+    {%elif type == "peptide_batch"  %}
+       <form action={{url('peptidebatches')}}>
+
+    {%elif type == "antibody_batch"  %}
+       <form action={{url('antibodybatches')}}>
+
+    {%elif type == "virus_batch"  %}
+       <form action={{url('virusbatches')}}>
+    {%elif type == "step"  %}
+       <form action={{url('steps')}}>
+    {%elif type == "process"  %}
+        <form action={{url('processes')}}>
+    {% endif %}
+
+    <span style="float:left;">
+    <button class="btn btn-default"> No, cancel.</button>
+        </span>
+    </form>
+
+{% endblock %}
+<script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+        $('#edit').DataTable({
+            searching: false,
+            paging: false,
+            info : false,
+            "order": []});
+        });
+    </script>

@@ -24,10 +24,11 @@ from django.contrib.auth import views as auth_views
 from django.views.generic import RedirectView
 
 
+
+
 urlpatterns = [
     
     url(r'^admin/', admin.site.urls),
-    # FIXME: the base url should be ^$'
     url(r'^flutype/', include('flutype.urls')),
     url(r'^$', RedirectView.as_view(pattern_name='index', permanent=False)),
     url(r'^login/$', auth_views.login, name='login'),

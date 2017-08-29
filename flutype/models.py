@@ -89,22 +89,14 @@ class Ligand(PolymorphicModel):
     Generic ligand.
     This can be for instance a peptide, virus or antibody.
     """
-    #objects = InheritanceManager()
     sid = models.CharField(max_length=CHAR_MAX_LENGTH, null=True)
     comment = models.TextField(blank=True, null=True)
-
-
-
-
-
-
 
 
 class Peptide(Ligand):
     """
     Pepide ligand.
     """
-
     linker = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     spacer = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     sequence = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
@@ -112,32 +104,27 @@ class Peptide(Ligand):
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
 
 
-
-
-
-
 class Virus(Ligand):
     """
     Virus ligand
     """
-    # FIXME: extend/change the virus model
     tax_id = models.CharField(max_length=CHAR_MAX_LENGTH, null=True)
     link_db = models.URLField(blank=True, null=True)
     # fludb_id
     subtype = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     isolation_country = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
-    # FIXME: wrong, i.ei, date_of_collection
     collection_date = models.CharField(max_length=10, blank=True, null=True)
     strain = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+
 
 class Antibody(Ligand):
     target = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     # FIXME: monoclonal/polyclonal
-    link_db =  models.URLField(blank=True, null=True)
+    link_db = models.URLField(blank=True, null=True)
 
 
-
+# TODO: complex
 
 
 ########################################
@@ -182,11 +169,6 @@ class LigandBatch(Batch):
     mobile = models.NullBooleanField(blank=True, null=True)
 
 
-
-
-
-
-
 class VirusBatch(LigandBatch):
     """
     Virus batch model
@@ -224,6 +206,8 @@ class Step(models.Model):
     objects = InheritanceManager()
     sid = models.CharField(max_length=CHAR_MAX_LENGTH,null=True, blank=True)
     method = models.CharField(max_length=300, null=True, blank=True)
+    temperature = models.CharField(max_length=300, null=True, blank=True)
+    comment = models.TextField(blank=True, null=True)
 
 
     @property
@@ -233,10 +217,18 @@ class Step(models.Model):
         return subclass_object
 
 
-
 class Washing(Step):
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
+
+
+class Blocking(Step):
+    substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
+    duration = models.DurationField(null=True, blank=True)
+
+
+class Scanning(Step):
+    pass
 
 
 class Drying(Step):
@@ -256,51 +248,6 @@ class Incubating(Step):
 class Quenching(Step):
     duration = models.DurationField(null=True, blank=True)
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
-
-"""
-
-
-class Process(models.Model):
-    '''
-        user: is the main user responsible for the experiment
-    '''
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
-
-    # washing = models.ForeignKey(Washing,null=True, blank=True)
-    # drying = models.ForeignKey(Drying,null=True, blank=True)
-    # spotting = models.ForeignKey(Spotting,null=True, blank=True)
-    # incubating = models.ForeignKey(Incubating,null=True, blank=True)
-    # quenching = models.ForeignKey(Quenching,null=True, blank=True)
-
-
-    # TODO: check what is best solution to store user
-    user = models.ForeignKey(User, null=True, blank=True)
-
-    # FIXME: property all users involved in the process, i.e.
-    # everybody involved in any step in the process
-    def users(self):
-        users = []
-        for step in self.steps.all():
-            users.append(step.user)
-        return users
-
-
-
-
-
-
-
-@receiver(m2m_changed, sender=Process.steps.trough)
-def verify_uniqueness(sender, **kwargs):
-    index = kwargs.get("index", None)
-    for step in steps:
-"""
-
-
-
-# TODO: find a clever solution to check if two processes are identical
-# independet of user & date (requires consistency in data)
-# Not sure if on model level or afterwards.
 
 
 ########################################
@@ -327,54 +274,72 @@ class Experiment(models.Model):
     functionalization = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Substance.choices)
     manufacturer = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Manufacturer.choices)
     process = models.ForeignKey("Process", blank=True, null=True)
-    #steps = models.ManyToManyField(Step, db_index=True, through='ProcessStep')
     comment = models.TextField(null=True, blank=True)
 
 
 class Process(models.Model):
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
-    steps = models.ManyToManyField(Step, db_index=True, through='ProcessStep')
+    """ A process is a collection of process steps.
+    Every step has an index.
 
-    @property
+    """
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH, unique=True)
+    steps = models.ManyToManyField(Step, through='ProcessStep')
+    unique_ordering = models.CharField(max_length=CHAR_MAX_LENGTH)
+
     def users(self):
         user_ids = self.processstep_set.values_list("user", flat="True").distinct()
         return User.objects.filter(id__in=user_ids)
-    def is_steps_in_process(self):
+
+
+    def is_step_in_process(self):
         result = True
         if self.steps.all().count() == 0:
             result = False
         return result
 
+    @property
+    def get_unique_ordering(self):
+        """ Creates DataFrame from given steps.
+        :return:
+        """
+        data = read_frame(self.processstep_set.all(), fieldnames=["step__sid", "index"])
+        data.sort_values(["index","step__sid"], ascending =[1,0])
+        order_steps = data["step__sid"]
+        vals = '-'.join(order_steps)
+        return vals
+
+
+    # TODO: overwrite the save method on model to add uniqueness constraint
+    def save(self, *args, **kwargs):
+        self.unique_ordering = self.get_unique_ordering
+        super(Process,self).save(*args,**kwargs)
+
+    def __str__(self):
+        return self.unique_ordering
+
+
 
 
 class ProcessStep(models.Model):
+    """ Single step in an actual process.
+        Connecting the Steps to the process, creating an order of the steps.
+
+        index: position of step in the process.
+
+    """
     process = models.ForeignKey(Process)
-    #experiment = models.ForeignKey(Experiment)
     step = models.ForeignKey(Step)
+    index = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(User, null=True, blank=True)
     start = models.DateTimeField(null=True, blank=True)
     finish = models.DateTimeField(null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
-    index = models.IntegerField(blank=True, null=True)
     # FIXME: property all users involved in the process, i.e.
     # everybody involved in any step in the process
 
     class Meta:
         unique_together = ('process', 'step', 'index')
-        ordering = ['index',]
-
-"""
-class Elisa(Experiment):
-    pass
-
-class MicrowellPlate(Experiment):
-    pass
-
-class Microarray(Experiment):
-    pass
-
-"""
-
+        ordering = ['index', ]
 
 
 class RawSpotCollection(Experiment):
@@ -450,41 +415,6 @@ class RawSpotCollection(Experiment):
         concentration.fillna(value="", inplace=True)
         return concentration
 
-    # TODO: refactor analyis function
-    def analysis(self):
-        """ Returns the analysis object. """
-        d = {'data_id': self.sid}
-
-        row = []
-        column = []
-        pep_name = []
-        vir_name = []
-        for raw_spot in self.rawspot_set.all():
-            row.append(raw_spot.row)
-            column.append(raw_spot.column)
-            if not hasattr(raw_spot.ligand1, 'sid'):
-                pep_name.append("")
-            else:
-                pep_name.append(raw_spot.ligand1.sid)
-            if not hasattr(raw_spot.ligand2, 'sid'):
-                pep_name.append("")
-            else:
-                vir_name.append(raw_spot.ligand2.sid)
-
-        data = pd.DataFrame(row, columns=["Row"])
-        data["Column"] = column
-        pep_data = data.copy()
-        vir_data = data.copy()
-
-        pep_data["Name"] = pep_name
-        vir_data["Name"] = vir_name
-
-        d['gal_vir'] = vir_data.copy()
-        d['gal_pep'] = pep_data.copy()
-        ana = analysis.Analysis(d)
-
-        return ana
-
 
 class RawSpot(models.Model):
     """
@@ -517,40 +447,6 @@ class SpotCollection(models.Model):
                                       "The Intesity values are calculated as the total intensity over that square. "
                                       "The image is not preprocessed.")
 
-    def analysis(self):
-        """ Returns the analysis object."""
-        d = {'data_id': self.raw_spot_collection.sid}
-        data = read_frame(self.spot_set.all(),fieldnames=["intensity"])
-        raw = []
-        column = []
-        pep_name = []
-        vir_name = []
-        for spot in self.spot_set.all():
-            raw.append(spot.raw_spot.row)
-            column.append(spot.raw_spot.column)
-            if not hasattr(spot.raw_spot.ligand1, 'sid'):
-                pep_name.append("")
-            else:
-                pep_name.append(spot.raw_spot.ligand1.sid)
-            if not hasattr(spot.raw_spot.ligand2, 'sid'):
-                pep_name.append("")
-            else:
-                vir_name.append(spot.raw_spot.ligand2.sid)
-
-        data["Row"] = raw
-        data["Column"] = column
-        pep_data = data.copy()
-        vir_data = data.copy()
-
-        pep_data["Name"] = pep_name
-        vir_data["Name"] = vir_name
-        d["gal_vir"] = vir_data.copy()
-        d["gal_pep"] = pep_data.copy()
-        d["data"] = data.pivot(index="Row", columns="Column", values="intensity")
-        ana = analysis.Analysis(d)
-        return ana
-
-
 # perhaps name Interaction
 class Spot(models.Model):
     """
@@ -562,8 +458,7 @@ class Spot(models.Model):
     intensity = models.FloatField(null=True, blank=True)
     std = models.FloatField(null=True, blank=True)
     spot_collection = models.ForeignKey(SpotCollection)
-    #TODO: add Coordinates on Image
-
+    #TODO: add Coordinates on image
 
 
 
