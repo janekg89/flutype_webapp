@@ -10,12 +10,12 @@ branches:
   only:
     - master
     - develop
-
 install:
-  pip install -r requirements.txt
-
+  - pip install -r requirements.txt
+  - pip install coveralls
+before_script:
+  python manage.py collectstatic
 script:
-  python manage.py test
-
-# after_success:
-#   pip install codecov; codecov
+- coverage run --source='.' manage.py test flutype --exclude-tag=local
+after_success:
+  coveralls

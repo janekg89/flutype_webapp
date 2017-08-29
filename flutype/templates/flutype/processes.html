@@ -3,6 +3,9 @@
     <!-- LIST OF Virsuses -->
     <div class="row">
         <div class="col-lg-12">
+            <div class ="pull-right">
+                <a href="{{ url('process_new')}}" class="top-menu"><span class="fa fa-plus-circle fa-4x text-success"></span></a>
+            </div>
             <h1>Processes</h1>
             {% if processes %}
 
@@ -10,25 +13,24 @@
                 <thead>
                 <tr>
                     <th>Sid</th>
-
                     <th>Steps</th>
                     <th>Applied on RawSpot Collections</th>
+                    <th>Edit</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for process in processes %}
                     <tr>
                         <td> <a href="{{ url('processview', args=[process.id])}}"> {{ process.sid }}  </a> </td>
-                        <td>
-                            {% for step in process.steps.all()%}
-                                {{ step.sid }}
-                            {% endfor %}
-                        </td>
+                        <td>{{ process.unique_ordering }}</td>
                         <td>
                             {% for experiment in process.experiment_set.all()%}
                                 <a href="{{ url('rawspotcollectionview', args=[experiment.id]) }}">{{ experiment.sid}}</a>
                             {% endfor %}
                         </td>
+                        <td><a href="{{url('process_edit', args=[process.id])}}" class="top-menu"><span class="fa fa-pencil" aria-hidden="true"></span> </a>
+                            <a href="{{url('process_delete', args=[process.id])}}" class="top-menu"><span class="fa fa-trash text-danger" aria-hidden="true"></span> </a> </td>
+
                     </tr>
                 {% endfor %}
                 </tbody>

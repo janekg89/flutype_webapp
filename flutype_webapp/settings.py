@@ -44,9 +44,7 @@ INSTALLED_APPS = [
     'polymorphic',
     'imagekit',
     'rest_framework',
-    'crispy_forms',
-
-]
+    ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -157,6 +155,8 @@ INTERNAL_IPS = ['127.0.0.1', ]
 
 LOGIN_REDIRECT_URL = '/index'
 LOGIN_URL = '/login/'
+
+
 
 
 ######################################################################################

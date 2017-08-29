@@ -255,12 +255,6 @@ class Database(object):
         return incub, created
 
 
-
-
-
-
-
-
     def fill_dt(self,data_tables):
         # Stores informations if any new media was loaded.
         created_p = []
@@ -389,6 +383,7 @@ class Database(object):
                                                                       start=step["start"],
                                                                       finish=step["finish"]
                                                                       )
+        process.save()
         return process, created
 
 
@@ -692,11 +687,9 @@ def fill_database(path_master, collection_ids):
     data_tables = ma.read_data_tables()
     db.fill_dt(data_tables)
 
-
-
     # loads collection
     for collection_id in collection_ids:
-        #fill raw collection
+        # fill raw collection
         dic_data_dj = ma.read_raw_collection(collection_id)
 
         dic_spots = ma.read_dic_spots(collection_id)

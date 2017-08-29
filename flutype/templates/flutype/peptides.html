@@ -2,7 +2,9 @@
 {% block content %}
     <div class="row">
         <div class="col-lg-12">
-            <a href="{{url('peptide_new')}}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+            <div class ="pull-right">
+            <a href="{{url('peptide_new')}}" class="top-menu"><span class="fa fa-plus-circle fa-4x text-success"></span></a>
+            </div>
             {% if type == "fixed" %}
                 <h1>Fixed Peptides</h1>
             {% elif type == "mobile"%}
@@ -22,6 +24,7 @@
                     <th>C-Terminus</th>
                     <th>Name</th>
                     <th>Comment</th>
+                    <th>Edit</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -34,6 +37,8 @@
                         <td>{{ p.c_terminus }}</td>
                         <td>{{ p.name }}</td>
                         <td>{{ p.comment }}</td>
+                        <td><a href="{{url('peptide_edit', args=[p.id])}}" class="top-menu"><span class="fa fa-pencil" aria-hidden="true"></span> </a>
+                            <a href="{{url('peptide_delete', args=[p.id])}}" class="top-menu"><span class="fa fa-trash text-danger" aria-hidden="true"></span> </a> </td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -45,11 +50,12 @@
         </div>
     </div>
 {% endblock %}
-
 {% block javascript %}
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
-            $('#peptides').DataTable();
-        });
+    $('#peptides').DataTable( {
+    } );
+} );
+
     </script>
 {% endblock %}
