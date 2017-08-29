@@ -282,9 +282,9 @@ class Process(models.Model):
     Every step has an index.
 
     """
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
-    steps = models.ManyToManyField(Step, db_index=True, through='ProcessStep')
-
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH, unique=True)
+    steps = models.ManyToManyField(Step, through='ProcessStep')
+    unique_ordering = models.CharField(max_length=CHAR_MAX_LENGTH)
 
     def users(self):
         user_ids = self.processstep_set.values_list("user", flat="True").distinct()
@@ -298,16 +298,26 @@ class Process(models.Model):
         return result
 
     @property
-    def identical_ordering(self):
+    def get_unique_ordering(self):
         """ Creates DataFrame from given steps.
-
         :return:
         """
-        data = read_frame(self.processstep_set.all(), fieldnames=["process__sid", "index"])
-        # TODO: sort step id by index, create string S1-S2-S3, use this string to compare
-        return data
+        data = read_frame(self.processstep_set.all(), fieldnames=["step__sid", "index"])
+        data.sort_values(["index","step__sid"], ascending =[1,0])
+        order_steps = data["step__sid"]
+        vals = '-'.join(order_steps)
+        return vals
+
 
     # TODO: overwrite the save method on model to add uniqueness constraint
+    def save(self, *args, **kwargs):
+        self.unique_ordering = self.get_unique_ordering
+        super(Process,self).save(*args,**kwargs)
+
+    def __str__(self):
+        return self.unique_ordering
+
+
 
 
 class ProcessStep(models.Model):
