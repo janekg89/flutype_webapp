@@ -21,4 +21,6 @@ djangorestframework
 django-crispy-forms
 
 
+coverage
+
 
