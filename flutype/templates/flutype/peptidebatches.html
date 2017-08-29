@@ -3,69 +3,73 @@
     <!-- LIST OF RAWSPOTCOLLECTION -->
     <div class="row">
         <div class="col-lg-12">
-            <div class ="pull-right">
-            <a href="{{url('peptide_batch_new')}}" class="top-menu"><span class="fa fa-plus-circle fa-4x text-success"></span></a>
+            <div class="pull-right">
+                <a href="{{ url('peptide_batch_new') }}" class="top-menu"><span
+                        class="fa fa-plus-circle fa-4x text-success"></span></a>
             </div>            {% if type == "fixed" %}
-                <h1>Fixed Peptide Batches</h1>
-            {% elif type == "mobile"%}
-                <h1>Mobile Peptide Batches</h1>
-            {% else %}
-                <h1>Peptide Batches</h1>
-            {% endif %}
+            <h1>Fixed Peptide Batches</h1>
+        {% elif type == "mobile" %}
+            <h1>Mobile Peptide Batches</h1>
+        {% else %}
+            <h1>Peptide Batches</h1>
+        {% endif %}
             {% if peptide_batches %}
-            <table id="peptide_batches" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Sid Peptide Batch</th>
-                    <th>Sid Peptide</th>
-                    <th>Linker</th>
-                    <th>Spacer</th>
-                    <th>Sequence</th>
-                    <th>C-Terminus</th>
-                    <th>Name</th>
-                    <th>Concentration</th>
-                    <th>Buffer</th>
-                    <th>pH</th>
-                    <th>Purity</th>
-                    <th>Labeling</th>
-                    <th>Produced by</th>
-                    <th>Production Date</th>
-                    <th>Comment</th>
-                    <th>Edit</th>
-
-                </tr>
-                </thead>
-                <tbody>
-                {% for peptidebatch in peptide_batches.all() %}
+                <table id="peptide_batches" class="table table-striped">
+                    <thead>
                     <tr>
-                        <td class="warning">
-                            <b>{{ peptidebatch.sid }}</b>
-                        </td>
-                        <!-- peptide information -->
-                        {% with p=peptidebatch.ligand%}
-                        <td class="danger">{{ p.sid }}</td>
-                        <td class="danger">{{ p.linker }}</td>
-                        <td class="danger">{{ p.spacer }}</td>
-                        <td class="danger">{{ p.sequence }}</td>
-                        <td class="danger">{{ p.c_terminus }}</td>
-                        <td class="danger">{{ p.name }}</td>
-                        {%  endwith %}
-                        <!-- batch information -->
-                        <td>{{ peptidebatch.concentration }}</td>
-                        <td>{{ peptidebatch.buffer }}</td>
-                        <td>{{ peptidebatch.ph }}</td>
-                        <td>{{ peptidebatch.purity }}</td>
-                        <td>{{ peptidebatch.labeling }}</td>
-                        <td>{{ peptidebatch.produced_by }}</td>
-                        <td>{{ peptidebatch.production_date }}</td>
-                        <td>{{ peptidebatch.comment }}</td>
-                        <td><a href="{{url('peptide_batch_edit', args=[peptidebatch.id])}}" class="top-menu"><span class="fa fa-pencil" aria-hidden="true"></span> </a>
-                            <a href="{{url('peptide_batch_delete', args=[peptidebatch.id])}}" class="top-menu"><span class="fa fa-trash text-danger" aria-hidden="true"></span> </a> </td>
+                        <th>Sid Peptide Batch</th>
+                        <th>Sid Peptide</th>
+                        <th>Linker</th>
+                        <th>Spacer</th>
+                        <th>Sequence</th>
+                        <th>C-Terminus</th>
+                        <th>Name</th>
+                        <th>Concentration</th>
+                        <th>Buffer</th>
+                        <th>pH</th>
+                        <th>Purity</th>
+                        <th>Labeling</th>
+                        <th>Produced by</th>
+                        <th>Production Date</th>
+                        <th>Comment</th>
+                        <th>Edit</th>
 
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {% for peptidebatch in peptide_batches.all() %}
+                        <tr>
+                            <td class="warning">
+                                <b>{{ peptidebatch.sid }}</b>
+                            </td>
+                            <!-- peptide information -->
+                            {% with p=peptidebatch.ligand %}
+                                <td class="danger">{{ p.sid }}</td>
+                                <td class="danger">{{ p.linker }}</td>
+                                <td class="danger">{{ p.spacer }}</td>
+                                <td class="danger">{{ p.sequence }}</td>
+                                <td class="danger">{{ p.c_terminus }}</td>
+                                <td class="danger">{{ p.name }}</td>
+                            {% endwith %}
+                            <!-- batch information -->
+                            <td>{{ peptidebatch.concentration }}</td>
+                            <td>{{ peptidebatch.buffer }}</td>
+                            <td>{{ peptidebatch.ph }}</td>
+                            <td>{{ peptidebatch.purity }}</td>
+                            <td>{{ peptidebatch.labeling }}</td>
+                            <td>{{ peptidebatch.produced_by }}</td>
+                            <td>{{ peptidebatch.production_date }}</td>
+                            <td>{{ peptidebatch.comment }}</td>
+                            <td><a href="{{ url('peptide_batch_edit', args=[peptidebatch.id]) }}" class="top-menu"><span
+                                    class="fa fa-pencil" aria-hidden="true"></span> </a>
+                                <a href="{{ url('peptide_batch_delete', args=[peptidebatch.id]) }}"
+                                   class="top-menu"><span class="fa fa-trash text-danger" aria-hidden="true"></span>
+                                </a></td>
+
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
 
             {% else %}
                 <p>No entries in database.</p>

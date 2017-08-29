@@ -72,14 +72,17 @@ if path not in sys.path:
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flutype_webapp.settings")
 
 import django
+
 django.setup()
 ###############################################
-from flutype.data_management.read_flutype_analysis_db import load_procedure_data , load_db_from_formular
+from flutype.data_management.read_flutype_analysis_db import load_procedure_data, load_db_from_formular
 
 # fix for py3
 try:
     input = raw_input
-except NameError: pass
+except NameError:
+    pass
+
 
 class Master(object):
     """ Class for operations on master files. """
@@ -101,7 +104,7 @@ class Master(object):
         :param data_tables_dic:
         :return:
         """
-        if not os.path.exists( self.data_tables_path):
+        if not os.path.exists(self.data_tables_path):
             os.makedirs(self.data_tables_path)
 
         for key in data_tables_dic:
@@ -120,18 +123,18 @@ class Master(object):
         """
         :return: data_tables_dic
         """
-        data_tables_dic ={}
+        data_tables_dic = {}
         for fn in os.listdir(self.data_tables_path):
             key = re.search('(.*).csv', fn)
-            d_file = os.path.join(self.data_tables_path,fn)
-            data_tables_dic[key.group(1)] = pd.read_csv(d_file, sep="\t", encoding='utf-8',dtype=str)
-            data_tables_dic[key.group(1)].replace([np.NaN], [None] , inplace=True)
+            d_file = os.path.join(self.data_tables_path, fn)
+            data_tables_dic[key.group(1)] = pd.read_csv(d_file, sep="\t", encoding='utf-8', dtype=str)
+            data_tables_dic[key.group(1)].replace([np.NaN], [None], inplace=True)
         return data_tables_dic
 
     def read_steps(self, collection_id):
         file_path = os.path.join(self.collections_path, collection_id, "steps.csv")
         steps = pd.read_csv(file_path, sep="\t", encoding='utf-8')
-        steps.replace([np.NaN], [None] , inplace=True)
+        steps.replace([np.NaN], [None], inplace=True)
         return steps
 
     def create_or_update_gal_ligand(self, gal_ligand, collection_id):
@@ -155,33 +158,33 @@ class Master(object):
         """
         collection_path = os.path.join(self.collections_path, collection_id)
         for fn in os.listdir(collection_path):
-            result = re.search( 'lig_fix_(.*).txt', fn)
+            result = re.search('lig_fix_(.*).txt', fn)
             if bool(result):
                 f_name = fn
                 break
-        gal_lig_f = os.path.join(self.collections_path,collection_id,f_name)
+        gal_lig_f = os.path.join(self.collections_path, collection_id, f_name)
         if format == "pd":
             gal_ligand = pd.read_csv(gal_lig_f, sep='\t', index_col="ID")
-        elif format=="dj":
+        elif format == "dj":
             gal_ligand = open(gal_lig_f, "rb")
         else:
             LookupError("format name wrong")
         return gal_ligand, f_name
 
-    def create_or_update_gal_virus(self,gal_virus_data,collection_id):
+    def create_or_update_gal_virus(self, gal_virus_data, collection_id):
         """
         saves gal_virus
         :param gal_virus_data:
         :param collection_id:
         :return:
         """
-        #file_path = os.path.join(self.collections_path, collection_id, "gal_virus.csv")
+        # file_path = os.path.join(self.collections_path, collection_id, "gal_virus.csv")
         fname, _ = self.get_unique_gal_vir(gal_virus_data)
         file_path = os.path.join(self.collections_path, collection_id, fname)
 
         gal_virus_data.to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
 
-    def read_gal_virus(self, collection_id,format="pd"):
+    def read_gal_virus(self, collection_id, format="pd"):
         """
 
         :param collection_id:
@@ -196,11 +199,11 @@ class Master(object):
             if bool(result):
                 f_name = fn
                 break
-        gal_lig_f = os.path.join(self.collections_path,collection_id,f_name)
+        gal_lig_f = os.path.join(self.collections_path, collection_id, f_name)
         if format == "pd":
             gal_virus = pd.read_csv(gal_lig_f, sep='\t', index_col="ID")
         elif format == "dj":
-            gal_virus= open(gal_lig_f, "rb")
+            gal_virus = open(gal_lig_f, "rb")
         else:
             LookupError("format name wrong")
         return gal_virus, f_name
@@ -215,13 +218,11 @@ class Master(object):
 
         path_file = os.path.join(self.collections_path, collection_id, 'meta.csv')
         with open(path_file, 'w') as f:
-            writer = csv.writer(f,delimiter="\t")
-            for key , value in meta.items():
-                writer.writerow([key,value])
+            writer = csv.writer(f, delimiter="\t")
+            for key, value in meta.items():
+                writer.writerow([key, value])
 
-
-
-    def read_meta(self,collection_id):
+    def read_meta(self, collection_id):
         """
 
         :param collection_id:
@@ -233,16 +234,15 @@ class Master(object):
             meta = dict(reader)
         return meta
 
-    def create_or_update_image(self,image_data, collection_id):
+    def create_or_update_image(self, image_data, collection_id):
         """
 
         :param image_data:
         :param collection_id:
         :return:
         """
-        path_file = os.path.join(self.collections_path,collection_id,"image.jpg")
+        path_file = os.path.join(self.collections_path, collection_id, "image.jpg")
         cv2.imwrite(path_file, image_data)
-
 
     def read_image(self, collection_id, format="cv2"):
         """
@@ -252,14 +252,13 @@ class Master(object):
                        dj
         :return: image: depending on format.
         """
-        path_file = os.path.join(self.collections_path,collection_id,"image.jpg")
+        path_file = os.path.join(self.collections_path, collection_id, "image.jpg")
         if format == "cv2":
-            return cv2.imread(path_file,0)
+            return cv2.imread(path_file, 0)
         elif format == "dj":
             return File(open(path_file, "rb"))
 
-
-    def create_or_update_intensity(self, intensity_data, collection_id,q_collection_id):
+    def create_or_update_intensity(self, intensity_data, collection_id, q_collection_id):
         """
         saves intensity
         :param intensity_data:
@@ -268,16 +267,14 @@ class Master(object):
         :return:
         """
 
-        file_path = os.path.join(self.collections_path,  collection_id,q_collection_id, "intensity.csv")
+        file_path = os.path.join(self.collections_path, collection_id, q_collection_id, "intensity.csv")
         intensity_data.to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
 
-    def read_intensity(self,collection_id,q_collection_id):
-        file_path = os.path.join(self.collections_path,  collection_id,q_collection_id, "intensity.csv")
+    def read_intensity(self, collection_id, q_collection_id):
+        file_path = os.path.join(self.collections_path, collection_id, q_collection_id, "intensity.csv")
         return pd.read_csv(file_path, sep='\t', index_col=0)
 
-
-
-    def create_or_update_std(self, std_data, collection_id,q_collection_id):
+    def create_or_update_std(self, std_data, collection_id, q_collection_id):
         """
         saves std
         :param std_data:
@@ -286,15 +283,15 @@ class Master(object):
         :return:
         """
 
-        file_path = os.path.join(self.collections_path, collection_id,q_collection_id, "std.csv")
+        file_path = os.path.join(self.collections_path, collection_id, q_collection_id, "std.csv")
         std_data.to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
 
-    def read_std(self,collection_id,q_collection_id):
+    def read_std(self, collection_id, q_collection_id):
         file_path = os.path.join(self.collections_path, collection_id, q_collection_id, "std.csv")
         return pd.read_csv(file_path, sep="\t", index_col=0)
 
-
-    def create_or_update_collection(self, collection_id, dic_data, q_collection_id="not", quantified_only=False, type="microarray"):
+    def create_or_update_collection(self, collection_id, dic_data, q_collection_id="not", quantified_only=False,
+                                    type="microarray"):
 
         """
         The method is updating the desired data in the collection folder of one collection. The keys corresond to the specific data, which shell by updated.
@@ -318,7 +315,7 @@ class Master(object):
         :return:
         """
 
-        collection_path = os.path.join(self.collections_path,collection_id)
+        collection_path = os.path.join(self.collections_path, collection_id)
         q_collection_path = os.path.join(collection_path, q_collection_id)
 
         # creates path to collection if not yet present
@@ -332,7 +329,8 @@ class Master(object):
                 self.create_or_update_gal_virus(dic_data["gal_virus"], collection_id)
                 self.create_or_update_meta(dic_data["meta"], collection_id)
                 self.create_or_update_image(dic_data["image"], collection_id)
-                self.create_or_update_intensity(dic_data["intensity"], collection_id=collection_id, q_collection_id=q_collection_id)
+                self.create_or_update_intensity(dic_data["intensity"], collection_id=collection_id,
+                                                q_collection_id=q_collection_id)
 
             elif quantified_only:
                 # creates path to quantified collection if not yet present
@@ -340,9 +338,11 @@ class Master(object):
                     os.makedirs(q_collection_path)
 
                 # saves quantified data
-                self.create_or_update_intensity(dic_data["intensity"], collection_id=collection_id, q_collection_id=q_collection_id)
+                self.create_or_update_intensity(dic_data["intensity"], collection_id=collection_id,
+                                                q_collection_id=q_collection_id)
                 if "std" in dic_data:
-                    self.create_or_update_std(dic_data["std"], collection_id=collection_id, q_collection_id=q_collection_id)
+                    self.create_or_update_std(dic_data["std"], collection_id=collection_id,
+                                              q_collection_id=q_collection_id)
 
             else:
                 # saves raw and quantified data
@@ -356,9 +356,11 @@ class Master(object):
                     # creates path to quantified collection if not yet present
                     if not os.path.exists(q_collection_path):
                         os.makedirs(q_collection_path)
-                    self.create_or_update_intensity(dic_data["intensity"], collection_id=collection_id, q_collection_id=q_collection_id)
+                    self.create_or_update_intensity(dic_data["intensity"], collection_id=collection_id,
+                                                    q_collection_id=q_collection_id)
                 if "std" in dic_data:
-                    self.create_or_update_std(dic_data["std"], collection_id=collection_id, q_collection_id=q_collection_id)
+                    self.create_or_update_std(dic_data["std"], collection_id=collection_id,
+                                              q_collection_id=q_collection_id)
 
         elif type == "microwell":
             if q_collection_id == "raw":
@@ -382,8 +384,7 @@ class Master(object):
             if "std" in dic_data:
                 self.create_or_update_std(dic_data["std"], collection_id=collection_id, q_collection_id=q_collection_id)
 
-
-    def flush_collection(self, collection, quantified=False ,only_quantified=False, user_input=True):
+    def flush_collection(self, collection, quantified=False, only_quantified=False, user_input=True):
 
         """
         All data in Master folder will be deleted.
@@ -405,7 +406,6 @@ class Master(object):
             else:
                 return
 
-
     def read_raw_collection(self, collection_id):
         """
         reads data of one collection in the master folder.
@@ -423,18 +423,18 @@ class Master(object):
                                                 std          (pandas.DataFrame -> Columns: "Columns" Index:"Row" Value: Standard deviation)
         """
         dic_data = {}
-        dic_data["meta"]=self.read_meta(collection_id)
-        dic_data["steps"]=self.read_steps(collection_id)
+        dic_data["meta"] = self.read_meta(collection_id)
+        dic_data["steps"] = self.read_steps(collection_id)
         dic_data["gal_ligand1"] = self.read_gal_ligand(collection_id, format="dj")
         dic_data["gal_ligand2"] = self.read_gal_virus(collection_id, format="dj")
         # FIXME: IF dic_data["meta"][holdertype]=microarray ...
         # or think how to show and or store rawcollection/quantified colelction.
         try:
-            dic_data["image"] =  self.read_image(collection_id,format="dj")
+            dic_data["image"] = self.read_image(collection_id, format="dj")
         except:
             pass
         try:
-            dic_data["intensity"] = self.read_intensity(collection_id,".")
+            dic_data["intensity"] = self.read_intensity(collection_id, ".")
         except:
             pass
         return dic_data
@@ -446,25 +446,23 @@ class Master(object):
         dic_data["meta"] = self.read_meta(collection_id)
         return dic_data
 
-    def read_q_collection(self,collection_id, q_collection_id):
-        #FIXME: Read q_meta
+    def read_q_collection(self, collection_id, q_collection_id):
+        # FIXME: Read q_meta
         dic_data = {}
         dic_data["gal_ligand1"] = self.read_gal_ligand(collection_id)[0]
         dic_data["gal_ligand2"] = self.read_gal_virus(collection_id)[0]
         dic_data["meta"] = self.read_meta(collection_id)
-        dic_data["intensity"] = self.read_intensity(collection_id,q_collection_id)
+        dic_data["intensity"] = self.read_intensity(collection_id, q_collection_id)
         try:
-            dic_data["std"] = self.read_std(collection_id,q_collection_id)
+            dic_data["std"] = self.read_std(collection_id, q_collection_id)
         except:
             pass
         return dic_data
 
-    def read_all_q_collection_ids_for_collection(self,collection_id):
-        collection_path = os.path.join(self.collections_path,collection_id)
+    def read_all_q_collection_ids_for_collection(self, collection_id):
+        collection_path = os.path.join(self.collections_path, collection_id)
         q_collections = next(os.walk(collection_path))[1]
         return q_collections
-
-
 
     def create_or_update_unique_gal_lig(self, gal_lig):
         """
@@ -494,14 +492,14 @@ class Master(object):
                 fpath = os.path.join(self.unique_lig_gal_path, fname)
                 break
         else:
-            #else: create  a new file
+            # else: create  a new file
             created = True
             fname = 'lig_fix_' + '{:03}'.format(max_name + 1) + '.txt'
             fpath = os.path.join(self.unique_lig_gal_path, fname)
             gal_lig.to_csv(fpath, sep='\t')
         return fname, fpath, created
 
-    def get_unique_gal_lig(self,gal_lig):
+    def get_unique_gal_lig(self, gal_lig):
         for fn in os.listdir(self.unique_lig_gal_path):
             file_path = os.path.join(self.unique_lig_gal_path, fn)
             # reads the matching file
@@ -581,7 +579,8 @@ if __name__ == "__main__":
     # all sids of microwell collections
     microwell_collection_ids = ["2017-05-12_MTP_R1",
                                 "2017-06-13_MTP"
-                               ]
+                                ]
+
 
     def rename_dic(dic_data):
         """
@@ -601,6 +600,7 @@ if __name__ == "__main__":
             dic_data["std"] = dic_data.pop("data_std")
         return dic_data
 
+
     # fill master/data_tables
     path_formular_db = "media/forumular_db/"
     # loads data tabels information from formular
@@ -611,7 +611,7 @@ if __name__ == "__main__":
     # read microarrays
     for collection_id in microarray_collection_ids:
         # loading gal_vi,gal_pep, picture,data, data_std
-        #dic_data = utils.load_data(collection_id, PATTERN_DIR_MICROARRAY.format(collection_id))#fixme
+        # dic_data = utils.load_data(collection_id, PATTERN_DIR_MICROARRAY.format(collection_id))#fixme
 
         # renaming keys
         dic_data = rename_dic(dic_data)
@@ -625,12 +625,13 @@ if __name__ == "__main__":
         ma.create_or_update_unique_gal_lig(dic_data["gal_ligand"])
 
         # saving microarray collection data
-        ma.create_or_update_collection(collection_id, dic_data, q_collection_id="q001", quantified_only=False, type="microarray")
+        ma.create_or_update_collection(collection_id, dic_data, q_collection_id="q001", quantified_only=False,
+                                       type="microarray")
 
     # Read microwells
     for collection_id in microwell_collection_ids:
         # loading gal_vi,gal_pep, picture,data, data_std
-        #dic_data = utils.load_data(collection_id, PATTERN_DIR_MICROWELL.format(collection_id)) #fixme
+        # dic_data = utils.load_data(collection_id, PATTERN_DIR_MICROWELL.format(collection_id)) #fixme
         # renaming keys
         dic_data = rename_dic(dic_data)
         # loading procedure data from formular
@@ -641,5 +642,5 @@ if __name__ == "__main__":
         ma.create_or_update_unique_gal_lig(dic_data["gal_ligand"])
 
         # saving microwell plate collection data
-        ma.create_or_update_collection(collection_id, dic_data, q_collection_id = "raw",
-                                                                    quantified_only=False, type="microwell")
+        ma.create_or_update_collection(collection_id, dic_data, q_collection_id="raw",
+                                       quantified_only=False, type="microwell")

@@ -11,7 +11,8 @@
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="{{ static('flutype/css/bootstrap.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ static('flutype/js/datatables.min.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ static('winmarkltd-BootstrapFormHelpers-d4201db/dist/css/bootstrap-formhelpers.min.css') }}"/>
+    <link rel="stylesheet" type="text/css"
+          href="{{ static('winmarkltd-BootstrapFormHelpers-d4201db/dist/css/bootstrap-formhelpers.min.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ static('flutype/font-awesome-4.7.0/css/font-awesome.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ static('flutype/css/custom.css') }}"/>
 
@@ -20,7 +21,8 @@
     <script type="text/javascript" src="{{ static('flutype/js/tether-1.4.0.min.js') }}"></script>
     <script type="text/javascript" src="{{ static('flutype/js/bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ static('flutype/js/datatables-1.10.15.min.js') }}"></script>
-    <script type="text/javascript" src="{{ static('winmarkltd-BootstrapFormHelpers-d4201db/dist/js/bootstrap-formhelpers.min.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ static('winmarkltd-BootstrapFormHelpers-d4201db/dist/js/bootstrap-formhelpers.min.js') }}"></script>
 
     <!-- HEAD -->
     {% block head %}{% endblock %}
@@ -40,71 +42,104 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="nav navbar-nav" href="{{ url('index') }}">
-                <img style="width:50px" src="{{ static('flutype/images/flutype-logo.png') }}"></a>
+            <a class="nav navbar-nav" href="{{ url('index')}}">
+                <img style="width:50px" src="{{static('flutype/images/flutype-logo.png')}}"></a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 {% if request.user.is_authenticated %}
-                    <li class="active"><a href="{{ url('index') }}"><i class="fa fa-building fa-fw"></i> Experiments <span class="sr-only">(current)</span></a></li>
-                    <li class="dropdown active" >
-                        <a data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-anchor fa-fw" ></i>  Fixed Ligands  <span class="caret"></span> </a>
+                    <li class="active"><a href="{{ url('index') }}"><i class="fa fa-building fa-fw"></i> Experiments
+                        <span class="sr-only">(current)</span></a></li>
+                    <li class="dropdown active">
+                        <a data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-anchor fa-fw"></i>
+                            Fixed Ligands <span class="caret"></span> </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li> <a href="{{ url('peptidebatches_fixed')}}">Peptide Batches <span class="sr-only">(current)</span></a></li>
-                            <li> <a href="{{ url('peptides_fixed')}}">Peptides <span class="sr-only">(current)</span></a></li>
-                            <li> <a href="{{ url('virusbatches_fixed')}}">Virus Batches <span class="sr-only">(current)</span></a></li>
-                            <li> <a href="{{ url('viruses_fixed')}}">Viruses <span class="sr-only">(current)</span></a></li>
-                            <li> <a href="{{ url('antibodybatches_fixed')}}">Antibody Batches <span class="sr-only">(current)</span></a></li>
-                            <li> <a href="{{ url('antibodies_fixed')}}">Antibodies <span class="sr-only">(current)</span></a></li>
+                            <li><a href="{{ url('peptidebatches_fixed') }}">
+                                Peptide Batches <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li><a href="{{ url('peptides_fixed') }}">Peptides <span
+                                    class="sr-only">(current)</span></a></li>
+                            <li><a href="{{ url('virusbatches_fixed') }}">Virus Batches <span
+                                    class="sr-only">(current)</span></a></li>
+                            <li><a href="{{ url('viruses_fixed') }}">Viruses <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li><a href="{{ url('antibodybatches_fixed') }}">
+                                Antibody Batches <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li><a href="{{ url('antibodies_fixed') }}">Antibodies <span
+                                    class="sr-only">(current)</span></a></li>
 
 
                         </ul>
                     </li>
-                    <li class="dropdown active" >
-                        <a data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-tint fa-fw" ></i>  Mobile Ligands  <span class="caret"></span> </a>
+                    <li class="dropdown active">
+                        <a data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-tint fa-fw"></i>
+                            Mobile Ligands <span class="caret"></span> </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li> <a href="{{ url('peptidebatches_mobile')}}">Peptide Batches <span class="sr-only">(current)</span></a></li>
-                            <li> <a href="{{ url('peptides_mobile')}}">Peptides <span class="sr-only">(current)</span></a></li>
-                            <li> <a href="{{ url('virusbatches_mobile')}}">Virus Batches <span class="sr-only">(current)</span></a></li>
-                            <li> <a href="{{ url('viruses_mobile')}}">Viruses <span class="sr-only">(current)</span></a></li>
-                            <li> <a href="{{ url('antibodybatches_mobile')}}">Antibody Batches <span class="sr-only">(current)</span></a></li>
-                            <li> <a href="{{ url('antibodies_mobile')}}">Antibodies <span class="sr-only">(current)</span></a></li>
+                            <li><a href="{{ url('peptidebatches_mobile') }}">
+                                Peptide Batches <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li><a href="{{ url('peptides_mobile') }}">Peptides <span
+                                    class="sr-only">(current)</span></a></li>
+                            <li><a href="{{ url('virusbatches_mobile') }}">Virus Batches <span
+                                    class="sr-only">(current)</span></a></li>
+                            <li><a href="{{ url('viruses_mobile') }}">Viruses <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li><a href="{{ url('antibodybatches_mobile') }}">
+                                Antibody Batches <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li><a href="{{ url('antibodies_mobile') }}">Antibodies <span
+                                    class="sr-only">(current)</span></a></li>
 
 
                         </ul>
                     </li>
-                    <li class="dropdown active" >
-                        <a data-toggle="dropdown" role="button" aria-expanded="false"> <i class="fa fa-magic" aria-hidden="true"></i> Process  <span class="caret"></span> </a>
+                    <li class="dropdown active">
+                        <a data-toggle="dropdown" role="button" aria-expanded="false"> <i class="fa fa-magic"
+                                                                                          aria-hidden="true"></i>
+                            Process <span class="caret"></span> </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href={{ url('processes')}}> Processes <span class="sr-only">(current)</span></a> </li>
-                            <li><a href={{ url('steps')}}> Process Steps <span class="sr-only">(current)</span></a> </li>
+                            <li><a href={{ url('processes') }}> Processes <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li><a href={{ url('steps') }}> Process Steps <span class="sr-only">(current)</span></a>
+                            </li>
 
 
                         </ul>
                     </li>
-                    <li class="active"><a href="{{ url('users') }}"> <i class="fa fa-group fa-fw"></i> Users <span class="sr-only">(current)</span></a></li>
+                    <li class="active"><a href="{{ url('users') }}"> <i class="fa fa-group fa-fw"></i> Users <span
+                            class="sr-only">(current)</span></a></li>
 
                 {% endif %}
-                <li class="active"><a href="{{ url('about') }}"><i class="fa fa-info fa-fw"></i> About <span class="sr-only">(current)</span></a></li>
+                <li class="active"><a href="{{ url('about') }}"><i class="fa fa-info fa-fw"></i> About <span
+                        class="sr-only">(current)</span></a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
                 {% if request.user.is_authenticated %}
-                    <li class="dropdown active" >
-                        <a data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user fa-fw" ></i> {{ request.user.get_username() }}  <span class="caret"></span> </a>
+                    <li class="dropdown active">
+                        <a data-toggle="dropdown" role="button" aria-expanded="false"><i
+                                class="fa fa-user fa-fw"></i> {{ request.user.get_username() }} <span
+                                class="caret"></span> </a>
                         <ul class="dropdown-menu" role="menu">
-                        <li> <a href="{{ url('my_index')}}"> <i class="fa fa-user fa-fw" aria-hidden="true"></i> My Experiments </a> </li>
-						<li> <a href="{{ url('change_password')}}"> <i  class="fa fa-key"></i> Change Password </a> </li>
-						<li> <a href="{{ url('logout') }}?next={{ request.path }}"> <i class="fa fa-sign-out fa-fw"> </i> Logout</a> </li>
-					    </ul>
+                            <li><a href="{{ url('my_index') }}"> <i class="fa fa-user fa-fw" aria-hidden="true"></i> My
+                                Experiments </a></li>
+                            <li><a href="{{ url('change_password') }}"> <i class="fa fa-key"></i> Change Password </a>
+                            </li>
+                            <li><a href="{{ url('logout') }}?next={{ request.path }}"> <i
+                                    class="fa fa-sign-out fa-fw"> </i> Logout</a></li>
+                        </ul>
                     </li>
                 {% else %}
-                    <li class="active"><a href="{{ url('login') }}?next={{ request.path }}"><i class="fa fa-sign-in fa-fw"></i> Login</a></li>
+                    <li class="active"><a href="{{ url('login') }}?next={{ request.path }}"><i
+                            class="fa fa-sign-in fa-fw"></i> Login</a></li>
                 {% endif %}
-                <li class="active"> <a href="http://cloud.flutype.de/owncloud"><i class="fa fa-cloud fa-fw"></i> Cloud</a>
-                <li class="active"> <a href="https://github.com/janekg89/flutype_webapp"><i class="fa fa-github fa-fw"></i> Github</a>
+                <li class="active"><a href="http://cloud.flutype.de/owncloud"><i class="fa fa-cloud fa-fw"></i>
+                    Cloud</a>
+                <li class="active"><a href="https://github.com/janekg89/flutype_webapp"><i
+                        class="fa fa-github fa-fw"></i> Github</a>
 
             </ul>
         </div><!-- /.navbar-collapse -->
