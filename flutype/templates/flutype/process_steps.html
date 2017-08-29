@@ -2,18 +2,33 @@
 {% block content %}
     <div class="row">
         <div class="col-lg-12">
-        <!-- Buttons -->
+            <!-- Buttons -->
             <div class="row">
                 <div class="btn-group  pull-right">
-                    <button class="btn dropdown-toggle glyphicon glyphicon-triangle-bottom" data-toggle="dropdown" > <span class="fa fa-plus-circle fa-4x text-success"></span> </button>
+                    <button class="btn dropdown-toggle glyphicon glyphicon-triangle-bottom" data-toggle="dropdown"><span
+                            class="fa fa-plus-circle fa-4x text-success"></span></button>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-                       <li><a href="{{url('step_new' , args=["Washing"])}}"> <i class="fa fa-shower" aria-hidden="true"> </i>  Washing</a></li>
-                       <li><a href="{{url('step_new' , args=["Drying"])}}"> <i class="fa fa-bullhorn" aria-hidden="true"> </i>  Drying</a></li>
-                       <li><a href="{{url('step_new' , args=["Spotting"])}}"> <i class="fa fa-anchor fa-fw" aria-hidden="true"> </i> Spotting </a></li>
-                       <li><a href="{{url('step_new' , args=["Quenching"])}}"> <i class="fa fa-chain-broken" aria-hidden="true"> </i> Quenching</a></li>
-                       <li><a href="{{url('step_new' , args=["Blocking"])}}"> <i class="fa fa-pause" aria-hidden="true"> </i> Blocking </a></li>
-                       <li><a href="{{url('step_new' , args=["Incubating"])}}"> <i class="fa fa-tint" aria-hidden="true"></i> Incubating </a></li>
-                       <li><a href="{{url('step_new' , args=["Scanning"])}}"> <i class="fa fa-camera" aria-hidden="true"></i> Scanning</a></li>
+                        <li><a href="{{ url('step_new' , args=["Washing"]) }}"> <i class="fa fa-shower"
+                                                                                   aria-hidden="true"> </i> Washing</a>
+                        </li>
+                        <li><a href="{{ url('step_new' , args=["Drying"]) }}"> <i class="fa fa-bullhorn"
+                                                                                  aria-hidden="true"> </i> Drying</a>
+                        </li>
+                        <li><a href="{{ url('step_new' , args=["Spotting"]) }}"> <i class="fa fa-anchor fa-fw"
+                                                                                    aria-hidden="true"> </i> Spotting
+                        </a></li>
+                        <li><a href="{{ url('step_new' , args=["Quenching"]) }}"> <i class="fa fa-chain-broken"
+                                                                                     aria-hidden="true"> </i> Quenching</a>
+                        </li>
+                        <li><a href="{{ url('step_new' , args=["Blocking"]) }}"> <i class="fa fa-pause"
+                                                                                    aria-hidden="true"> </i> Blocking
+                        </a></li>
+                        <li><a href="{{ url('step_new' , args=["Incubating"]) }}"> <i class="fa fa-tint"
+                                                                                      aria-hidden="true"></i> Incubating
+                        </a></li>
+                        <li><a href="{{ url('step_new' , args=["Scanning"]) }}"> <i class="fa fa-camera"
+                                                                                    aria-hidden="true"></i> Scanning</a>
+                        </li>
 
 
                     </ul>
@@ -21,47 +36,49 @@
             </div>
             <h1>Process Steps</h1>
             {% if steps %}
-            <table id="steps" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Sid Step</th>
-                    <th>Type</th>
-                    <th>Method</th>
-                    <th>Temperature</th>
-                    <th>substance</th>
-                    <th>Duration</th>
-                    <th>Comment</th>
-                    <th>Edit</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for s in steps.all() %}
-                    {% with sg = s.get_step_type %}
-                        {% with class = sg.__class__.__name__  %}
+                <table id="steps" class="table table-striped">
+                    <thead>
                     <tr>
-                        <td class="warning"> <b> {{sg.sid }}</b> </td>
-                        <td> {{ sg.__class__.__name__ }}</td>
-                        <td>{{ sg.method }}</td>
-                        <td>{{ sg.temperature }}</td>
-                        {% if class == "Spotting" or class == "Incubating" or class == "Scanning" %}
-                        <td class="danger">  </td>
-                        {% else %}
-                            <td>{{ sg.substance }}</td>
-                        {% endif %}
-                        {% if class == "Spotting" or class == "Scanning" %}
-                            <td class="danger">  </td>
-                        {% else %}
-                            <td>{{ sg.duration }}</td>
-                        {% endif %}
-                        <td>{{ sg.comment }}</td>
-                        <td><a href="{{url('step_edit', args=[sg.id])}}" class="top-menu"><span class="fa fa-pencil" aria-hidden="true"></span> </a>
-                            <a href="{{url('step_delete', args=[sg.id])}}" class="top-menu"><span class="fa fa-trash text-danger" aria-hidden="true"></span> </a> </td>
+                        <th>Sid Step</th>
+                        <th>Type</th>
+                        <th>Method</th>
+                        <th>Temperature</th>
+                        <th>substance</th>
+                        <th>Duration</th>
+                        <th>Comment</th>
+                        <th>Edit</th>
                     </tr>
+                    </thead>
+                    <tbody>
+                    {% for s in steps.all() %}
+                        {% with sg = s.get_step_type %}
+                            {% with class = sg.__class__.__name__ %}
+                                <tr>
+                                    <td class="warning"><b> {{ sg.sid }}</b></td>
+                                    <td> {{ sg.__class__.__name__ }}</td>
+                                    <td>{{ sg.method }}</td>
+                                    <td>{{ sg.temperature }}</td>
+                                    {% if class == "Spotting" or class == "Incubating" or class == "Scanning" %}
+                                        <td class="danger"></td>
+                                    {% else %}
+                                        <td>{{ sg.substance }}</td>
+                                    {% endif %}
+                                    {% if class == "Spotting" or class == "Scanning" %}
+                                        <td class="danger"></td>
+                                    {% else %}
+                                        <td>{{ sg.duration }}</td>
+                                    {% endif %}
+                                    <td>{{ sg.comment }}</td>
+                                    <td><a href="{{ url('step_edit', args=[sg.id]) }}" class="top-menu"><span
+                                            class="fa fa-pencil" aria-hidden="true"></span> </a>
+                                        <a href="{{ url('step_delete', args=[sg.id]) }}" class="top-menu"><span
+                                                class="fa fa-trash text-danger" aria-hidden="true"></span> </a></td>
+                                </tr>
                             {% endwith %}
-                    {% endwith %}
-                {% endfor %}
-                </tbody>
-            </table>
+                        {% endwith %}
+                    {% endfor %}
+                    </tbody>
+                </table>
             {% else %}
                 <p>No entries in database.</p>
             {% endif %}
@@ -72,9 +89,8 @@
 {% block javascript %}
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
-    $('#steps').DataTable( {
-    } );
-} );
+            $('#steps').DataTable({});
+        });
 
     </script>
 {% endblock %}
