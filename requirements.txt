@@ -20,4 +20,3 @@ django-imagekit
 djangorestframework
 
 python-coveralls
-
