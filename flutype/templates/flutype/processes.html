@@ -13,7 +13,6 @@
                 <thead>
                 <tr>
                     <th>Sid</th>
-
                     <th>Steps</th>
                     <th>Applied on RawSpot Collections</th>
                     <th>Edit</th>
@@ -23,11 +22,7 @@
                 {% for process in processes %}
                     <tr>
                         <td> <a href="{{ url('processview', args=[process.id])}}"> {{ process.sid }}  </a> </td>
-                        <td>
-                            {% for step in process.steps.all()%}
-                                {{ step.sid }}
-                            {% endfor %}
-                        </td>
+                        <td>{{ process.unique_ordering }}</td>
                         <td>
                             {% for experiment in process.experiment_set.all()%}
                                 <a href="{{ url('rawspotcollectionview', args=[experiment.id]) }}">{{ experiment.sid}}</a>
