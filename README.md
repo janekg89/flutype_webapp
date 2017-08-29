@@ -3,7 +3,7 @@
 # flutype webapp
 [![Build Status](https://travis-ci.org/janekg89/flutype_webapp.svg?branch=develop)](https://travis-ci.org/janekg89/flutype_webapp)
 [![License (LGPL version 3)](https://img.shields.io/badge/license-LGPLv3.0-blue.svg?style=flat-square)](http://opensource.org/licenses/LGPL-3.0)
-
+[![Coverage Status](https://coveralls.io/repos/github/janekg89/flutype_webapp/badge.svg?branch=develop)](https://coveralls.io/github/janekg89/flutype_webapp?branch=develop)
 ## Introduction
 This project develops a web application for the data management of binding assays for the classification of influenza subtypes.
  

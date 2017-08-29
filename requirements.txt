@@ -20,7 +20,8 @@ django-imagekit
 djangorestframework
 django-crispy-forms
 
+django-nose
 
-coverage
 
+python-coveralls
 
