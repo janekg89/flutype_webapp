@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'polymorphic',
     'imagekit',
     'rest_framework',
-    'crispy_forms',
     ]
 
 MIDDLEWARE = [
