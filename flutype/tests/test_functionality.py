@@ -17,10 +17,6 @@ from flutype.models import RawSpotCollection, SpotCollection, Process
 
 class SeleniumTestCase(LiveServerTestCase):
 
-    @classmethod
-    def setUpTestData(cls):
-        create_users(user_defs=user_defs)
-
     def setUp(self):
         self.driver = webdriver.PhantomJS(service_args=['--ignore-ssl-errors=true', '--ssl-protocol=any',
                                                    '--web-security=false'])
@@ -49,7 +45,6 @@ class SeleniumTestCase(LiveServerTestCase):
         self.login(expected_url)
         self.driver.find_element_by_link_text("387139").click()
         self.assertIn("https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=387139", self.driver.current_url)
-        self.driver.save_screenshot('screenshot1.png')
 
     def test_heatmap(self):
         id = SpotCollection.objects.first().id
@@ -57,10 +52,8 @@ class SeleniumTestCase(LiveServerTestCase):
         self.login(expected_url)
         # keep a watch on jQuery 'active' attribute
         # page should be stable enough now, and we can perform desired actions
-        self.driver.implicitly_wait(10)
         elem = WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of_element_located((By.ID, 'container')))
         retval = self.driver.execute_script("return lig1;", elem)
-
         self.assertEqual(len(retval), 25)
 
     def test_barplot(self):
@@ -76,7 +69,6 @@ class SeleniumTestCase(LiveServerTestCase):
         # self.driver.save_screenshot('screenshot.png')
 
         retval = self.driver.execute_script("return Chart(dataPlot);", elem)
-
         self.assertEqual(len(retval),2)
 
 
