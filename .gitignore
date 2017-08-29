@@ -12,4 +12,5 @@ dbdata/
 ghostdriver.log
 node_modules/
 media/CACHE/
-
+htmlcov/
+.coverage

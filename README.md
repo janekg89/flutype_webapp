@@ -36,8 +36,21 @@ sudo tar xvjf phantomjs-2.1.1-linux-x86_64.tar.bz2 -C /usr/local/share/
 sudo ln -s /usr/local/share/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/
 phantomjs --version
 ```
+## Coverage
 
+Coverage of Test are run via
+```angular2html
+coverage run --source='.' manage.py test
 
+```
+a report is displayed via:
+```angular2html
+coverage report
+```
+a html report is saved via:
+```angular2html
+coverage html
+```
 ## Container & Deployment
 For testing and deployment gunicorn and docker scripts are available. These are still experimental.
 
