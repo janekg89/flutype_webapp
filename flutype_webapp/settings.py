@@ -30,13 +30,7 @@ ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', 'flutype.de', 'www.flutype.de']
 # SECURITY WARNING: don't run create users with default password in production !
 DEFAULT_USER_PASSWORD = 'flutype_db'
 
-# Use nose to run all tests
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
-# Tell nose to measure coverage on the 'foo' and 'bar' apps
-NOSE_ARGS = [
-    '--with-coverage'
-    ]
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -51,8 +45,7 @@ INSTALLED_APPS = [
     'imagekit',
     'rest_framework',
     'crispy_forms',
-    'django_nose',
-]
+    ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
