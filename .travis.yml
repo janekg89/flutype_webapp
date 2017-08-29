@@ -10,16 +10,12 @@ branches:
   only:
     - master
     - develop
-
 install:
   - pip install -r requirements.txt
   - pip install coveralls
 before_script:
-
   python manage.py collectstatic
 script:
-- python manage.py test  flutype --exclude-tag=local
-- coverage run --source='.' manage.py test flutype --exclude-tag=local
-
+- coverage run --source='.' manage.py test flutype
 after_success:
   coveralls
