@@ -127,6 +127,8 @@ class Antibody(Ligand):
 
 
 # TODO: complex
+class Complex(models.Model):
+    ligands = models.ManyToManyField(Ligand)
 
 
 ########################################
