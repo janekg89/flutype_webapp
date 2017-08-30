@@ -26,6 +26,8 @@ from model_utils.managers import InheritanceManager
 from polymorphic.models import PolymorphicModel
 from imagekit.models import ImageSpecField
 from imagekit.processors import Transpose, ResizeToFit
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes import fields
 
 CHAR_MAX_LENGTH = 50
 
@@ -95,6 +97,7 @@ class Ligand(PolymorphicModel):
     comment = models.TextField(blank=True, null=True)
 
 
+
 class Peptide(Ligand):
     """
     Pepide ligand.
@@ -127,8 +130,8 @@ class Antibody(Ligand):
 
 
 # TODO: complex
-class Complex(models.Model):
-    ligands = models.ManyToManyField(Ligand)
+class Complex(Ligand):
+    ligands = models.ManyToManyField(Ligand, related_name="complex_ligands")
 
 
 ########################################
@@ -171,6 +174,8 @@ class LigandBatch(Batch):
     """
     ligand = models.ForeignKey(Ligand, blank=True, null=True)
     mobile = models.NullBooleanField(blank=True, null=True)
+
+
 
 
 class VirusBatch(LigandBatch):
@@ -426,6 +431,7 @@ class RawSpot(models.Model):
     ligand2 = models.ForeignKey(LigandBatch, related_name="ligand2", null=True, blank=True)
     column = models.IntegerField()
     row = models.IntegerField()
+
 
     class Meta:
         unique_together = ('column', 'row', 'raw_spot_collection')
