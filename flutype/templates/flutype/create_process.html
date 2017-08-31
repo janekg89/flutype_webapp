@@ -1,0 +1,61 @@
+{% extends "flutype/base.html" %}
+{% block content %}
+    <div >
+        <h1> Process Information</h1>
+
+
+
+    <form class="form-horizontal">
+      <form method="post" class="post-form">
+          <table id="edit">
+              <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+              {{ form.management_form }}
+                <div id="items-form-container">
+                {% for item_form in form %}
+                <div id="item-{{ loop.counter0 }}">
+                    {{ form.empty_form}}
+                </div>
+                {% endfor %}
+            </div>
+          </table>
+                        <span style="float:left;">
+                  <a href="#" id="add-item-button" class="btn btn-default add-item">Add Item</a>
+              <button class="btn btn-default">Save changes</button>
+                  </span>
+      </form>
+        <form action={{url('processes')}}>
+    <span style="float:left;">
+    <button class="btn btn-default"> No, cancel.</button>
+        </span>
+    </form>
+    </form>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/html" id="item-template">
+<div id="item-__prefix__">
+    {{ form.empty_form }}
+</div>
+</script>
+<script>
+$(document).ready(function() {
+    $('.add-item').click(function(ev) {
+        ev.preventDefault();
+        var count = $('#items-form-container').children().length;
+        var tmplMarkup = $('#item-template').html();
+        var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+        $('div#items-form-container').append(compiledTmpl);
+
+        // update form count
+        $('#id_item_items-TOTAL_FORMS').attr('value', count+1);
+
+        // some animate to scroll to view our new form
+        $('html, body').animate({
+                scrollTop: $("#add-item-button").position().top-200
+            }, 800);
+    });
+});
+</script>
+{% endblock %}
