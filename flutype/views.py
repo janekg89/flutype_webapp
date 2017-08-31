@@ -699,13 +699,16 @@ def step_delete(request, pk):
 @login_required
 def process_new(request):
     if request.method == 'POST':
-        form = Steps2FormSet(request.POST)
-        if form.is_valid():
-            form.save()
+        formset = Steps2FormSet(request.POST)
+        if formset.is_valid():
+            for form in formset:
+                print(form.step)
+                # todo not redirect but load process data. add button to go back to process
+
             return redirect('processes')
     else:
-        form = Steps2FormSet()
-        return render(request, 'flutype/create_process.html', {'form': form, 'type': 'process'})
+        formset = Steps2FormSet()
+        return render(request, 'flutype/create_process.html', {'formset': formset, 'type': 'process'})
 
 
 @login_required
@@ -715,6 +718,7 @@ def process_edit(request, pk):
         form = ProcessForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
+
             return redirect('processes')
     else:
         form = ProcessForm(instance=instance)

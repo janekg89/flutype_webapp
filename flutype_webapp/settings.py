@@ -29,7 +29,6 @@ ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', 'flutype.de', 'www.flutype.de']
 # SECURITY WARNING: don't run create users with default password in production !
 DEFAULT_USER_PASSWORD = 'flutype_db'
 
-CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 # Application definition
 INSTALLED_APPS = [
