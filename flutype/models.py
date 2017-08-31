@@ -95,6 +95,8 @@ class Ligand(PolymorphicModel):
     """
     sid = models.CharField(max_length=CHAR_MAX_LENGTH, null=True)
     comment = models.TextField(blank=True, null=True)
+    def __str__(self):
+        return self.sid
 
 
 
@@ -129,7 +131,6 @@ class Antibody(Ligand):
     link_db = models.URLField(blank=True, null=True)
 
 
-# TODO: complex
 class Complex(Ligand):
     ligands = models.ManyToManyField(Ligand, related_name="complex_ligands")
 
@@ -173,7 +174,6 @@ class LigandBatch(Batch):
         mobile: is the ligand immobilized on surface, or in solution (other options ?)
     """
     ligand = models.ForeignKey(Ligand, blank=True, null=True)
-    mobile = models.NullBooleanField(blank=True, null=True)
 
 
 
@@ -223,6 +223,11 @@ class Step(models.Model):
         """ Type of step."""
         subclass_object = Step.objects.get_subclass(id=self.id)
         return subclass_object
+
+    def __str__(self):
+        return self.sid
+
+
 
 
 class Washing(Step):
@@ -321,8 +326,7 @@ class Process(models.Model):
         self.unique_ordering = self.get_unique_ordering
         super(Process, self).save(*args, **kwargs)
 
-    def __str__(self):
-        return self.unique_ordering
+
 
 
 class ProcessStep(models.Model):
