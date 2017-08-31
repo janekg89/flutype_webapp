@@ -9,11 +9,11 @@
       <form method="post" class="post-form">
           <table id="edit">
               <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-              {{ form.management_form }}
+              {{ formset.management_form }}
                 <div id="items-form-container">
-                {% for item_form in form %}
+                {% for item_form in formset %}
                 <div id="item-{{ loop.counter0 }}">
-                    {{ form.empty_form}}
+                    {{ formset.empty_form}}
                 </div>
                 {% endfor %}
             </div>
@@ -36,7 +36,7 @@
 {% block javascript %}
     <script type="text/html" id="item-template">
 <div id="item-__prefix__">
-    {{ form.empty_form }}
+    {{ formset.empty_form }}
 </div>
 </script>
 <script>
