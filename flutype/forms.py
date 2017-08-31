@@ -128,5 +128,5 @@ class Steps2Form(forms.Form):
    step = forms.ModelChoiceField(Step.objects.all())
 
 
-Steps2FormSet = formset_factory(Steps2Form, extra=2)
+Steps2FormSet = formset_factory(Steps2Form, extra=1)
 
