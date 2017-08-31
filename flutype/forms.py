@@ -1,5 +1,7 @@
-
+import numpy as np
 from django import forms
+from django.forms import formset_factory
+
 from .models import Peptide, PeptideBatch, Virus, VirusBatch, Antibody, AntibodyBatch, \
     ProcessStep, Step, Spotting, Washing, Drying, Quenching, Blocking, Scanning, Incubating, \
     Process
@@ -113,7 +115,18 @@ class ProcessForm(forms.ModelForm):
     orderer_steps = OrderedModelMultipleChoiceField(Step.objects.all())
     class Meta:
         model = Process
-        fields = '__all__'
+        fields = ['sid']
 
 
+class ProcessFormUpdate(forms.ModelForm):
+    orderer_steps = OrderedModelMultipleChoiceField(Step.objects.all())
+    class Meta:
+        model = Process
+        fields = ['sid']
+
+class Steps2Form(forms.Form):
+   step = forms.ModelChoiceField(Step.objects.all())
+
+
+Steps2FormSet = formset_factory(Steps2Form, extra=2)
 

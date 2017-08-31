@@ -8,9 +8,12 @@ from rest_framework.response import Response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 
+
 from .forms import PeptideForm, VirusForm, AntibodyForm, AntibodyBatchForm, \
     PeptideBatchForm, VirusBatchForm, StepForm, QuenchingForm, WashingForm, \
-    DryingForm, SpottingForm, BlockingForm, IncubatingForm, ScanningForm, ProcessForm
+    DryingForm, SpottingForm, BlockingForm, IncubatingForm, ScanningForm, ProcessForm,\
+     Steps2Form, Steps2FormSet
+
 from .models import RawSpotCollection, SpotCollection, Process, PeptideBatch, \
     Peptide, VirusBatch, Virus, AntibodyBatch, Antibody, Step
 from django.shortcuts import get_object_or_404, render, redirect
@@ -696,13 +699,13 @@ def step_delete(request, pk):
 @login_required
 def process_new(request):
     if request.method == 'POST':
-        form = ProcessForm(request.POST)
+        form = Steps2FormSet(request.POST)
         if form.is_valid():
             form.save()
             return redirect('processes')
     else:
-        form = ProcessForm()
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'process'})
+        form = Steps2FormSet()
+        return render(request, 'flutype/create_process.html', {'form': form, 'type': 'process'})
 
 
 @login_required
@@ -715,7 +718,8 @@ def process_edit(request, pk):
             return redirect('processes')
     else:
         form = ProcessForm(instance=instance)
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'process'})
+
+        return render(request, 'flutype/create_process.html', {'form': form, "process": instance})
 
 
 @login_required
