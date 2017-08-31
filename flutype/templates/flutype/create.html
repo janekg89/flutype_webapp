@@ -29,12 +29,12 @@
 
 
 
-
+    <form class="form-horizontal">
       <form method="post" class="post-form">
           <table id="edit">
               <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
-       {{form.as_table()}}
+       {{ form.as_table() }}
            </table>
                   <span style="float:left;">
 
@@ -66,6 +66,7 @@
     <span style="float:left;">
     <button class="btn btn-default"> No, cancel.</button>
         </span>
+    </form>
     </form>
 
 {% endblock %}
