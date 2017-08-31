@@ -69,7 +69,6 @@ urlpatterns = [
     url(r'^antibodybatches_mobile/$', views.antibody_batch_mobile_view, name='antibodybatches_mobile'),
     url(r'^antibodybatches_fixed/$', views.antibody_batch_fixed_view, name='antibodybatches_fixed'),
 
-    url(r'^test/$', views.test_view, name='test'),
     url(r'^password/$', views.change_password_view, name='change_password'),
 
     # renders spot collections

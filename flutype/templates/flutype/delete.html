@@ -46,6 +46,8 @@
        <form action={{url('virusbatches')}}>
     {%elif type == "step"  %}
        <form action={{url('steps')}}>
+    {%elif type == "process"  %}
+       <form action={{url('processes')}}>
     {% endif %}
         <span style="float:left;">
             <button class="btn btn-default"> No, cancel.</button>

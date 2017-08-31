@@ -44,9 +44,7 @@ INSTALLED_APPS = [
     'polymorphic',
     'imagekit',
     'rest_framework',
-    'crispy_forms',
-    'bootstrapform_jinja',
-]
+    ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
