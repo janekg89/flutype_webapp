@@ -29,6 +29,8 @@ ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', 'flutype.de', 'www.flutype.de']
 # SECURITY WARNING: don't run create users with default password in production !
 DEFAULT_USER_PASSWORD = 'flutype_db'
 
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -42,6 +44,8 @@ INSTALLED_APPS = [
     'polymorphic',
     'imagekit',
     'rest_framework',
+    'crispy_forms',
+    'bootstrapform_jinja',
 ]
 
 MIDDLEWARE = [
@@ -64,6 +68,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'environment': 'flutype_webapp.jinja2.environment',
+
         },
     },
 
@@ -77,6 +82,10 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                "django.template.context_processors.i18n",
+                "django.template.context_processors.media",
+                "django.template.context_processors.static",
+                "django.template.context_processors.tz",
             ],
         },
     },
