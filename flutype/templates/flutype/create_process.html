@@ -11,7 +11,7 @@
               <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
               {{ formset.management_form }}
 
-              <div id="items-form-container">
+              <div id="items-form-container" class="link-formset">
                 {% for item_form in formset %}
                     <div id="item-{{ loop.counter0 }}">
                             {{ loop.index }}
@@ -25,9 +25,12 @@
                 {% endfor %}
 
               <script type="text/html" id="item-template">
-                <p id="item-__prefix__">
-                    {{ formset.empty_form.step}}  </p>
+                <text id="item-__prefix__">
+                    <span id="counter"></span>
+                    {{ formset.Total}}
+                    {{ formset.empty_form.step}}  </text>
                 </script>
+
               </div>
 
 
@@ -44,10 +47,22 @@
     </form>
     </div>
 
+
 {% endblock %}
 
 {% block javascript %}
+<script type="text/javascript">
+$(document).ready(function() {
 
+var count = {{ formset.total_form_count() }};
+
+$("#add-item-button").click(function() {
+    count++;
+    $("#counter").text(count);
+})
+});
+
+</script>
 <script>
 $(document).ready(function() {
     $('.add-item').click(function(ev) {
@@ -66,5 +81,12 @@ $(document).ready(function() {
             }, 800);
     });
 });
+</script>
+
+    <script>
+    $('.link-formset').formset({
+        addText: 'add item',
+        deleteText: 'remove'
+    });
 </script>
 {% endblock %}
