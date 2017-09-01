@@ -714,16 +714,27 @@ def process_new(request):
 @login_required
 def process_edit(request, pk):
     instance = get_object_or_404(Process, pk=pk)
-    if request.method == 'POST':
-        form = ProcessForm(request.POST, instance=instance)
-        if form.is_valid():
-            form.save()
+    ordered_steps=instance.unique_ordering.split("-")
+    initial = []
+    for index, step in enumerate(ordered_steps):
+        initialstep = {}
+        initialstep["step"] = get_object_or_404(Step, sid=step)
+        initial.append(initialstep)
+    #initial['form-TOTAL_FORMS'] = '{}'.format(len(ordered_steps)-1)
+    #initial['form-TOTAL_FORMS']='0'
 
+    if request.method == 'POST':
+        formset = Steps2FormSet(request.POST,initial=initial)
+
+        if formset.is_valid():
+            formset.save()
             return redirect('processes')
     else:
-        form = ProcessForm(instance=instance)
 
-        return render(request, 'flutype/create_process.html', {'form': form, "process": instance})
+        formset = Steps2FormSet(initial=initial)
+
+
+        return render(request, 'flutype/create_process.html', {'formset': formset, "process": instance})
 
 
 @login_required
