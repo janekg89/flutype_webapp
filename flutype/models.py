@@ -217,6 +217,7 @@ class Step(models.Model):
     method = models.CharField(max_length=300, null=True, blank=True)
     temperature = models.CharField(max_length=300, null=True, blank=True)
     comment = models.TextField(blank=True, null=True)
+
     @property
     def get_step_type(self):
         """ Type of step."""
