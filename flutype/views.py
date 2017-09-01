@@ -731,15 +731,14 @@ def process_edit(request, pk):
 
 
     if request.method == 'POST':
-        formset = Steps2FormSet(request.POST,request.FILES,instance=instance)
+        formset = Steps2FormSet(request.POST)
+        #fixme donot know how
+        print(formset.cleaned_data("step"))
 
-        if formset.is_valid():
-            formset.save()
-            return redirect('processes')
+        return redirect('processes')
     else:
 
         formset = Steps2FormSet(instance=instance)
-
 
         return render(request, 'flutype/create_process.html', {'formset': formset, "process": instance})
 
