@@ -5,45 +5,42 @@
 
 
 
-    <form class="form-horizontal">
-      <form method="post" class="post-form">
-          <table id="edit">
+      <form id="myFormsets" method="post" action="">
+          <table id="myFormset1Table" class="cell-border" >
+              <thead>
+              <tr>
+                  <td>Index</td>
+                  <td>Sid</td>
+                  <td>Process Step Type</td>
+                  <td>Method</td>
+              </tr>
+          </thead>
               <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-              {{ formset.management_form }}
+                 <tbody>
+                    {% for item_form in formset.forms %}
+                        <tr>
+                            <td> {{ item_form.index }}</td>
+                            <td> {{ item_form.step}}</td>
+                            <td> {{ item_form.instance.step.get_step_type.__class__.__name__}}</td>
+                            <td> {{ item_form.instance.step.method}}</td>
+                        </tr>
+                    {% endfor %}
+                 </tbody>
+          </table>
+                    {{ formset.management_form }}
 
-              <div id="items-form-container" class="link-formset">
-                {% for item_form in formset %}
-                    <div id="item-{{ loop.counter0 }}">
-                            {{ loop.index }}
-                            {{ item_form.step}}
-                            {{ item_form.instance.step.get_step_type.__class__.__name__}}
-                            {{ item_form.instance.step.method}}
 
 
-                    </div>
-
-                {% endfor %}
-
-              <script type="text/html" id="item-template">
-                <text id="item-__prefix__">
-                    <span id="counter"></span>
-                    {{ formset.Total}}
-                    {{ formset.empty_form.step}}  </text>
-                </script>
-
-              </div>
 
 
                         <span style="float:left;">
-                  <a href="#" id="add-item-button" class="btn btn-default add-item">Add Item</a>
               <button class="btn btn-default">Save changes</button>
                   </span>
       </form>
-        <form action={{url('processes')}}>
+      <form action={{url('processes')}}>
     <span style="float:left;">
     <button class="btn btn-default"> No, cancel.</button>
         </span>
-    </form>
     </form>
     </div>
 
@@ -51,42 +48,23 @@
 {% endblock %}
 
 {% block javascript %}
-<script type="text/javascript">
-$(document).ready(function() {
 
-var count = {{ formset.total_form_count() }};
 
-$("#add-item-button").click(function() {
-    count++;
-    $("#counter").text(count);
-})
-});
 
-</script>
-<script>
-$(document).ready(function() {
-    $('.add-item').click(function(ev) {
-        ev.preventDefault();
-        var count = $('#items-form-container').children().length;
-        var tmplMarkup = $('#item-template').html();
-        var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
-        $('div#items-form-container').append(compiledTmpl);
+    <script type="text/javascript" charset="utf-8">
+            $('#myFormset1Table').DataTable({
+                searching: false,
+                paging: false,
+                info: false,
+                ordering:  false
+            });
+    </script>
 
-        // update form count
-        $('#id_item_items-TOTAL_FORMS').attr('value', count+1);
-
-        // some animate to scroll to view our new form
-        $('html, body').animate({
-                scrollTop: $("#add-item-button").position().top-200
-            }, 800);
-    });
-});
-</script>
-
-    <script>
-    $('.link-formset').formset({
+     <script>
+    $('#myFormset1Table tbody tr').formset({
         addText: 'add item',
-        deleteText: 'remove'
+        deleteText: '    remove'
     });
 </script>
+
 {% endblock %}
