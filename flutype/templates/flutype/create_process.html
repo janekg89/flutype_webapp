@@ -13,7 +13,7 @@
                 <div id="items-form-container">
                 {% for item_form in formset %}
                 <div id="item-{{ loop.counter0 }}">
-                    {{ formset.empty_form}}
+                    {{ item_form.as_p()}}
                 </div>
                 {% endfor %}
             </div>
