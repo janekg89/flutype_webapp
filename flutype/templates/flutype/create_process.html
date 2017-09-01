@@ -10,14 +10,27 @@
           <table id="edit">
               <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
               {{ formset.management_form }}
-                <div id="items-form-container">
+
+              <div id="items-form-container">
                 {% for item_form in formset %}
-                <div id="item-{{ loop.counter0 }}">
-                    {{ item_form.as_p()}}
-                </div>
+                    <div id="item-{{ loop.counter0 }}">
+                            {{ loop.index }}
+                            {{ item_form.step}}
+                            {{ item_form.instance.step.get_step_type.__class__.__name__}}
+                            {{ item_form.instance.step.method}}
+
+
+                    </div>
+
                 {% endfor %}
-            </div>
-          </table>
+
+              <script type="text/html" id="item-template">
+                <p id="item-__prefix__">
+                    {{ formset.empty_form.step}}  </p>
+                </script>
+              </div>
+
+
                         <span style="float:left;">
                   <a href="#" id="add-item-button" class="btn btn-default add-item">Add Item</a>
               <button class="btn btn-default">Save changes</button>
@@ -34,11 +47,7 @@
 {% endblock %}
 
 {% block javascript %}
-    <script type="text/html" id="item-template">
-<div id="item-__prefix__">
-    {{ formset.empty_form }}
-</div>
-</script>
+
 <script>
 $(document).ready(function() {
     $('.add-item').click(function(ev) {
