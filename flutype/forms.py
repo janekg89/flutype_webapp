@@ -1,6 +1,6 @@
 import numpy as np
 from django import forms
-from django.forms import formset_factory
+from django.forms import formset_factory, inlineformset_factory
 
 from .models import Peptide, PeptideBatch, Virus, VirusBatch, Antibody, AntibodyBatch, \
     ProcessStep, Step, Spotting, Washing, Drying, Quenching, Blocking, Scanning, Incubating, \
@@ -125,8 +125,10 @@ class ProcessFormUpdate(forms.ModelForm):
         fields = ['sid']
 
 class Steps2Form(forms.Form):
-   step = forms.ModelChoiceField(Step.objects.all())
+   step = forms.ModelChoiceField(Step.objects.values_list('sid', flat=True))
+   method = forms.ModelChoiceField(Step.objects.values_list('method', flat=True))
 
 
-Steps2FormSet = formset_factory(Steps2Form, extra=1)
+
+Steps2FormSet = inlineformset_factory(Process, ProcessStep,form=StepForm, extra=0)
 
