@@ -2,6 +2,19 @@
 {% block content %}
     <div >
         <h1> Process Information</h1>
+    <form class="form-horizontal" id="add_client" method="post" action=".">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            {% for field in form.visible_fields() %}
+        <div class="form-group">
+           <label for="{{ field.id }}" class="col-sm-2 control-label">{{ field.sid }}</label>
+           <div class="col-sm-10">
+             {{ field.errors }}
+             {{ field }}
+           </div>
+        </div>
+    {% endfor %}
+
+
 
 
 
@@ -17,13 +30,17 @@
           </thead>
               <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                  <tbody>
-                    {% for item_form in formset.forms %}
+
+                    {% for item_form in formset %}
+                        {% for hidden in item_form.hidden_fields() %} {{ hidden }} {% endfor %}
+
                         <tr>
                             <td> {{ item_form.index }}</td>
                             <td> {{ item_form.step}}</td>
                             <td> {{ item_form.instance.step.get_step_type.__class__.__name__}}</td>
                             <td> {{ item_form.instance.step.method}}</td>
                         </tr>
+
                     {% endfor %}
                  </tbody>
           </table>

@@ -165,6 +165,9 @@ class Batch(models.Model):
     class Meta:
         abstract = True
 
+    def __str__(self):
+        return self.sid
+
 
 class LigandBatch(Batch):
     """
@@ -196,6 +199,12 @@ class PeptideBatch(LigandBatch):
 class AntibodyBatch(LigandBatch):
     """
     peptide batch model
+    """
+    pass
+
+class ComplexBatch(LigandBatch):
+    """
+    a complex composed of ligands model
     """
     pass
 
@@ -270,13 +279,11 @@ class GalFile(models.Model):
     sid = models.CharField(max_length=CHAR_MAX_LENGTH)
     file = models.FileField(upload_to="gal_file", null=True, blank=True, storage=OverwriteStorage())
 
-
-# class GalVirus(models.Model):
-#    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
-#    file = models.FileField(upload_to="gal_vir", null=True, blank=True, storage=OverwriteStorage())
+    def __str__(self):
+        return self.sid
 
 
-# probably measurement ?
+
 class Experiment(models.Model):
     """
     FIXME: an experiment can have multiple image/data files
@@ -289,6 +296,9 @@ class Experiment(models.Model):
     manufacturer = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Manufacturer.choices)
     process = models.ForeignKey("Process", blank=True, null=True)
     comment = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return self.sid
 
 
 class Process(models.Model):
@@ -321,10 +331,22 @@ class Process(models.Model):
         vals = '-'.join(order_steps)
         return vals
 
+    @property
+    def get_unique_ordering2(self):
+        order_steps = self.processstep_set.order_by('index').values_list('step__sid', flat=True)
+        vals = '-'.join(order_steps)
+        return vals
+
+
+
     # TODO: overwrite the save method on model to add uniqueness constraint
     def save(self, *args, **kwargs):
         self.unique_ordering = self.get_unique_ordering
         super(Process, self).save(*args, **kwargs)
+
+
+    def __str__(self):
+        return self.sid
 
 
 
@@ -350,6 +372,9 @@ class ProcessStep(models.Model):
     class Meta:
         unique_together = ('process', 'step', 'index')
         ordering = ['index', ]
+
+    def __str__(self):
+        return str(self.process.sid + "-" + self.step.sid + "-" + str(self.index))
 
 
 class RawSpotCollection(Experiment):
@@ -425,6 +450,9 @@ class RawSpotCollection(Experiment):
         concentration.fillna(value="", inplace=True)
         return concentration
 
+    # todo: RawSpots created via overwritten safe  with Galfile
+    # todo: ligands1,ligands2 shell be uploaded via overwritten safe method.
+
 
 class RawSpot(models.Model):
     """
@@ -439,6 +467,12 @@ class RawSpot(models.Model):
 
     class Meta:
         unique_together = ('column', 'row', 'raw_spot_collection')
+
+    # todo rename ligand1 and 2 to ligandbatch1 and 2
+
+    def __str__(self):
+        return str("column:"+str(self.column)+"-"+"row:"+str(self.row))
+
 
 
 #####################################
@@ -459,6 +493,10 @@ class SpotCollection(models.Model):
                                        "The image is not preprocessed.")
 
 
+    def __str__(self):
+        return str(self.raw_spot_collection.si+self.sid)
+
+
 # perhaps name Interaction
 class Spot(models.Model):
     """
@@ -471,3 +509,6 @@ class Spot(models.Model):
     std = models.FloatField(null=True, blank=True)
     spot_collection = models.ForeignKey(SpotCollection)
     # TODO: add Coordinates on image
+
+    def __str__(self):
+        return str("column:"+str(self.raw_spot.column)+"-"+"row:"+str(self.raw_spot.row)+"-"+"intensity:"+str(self.intensity))
