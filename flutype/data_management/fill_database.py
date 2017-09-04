@@ -65,7 +65,6 @@ from flutype.models import (Peptide,
                             Process,
                             GalFile,
                             Step,
-                            Experiment
                             )
 
 
@@ -154,6 +153,40 @@ class Database(object):
                                                          c_terminus=peptide["c-terminus"],
                                                          )
         return peptide, created
+
+    def create_or_update_complex(self, complex):
+        # fills complexs
+        complex_new, created = Peptide.objects.get_or_create(sid=complex["sid"],
+                                                         comment=complex["comment"],
+                                                         )
+        for ligand in complex["ligands"]:
+            complex_new.ligands.add(ligand)
+
+        return complex_new, created
+
+    def create_or_update_complex_batch(self, complex_batch):
+
+        if "lig_sid" in complex_batch:
+            complex = Antibody.objects.get(sid=complex_batch["lig_sid"])
+
+        else:
+            complex = None
+            # prints all complex batches without foreignkey to a complex in the database
+            print("No complex found for complex batch with sid:" + complex_batch["sid"])
+
+        user = get_user_or_none(complex_batch)
+
+        complex_b, created = AntibodyBatch.objects.get_or_create(sid=complex_batch["sid"],
+                                                                  ligand=complex,
+                                                                  concentration=complex_batch["concentration"],
+                                                                  ph=complex_batch["ph"],
+                                                                  purity=complex_batch["purity"],
+                                                                  buffer=complex_batch["buffer"],
+                                                                  produced_by=user,
+                                                                  production_date=complex_batch["production_date"],
+                                                                  comment=complex_batch["comment"]
+                                                                  )
+        return complex_b, created
 
     def create_or_update_peptide_batch(self, peptide_batch):
         if peptide_batch["sid"] == "NO":
@@ -290,6 +323,14 @@ class Database(object):
         for k, antibody_batch in data_tables["antibody_batch"].iterrows():
             _, created = self.create_or_update_antibody_batch(antibody_batch)
             created_ab.append(created)
+
+        for k, complex in data_tables["complex"].iterrows():
+            _, created = self.create_or_update_complex(complex)
+            created_ab.append(created)
+        for k, complex_batch in data_tables["complex_batch"].iterrows():
+            _, created = self.create_or_update_complex_batch(complex_batch)
+            created_ab.append(created)
+
 
         ############################################
         for k, washing in data_tables["washing"].iterrows():

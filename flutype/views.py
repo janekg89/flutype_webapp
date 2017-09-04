@@ -12,10 +12,12 @@ from django.contrib.auth.models import User
 from .forms import PeptideForm, VirusForm, AntibodyForm, AntibodyBatchForm, \
     PeptideBatchForm, VirusBatchForm, StepForm, QuenchingForm, WashingForm, \
     DryingForm, SpottingForm, BlockingForm, IncubatingForm, ScanningForm, ProcessForm,\
-     Steps2Form, Steps2FormSet
+     Steps2Form, ProcessStepForm
 
 from .models import RawSpotCollection, SpotCollection, Process, PeptideBatch, \
-    Peptide, VirusBatch, Virus, AntibodyBatch, Antibody, Step
+    Peptide, VirusBatch, Virus, AntibodyBatch, Antibody, Step, ProcessStep
+
+from django.forms import formset_factory, inlineformset_factory
 from django.shortcuts import get_object_or_404, render, redirect
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from django.contrib.auth.decorators import login_required
@@ -698,7 +700,10 @@ def step_delete(request, pk):
 
 @login_required
 def process_new(request):
+    Steps2FormSet = inlineformset_factory(Process, ProcessStep, form=ProcessStepForm, extra=0, can_delete=True)
+
     if request.method == 'POST':
+
         formset = Steps2FormSet(request.POST)
         if formset.is_valid():
             for form in formset:
@@ -714,10 +719,13 @@ def process_new(request):
 @login_required
 def process_edit(request, pk):
     instance = get_object_or_404(Process, pk=pk)
+    Steps2FormSet = inlineformset_factory(Process, ProcessStep, form=ProcessStepForm, extra=0)
 
+    form = ProcessForm(instance = instance)
 
     ordered_steps=instance.unique_ordering.split("-")
     initial = []
+
     for index, step in enumerate(ordered_steps):
         initialstep = {}
         initialstep["step"] = get_object_or_404(Step, sid=step)
@@ -731,16 +739,23 @@ def process_edit(request, pk):
 
 
     if request.method == 'POST':
-        formset = Steps2FormSet(request.POST)
-        #fixme donot know how
-        print(formset.cleaned_data("step"))
+        form = ProcessForm(request.POST, instance=instance)
+        if form.is_valid():
+            form_saved = form.save(commit=False)
 
-        return redirect('processes')
+            formset = Steps2FormSet(request.POST, instance=form_saved)
+
+            if formset.is_valid():
+                for f in formset:
+                    cd  = f.cleaned_data
+                    print(cd.get("sid"))
+
+            return redirect('processes')
     else:
 
         formset = Steps2FormSet(instance=instance)
 
-        return render(request, 'flutype/create_process.html', {'formset': formset, "process": instance})
+        return render(request, 'flutype/create_process.html', {'form':form, 'formset': formset, "process": instance})
 
 
 @login_required

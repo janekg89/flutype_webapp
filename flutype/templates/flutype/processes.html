@@ -23,7 +23,7 @@
                     {% for process in processes %}
                         <tr>
                             <td><a href="{{ url('processview', args=[process.id]) }}"> {{ process.sid }}  </a></td>
-                            <td>{{ process.unique_ordering }}</td>
+                            <td>{{ process.get_unique_ordering2 }}</td>
                             <td>
                                 {% for experiment in process.experiment_set.all() %}
                                     <a href="
