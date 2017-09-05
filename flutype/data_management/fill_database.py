@@ -8,23 +8,21 @@ import sys
 from django.core.files import File
 import warnings
 import re
-from django_pandas.io import read_frame
 ###########################################################
 # setup django (add current path to sys.path)
+from django_pandas.io import read_frame
 path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../'))
+
 print(path)
 if path not in sys.path:
     sys.path.append(path)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flutype_webapp.settings")
 
 import django
-
 django.setup()
 
 # the path to the master folder
 path_master = os.path.join(path, "master/")
-path_master2 = os.path.join(path, "master2/")
-
 
 # all sid of microarray collections
 collection_ids = ["2017-05-19_E5_X31",

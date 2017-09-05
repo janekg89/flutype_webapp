@@ -30,9 +30,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import fields
 
 
-from flutype.data_management.fill_database import Database
 CHAR_MAX_LENGTH = 50
-
 
 class OverwriteStorage(FileSystemStorage):
     """
@@ -284,11 +282,6 @@ class Incubating(Step):
 
 
 class Quenching(Step):
-    duration = models.DurationField(null=True, blank=True)
-    substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
-
-
-class Coating(Step):
     duration = models.DurationField(null=True, blank=True)
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
 
