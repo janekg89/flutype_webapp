@@ -135,6 +135,8 @@ class Complex(Ligand):
     ligands = models.ManyToManyField(Ligand, related_name="complex_ligands")
 
 
+
+
 ########################################
 # Batch
 ########################################
@@ -214,6 +216,13 @@ class ComplexBatch(LigandBatch):
 ########################################
 # The steps in the process.
 
+class GalFile(models.Model):
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
+    file = models.FileField(upload_to="gal_file", null=True, blank=True, storage=OverwriteStorage())
+
+    def __str__(self):
+        return self.sid
+
 
 class Step(models.Model):
     """
@@ -242,11 +251,15 @@ class Step(models.Model):
 class Washing(Step):
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
+    gal_file = models.ForeignKey(GalFile, null=True, blank=True)
+
 
 
 class Blocking(Step):
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
+    gal_file = models.ForeignKey(GalFile, null=True, blank=True)
+
 
 
 class Scanning(Step):
@@ -260,27 +273,31 @@ class Drying(Step):
 
 class Spotting(Step):
     """ Spotting method and media related to spotting. """
-    pass
+    gal_file = models.ForeignKey(GalFile, null=True, blank=True)
+
 
 
 class Incubating(Step):
     duration = models.DurationField(null=True, blank=True)
+    gal_file = models.ForeignKey(GalFile, null=True, blank=True)
+
 
 
 class Quenching(Step):
     duration = models.DurationField(null=True, blank=True)
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
+    gal_file = models.ForeignKey(GalFile, null=True, blank=True)
+
+
+class Coating(Step):
+    duration = models.DurationField(null=True, blank=True)
+    substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
+    gal_file = models.ForeignKey(GalFile, null=True, blank=True)
 
 
 ########################################
 # Gal files
 ########################################
-class GalFile(models.Model):
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
-    file = models.FileField(upload_to="gal_file", null=True, blank=True, storage=OverwriteStorage())
-
-    def __str__(self):
-        return self.sid
 
 
 
@@ -489,7 +506,7 @@ class SpotCollection(models.Model):
                                        null=True)
     comment = models.TextField(default="A spot detecting script has located the spots in the image."
                                        "The spots are centered in a larger square."
-                                       "The Intesity values are calculated as the total intensity over that square. "
+                                       "The intesity values are calculated as the total intensity over that square. "
                                        "The image is not preprocessed.")
 
 
