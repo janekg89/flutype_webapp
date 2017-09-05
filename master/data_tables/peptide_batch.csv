@@ -1,53 +1,53 @@
 	sid	lig_sid	linker	spacer	sequence	c-terminus	mobile	concentration	buffer	ph	purity	produced_by	production_date	comment
 0	NO	Empty	NA	NA	NA	NA	no		Natriumhydrogencarbonat	8.5				
 1	Buffer01	Buffer001					no							
-2	L001	P012					no	0.1	Natriumhydrogencarbonat	8.5			2017-05-09	
-3	L002	P001	KKK		FYDYDVFY	amide	no	1	Natriumhydrogencarbonat	8.5				
-4	L003	P008	KKK		FYDPDVFY	amide	no	1	Natriumhydrogencarbonat	8.5				
-5	L004	P009	KKK		LYGYDVFF	amide	no	1	Natriumhydrogencarbonat	8.5				
-6	L005	P010	KKK		FYGYDVAF	amide	no	1	Natriumhydrogencarbonat	8.5				
-7	L006	P011	DOA-KK		FYDYDVFY	amide	no	1	Natriumhydrogencarbonat	8.5				
-8	L007	P013	C-KK		FYGYDVFF	amide	no	0.07	Natriumhydrogencarbonat	8.5				
-9	P1	P1					no							
-10	P3	P3					no							
-11	P4	P4					no							
-12	P5	P5					no							
-13	P6	P6					no							
-14	P7	P7					no							
-15	P8	P8					no							
-16	P10	P10					no							
-17	P13	P13					no							
-21	DYE025	Dye001					no	0.25						
-22	DYE050	Dye001					no	0.5						
-23	DYE100	Dye001					no	1						
-24	NEN025	P013	C-KK		FYGYDVFF	amide	no	0.25						
-25	NEN050	P013	C-KK		FYGYDVFF	amide	no	0.5						
-26	NEN100	P013	C-KK		FYGYDVFF	amide	no	1						
-27	FEU025	P012					no	0.25						
-28	FEU050	P012					no	0.5						
-29	FEU100	P012					no	1						
-30	KLOS025	P030					no	0.25						
-31	KLOS050	P030					no	0.5						
-32	KLOS100	P030					no	1						
-33	KLOA025	P031					no	0.25						
-34	KLOA050	P031					no	0.5						
-35	KLOA100	P031					no	1						
-36	P6025	P001	KKK		FYDYDVFY	amide	no	0.25						
-37	P6050	P001	KKK		FYDYDVFY	amide	no	0.5						
-38	P6100	P001	KKK		FYDYDVFY	amide	no	1						
-39	P7025	P008	KKK		FYDPDVFY	amide	no	0.25						
-40	P7050	P008	KKK		FYDPDVFY	amide	no	0.5						
-41	P7100	P008	KKK		FYDPDVFY	amide	no	1						
-42	P8025	P009	KKK		LYGYDVFF	amide	no	0.25						
-43	P8050	P009	KKK		LYGYDVFF	amide	no	0.5						
-44	P8100	P008	KKK		FYDPDVFY	amide	no	1						
-45	P9025	P010	KKK		FYGYDVAF	amide	no	0.25						
-46	P9050	P010	KKK		FYGYDVAF	amide	no	0.5						
-47	P9100	P010	KKK		FYGYDVAF	amide	no	1						
-48	P10025	P014	Ahx-KK		FYDYDVFY	amide	no	0.25						
-49	P10050	P014	Ahx-KK		FYDYDVFY	amide	no	0.5						
-50	P10100	P014	Ahx-KK		FYDYDVFY	amide	no	1						
-51	P11025	P011	DOA-KK		FYDYDVFY	amide	no	0.25						
+2	L001	P012					no	0.1	Natriumhydrogencarbonat	8.5		hmemczak	2017-05-09	
+3	L002	P001	KKK		FYDYDVFY	amide	no	1	Natriumhydrogencarbonat	8.5		hmemczak		
+4	L003	P008	KKK		FYDPDVFY	amide	no	1	Natriumhydrogencarbonat	8.5		hmemczak		
+5	L004	P009	KKK		LYGYDVFF	amide	no	1	Natriumhydrogencarbonat	8.5		hmemczak		
+6	L005	P010	KKK		FYGYDVAF	amide	no	1	Natriumhydrogencarbonat	8.5		hmemczak		
+7	L006	P011	DOA-KK		FYDYDVFY	amide	no	1	Natriumhydrogencarbonat	8.5		hmemczak		
+8	L007	P013	C-KK		FYGYDVFF	amide	no	0.07	Natriumhydrogencarbonat	8.5		hmemczak		
+9	P1	P1					no					hmemczak		
+10	P3	P3					no					hmemczak		
+11	P4	P4					no					hmemczak		
+12	P5	P5					no					hmemczak		
+13	P6	P6					no					hmemczak		
+14	P7	P7					no					hmemczak		
+15	P8	P8					no					hmemczak		
+16	P10	P10					no					hmemczak		
+17	P13	P13					no					hmemczak		
+21	DYE025	Dye001					no	0.25				hmemczak		
+22	DYE050	Dye001					no	0.5				hmemczak		
+23	DYE100	Dye001					no	1				hmemczak		
+24	NEN025	P013	C-KK		FYGYDVFF	amide	no	0.25				hmemczak		
+25	NEN050	P013	C-KK		FYGYDVFF	amide	no	0.5				hmemczak		
+26	NEN100	P013	C-KK		FYGYDVFF	amide	no	1				hmemczak		
+27	FEU025	P012					no	0.25				hmemczak		
+28	FEU050	P012					no	0.5				hmemczak		
+29	FEU100	P012					no	1				hmemczak		
+30	KLOS025	P030					no	0.25				hmemczak		
+31	KLOS050	P030					no	0.5				hmemczak		
+32	KLOS100	P030					no	1				hmemczak		
+33	KLOA025	P031					no	0.25				hmemczak		
+34	KLOA050	P031					no	0.5				hmemczak		
+35	KLOA100	P031					no	1				hmemczak		
+36	P6025	P001	KKK		FYDYDVFY	amide	no	0.25				hmemczak		
+37	P6050	P001	KKK		FYDYDVFY	amide	no	0.5				hmemczak		
+38	P6100	P001	KKK		FYDYDVFY	amide	no	1				hmemczak		
+39	P7025	P008	KKK		FYDPDVFY	amide	no	0.25				hmemczak		
+40	P7050	P008	KKK		FYDPDVFY	amide	no	0.5				hmemczak		
+41	P7100	P008	KKK		FYDPDVFY	amide	no	1				hmemczak		
+42	P8025	P009	KKK		LYGYDVFF	amide	no	0.25				hmemczak		
+43	P8050	P009	KKK		LYGYDVFF	amide	no	0.5				hmemczak		
+44	P8100	P008	KKK		FYDPDVFY	amide	no	1				hmemczak		
+45	P9025	P010	KKK		FYGYDVAF	amide	no	0.25				hmemczak		
+46	P9050	P010	KKK		FYGYDVAF	amide	no	0.5				hmemczak		
+47	P9100	P010	KKK		FYGYDVAF	amide	no	1				hmemczak		
+48	P10025	P014	Ahx-KK		FYDYDVFY	amide	no	0.25				hmemczak		
+49	P10050	P014	Ahx-KK		FYDYDVFY	amide	no	0.5				hmemczak		
+50	P10100	P014	Ahx-KK		FYDYDVFY	amide	no	1				hmemczak		
+51	P11025	P011	DOA-KK		FYDYDVFY	amide	no	0.25				hmemczak		
 52	P11050	P011	DOA-KK		FYDYDVFY	amide	no	0.5						
 53	P11100	P011	DOA-KK		FYDYDVFY	amide	no	1						
 54	P12025	P015	KK-SG		FYDYDVFY	amide	no	0.25						
