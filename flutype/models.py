@@ -29,6 +29,8 @@ from imagekit.processors import Transpose, ResizeToFit
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import fields
 
+
+from flutype.data_management.fill_database import Database
 CHAR_MAX_LENGTH = 50
 
 
@@ -208,7 +210,8 @@ class ComplexBatch(LigandBatch):
     """
     a complex composed of ligands model
     """
-    pass
+
+
 
 
 ########################################
@@ -251,14 +254,12 @@ class Step(models.Model):
 class Washing(Step):
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
-    gal_file = models.ForeignKey(GalFile, null=True, blank=True)
 
 
 
 class Blocking(Step):
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
-    gal_file = models.ForeignKey(GalFile, null=True, blank=True)
 
 
 
@@ -273,26 +274,23 @@ class Drying(Step):
 
 class Spotting(Step):
     """ Spotting method and media related to spotting. """
-    gal_file = models.ForeignKey(GalFile, null=True, blank=True)
+    pass
 
 
 
 class Incubating(Step):
     duration = models.DurationField(null=True, blank=True)
-    gal_file = models.ForeignKey(GalFile, null=True, blank=True)
 
 
 
 class Quenching(Step):
     duration = models.DurationField(null=True, blank=True)
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
-    gal_file = models.ForeignKey(GalFile, null=True, blank=True)
 
 
 class Coating(Step):
     duration = models.DurationField(null=True, blank=True)
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
-    gal_file = models.ForeignKey(GalFile, null=True, blank=True)
 
 
 ########################################
@@ -356,7 +354,7 @@ class Process(models.Model):
 
 
 
-    # TODO: overwrite the save method on model to add uniqueness constraint
+
     def save(self, *args, **kwargs):
         self.unique_ordering = self.get_unique_ordering
         super(Process, self).save(*args, **kwargs)
@@ -378,10 +376,12 @@ class ProcessStep(models.Model):
     process = models.ForeignKey(Process)
     step = models.ForeignKey(Step)
     index = models.IntegerField(blank=True, null=True)
+    gal_duration = models.ForeignKey(GalFile, null=True, blank=True, related_name="gal_duration")
     user = models.ForeignKey(User, null=True, blank=True)
     start = models.DateTimeField(null=True, blank=True)
     finish = models.DateTimeField(null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
+
 
     # FIXME: property all users involved in the process, i.e.
     # everybody involved in any step in the process
@@ -469,7 +469,6 @@ class RawSpotCollection(Experiment):
 
     # todo: RawSpots created via overwritten safe  with Galfile
     # todo: ligands1,ligands2 shell be uploaded via overwritten safe method.
-
 
 class RawSpot(models.Model):
     """
