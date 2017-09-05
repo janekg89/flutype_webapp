@@ -8,7 +8,7 @@ import sys
 from django.core.files import File
 import warnings
 import re
-
+from django_pandas.io import read_frame
 ###########################################################
 # setup django (add current path to sys.path)
 path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../'))
@@ -23,6 +23,8 @@ django.setup()
 
 # the path to the master folder
 path_master = os.path.join(path, "master/")
+path_master2 = os.path.join(path, "master2/")
+
 
 # all sid of microarray collections
 collection_ids = ["2017-05-19_E5_X31",
@@ -47,6 +49,8 @@ from flutype.data_management.fill_master import Master
 from flutype.models import (Peptide,
                             PeptideBatch,
                             Virus,
+                            Complex,
+                            ComplexBatch,
                             VirusBatch,
                             Antibody,
                             AntibodyBatch,
@@ -81,8 +85,6 @@ def get_user_or_none(dict):
 
 
 def get_step_or_none(dict):
-    print(dict.keys())
-    exit()
     if "sid" in dict:
         if dict["sid"] is None:
             step = None
@@ -90,7 +92,6 @@ def get_step_or_none(dict):
             step = Step.objects.get(sid=dict["sid"])
     else:
         step = None
-
     return step
 
 
@@ -112,6 +113,10 @@ class Database(object):
                                                    )
         return vir, created
 
+
+
+
+
     def create_or_update_virus_batch(self, virus_batch):
         if "lig_id" in virus_batch:
             print(virus_batch["lig_id"])
@@ -127,7 +132,6 @@ class Database(object):
         user = get_user_or_none(virus_batch)
         # fills virus batches
         virus_b, created = VirusBatch.objects.get_or_create(sid=virus_batch["sid"],
-
                                                             labeling=virus_batch["labeling"],
                                                             concentration=virus_batch["concentration"],
                                                             buffer=virus_batch["buffer"],
@@ -150,15 +154,15 @@ class Database(object):
                                                          linker=peptide["linker"],
                                                          spacer=peptide["spacer"],
                                                          sequence=peptide["sequence"],
-                                                         c_terminus=peptide["c-terminus"],
+                                                         c_terminus=peptide["c_terminus"],
                                                          )
         return peptide, created
 
     def create_or_update_complex(self, complex):
         # fills complexs
         complex_new, created = Peptide.objects.get_or_create(sid=complex["sid"],
-                                                         comment=complex["comment"],
-                                                         )
+                                                             comment=complex["comment"],
+                                                             )
         for ligand in complex["ligands"]:
             complex_new.ligands.add(ligand)
 
@@ -360,6 +364,42 @@ class Database(object):
         print("incubating:", any(created_i))
         print("washing:", any(created_w))
         print("drying:", any(created_d))
+
+    def load_database(self):
+        data_tables = []
+        data_tables["peptide"] = read_frame(Peptide.objects.all())
+        data_tables["virus"] = read_frame(Virus.objects.all())
+        data_tables["antibody"] = read_frame(Antibody.objects.all())
+        data_tables["complex"] = read_frame(Complex.objects.all())
+        data_tables["peptide_batch"] = read_frame(PeptideBatch.objects.all())
+        data_tables["virus_batch"] = read_frame(VirusBatch.objects.all())
+        data_tables["antibody_batch"] = read_frame(AntibodyBatch.objects.all())
+        data_tables["complex_batch"] =read_frame(ComplexBatch.objects.all())
+
+        data_tables["spotting"] =read_frame(Spotting.objects.all())
+        data_tables["washing"] =read_frame(Washing.objects.all())
+        data_tables["drying"] =read_frame(Drying.objects.all())
+        data_tables["quenching"] =read_frame(Quenching.objects.all())
+        data_tables["incubating"] =read_frame(Incubating.objects.all())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     def create_or_update_process(self, steps):
         steps_in_process = []
