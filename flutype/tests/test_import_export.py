@@ -20,7 +20,6 @@ class LoadDataFromDataBase(TestCase):
 
     def test_load_database_from_master(self):
         print(Database.load_database())
-
         return Database.load_database()
 
 

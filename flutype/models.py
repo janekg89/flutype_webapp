@@ -376,7 +376,6 @@ class ProcessStep(models.Model):
     process = models.ForeignKey(Process)
     step = models.ForeignKey(Step)
     index = models.IntegerField(blank=True, null=True)
-    gal_duration = models.ForeignKey(GalFile, null=True, blank=True, related_name="gal_duration")
     user = models.ForeignKey(User, null=True, blank=True)
     start = models.DateTimeField(null=True, blank=True)
     finish = models.DateTimeField(null=True, blank=True)
