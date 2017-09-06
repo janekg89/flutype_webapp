@@ -8,6 +8,7 @@ import sys
 from django.core.files import File
 import warnings
 import re
+import pandas as pd
 ###########################################################
 # setup django (add current path to sys.path)
 from django_pandas.io import read_frame
@@ -23,7 +24,7 @@ django.setup()
 
 # the path to the master folder
 path_master = os.path.join(path, "master/")
-
+path_master2 = os.path.join(path, "test/")
 # all sid of microarray collections
 collection_ids = ["2017-05-19_E5_X31",
                   "2017-05-19_E6_untenliegend_X31",
@@ -116,12 +117,12 @@ class Database(object):
 
 
     def create_or_update_virus_batch(self, virus_batch):
-        if "lig_id" in virus_batch:
-            print(virus_batch["lig_id"])
-            if virus_batch["lig_id"] is None:
+        if "ligand" in virus_batch:
+            print(virus_batch["ligand"])
+            if virus_batch["ligand"] is None:
                 virus = None
             else:
-                virus = Virus.objects.get(sid=int(virus_batch["lig_id"]))
+                virus = Virus.objects.get(sid=int(virus_batch["ligand"]))
         else:
             virus = None
             # prints all virus batches without foreignkey to a virus in the database
@@ -158,19 +159,19 @@ class Database(object):
 
     def create_or_update_complex(self, complex):
         # fills complexs
-        complex_new, created = Peptide.objects.get_or_create(sid=complex["sid"],
+        complex_new, created = Complex.objects.get_or_create(sid=complex["sid"],
                                                              comment=complex["comment"],
                                                              )
-        for ligand in complex["ligands"]:
-            complex_new.ligands.add(ligand)
+        for ligand_sid in complex["ligands_str"].split('-'):
+            ligand = Ligand.objects.get(sid=ligand_sid)
+            complex_new.complex_ligands.add(ligand)
 
         return complex_new, created
 
     def create_or_update_complex_batch(self, complex_batch):
 
-        if "lig_sid" in complex_batch:
-            complex = Antibody.objects.get(sid=complex_batch["lig_sid"])
-
+        if "ligand" in complex_batch:
+            complex = Complex.objects.get(sid=complex_batch["ligand"])
         else:
             complex = None
             # prints all complex batches without foreignkey to a complex in the database
@@ -178,24 +179,25 @@ class Database(object):
 
         user = get_user_or_none(complex_batch)
 
-        complex_b, created = AntibodyBatch.objects.get_or_create(sid=complex_batch["sid"],
-                                                                  ligand=complex,
-                                                                  concentration=complex_batch["concentration"],
-                                                                  ph=complex_batch["ph"],
-                                                                  purity=complex_batch["purity"],
-                                                                  buffer=complex_batch["buffer"],
-                                                                  produced_by=user,
-                                                                  production_date=complex_batch["production_date"],
-                                                                  comment=complex_batch["comment"]
-                                                                  )
+        complex_b, created = ComplexBatch.objects.get_or_create(sid=complex_batch["sid"],
+                                                                concentration=complex_batch["concentration"],
+                                                                ligand = complex,
+                                                                ph=complex_batch["ph"],
+                                                                purity=complex_batch["purity"],
+                                                                buffer=complex_batch["buffer"],
+                                                                produced_by=user,
+                                                                production_date=complex_batch["production_date"],
+                                                                comment=complex_batch["comment"]
+                                                                )
+
         return complex_b, created
 
     def create_or_update_peptide_batch(self, peptide_batch):
         if peptide_batch["sid"] == "NO":
             peptide_batch["sid"] = None
 
-        if "lig_sid" in peptide_batch:
-            peptide = Peptide.objects.get(sid=peptide_batch["lig_sid"])
+        if "ligand" in peptide_batch:
+            peptide = Peptide.objects.get(sid=peptide_batch["ligand"])
 
         else:
             peptide = None
@@ -229,8 +231,8 @@ class Database(object):
 
     def create_or_update_antibody_batch(self, antibody_batch):
 
-        if "lig_sid" in antibody_batch:
-            antibody = Antibody.objects.get(sid=antibody_batch["lig_sid"])
+        if "ligand" in antibody_batch:
+            antibody = Antibody.objects.get(sid=antibody_batch["ligand"])
 
         else:
             antibody = None
@@ -327,6 +329,7 @@ class Database(object):
             created_ab.append(created)
 
         for k, complex in data_tables["complex"].iterrows():
+            print(complex)
             _, created = self.create_or_update_complex(complex)
             created_ab.append(created)
         for k, complex_batch in data_tables["complex_batch"].iterrows():
@@ -363,14 +366,54 @@ class Database(object):
         print("washing:", any(created_w))
         print("drying:", any(created_d))
 
+
+
     def load_database(self):
-        data_tables = []
+        data_tables = {}
+
+        def get_ligands_or_empty_string():
+            vb_ligands = []
+            for vb in VirusBatch.objects.all():
+                if vb.ligand:
+                    vb_ligands.append(vb.ligand.sid)
+                else:
+                    vb_ligands.append("")
+
+            return vb_ligands
+
+        def drop_unnessecary_keys(data_tables):
+            for ligand in ["peptide","virus","antibody"]:
+                data_tables[ligand].drop(["id", "polymorphic_ctype", "ligand_ptr"], axis=1, inplace=True)
+
+            for ligand_batch in ["peptide_batch", "virus_batch","antibody_batch","complex_batch"]:
+                data_tables[ligand_batch].drop(["id", "ligandbatch_ptr"], axis=1, inplace=True)
+            for step in ["spotting","washing","drying","quenching","incubating"]:
+                data_tables[step].drop(["id", "step_ptr"], axis=1, inplace=True)
+            return data_tables
+
+        def complex_ligands_str():
+            complex_ligands =[]
+            for complex in Complex.objects.all():
+                complex_ligands.append(complex.ligands_str)
+            return complex_ligands
+
+
         data_tables["peptide"] = read_frame(Peptide.objects.all())
         data_tables["virus"] = read_frame(Virus.objects.all())
         data_tables["antibody"] = read_frame(Antibody.objects.all())
-        data_tables["complex"] = read_frame(Complex.objects.all())
+        data_tables["complex"] = read_frame(Complex.objects.all(),fieldnames=["sid","comment"])
+        data_tables["complex"]["ligands_str"] = complex_ligands_str()
+        print("************")
+        print(data_tables["complex"]["ligands_str"])
+        print("************")
+
+
         data_tables["peptide_batch"] = read_frame(PeptideBatch.objects.all())
         data_tables["virus_batch"] = read_frame(VirusBatch.objects.all())
+        data_tables["virus_batch"]["ligand"]= get_ligands_or_empty_string()
+
+
+
         data_tables["antibody_batch"] = read_frame(AntibodyBatch.objects.all())
         data_tables["complex_batch"] =read_frame(ComplexBatch.objects.all())
 
@@ -380,17 +423,9 @@ class Database(object):
         data_tables["quenching"] =read_frame(Quenching.objects.all())
         data_tables["incubating"] =read_frame(Incubating.objects.all())
 
+        data_tables = drop_unnessecary_keys(data_tables)
 
-
-
-
-
-
-
-
-
-
-
+        return data_tables
 
 
 
