@@ -95,6 +95,7 @@ class Ligand(PolymorphicModel):
     """
     sid = models.CharField(max_length=CHAR_MAX_LENGTH, null=True)
     comment = models.TextField(blank=True, null=True)
+
     def __str__(self):
         return self.sid
 
@@ -132,7 +133,14 @@ class Antibody(Ligand):
 
 
 class Complex(Ligand):
-    ligands = models.ManyToManyField(Ligand, related_name="complex_ligands")
+    complex_ligands = models.ManyToManyField(Ligand, related_name="complex_ligands")
+
+    @property
+    def ligands_str(self):
+        ligands = self.complex_ligands.values_list('sid', flat=True)
+        print(ligands)
+        vals = '-'.join(ligands)
+        return vals
 
 
 
