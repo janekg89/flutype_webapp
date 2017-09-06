@@ -1,1 +1,2 @@
-,sid,lig_sid,mobile,concentration,buffer,ph,purity,produced_by,production_date,comment
+sid	ligand	concentration	buffer	ph	purity	produced_by	production_date	comment	labeling
+test01	C01							this is a test	

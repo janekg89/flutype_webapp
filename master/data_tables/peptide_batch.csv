@@ -1,130 +1,130 @@
-	sid	lig_sid	linker	spacer	sequence	c-terminus	mobile	concentration	buffer	ph	purity	produced_by	production_date	comment
-0	NO	Empty	NA	NA	NA	NA	no		Natriumhydrogencarbonat	8.5				
-1	Buffer01	Buffer001					no							
-2	L001	P012					no	0.1	Natriumhydrogencarbonat	8.5		hmemczak	2017-05-09	
-3	L002	P001	KKK		FYDYDVFY	amide	no	1	Natriumhydrogencarbonat	8.5		hmemczak		
-4	L003	P008	KKK		FYDPDVFY	amide	no	1	Natriumhydrogencarbonat	8.5		hmemczak		
-5	L004	P009	KKK		LYGYDVFF	amide	no	1	Natriumhydrogencarbonat	8.5		hmemczak		
-6	L005	P010	KKK		FYGYDVAF	amide	no	1	Natriumhydrogencarbonat	8.5		hmemczak		
-7	L006	P011	DOA-KK		FYDYDVFY	amide	no	1	Natriumhydrogencarbonat	8.5		hmemczak		
-8	L007	P013	C-KK		FYGYDVFF	amide	no	0.07	Natriumhydrogencarbonat	8.5		hmemczak		
-9	P1	P1					no					hmemczak		
-10	P3	P3					no					hmemczak		
-11	P4	P4					no					hmemczak		
-12	P5	P5					no					hmemczak		
-13	P6	P6					no					hmemczak		
-14	P7	P7					no					hmemczak		
-15	P8	P8					no					hmemczak		
-16	P10	P10					no					hmemczak		
-17	P13	P13					no					hmemczak		
-21	DYE025	Dye001					no	0.25				hmemczak		
-22	DYE050	Dye001					no	0.5				hmemczak		
-23	DYE100	Dye001					no	1				hmemczak		
-24	NEN025	P013	C-KK		FYGYDVFF	amide	no	0.25				hmemczak		
-25	NEN050	P013	C-KK		FYGYDVFF	amide	no	0.5				hmemczak		
-26	NEN100	P013	C-KK		FYGYDVFF	amide	no	1				hmemczak		
-27	FEU025	P012					no	0.25				hmemczak		
-28	FEU050	P012					no	0.5				hmemczak		
-29	FEU100	P012					no	1				hmemczak		
-30	KLOS025	P030					no	0.25				hmemczak		
-31	KLOS050	P030					no	0.5				hmemczak		
-32	KLOS100	P030					no	1				hmemczak		
-33	KLOA025	P031					no	0.25				hmemczak		
-34	KLOA050	P031					no	0.5				hmemczak		
-35	KLOA100	P031					no	1				hmemczak		
-36	P6025	P001	KKK		FYDYDVFY	amide	no	0.25				hmemczak		
-37	P6050	P001	KKK		FYDYDVFY	amide	no	0.5				hmemczak		
-38	P6100	P001	KKK		FYDYDVFY	amide	no	1				hmemczak		
-39	P7025	P008	KKK		FYDPDVFY	amide	no	0.25				hmemczak		
-40	P7050	P008	KKK		FYDPDVFY	amide	no	0.5				hmemczak		
-41	P7100	P008	KKK		FYDPDVFY	amide	no	1				hmemczak		
-42	P8025	P009	KKK		LYGYDVFF	amide	no	0.25				hmemczak		
-43	P8050	P009	KKK		LYGYDVFF	amide	no	0.5				hmemczak		
-44	P8100	P008	KKK		FYDPDVFY	amide	no	1				hmemczak		
-45	P9025	P010	KKK		FYGYDVAF	amide	no	0.25				hmemczak		
-46	P9050	P010	KKK		FYGYDVAF	amide	no	0.5				hmemczak		
-47	P9100	P010	KKK		FYGYDVAF	amide	no	1				hmemczak		
-48	P10025	P014	Ahx-KK		FYDYDVFY	amide	no	0.25				hmemczak		
-49	P10050	P014	Ahx-KK		FYDYDVFY	amide	no	0.5				hmemczak		
-50	P10100	P014	Ahx-KK		FYDYDVFY	amide	no	1				hmemczak		
-51	P11025	P011	DOA-KK		FYDYDVFY	amide	no	0.25				hmemczak		
-52	P11050	P011	DOA-KK		FYDYDVFY	amide	no	0.5						
-53	P11100	P011	DOA-KK		FYDYDVFY	amide	no	1						
-54	P12025	P015	KK-SG		FYDYDVFY	amide	no	0.25						
-55	P12050	P015	KK-SG		FYDYDVFY	amide	no	0.5						
-56	P12100	P015	KK-SG		FYDYDVFY	amide	no	1						
-57	P13025	P016		ßAßAßA	FYDYDVFY	amide	no	0.25						
-58	P13050	P016		ßAßAßA	FYDYDVFY	amide	no	0.5						
-59	P13100	P016		ßAßAßA	FYDYDVFY	amide	no	1						
-60	P14025	P017		ßAßAK	FYDYDVFY	amide	no	0.25						
-61	P14050	P017		ßAßAK	FYDYDVFY	amide	no	0.5						
-62	P14100	P017		ßAßAK	FYDYDVFY	amide	no	1						
-63	P16025	P019	KKK		FYDYDVFY	amide	no	0.25						
-64	P16050	P019	KKK		FYDYDVFY	amide	no	0.5						
-65	P16100	P019	KKK		FYDYDVFY	amide	no	1						
-66	Buffer	Buffer001					no							
-75	P032-1:50	P032					no	50	Natriumhydrogencarbonat	8.5				
-76	P012-2	P012					no	2	Natriumhydrogencarbonat	8.5				
-77	P012-1	P012					no	1	Natriumhydrogencarbonat	8.5				
-78	P012-05	P012					no	0.5	Natriumhydrogencarbonat	8.5				
-79	P012-025	P012					no	0.25	Natriumhydrogencarbonat	8.5				
-80	P012-0125	P012					no	0.125	Natriumhydrogencarbonat	8.5				
-81	P012-00625	P012					no	0.0625	Natriumhydrogencarbonat	8.5				
-82	P012-00313	P012					no	0.0313	Natriumhydrogencarbonat	8.5				
-83	P012-00156	P012					no	0.0156	Natriumhydrogencarbonat	8.5				
-84	P019-2	P019					no	2	Natriumhydrogencarbonat	8.5				
-85	P019-1	P019					no	1	Natriumhydrogencarbonat	8.5				
-86	P019-05	P019					no	0.5	Natriumhydrogencarbonat	8.5				
-87	P019-025	P019					no	0.25	Natriumhydrogencarbonat	8.5				
-88	P019-0125	P019					no	0.125	Natriumhydrogencarbonat	8.5				
-89	P019-00625	P019					no	0.0625	Natriumhydrogencarbonat	8.5				
-90	P019-00313	P019					no	0.0313	Natriumhydrogencarbonat	8.5				
-91	P019-00156	P019					no	0.0156	Natriumhydrogencarbonat	8.5				
-92	P011-2	P011					no	2	Natriumhydrogencarbonat	8.5				
-93	P011-1	P011					no	1	Natriumhydrogencarbonat	8.5				
-94	P011-05	P011					no	0.5	Natriumhydrogencarbonat	8.5				
-95	P011-025	P011					no	0.25	Natriumhydrogencarbonat	8.5				
-96	P011-0125	P011					no	0.125	Natriumhydrogencarbonat	8.5				
-97	P011-00625	P011					no	0.0625	Natriumhydrogencarbonat	8.5				
-98	P011-00313	P011					no	0.0313	Natriumhydrogencarbonat	8.5				
-99	P011-00156	P011					no	0.0156	Natriumhydrogencarbonat	8.5				
-100	P001-2	P001					no	2	Natriumhydrogencarbonat	8.5				
-101	P001-1	P001					no	1	Natriumhydrogencarbonat	8.5				
-102	P001-05	P001					no	0.5	Natriumhydrogencarbonat	8.5				
-103	P001-025	P001					no	0.25	Natriumhydrogencarbonat	8.5				
-104	P001-0125	P001					no	0.125	Natriumhydrogencarbonat	8.5				
-105	P001-00625	P001					no	0.0625	Natriumhydrogencarbonat	8.5				
-106	P001-00313	P001					no	0.0313	Natriumhydrogencarbonat	8.5				
-107	P001-00156	P001					no	0.0156	Natriumhydrogencarbonat	8.5				
-108	P008-2	P008					no	2	Natriumhydrogencarbonat	8.5				
-109	P008-1	P008					no	1	Natriumhydrogencarbonat	8.5				
-110	P008-05	P008					no	0.5	Natriumhydrogencarbonat	8.5				
-111	P008-025	P008					no	0.25	Natriumhydrogencarbonat	8.5				
-112	P008-0125	P008					no	0.125	Natriumhydrogencarbonat	8.5				
-113	P008-00625	P008					no	0.0625	Natriumhydrogencarbonat	8.5				
-114	P008-00313	P008					no	0.0313	Natriumhydrogencarbonat	8.5				
-115	P008-00156	P008					no	0.0156	Natriumhydrogencarbonat	8.5				
-116	P009-2	P009					no	2	Natriumhydrogencarbonat	8.5				
-117	P009-1	P009					no	1	Natriumhydrogencarbonat	8.5				
-118	P009-05	P009					no	0.5	Natriumhydrogencarbonat	8.5				
-119	P009-025	P009					no	0.25	Natriumhydrogencarbonat	8.5				
-120	P009-0125	P009					no	0.125	Natriumhydrogencarbonat	8.5				
-121	P009-00625	P009					no	0.0625	Natriumhydrogencarbonat	8.5				
-122	P009-00313	P009					no	0.0313	Natriumhydrogencarbonat	8.5				
-123	P009-00156	P009					no	0.0156	Natriumhydrogencarbonat	8.5				
-124	P010-2	P010					no	2	Natriumhydrogencarbonat	8.5				
-125	P010-1	P010					no	1	Natriumhydrogencarbonat	8.5				
-126	P010-05	P010					no	0.5	Natriumhydrogencarbonat	8.5				
-127	P010-025	P010					no	0.25	Natriumhydrogencarbonat	8.5				
-128	P010-0125	P010					no	0.125	Natriumhydrogencarbonat	8.5				
-129	P010-00625	P010					no	0.0625	Natriumhydrogencarbonat	8.5				
-130	P010-00313	P010					no	0.0313	Natriumhydrogencarbonat	8.5				
-131	P010-00156	P010					no	0.0156	Natriumhydrogencarbonat	8.5				
-132	P013-100	P013					no	0.1	Natriumhydrogencarbonat	8.5				
-133	P013-050	P013					no	0.05	Natriumhydrogencarbonat	8.5				
-134	P013-025	P013					no	0.025	Natriumhydrogencarbonat	8.5				
-135	P013-0125	P013					no	0.0125	Natriumhydrogencarbonat	8.5				
-136	P013-00625	P013					no	0.00625	Natriumhydrogencarbonat	8.5				
-137	P013-00313	P013					no	0.00313	Natriumhydrogencarbonat	8.5				
-138	P013-00156	P013					no	0.00156	Natriumhydrogencarbonat	8.5				
-139	P013-00078	P013					no	0.00078	Natriumhydrogencarbonat	8.5				
+sid	ligand	concentration	buffer	ph	purity	produced_by	production_date	comment	labeling
+NO	Empty		Natriumhydrogencarbonat	8.5					
+Buffer01	Buffer001								
+L001	P012	0.1	Natriumhydrogencarbonat	8.5		hmemczak	2017-05-09		
+L002	P001	1	Natriumhydrogencarbonat	8.5		hmemczak			
+L003	P008	1	Natriumhydrogencarbonat	8.5		hmemczak			
+L004	P009	1	Natriumhydrogencarbonat	8.5		hmemczak			
+L005	P010	1	Natriumhydrogencarbonat	8.5		hmemczak			
+L006	P011	1	Natriumhydrogencarbonat	8.5		hmemczak			
+L007	P013	0.07	Natriumhydrogencarbonat	8.5		hmemczak			
+P1	P1					hmemczak			
+P3	P3					hmemczak			
+P4	P4					hmemczak			
+P5	P5					hmemczak			
+P6	P6					hmemczak			
+P7	P7					hmemczak			
+P8	P8					hmemczak			
+P10	P10					hmemczak			
+P13	P13					hmemczak			
+DYE025	Dye001	0.25				hmemczak			
+DYE050	Dye001	0.5				hmemczak			
+DYE100	Dye001	1				hmemczak			
+NEN025	P013	0.25				hmemczak			
+NEN050	P013	0.5				hmemczak			
+NEN100	P013	1				hmemczak			
+FEU025	P012	0.25				hmemczak			
+FEU050	P012	0.5				hmemczak			
+FEU100	P012	1				hmemczak			
+KLOS025	P030	0.25				hmemczak			
+KLOS050	P030	0.5				hmemczak			
+KLOS100	P030	1				hmemczak			
+KLOA025	P031	0.25				hmemczak			
+KLOA050	P031	0.5				hmemczak			
+KLOA100	P031	1				hmemczak			
+P6025	P001	0.25				hmemczak			
+P6050	P001	0.5				hmemczak			
+P6100	P001	1				hmemczak			
+P7025	P008	0.25				hmemczak			
+P7050	P008	0.5				hmemczak			
+P7100	P008	1				hmemczak			
+P8025	P009	0.25				hmemczak			
+P8050	P009	0.5				hmemczak			
+P8100	P008	1				hmemczak			
+P9025	P010	0.25				hmemczak			
+P9050	P010	0.5				hmemczak			
+P9100	P010	1				hmemczak			
+P10025	P014	0.25				hmemczak			
+P10050	P014	0.5				hmemczak			
+P10100	P014	1				hmemczak			
+P11025	P011	0.25				hmemczak			
+P11050	P011	0.5							
+P11100	P011	1							
+P12025	P015	0.25							
+P12050	P015	0.5							
+P12100	P015	1							
+P13025	P016	0.25							
+P13050	P016	0.5							
+P13100	P016	1							
+P14025	P017	0.25							
+P14050	P017	0.5							
+P14100	P017	1							
+P16025	P019	0.25							
+P16050	P019	0.5							
+P16100	P019	1							
+Buffer	Buffer001								
+P032-1:50	P032	50	Natriumhydrogencarbonat	8.5					
+P012-2	P012	2	Natriumhydrogencarbonat	8.5					
+P012-1	P012	1	Natriumhydrogencarbonat	8.5					
+P012-05	P012	0.5	Natriumhydrogencarbonat	8.5					
+P012-025	P012	0.25	Natriumhydrogencarbonat	8.5					
+P012-0125	P012	0.125	Natriumhydrogencarbonat	8.5					
+P012-00625	P012	0.0625	Natriumhydrogencarbonat	8.5					
+P012-00313	P012	0.0313	Natriumhydrogencarbonat	8.5					
+P012-00156	P012	0.0156	Natriumhydrogencarbonat	8.5					
+P019-2	P019	2	Natriumhydrogencarbonat	8.5					
+P019-1	P019	1	Natriumhydrogencarbonat	8.5					
+P019-05	P019	0.5	Natriumhydrogencarbonat	8.5					
+P019-025	P019	0.25	Natriumhydrogencarbonat	8.5					
+P019-0125	P019	0.125	Natriumhydrogencarbonat	8.5					
+P019-00625	P019	0.0625	Natriumhydrogencarbonat	8.5					
+P019-00313	P019	0.0313	Natriumhydrogencarbonat	8.5					
+P019-00156	P019	0.0156	Natriumhydrogencarbonat	8.5					
+P011-2	P011	2	Natriumhydrogencarbonat	8.5					
+P011-1	P011	1	Natriumhydrogencarbonat	8.5					
+P011-05	P011	0.5	Natriumhydrogencarbonat	8.5					
+P011-025	P011	0.25	Natriumhydrogencarbonat	8.5					
+P011-0125	P011	0.125	Natriumhydrogencarbonat	8.5					
+P011-00625	P011	0.0625	Natriumhydrogencarbonat	8.5					
+P011-00313	P011	0.0313	Natriumhydrogencarbonat	8.5					
+P011-00156	P011	0.0156	Natriumhydrogencarbonat	8.5					
+P001-2	P001	2	Natriumhydrogencarbonat	8.5					
+P001-1	P001	1	Natriumhydrogencarbonat	8.5					
+P001-05	P001	0.5	Natriumhydrogencarbonat	8.5					
+P001-025	P001	0.25	Natriumhydrogencarbonat	8.5					
+P001-0125	P001	0.125	Natriumhydrogencarbonat	8.5					
+P001-00625	P001	0.0625	Natriumhydrogencarbonat	8.5					
+P001-00313	P001	0.0313	Natriumhydrogencarbonat	8.5					
+P001-00156	P001	0.0156	Natriumhydrogencarbonat	8.5					
+P008-2	P008	2	Natriumhydrogencarbonat	8.5					
+P008-1	P008	1	Natriumhydrogencarbonat	8.5					
+P008-05	P008	0.5	Natriumhydrogencarbonat	8.5					
+P008-025	P008	0.25	Natriumhydrogencarbonat	8.5					
+P008-0125	P008	0.125	Natriumhydrogencarbonat	8.5					
+P008-00625	P008	0.0625	Natriumhydrogencarbonat	8.5					
+P008-00313	P008	0.0313	Natriumhydrogencarbonat	8.5					
+P008-00156	P008	0.0156	Natriumhydrogencarbonat	8.5					
+P009-2	P009	2	Natriumhydrogencarbonat	8.5					
+P009-1	P009	1	Natriumhydrogencarbonat	8.5					
+P009-05	P009	0.5	Natriumhydrogencarbonat	8.5					
+P009-025	P009	0.25	Natriumhydrogencarbonat	8.5					
+P009-0125	P009	0.125	Natriumhydrogencarbonat	8.5					
+P009-00625	P009	0.0625	Natriumhydrogencarbonat	8.5					
+P009-00313	P009	0.0313	Natriumhydrogencarbonat	8.5					
+P009-00156	P009	0.0156	Natriumhydrogencarbonat	8.5					
+P010-2	P010	2	Natriumhydrogencarbonat	8.5					
+P010-1	P010	1	Natriumhydrogencarbonat	8.5					
+P010-05	P010	0.5	Natriumhydrogencarbonat	8.5					
+P010-025	P010	0.25	Natriumhydrogencarbonat	8.5					
+P010-0125	P010	0.125	Natriumhydrogencarbonat	8.5					
+P010-00625	P010	0.0625	Natriumhydrogencarbonat	8.5					
+P010-00313	P010	0.0313	Natriumhydrogencarbonat	8.5					
+P010-00156	P010	0.0156	Natriumhydrogencarbonat	8.5					
+P013-100	P013	0.1	Natriumhydrogencarbonat	8.5					
+P013-050	P013	0.05	Natriumhydrogencarbonat	8.5					
+P013-025	P013	0.025	Natriumhydrogencarbonat	8.5					
+P013-0125	P013	0.0125	Natriumhydrogencarbonat	8.5					
+P013-00625	P013	0.00625	Natriumhydrogencarbonat	8.5					
+P013-00313	P013	0.00313	Natriumhydrogencarbonat	8.5					
+P013-00156	P013	0.00156	Natriumhydrogencarbonat	8.5					
+P013-00078	P013	0.00078	Natriumhydrogencarbonat	8.5					

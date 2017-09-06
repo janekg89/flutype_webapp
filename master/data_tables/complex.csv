@@ -1,1 +1,2 @@
-,sid,ligands,comment
+sid	ligands_str	comment
+C01	P001-P002-P003	a test if complex works

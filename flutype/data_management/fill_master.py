@@ -102,7 +102,6 @@ class Master(object):
         """
         saves datatables in master Folder
         :param data_tables_dic:
-        :return:
         """
         if not os.path.exists(self.data_tables_path):
             os.makedirs(self.data_tables_path)
@@ -110,14 +109,12 @@ class Master(object):
         for key in data_tables_dic:
             file_name = key + ".csv"
             file_path = os.path.join(self.data_tables_path, file_name)
-
-            if os.path.isfile(file_path):
-                user_input = input("Type yes if you really want to delete <{}>  ".format(key))
-                if user_input == "yes":
-                    pass
-                else:
-                    return
             data_tables_dic[key].to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
+
+
+
+
+
 
     def read_data_tables(self):
         """
@@ -130,6 +127,9 @@ class Master(object):
             data_tables_dic[key.group(1)] = pd.read_csv(d_file, sep="\t", encoding='utf-8', dtype=str)
             data_tables_dic[key.group(1)].replace([np.NaN], [None], inplace=True)
         return data_tables_dic
+
+
+
 
     def read_steps(self, collection_id):
         file_path = os.path.join(self.collections_path, collection_id, "steps.csv")
