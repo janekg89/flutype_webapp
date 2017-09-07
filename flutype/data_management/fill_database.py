@@ -403,10 +403,6 @@ class Database(object):
         data_tables["antibody"] = read_frame(Antibody.objects.all())
         data_tables["complex"] = read_frame(Complex.objects.all(),fieldnames=["sid","comment"])
         data_tables["complex"]["ligands_str"] = complex_ligands_str()
-        print("************")
-        print(data_tables["complex"]["ligands_str"])
-        print("************")
-
 
         data_tables["peptide_batch"] = read_frame(PeptideBatch.objects.all())
         data_tables["virus_batch"] = read_frame(VirusBatch.objects.all())
@@ -458,6 +454,14 @@ class Database(object):
         process, created = Process.objects.get_or_create(sid=new_sid)
 
         return process, created
+
+    def load_process(self,process):
+        process =  read_frame(process.processstep_set.all())
+        return process
+
+
+
+
 
     def create_or_update_process_and_process_steps(self, steps):
         """
@@ -526,6 +530,16 @@ class Database(object):
         if "image" in dic_data:
             raw_spot_collection.image.save(dic_data["meta"]["sid"] + ".jpg", dic_data["image"])
 
+    def load_raw_spot_meta_from_db(self, raw_spot_collection):
+        meta = {}
+        meta["manufacturer"]= raw_spot_collection.manufacturer
+        meta["holder_type"] = raw_spot_collection.experiment_type
+        meta["holder_batch"] = raw_spot_collection.batch
+        meta["sid"] = raw_spot_collection.sid
+        meta["surface_substance"] = raw_spot_collection.functionalization
+        meta["user"] = raw_spot_collection.process.user
+        return meta
+
     def fill_spot_collection(self, collection_id, q_collection_id):
         """
                                                             intensity     (pandas.DataFrame -> Columns: "Columns" Index:"Row" Value: Intenstities)
@@ -593,6 +607,14 @@ class Database(object):
             gal_ligand.file.save(fname_gal_lig, File(gal_lig))
 
         return gal_ligand, created
+
+    def update_gal_lig1_from_db(self):
+        pass
+
+    def update_gal_lig2_from_db(self):
+        pass
+
+
 
     def fill_gal_lig2(self, gal_ligand, fname_gal_lig2):
         """
