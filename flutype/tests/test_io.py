@@ -77,6 +77,7 @@ class IOCollectionTestCase(TestCase):
         create_users(user_defs=None, delete_all=True)
 
     def setUp(self):
+        self.collection_id = "2017-05-12_MTP_R1"
         self.path_master_test = "temp/test_master_01/"
         if not os.path.exists(self.path_master_test):
             os.makedirs(self.path_master_test)
@@ -89,7 +90,8 @@ class IOCollectionTestCase(TestCase):
         self.sc_meta_keys = ["comment","image2numeric_version","processing_type"]
 
     def tearDown(self):
-        shutil.rmtree(self.path_master_test)
+        pass
+        #shutil.rmtree(self.path_master_test)
 
     def load_process_from_db(self):
         p_db = Process.objects.first()
@@ -149,6 +151,12 @@ class IOCollectionTestCase(TestCase):
         self.assertTrue(set(["spot_collections","meta", "gal_lig1", "gal_lig2", "process", "image"]).issubset(data_dic_rsc))
 
 
+    #fixme: working on this
+    # def test_create_or_update_gal_ligand_1(self):
+    #
+    #     rsc = RawSpotCollection.objects.first()
+    #     _, gal_file = self.db.load_gal1_from_db(rsc)
+    #     self.ma_test.create_or_update_gal_ligand(gal_file,self.collection_id)
 
 
 
