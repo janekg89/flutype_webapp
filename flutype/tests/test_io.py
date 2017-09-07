@@ -114,14 +114,26 @@ class IOCollectionTestCase(TestCase):
         meta = self.db.load_spot_collection_meta_from_db(sc1)
         self.assertTrue(set(self.sc_meta_keys).issubset(meta))
 
-    def load_spot_collection_intensity_from_db(self):
-        pass
+    def test_load_spot_collection_intensity_and_std_from_db(self):
+        rsc = RawSpotCollection.objects.first()
+        sc1 = rsc.spotcollection_set.first()
 
-    def load_image_from_db(self):
-        pass
+        intensity= sc1.pivot_intensity()
+        self.assertEqual(intensity.shape, (8,12))
 
-    def load_spot_collection_from_db(self):
-        pass
+        std = sc1.pivot_std()
+        self.assertEqual(std.shape, (8, 12))
+
+
+    def test_load_spot_collection_from_db(self):
+        rsc = RawSpotCollection.objects.first()
+        sc1 = rsc.spotcollection_set.first()
+        data_dic_spot = {}
+        data_dic_spot["meta"] = self.db.load_spot_collection_meta_from_db(sc1)
+        data_dic_spot["intensity"] = sc1.pivot_intensity()
+        data_dic_spot["std"] = sc1.pivot_std()
+        self.assertTrue(set(["meta","intensity","std"]).issubset(data_dic_spot))
+
 
     def load_raw_spot_collection_from_db(self):
         pass

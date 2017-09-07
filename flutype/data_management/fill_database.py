@@ -547,6 +547,15 @@ class Database(object):
         meta["comment"] = spot_collection.comment
         return meta
 
+    def load_spot_collection_from_db(self,spot_collection):
+
+        data_dic_spot = {}
+        data_dic_spot["meta"] = self.load_spot_collection_meta_from_db(spot_collection)
+        data_dic_spot["intensity"] = spot_collection.pivot_intensity()
+        data_dic_spot["std"] = spot_collection.pivot_std()
+
+        return data_dic_spot
+
     def fill_spot_collection(self, collection_id, q_collection_id):
         """
                                                             intensity     (pandas.DataFrame -> Columns: "Columns" Index:"Row" Value: Intenstities)
@@ -636,6 +645,8 @@ class Database(object):
         :return: tuple (name, file)
         """
         return raw_spot_collection.gal_file2.sid, raw_spot_collection.gal_file2.file
+
+
 
     def fill_gal_lig2(self, gal_ligand, fname_gal_lig2):
         """

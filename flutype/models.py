@@ -513,6 +513,18 @@ class SpotCollection(models.Model):
     def __str__(self):
         return str(self.raw_spot_collection.sid+"+"+self.sid)
 
+    def pivot_intensity(self):
+        data = read_frame(self.spot_set.all(), fieldnames=["raw_spot__row", "raw_spot__column", "intensity"])
+        intensity = data.pivot(index="raw_spot__row", columns="raw_spot__column", values="intensity")
+        intensity.fillna(value="", inplace=True)
+        return intensity
+
+    def pivot_std(self):
+        data = read_frame(self.spot_set.all(), fieldnames=["raw_spot__row", "raw_spot__column", "std"])
+        std = data.pivot(index="raw_spot__row", columns="raw_spot__column", values="std")
+        std.fillna(value="", inplace=True)
+        return std
+
 
 # perhaps name Interaction
 class Spot(models.Model):
