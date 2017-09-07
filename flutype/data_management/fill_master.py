@@ -500,6 +500,8 @@ class Master(object):
         return fname, fpath, created
 
     def get_unique_gal_lig(self, gal_lig):
+        if not os.path.exists(self.unique_lig_gal_path):
+            os.makedirs(self.unique_lig_gal_path)
         for fn in os.listdir(self.unique_lig_gal_path):
             file_path = os.path.join(self.unique_lig_gal_path, fn)
             # reads the matching file
