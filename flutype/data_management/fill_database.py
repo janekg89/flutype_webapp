@@ -540,6 +540,13 @@ class Database(object):
         meta["user"] = raw_spot_collection.process.user
         return meta
 
+    def load_spot_collection_meta_from_db(self, spot_collection):
+        meta = {}
+        meta["image2numeric_version"] = spot_collection.image2numeric_version
+        meta["processing_type"] = spot_collection.processing_type
+        meta["comment"] = spot_collection.comment
+        return meta
+
     def fill_spot_collection(self, collection_id, q_collection_id):
         """
                                                             intensity     (pandas.DataFrame -> Columns: "Columns" Index:"Row" Value: Intenstities)
@@ -614,7 +621,21 @@ class Database(object):
     def update_gal_lig2_from_db(self):
         pass
 
+    def load_gal1_from_db(self, raw_spot_collection):
+        """
 
+        :param raw_spot_collection:
+        :return: tuple (name, file)
+        """
+        return raw_spot_collection.gal_file1.sid , raw_spot_collection.gal_file1.file
+
+    def load_gal2_from_db(self, raw_spot_collection):
+        """
+
+        :param raw_spot_collection:
+        :return: tuple (name, file)
+        """
+        return raw_spot_collection.gal_file2.sid, raw_spot_collection.gal_file2.file
 
     def fill_gal_lig2(self, gal_ligand, fname_gal_lig2):
         """

@@ -1,7 +1,7 @@
 from flutype.data_management.fill_database import Database, path_master, fill_database
 from flutype.data_management.fill_master import Master
 from flutype.data_management.fill_users import create_users, user_defs
-from flutype.models import Peptide, Process, RawSpotCollection
+from flutype.models import Peptide, Process, RawSpotCollection, SpotCollection
 import shutil
 import os
 
@@ -69,7 +69,7 @@ class IOCollectionTestCase(TestCase):
     def setUpTestData(cls):
         create_users(user_defs=user_defs)
         fill_database(path_master=path_master, collection_ids=[
-            "2017-05-19_E5_X31"
+            "2017-05-12_MTP_R1"
         ])
 
 
@@ -86,7 +86,7 @@ class IOCollectionTestCase(TestCase):
         self.data_tables = self.ma.read_data_tables()
         self.process_keys = ["id", "process", "step", "index", "user", "start", "finish", "comment"]
         self.rsc_meta_keys = ['surface_substance', 'manufacturer', 'sid', 'holder_type','holder_batch', 'user']
-
+        self.sc_meta_keys = ["comment","image2numeric_version","processing_type"]
     def tearDown(self):
         shutil.rmtree(self.path_master_test)
 
@@ -95,17 +95,24 @@ class IOCollectionTestCase(TestCase):
         process = self.db.load_process(p_db)
         self.assertTrue(set(self.process_keys).issubset(process))
 
-    def load_gal_from_db(self, raw_spot_collection):
-        return raw_spot_collection.image
+    def test_load_gal_from_db(self):
+        rsc = RawSpotCollection.objects.first()
+        gal1_sid , gal1_file = self.db.load_gal1_from_db(rsc)
+        gal2_sid , gal2_file = self.db.load_gal2_from_db(rsc)
+        self.assertTrue("lig_fix_004.txt" ,gal1_sid)
+        self.assertTrue("lig_mob_006.txt", gal2_sid)
+
 
     def test_load_raw_spot_meta_from_db(self):
         rsc = RawSpotCollection.objects.first()
         meta = self.db.load_raw_spot_meta_from_db(rsc)
         self.assertTrue(set(self.rsc_meta_keys).issubset(meta))
 
-    def load_spot_collection_meta_from_db(self):
-
-        pass
+    def test_load_spot_collection_meta_from_db(self):
+        rsc = RawSpotCollection.objects.first()
+        sc1 = rsc.spotcollection_set.first()
+        meta = self.db.load_spot_collection_meta_from_db(sc1)
+        self.assertTrue(set(self.sc_meta_keys).issubset(meta))
 
     def load_spot_collection_intensity_from_db(self):
         pass
