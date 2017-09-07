@@ -325,6 +325,7 @@ class Process(models.Model):
     sid = models.CharField(max_length=CHAR_MAX_LENGTH, unique=True)
     steps = models.ManyToManyField(Step, through='ProcessStep')
     unique_ordering = models.CharField(max_length=CHAR_MAX_LENGTH)
+    user = models.ForeignKey(User, blank=True, null=True)
 
     def users(self):
         user_ids = self.processstep_set.values_list("user", flat="True").distinct()
