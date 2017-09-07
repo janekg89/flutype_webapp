@@ -511,7 +511,7 @@ class SpotCollection(models.Model):
 
 
     def __str__(self):
-        return str(self.raw_spot_collection.si+self.sid)
+        return str(self.raw_spot_collection.sid+"+"+self.sid)
 
 
 # perhaps name Interaction
