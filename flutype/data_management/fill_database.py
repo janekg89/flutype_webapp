@@ -495,6 +495,15 @@ class Database(object):
         process.save()
         return process, created
 
+    def load_raw_spot_collection_from_db(self, raw_spot_collection):
+        data_dic_rsc = {}
+        data_dic_rsc["meta"] = self.load_raw_spot_meta_from_db(raw_spot_collection)
+        data_dic_rsc["gal_lig1"] = self.load_gal1_from_db(raw_spot_collection)
+        data_dic_rsc["gal_lig2"] = self.load_gal2_from_db(raw_spot_collection)
+        data_dic_rsc["process"] = self.load_process(raw_spot_collection.process)
+        data_dic_rsc["image"] = raw_spot_collection.image
+        return data_dic_rsc
+
     def fill_raw_collection(self, dic_data):
         """
          :param  dic_data: a dictionary containing one of the following keys. Their values contain the corresponding data:
@@ -795,6 +804,14 @@ class Database(object):
         raw_spots = self.get_spots_of_collection(dic_spots)
         for k, raw_spot in raw_spots.iterrows():
             self.fill_raw_spot(dic_data["meta"]["sid"], raw_spot)
+
+    def load_complete_collection_from_db(self, raw_spot_collection):
+        data_dic_rsc = self.load_raw_spot_collection_from_db(raw_spot_collection)
+        data_dics_sc = {}
+        for sc in raw_spot_collection.spotcollection_set.all():
+            data_dics_sc[sc.sid] = self.load_spot_collection_from_db(sc)
+        data_dic_rsc["spot_collections"] = data_dics_sc
+        return data_dic_rsc
 
     def fill_q_collection_and_related_spots(self, dic_data_q, q_collection_id):
         """ """
