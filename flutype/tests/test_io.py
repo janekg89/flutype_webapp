@@ -87,6 +87,7 @@ class IOCollectionTestCase(TestCase):
         self.process_keys = ["id", "process", "step", "index", "user", "start", "finish", "comment"]
         self.rsc_meta_keys = ['surface_substance', 'manufacturer', 'sid', 'holder_type','holder_batch', 'user']
         self.sc_meta_keys = ["comment","image2numeric_version","processing_type"]
+
     def tearDown(self):
         shutil.rmtree(self.path_master_test)
 
@@ -128,18 +129,27 @@ class IOCollectionTestCase(TestCase):
     def test_load_spot_collection_from_db(self):
         rsc = RawSpotCollection.objects.first()
         sc1 = rsc.spotcollection_set.first()
-        data_dic_spot = {}
-        data_dic_spot["meta"] = self.db.load_spot_collection_meta_from_db(sc1)
-        data_dic_spot["intensity"] = sc1.pivot_intensity()
-        data_dic_spot["std"] = sc1.pivot_std()
-        self.assertTrue(set(["meta","intensity","std"]).issubset(data_dic_spot))
+        data_dic_sc = {}
+        data_dic_sc["meta"] = self.db.load_spot_collection_meta_from_db(sc1)
+        data_dic_sc["intensity"] = sc1.pivot_intensity()
+        data_dic_sc["std"] = sc1.pivot_std()
+        self.assertTrue(set(["meta","intensity","std"]).issubset(data_dic_sc))
 
 
-    def load_raw_spot_collection_from_db(self):
-        pass
+    def test_load_raw_spot_collection_from_db(self):
+        rsc = RawSpotCollection.objects.first()
+        data_dic_rsc = self.db.load_raw_spot_collection_from_db(rsc)
+        self.assertTrue(set(["meta","gal_lig1","gal_lig2","process","image"]).issubset(data_dic_rsc))
+        self.assertFalse(set(["spot_collections"]).issubset(data_dic_rsc))
 
-    def load_complete_collection_from_db(self):
-        pass
+
+    def test_load_complete_collection_from_db(self):
+        rsc = RawSpotCollection.objects.first()
+        data_dic_rsc = self.db.load_complete_collection_from_db(rsc)
+        self.assertTrue(set(["spot_collections","meta", "gal_lig1", "gal_lig2", "process", "image"]).issubset(data_dic_rsc))
+
+
+
 
 
 
