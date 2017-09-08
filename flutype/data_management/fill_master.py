@@ -111,19 +111,17 @@ class Master(object):
             file_path = os.path.join(self.data_tables_path, file_name)
             data_tables_dic[key].to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
 
-    def write_steps(self, data_tables_dic,collection_id):
+    def write_steps(self, steps_dic, collection_id):
         """
         saves datatables in master Folder
-        :param data_tables_dic:
+        :param steps_dic:
         """
         collection_path = os.path.join(self.collections_path, collection_id)
         if not os.path.exists(collection_path):
             os.makedirs(collection_path)
 
-        for key in data_tables_dic:
-            file_name = key + ".csv"
-            file_path = os.path.join(collection_path, file_name)
-            data_tables_dic[key].to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
+        file_path = os.path.join(collection_path,"steps.csv")
+        steps_dic.to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
 
 
 
@@ -289,6 +287,10 @@ class Master(object):
         :param q_collection_id:
         :return:
         """
+        q_path = os.path.join(self.collections_path, collection_id, q_collection_id)
+
+        if not os.path.exists(q_path):
+            os.makedirs(q_path)
 
         file_path = os.path.join(self.collections_path, collection_id, q_collection_id, "intensity.csv")
         intensity_data.to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
@@ -305,6 +307,10 @@ class Master(object):
         :param q_collection_id:
         :return:
         """
+        q_path = os.path.join(self.collections_path, collection_id, q_collection_id)
+
+        if not os.path.exists(q_path):
+            os.makedirs(q_path)
 
         file_path = os.path.join(self.collections_path, collection_id, q_collection_id, "std.csv")
         std_data.to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
@@ -312,6 +318,18 @@ class Master(object):
     def read_std(self, collection_id, q_collection_id):
         file_path = os.path.join(self.collections_path, collection_id, q_collection_id, "std.csv")
         return pd.read_csv(file_path, sep="\t", index_col=0)
+
+    def write_rsc_to_master(self, collection_id, dic_data):
+        collection_path = os.path.join(self.collections_path, collection_id)
+        if not os.path.exists(collection_path):
+            os.makedirs(collection_path)
+
+        self.create_or_update_gal_ligand(dic_data["gal_lig1"][1], collection_id,fname=dic_data["gal_lig1"][0])
+        self.create_or_update_gal_ligand(dic_data["gal_lig2"][1], collection_id,fname=dic_data["gal_lig2"][0])
+        self.create_or_update_meta(dic_data["meta"], collection_id)
+        self.create_or_update_image(dic_data["image"][1], collection_id)
+        self.write_steps(dic_data["process"], collection_id)
+
 
     def create_or_update_collection(self, collection_id, dic_data, q_collection_id="not", quantified_only=False,
                                     type="microarray"):
