@@ -138,10 +138,7 @@ class IOCollectionTestCase(TestCase):
     def test_load_spot_collection_from_db(self):
         rsc = RawSpotCollection.objects.first()
         sc1 = rsc.spotcollection_set.first()
-        data_dic_sc = {}
-        data_dic_sc["meta"] = self.db.load_spot_collection_meta_from_db(sc1)
-        data_dic_sc["intensity"] = sc1.pivot_intensity()
-        data_dic_sc["std"] = sc1.pivot_std()
+        data_dic_sc = self.db.load_spot_collection_from_db(sc1)
         self.assertTrue(set(["meta","intensity","std"]).issubset(data_dic_sc))
 
 
@@ -157,6 +154,14 @@ class IOCollectionTestCase(TestCase):
         data_dic_rsc = self.db.load_complete_collection_from_db(rsc)
         self.assertTrue(set(["spot_collections","meta", "gal_lig1", "gal_lig2", "process", "image"]).issubset(data_dic_rsc))
 
+    def test_load_image(self):
+        rsc = RawSpotCollection.objects.first()
+        fname, image = self.db.load_image_from_db(rsc)
+        self.assertEqual(image, None)
+
+        rsc = RawSpotCollection.objects.last()
+        fname, image = self.db.load_image_from_db(rsc)
+        self.assertEqual(image.format, "JPEG")
 
     def test_write_ligand_to_master(self):
 
@@ -172,16 +177,6 @@ class IOCollectionTestCase(TestCase):
         file_path = os.path.join(self.path_master_test, "collections", self.collection1_id, fname2)
         self.assertTrue(Path(file_path).is_file())
 
-    def test_load_image(self):
-        rsc = RawSpotCollection.objects.first()
-        fname, image = self.db.load_image_from_db(rsc)
-        self.assertEqual(image, None)
-
-        rsc = RawSpotCollection.objects.last()
-        fname, image = self.db.load_image_from_db(rsc)
-        self.assertEqual(image.format, "JPEG")
-
-
     def test_write_image_to_master(self):
         rsc = RawSpotCollection.objects.last()
         _ , image = self.db.load_image_from_db(rsc)
@@ -196,18 +191,50 @@ class IOCollectionTestCase(TestCase):
         file_path = os.path.join(self.path_master_test, "collections", self.collection2_id,"meta.csv")
         self.assertTrue(Path(file_path).is_file())
 
-    def test_write_rsc_steps(self):
+    def test_write_rsc_steps_to_master(self):
         dic_process= {}
 
         rsc = RawSpotCollection.objects.last()
-        dic_process["steps"] = self.db.load_process(rsc.process)
-        self.ma_test.write_steps(dic_process, self.collection2_id)
+        steps = self.db.load_process(rsc.process)
+        self.ma_test.write_steps(steps, self.collection2_id)
         file_path = os.path.join(self.path_master_test, "collections", self.collection2_id, "steps.csv")
         self.assertTrue(Path(file_path).is_file())
 
-    def test_write_rsc(self):
+    def test_write_rsc_master(self):
         rsc = RawSpotCollection.objects.last()
         dic_data = self.db.load_raw_spot_collection_from_db(rsc)
+        self.ma_test.write_rsc_to_master(self.collection2_id,dic_data)
+        files = ["meta.csv","steps.csv","image.jpg",dic_data["gal_lig1"][0],dic_data["gal_lig2"][0]]
+        for file in files:
+            file_path = os.path.join(self.path_master_test, "collections", self.collection2_id, file)
+            self.assertTrue(Path(file_path).is_file())
+
+    def test_write_sc_to_master(self):
+        rsc = RawSpotCollection.objects.last()
+        sc1 = rsc.spotcollection_set.first()
+        data_dic_sc = self.db.load_spot_collection_from_db(sc1)
+        self.ma_test.create_or_update_intensity(data_dic_sc["intensity"],"test","test")
+        self.ma_test.create_or_update_std(data_dic_sc["std"],"test","test")
+        rel_path = os.path.join("test", "test")
+        self.ma_test.create_or_update_meta(data_dic_sc["meta"],rel_path)
+
+        files = ["intensity.csv", "std.csv","meta.csv"]
+        for file in files:
+            file_path = os.path.join(self.ma_test.collections_path,"test","test",file)
+            self.assertTrue(Path(file_path).is_file())
+
+    def test_write_complete_collection_to_master(self):
+        pass
+
+
+
+
+
+
+
+
+
+
 
 
 
