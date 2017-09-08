@@ -645,7 +645,9 @@ class Database(object):
         :param raw_spot_collection:
         :return: tuple (name, file)
         """
-        return raw_spot_collection.gal_file1.sid , raw_spot_collection.gal_file1.file
+        gal_ligand = pd.read_csv(raw_spot_collection.gal_file1.file, sep='\t', index_col="ID")
+
+        return raw_spot_collection.gal_file1.sid , gal_ligand
 
     def load_gal2_from_db(self, raw_spot_collection):
         """
