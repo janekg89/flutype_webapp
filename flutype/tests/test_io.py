@@ -149,15 +149,24 @@ class IOCollectionTestCase(TestCase):
         self.assertTrue(set(["spot_collections","meta", "gal_lig1", "gal_lig2", "process", "image"]).issubset(data_dic_rsc))
 
 
-    def test_create_or_update_gal_ligand_1(self):
+    def test_write_ligand_to_master(self):
 
         rsc = RawSpotCollection.objects.first()
-        fname, gal_file = self.db.load_gal1_from_db(rsc)
-        self.ma_test.create_or_update_gal_ligand(gal_file, self.collection_id, fname=fname)
-        file_path = os.path.join(self.path_master_test,"collections", self.collection_id, fname)
+
+        fname1, gal_file1 = self.db.load_gal1_from_db(rsc)
+        self.ma_test.create_or_update_gal_ligand(gal_file1, self.collection_id, fname=fname1)
+        file_path = os.path.join(self.path_master_test,"collections", self.collection_id, fname1)
         self.assertTrue(Path(file_path).is_file())
 
-    #def test_create_or_update_
+        fname2, gal_file2 = self.db.load_gal2_from_db(rsc)
+        self.ma_test.create_or_update_gal_ligand(gal_file2, self.collection_id, fname=fname2)
+        file_path = os.path.join(self.path_master_test, "collections", self.collection_id, fname2)
+        self.assertTrue(Path(file_path).is_file())
+
+
+
+    def test_write_image_to_master(self):
+        pass
 
 
 
