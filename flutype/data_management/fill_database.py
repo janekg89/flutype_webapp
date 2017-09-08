@@ -10,12 +10,12 @@ import warnings
 import re
 import pandas as pd
 from PIL import Image
+from django.core.files import File
+from django_pandas.io import read_frame
 ###########################################################
 # setup django (add current path to sys.path)
-from django_pandas.io import read_frame
 path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../'))
 
-print(path)
 if path not in sys.path:
     sys.path.append(path)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flutype_webapp.settings")
@@ -95,7 +95,7 @@ def get_step_or_none(dict):
     return step
 
 
-class Database(object):
+class DBDjango(object):
     """ Database """
 
     ##### helper functions  ########
@@ -858,7 +858,7 @@ def fill_database(path_master, collection_ids):
     # loads data_tables
     ma = Master(path_master)
 
-    db = Database()
+    db = DBDjango()
     data_tables = ma.read_data_tables()
     db.fill_dt(data_tables)
 

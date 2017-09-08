@@ -1,4 +1,4 @@
-from flutype.data_management.fill_database import Database, path_master, fill_database
+from flutype.data_management.fill_database import DBDjango, path_master, fill_database
 from flutype.data_management.fill_master import Master
 from flutype.data_management.fill_users import create_users, user_defs
 from flutype.models import Peptide, Process, RawSpotCollection
@@ -16,7 +16,7 @@ class IODataTableTestCase(TestCase):
             os.makedirs(self.path_master_test)
         self.ma = Master(path_master)
         self.ma_test = Master(self.path_master_test)
-        self.db = Database()
+        self.db = DBDjango()
         self.data_tables = self.ma.read_data_tables()
         self.data_table_keys = ['peptide',
                                  'virus',
@@ -85,7 +85,7 @@ class IOCollectionTestCase(TestCase):
             os.makedirs(self.path_master_test)
         self.ma = Master(path_master)
         self.ma_test = Master(self.path_master_test)
-        self.db = Database()
+        self.db = DBDjango()
         self.data_tables = self.ma.read_data_tables()
         self.process_keys = ["id", "process", "step", "index", "user", "start", "finish", "comment"]
         self.rsc_meta_keys = ['surface_substance', 'manufacturer', 'sid', 'holder_type','holder_batch', 'user']
