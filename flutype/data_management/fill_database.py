@@ -25,7 +25,6 @@ django.setup()
 
 # the path to the master folder
 path_master = os.path.join(path, "master/")
-path_master2 = os.path.join(path, "test/")
 # all sid of microarray collections
 collection_ids = ["2017-05-19_E5_X31",
                   "2017-05-19_E6_untenliegend_X31",
@@ -45,7 +44,7 @@ collection_ids = ["2017-05-19_E5_X31",
 
 ###########################################################
 from django.contrib.auth.models import User
-from flutype.data_management.fill_master import Master
+import flutype.data_management.fill_master
 from flutype.models import (Peptide,
                             PeptideBatch,
                             Virus,
@@ -434,7 +433,8 @@ class DBDjango(object):
     def create_or_update_process(self, steps):
         steps_in_process = []
         for index, step in steps.iterrows():
-            process_step = Step.objects.get(sid=step["sid"])
+            print(step.keys())
+            process_step = Step.objects.get(sid=step["step"])
             steps_in_process.append(process_step)
 
         max_name = 0
@@ -484,7 +484,7 @@ class DBDjango(object):
         # experiment = Experiment.objects.get(sid=meta["sid"])
         for index, step in steps.iterrows():
             # process_step = get_step_or_none(step)
-            process_step = Step.objects.get(sid=step["sid"])
+            process_step = Step.objects.get(sid=step["step"])
             user = get_user_or_none(step)
             process_step, created = ProcessStep.objects.get_or_create(process=process,
                                                                       step=process_step,
@@ -535,7 +535,7 @@ class DBDjango(object):
                                                                              "holder_type"],
                                                                          functionalization=dic_data["meta"][
                                                                              'surface_substance'],
-                                                                         manufacturer=dic_data["meta"]['manfacturer'],
+                                                                         manufacturer=dic_data["meta"]['manufacturer'],
                                                                          gal_file1=gal_lig,
                                                                          gal_file2=gal_vir,
                                                                          process=process)
@@ -856,7 +856,7 @@ def fill_database(path_master, collection_ids):
     print("-" * 80)
 
     # loads data_tables
-    ma = Master(path_master)
+    ma = flutype.data_management.fill_master.Master(path_master)
 
     db = DBDjango()
     data_tables = ma.read_data_tables()
@@ -883,4 +883,6 @@ def fill_database(path_master, collection_ids):
 
 ##############################################################
 if __name__ == "__main__":
-    fill_database(path_master=path_master, collection_ids=collection_ids)
+    coll_path = os.path.join(path_master, "collections/")
+    collections=os.listdir(coll_path)
+    fill_database(path_master=path_master, collection_ids=collections)

@@ -650,6 +650,6 @@ class Master(object):
 ####################################################################
 if __name__ == "__main__":
     # path to the master folder
-    path_master = "master2/"
+    path_master = "master/"
     ma = Master(path_master).write_db_to_master()
 

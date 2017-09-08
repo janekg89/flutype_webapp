@@ -50,7 +50,7 @@ class IODataTableTestCase(TestCase):
         datatables_loaded =self.db.load_database()
 
         for key in self.data_table_keys:
-            self.assertTrue(set(self.data_tables[key].keys()).issubset(datatables_loaded[key]))
+            self.assertTrue(set(datatables_loaded[key].keys()).issubset(self.data_tables[key]))
 
     def test_write_data_tables_to_master(self):
         self.db.fill_dt(self.data_tables)
@@ -61,7 +61,6 @@ class IODataTableTestCase(TestCase):
             self.assertTrue(Path(file_path).is_file())
 
         datatables_loaded2 = self.ma_test.read_data_tables()
-
         for key in self.data_table_keys:
             self.assertTrue(set(datatables_loaded[key].keys()).issubset(datatables_loaded2[key]))
 
@@ -72,13 +71,13 @@ class IOCollectionTestCase(TestCase):
     def setUpTestData(cls):
         create_users(user_defs=user_defs)
         fill_database(path_master=path_master, collection_ids=[
-            "2017-05-12_MTP_R1","2017-05-19_E5_X31"
+            "170509-00","2017-05-19_E5"
         ])
 
 
     def setUp(self):
-        self.collection1_id = "2017-05-12_MTP_R1"
-        self.collection2_id = "2017-05-19_E5_X31"
+        self.collection1_id = "170509-00"
+        self.collection2_id = "2017-05-19_E5"
 
         self.path_master_test = "temp/test_master_01/"
         if not os.path.exists(self.path_master_test):
@@ -233,7 +232,7 @@ class IOCollectionTestCase(TestCase):
         sc1 = rsc.spotcollection_set.first()
         data_dic_sc = self.db.load_spot_collection_from_db(sc1)
 
-        self.ma_test.write_sc_to_master(self.collection2_id,"q001")
+        self.ma_test.write_sc_to_master(self.collection2_id,"q001",data_dic_sc)
 
 
         files = ["intensity.csv", "std.csv","meta.csv"]
