@@ -1,15 +1,10 @@
 from flutype.data_management.fill_database import Database, path_master, fill_database
 from flutype.data_management.fill_master import Master
 from flutype.data_management.fill_users import create_users, user_defs
-from flutype.models import Peptide, Process, RawSpotCollection, SpotCollection
+from flutype.models import Peptide, Process, RawSpotCollection
 import shutil
 import os
 from pathlib import Path
-
-
-
-
-
 
 from django.test import TestCase
 
@@ -201,8 +196,6 @@ class IOCollectionTestCase(TestCase):
         self.assertTrue(Path(file_path_u).is_file())
 
 
-
-
     def test_write_image_to_master(self):
         rsc = RawSpotCollection.objects.last()
         _ , image = self.db.load_image_from_db(rsc)
@@ -230,61 +223,40 @@ class IOCollectionTestCase(TestCase):
         rsc = RawSpotCollection.objects.last()
         dic_data = self.db.load_raw_spot_collection_from_db(rsc)
         self.ma_test.write_rsc_to_master(self.collection2_id,dic_data)
-        files = ["meta.csv","steps.csv","image.jpg",dic_data["gal_lig1"][0],dic_data["gal_lig2"][0]]
+        files = ["meta.csv","steps.csv","image.jpg","lig_mob_001.txt","lig_fix_001.txt"]
         for file in files:
-            file_path = os.path.join(self.path_master_test, "collections", self.collection2_id, file)
+            file_path = os.path.join(self.ma_test.collections_path, self.collection2_id, file)
             self.assertTrue(Path(file_path).is_file())
 
     def test_write_sc_to_master(self):
         rsc = RawSpotCollection.objects.last()
         sc1 = rsc.spotcollection_set.first()
         data_dic_sc = self.db.load_spot_collection_from_db(sc1)
-        self.ma_test.create_or_update_intensity(data_dic_sc["intensity"],"test","test")
-        self.ma_test.create_or_update_std(data_dic_sc["std"],"test","test")
-        rel_path = os.path.join("test", "test")
-        self.ma_test.create_or_update_meta(data_dic_sc["meta"],rel_path)
+
+        self.ma_test.write_sc_to_master(self.collection2_id,"q001")
+
 
         files = ["intensity.csv", "std.csv","meta.csv"]
         for file in files:
-            file_path = os.path.join(self.ma_test.collections_path,"test","test",file)
+            file_path = os.path.join(self.ma_test.collections_path,self.collection2_id,"q001",file)
             self.assertTrue(Path(file_path).is_file())
 
-    def test_write_complete_collection_to_master(self):
-        pass
+    def test_write_complete_collection_to_master_for_2_collections(self):
+        rscs = RawSpotCollection.objects.all()
+        sids=[]
+        for rsc in rscs:
+            data_dic_rsc = self.db.load_complete_collection_from_db(rsc)
+            self.ma_test.write_complete_rsc_to_master(data_dic_rsc)
+            sids.append(data_dic_rsc["meta"]["sid"])
 
+        files = ["image.jpg","meta.csv", "steps.csv", "lig_mob_001.txt", "lig_fix_001.txt"]
+        for file in files[1:]:
+            file_path = os.path.join(self.ma_test.collections_path,sids[0], file)
+            self.assertTrue(Path(file_path).is_file())
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        file_path = os.path.join(self.ma_test.collections_path, sids[0], files[0])
+        self.assertFalse(Path(file_path).is_file())
+        files = ["image.jpg","meta.csv", "steps.csv", "lig_mob_002.txt", "lig_fix_002.txt"]
+        for file in files:
+            file_path = os.path.join(self.ma_test.collections_path,sids[1], file)
+            self.assertTrue(Path(file_path).is_file())
