@@ -504,7 +504,7 @@ class Database(object):
         data_dic_rsc["gal_lig1"] = self.load_gal1_from_db(raw_spot_collection)
         data_dic_rsc["gal_lig2"] = self.load_gal2_from_db(raw_spot_collection)
         data_dic_rsc["process"] = self.load_process(raw_spot_collection.process)
-        data_dic_rsc["image"] = raw_spot_collection.image
+        data_dic_rsc["image"] = self.load_image_from_db(raw_spot_collection)
         return data_dic_rsc
 
     def fill_raw_collection(self, dic_data):
