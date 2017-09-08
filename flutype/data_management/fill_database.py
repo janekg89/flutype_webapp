@@ -9,6 +9,7 @@ from django.core.files import File
 import warnings
 import re
 import pandas as pd
+from PIL import Image
 ###########################################################
 # setup django (add current path to sys.path)
 from django_pandas.io import read_frame
@@ -495,6 +496,8 @@ class Database(object):
         process.save()
         return process, created
 
+
+
     def load_raw_spot_collection_from_db(self, raw_spot_collection):
         data_dic_rsc = {}
         data_dic_rsc["meta"] = self.load_raw_spot_meta_from_db(raw_spot_collection)
@@ -616,6 +619,16 @@ class Database(object):
                                                   spot_collection=spot_collection)
         return spo, created
 
+    def load_image_from_db(self, raw_spot_collection):
+
+
+        try:
+            image = Image.open(raw_spot_collection.image)
+        except:
+            image = None
+        return "image",image
+
+
     def fill_gal_lig1(self, gal_lig, fname_gal_lig):
         """
 
@@ -632,6 +645,7 @@ class Database(object):
             gal_ligand.file.save(fname_gal_lig, File(gal_lig))
 
         return gal_ligand, created
+
 
     def update_gal_lig1_from_db(self):
         pass
