@@ -828,6 +828,7 @@ class Database(object):
         for sc in raw_spot_collection.spotcollection_set.all():
             data_dics_sc[sc.sid] = self.load_spot_collection_from_db(sc)
         data_dic_rsc["spot_collections"] = data_dics_sc
+
         return data_dic_rsc
 
     def fill_q_collection_and_related_spots(self, dic_data_q, q_collection_id):

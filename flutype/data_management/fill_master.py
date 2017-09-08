@@ -74,6 +74,9 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flutype_webapp.settings")
 import django
 
 django.setup()
+from flutype.models import RawSpotCollection
+from flutype.data_management.fill_database import Database
+
 ###############################################
 
 # fix for py3
@@ -280,7 +283,10 @@ class Master(object):
         collection_path = os.path.join(self.collections_path, collection_id)
         if not os.path.exists(collection_path):
             os.makedirs(collection_path)
-        image_data.save(path_file)
+        if image_data == None:
+            pass
+        else:
+            image_data.save(path_file)
 
     def read_image(self, collection_id, format="cv2"):
         """
@@ -341,11 +347,27 @@ class Master(object):
         if not os.path.exists(collection_path):
             os.makedirs(collection_path)
 
-        self.create_or_update_gal_lig1(dic_data["gal_lig1"][1], collection_id, fname=dic_data["gal_lig1"][0])
-        self.create_or_update_gal_lig1(dic_data["gal_lig2"][1], collection_id, fname=dic_data["gal_lig2"][0])
+        self.create_or_update_unique_gal_lig1(dic_data["gal_lig1"][1])
+        self.create_or_update_unique_gal_lig2(dic_data["gal_lig2"][1])
+        self.create_or_update_gal_lig1(dic_data["gal_lig1"][1], collection_id)
+        self.create_or_update_gal_lig2(dic_data["gal_lig2"][1], collection_id)
         self.create_or_update_meta(dic_data["meta"], collection_id)
         self.create_or_update_image(dic_data["image"][1], collection_id)
         self.write_steps(dic_data["process"], collection_id)
+
+    def write_sc_to_master(self,collection_id,q_collection_id,dic_data_sc):
+
+        self.create_or_update_intensity(dic_data_sc["intensity"], collection_id, q_collection_id)
+        self.create_or_update_std(dic_data_sc["std"], collection_id, q_collection_id)
+        rel_path = os.path.join(collection_id, q_collection_id)
+        self.create_or_update_meta(dic_data_sc["meta"], rel_path)
+
+
+    def write_complete_rsc_to_master(self, data_dic_rsc):
+        self.write_rsc_to_master(data_dic_rsc["meta"]["sid"],data_dic_rsc)
+        for sc_id in data_dic_rsc["spot_collections"].keys():
+            self.write_sc_to_master(data_dic_rsc["meta"]["sid"],sc_id,data_dic_rsc["spot_collections"][sc_id])
+
 
     '''
     def create_or_update_collection(self, collection_id, dic_data, q_collection_id="not", quantified_only=False,
@@ -613,10 +635,19 @@ class Master(object):
 
         return fname, fpath, created
 
+    def write_db_to_master(self):
+        datatables_loaded = Database().load_database()
+        self.write_data_tables(datatables_loaded)
+        rscs = RawSpotCollection.objects.all()
+        for rsc in rscs:
+            data_dic_rsc = Database().load_complete_collection_from_db(rsc)
+            self.write_complete_rsc_to_master(data_dic_rsc)
+
+
 
 ####################################################################
 if __name__ == "__main__":
     # path to the master folder
-    path_master = "master/"
-    ma = Master(path_master)
+    path_master = "master2/"
+    ma = Master(path_master).write_db_to_master()
 
