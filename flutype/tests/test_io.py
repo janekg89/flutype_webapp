@@ -38,7 +38,8 @@ class IODataTableTestCase(TestCase):
                                  "incubating"]
 
     def tearDown(self):
-        shutil.rmtree(self.path_master_test)
+        #shutil.rmtree(self.path_master_test)
+        pass
 
     def test_read_data_tables_from_master(self):
         self.assertTrue(set(self.data_table_keys).issubset(self.data_tables))
@@ -60,22 +61,30 @@ class IODataTableTestCase(TestCase):
         self.db.fill_dt(self.data_tables)
         datatables_loaded = self.db.load_database()
         self.ma_test.write_data_tables(datatables_loaded)
+        for key in self.data_table_keys:
+            file_path = os.path.join(self.path_master_test, "data_tables","{}.csv".format(key))
+            self.assertTrue(Path(file_path).is_file())
+
         datatables_loaded2 = self.ma_test.read_data_tables()
 
         for key in self.data_table_keys:
             self.assertTrue(set(datatables_loaded[key].keys()).issubset(datatables_loaded2[key]))
+
+
 
 class IOCollectionTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         create_users(user_defs=user_defs)
         fill_database(path_master=path_master, collection_ids=[
-            "2017-05-12_MTP_R1"
+            "2017-05-12_MTP_R1","2017-05-19_E5_X31"
         ])
 
 
     def setUp(self):
-        self.collection_id = "2017-05-12_MTP_R1"
+        self.collection1_id = "2017-05-12_MTP_R1"
+        self.collection2_id = "2017-05-19_E5_X31"
+
         self.path_master_test = "temp/test_master_01/"
         if not os.path.exists(self.path_master_test):
             os.makedirs(self.path_master_test)
@@ -89,7 +98,7 @@ class IOCollectionTestCase(TestCase):
 
     def tearDown(self):
         create_users(user_defs=None, delete_all=True)
-        shutil.rmtree(self.path_master_test)
+        #shutil.rmtree(self.path_master_test)
 
     def load_process_from_db(self):
         p_db = Process.objects.first()
@@ -154,19 +163,62 @@ class IOCollectionTestCase(TestCase):
         rsc = RawSpotCollection.objects.first()
 
         fname1, gal_file1 = self.db.load_gal1_from_db(rsc)
-        self.ma_test.create_or_update_gal_ligand(gal_file1, self.collection_id, fname=fname1)
-        file_path = os.path.join(self.path_master_test,"collections", self.collection_id, fname1)
+        self.ma_test.create_or_update_gal_ligand(gal_file1, self.collection1_id, fname=fname1)
+        file_path = os.path.join(self.path_master_test,"collections", self.collection1_id, fname1)
         self.assertTrue(Path(file_path).is_file())
 
         fname2, gal_file2 = self.db.load_gal2_from_db(rsc)
-        self.ma_test.create_or_update_gal_ligand(gal_file2, self.collection_id, fname=fname2)
-        file_path = os.path.join(self.path_master_test, "collections", self.collection_id, fname2)
+        self.ma_test.create_or_update_gal_ligand(gal_file2, self.collection1_id, fname=fname2)
+        file_path = os.path.join(self.path_master_test, "collections", self.collection1_id, fname2)
         self.assertTrue(Path(file_path).is_file())
 
+    def test_load_image(self):
+        rsc = RawSpotCollection.objects.first()
+        fname, image = self.db.load_image_from_db(rsc)
+        self.assertEqual(image, None)
+
+        rsc = RawSpotCollection.objects.last()
+        fname, image = self.db.load_image_from_db(rsc)
+        self.assertEqual(image.format, "JPEG")
 
 
     def test_write_image_to_master(self):
-        pass
+        rsc = RawSpotCollection.objects.last()
+        _ , image = self.db.load_image_from_db(rsc)
+        self.ma_test.create_or_update_image(image,self.collection2_id)
+        file_path = os.path.join(self.path_master_test, "collections", self.collection2_id,"image.jpg")
+        self.assertTrue(Path(file_path).is_file())
+
+    def test_write_rawspot_meta_to_master(self):
+        rsc = RawSpotCollection.objects.last()
+        meta = self.db.load_raw_spot_meta_from_db(rsc)
+        self.ma_test.create_or_update_meta(meta , self.collection2_id)
+        file_path = os.path.join(self.path_master_test, "collections", self.collection2_id,"meta.csv")
+        self.assertTrue(Path(file_path).is_file())
+
+    def test_write_rsc_steps(self):
+        dic_process= {}
+
+        rsc = RawSpotCollection.objects.last()
+        dic_process["steps"] = self.db.load_process(rsc.process)
+        self.ma_test.write_steps(dic_process, self.collection2_id)
+        file_path = os.path.join(self.path_master_test, "collections", self.collection2_id, "steps.csv")
+        self.assertTrue(Path(file_path).is_file())
+
+    def test_write_rsc(self):
+        dic_data = self.db.load_raw_spot_collection_from_db()
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

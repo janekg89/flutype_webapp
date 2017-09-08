@@ -111,7 +111,19 @@ class Master(object):
             file_path = os.path.join(self.data_tables_path, file_name)
             data_tables_dic[key].to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
 
+    def write_steps(self, data_tables_dic,collection_id):
+        """
+        saves datatables in master Folder
+        :param data_tables_dic:
+        """
+        collection_path = os.path.join(self.collections_path, collection_id)
+        if not os.path.exists(collection_path):
+            os.makedirs(collection_path)
 
+        for key in data_tables_dic:
+            file_name = key + ".csv"
+            file_path = os.path.join(collection_path, file_name)
+            data_tables_dic[key].to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
 
 
 
@@ -221,10 +233,14 @@ class Master(object):
         """
 
         path_file = os.path.join(self.collections_path, collection_id, 'meta.csv')
+        collection_path = os.path.join(self.collections_path, collection_id)
+        if not os.path.exists(collection_path):
+            os.makedirs(collection_path)
         with open(path_file, 'w') as f:
             writer = csv.writer(f, delimiter="\t")
             for key, value in meta.items():
                 writer.writerow([key, value])
+
 
     def read_meta(self, collection_id):
         """
@@ -246,7 +262,10 @@ class Master(object):
         :return:
         """
         path_file = os.path.join(self.collections_path, collection_id, "image.jpg")
-        cv2.imwrite(path_file, image_data)
+        collection_path = os.path.join(self.collections_path, collection_id)
+        if not os.path.exists(collection_path):
+            os.makedirs(collection_path)
+        image_data.save(path_file)
 
     def read_image(self, collection_id, format="cv2"):
         """
