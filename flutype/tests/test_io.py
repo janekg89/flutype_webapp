@@ -4,6 +4,7 @@ from flutype.data_management.fill_users import create_users, user_defs
 from flutype.models import Peptide, Process, RawSpotCollection, SpotCollection
 import shutil
 import os
+from pathlib import Path
 
 
 
@@ -73,9 +74,6 @@ class IOCollectionTestCase(TestCase):
         ])
 
 
-    def tearDown(self):
-        create_users(user_defs=None, delete_all=True)
-
     def setUp(self):
         self.collection_id = "2017-05-12_MTP_R1"
         self.path_master_test = "temp/test_master_01/"
@@ -90,8 +88,8 @@ class IOCollectionTestCase(TestCase):
         self.sc_meta_keys = ["comment","image2numeric_version","processing_type"]
 
     def tearDown(self):
-        pass
-        #shutil.rmtree(self.path_master_test)
+        create_users(user_defs=None, delete_all=True)
+        shutil.rmtree(self.path_master_test)
 
     def load_process_from_db(self):
         p_db = Process.objects.first()
@@ -151,12 +149,16 @@ class IOCollectionTestCase(TestCase):
         self.assertTrue(set(["spot_collections","meta", "gal_lig1", "gal_lig2", "process", "image"]).issubset(data_dic_rsc))
 
 
-    #fixme: working on this
-    # def test_create_or_update_gal_ligand_1(self):
-    #
-    #     rsc = RawSpotCollection.objects.first()
-    #     _, gal_file = self.db.load_gal1_from_db(rsc)
-    #     self.ma_test.create_or_update_gal_ligand(gal_file,self.collection_id)
+    def test_create_or_update_gal_ligand_1(self):
+
+        rsc = RawSpotCollection.objects.first()
+        fname, gal_file = self.db.load_gal1_from_db(rsc)
+        self.ma_test.create_or_update_gal_ligand(gal_file, self.collection_id, fname=fname)
+        file_path = os.path.join(self.path_master_test,"collections", self.collection_id, fname)
+        self.assertTrue(Path(file_path).is_file())
+
+    #def test_create_or_update_
+
 
 
 

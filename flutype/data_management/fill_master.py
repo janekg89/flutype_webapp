@@ -137,15 +137,19 @@ class Master(object):
         steps.replace([np.NaN], [None], inplace=True)
         return steps
 
-    def create_or_update_gal_ligand(self, gal_ligand, collection_id):
+    def create_or_update_gal_ligand(self, gal_ligand, collection_id, **kwargs ):
         """
         saves gal ligand
         :param gal_ligand:
         :param collection_id:
         :return:
         """
-        fname, _ = self.get_unique_gal_lig(gal_ligand)
-        file_path = os.path.join(self.collections_path, collection_id, fname)
+        if "fname" not in kwargs:
+            kwargs["fname"] , _ = self.get_unique_gal_lig(gal_ligand)
+        collection_path = os.path.join(self.collections_path, collection_id)
+        file_path = os.path.join(self.collections_path, collection_id, kwargs["fname"])
+        if not os.path.exists(collection_path):
+            os.makedirs(collection_path)
         gal_ligand.to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
 
     def read_gal_ligand(self, collection_id, format="pd"):
