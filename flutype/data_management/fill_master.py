@@ -147,7 +147,7 @@ class Master(object):
         steps.replace([np.NaN], [None], inplace=True)
         return steps
 
-    def create_or_update_gal_ligand(self, gal_ligand, collection_id, **kwargs ):
+    def create_or_update_gal_lig1(self, gal_ligand, collection_id, **kwargs):
         """
         saves gal ligand
         :param gal_ligand:
@@ -155,12 +155,30 @@ class Master(object):
         :return:
         """
         if "fname" not in kwargs:
-            kwargs["fname"] , _ = self.get_unique_gal_lig(gal_ligand)
+
+            kwargs["fname"] , _ = self.get_unique_gal_lig1(gal_ligand)
         collection_path = os.path.join(self.collections_path, collection_id)
         file_path = os.path.join(self.collections_path, collection_id, kwargs["fname"])
         if not os.path.exists(collection_path):
             os.makedirs(collection_path)
         gal_ligand.to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
+
+    def create_or_update_gal_lig2(self, gal_ligand, collection_id, **kwargs ):
+        """
+        saves gal ligand
+        :param gal_ligand:
+        :param collection_id:
+        :return:
+        """
+        if "fname" not in kwargs:
+
+            kwargs["fname"] , _ = self.get_unique_gal_lig2(gal_ligand)
+        collection_path = os.path.join(self.collections_path, collection_id)
+        file_path = os.path.join(self.collections_path, collection_id, kwargs["fname"])
+        if not os.path.exists(collection_path):
+            os.makedirs(collection_path)
+        gal_ligand.to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
+
 
     def read_gal_ligand(self, collection_id, format="pd"):
         """
@@ -193,7 +211,7 @@ class Master(object):
         :return:
         """
         # file_path = os.path.join(self.collections_path, collection_id, "gal_virus.csv")
-        fname, _ = self.get_unique_gal_vir(gal_virus_data)
+        fname, _ = self.get_unique_gal_lig2(gal_virus_data)
         file_path = os.path.join(self.collections_path, collection_id, fname)
 
         gal_virus_data.to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
@@ -324,13 +342,13 @@ class Master(object):
         if not os.path.exists(collection_path):
             os.makedirs(collection_path)
 
-        self.create_or_update_gal_ligand(dic_data["gal_lig1"][1], collection_id,fname=dic_data["gal_lig1"][0])
-        self.create_or_update_gal_ligand(dic_data["gal_lig2"][1], collection_id,fname=dic_data["gal_lig2"][0])
+        self.create_or_update_gal_lig1(dic_data["gal_lig1"][1], collection_id, fname=dic_data["gal_lig1"][0])
+        self.create_or_update_gal_lig1(dic_data["gal_lig2"][1], collection_id, fname=dic_data["gal_lig2"][0])
         self.create_or_update_meta(dic_data["meta"], collection_id)
         self.create_or_update_image(dic_data["image"][1], collection_id)
         self.write_steps(dic_data["process"], collection_id)
 
-
+    '''
     def create_or_update_collection(self, collection_id, dic_data, q_collection_id="not", quantified_only=False,
                                     type="microarray"):
 
@@ -424,7 +442,8 @@ class Master(object):
                                             q_collection_id=q_collection_id)
             if "std" in dic_data:
                 self.create_or_update_std(dic_data["std"], collection_id=collection_id, q_collection_id=q_collection_id)
-
+    '''
+    '''
     def flush_collection(self, collection, quantified=False, only_quantified=False, user_input=True):
 
         """
@@ -446,7 +465,8 @@ class Master(object):
                 pass
             else:
                 return
-
+                
+    '''
     def read_raw_collection(self, collection_id):
         """
         reads data of one collection in the master folder.
@@ -505,7 +525,7 @@ class Master(object):
         q_collections = next(os.walk(collection_path))[1]
         return q_collections
 
-    def create_or_update_unique_gal_lig(self, gal_lig):
+    def create_or_update_unique_gal_lig1(self, gal_lig):
         """
 
         :param gal_lig: pandas.DataFrame -> Columns: "Row", "Column", "Name"
@@ -540,7 +560,7 @@ class Master(object):
             gal_lig.to_csv(fpath, sep='\t')
         return fname, fpath, created
 
-    def get_unique_gal_lig(self, gal_lig):
+    def get_unique_gal_lig1(self, gal_lig):
         if not os.path.exists(self.unique_lig_gal_path):
             os.makedirs(self.unique_lig_gal_path)
         for fn in os.listdir(self.unique_lig_gal_path):
@@ -553,7 +573,7 @@ class Master(object):
                 return fname, fpath
         return IOError("unique_gal_lig not found")
 
-    def get_unique_gal_vir(self, gal_vir):
+    def get_unique_gal_lig2(self, gal_vir):
         for fn in os.listdir(self.unique_vir_gal_path):
             file_path = os.path.join(self.unique_vir_gal_path, fn)
             # reads the matching file
@@ -564,7 +584,7 @@ class Master(object):
                 return fname, fpath
         return IOError("unique_gal_lig not found")
 
-    def create_or_update_unique_gal_vir(self, gal_vir):
+    def create_or_update_unique_gal_lig2(self, gal_vir):
         """
         :param gal_vir: pandas.DataFrame -> Columns: "Row", "Column", "Name"
         :return:
@@ -664,8 +684,8 @@ if __name__ == "__main__":
 
         # get_or_create_unique_ligand / unique_virus .
         # important !!!! unique_gal_vir must be created before creating collection !!!!!
-        ma.create_or_update_unique_gal_vir(dic_data["gal_virus"])
-        ma.create_or_update_unique_gal_lig(dic_data["gal_ligand"])
+        ma.create_or_update_unique_gal_lig2(dic_data["gal_virus"])
+        ma.create_or_update_unique_gal_lig1(dic_data["gal_ligand"])
 
         # saving microarray collection data
         ma.create_or_update_collection(collection_id, dic_data, q_collection_id="q001", quantified_only=False,
@@ -681,8 +701,8 @@ if __name__ == "__main__":
         dic_data["meta"] = load_procedure_data(PATTERN_DIR_MICROWELL.format(collection_id))
         # get_or_create_unique_ligand / unique_virus .
         # important !!!! unique_gal_vir must be created before creating collection !!!!!
-        ma.create_or_update_unique_gal_vir(dic_data["gal_virus"])
-        ma.create_or_update_unique_gal_lig(dic_data["gal_ligand"])
+        ma.create_or_update_unique_gal_lig2(dic_data["gal_virus"])
+        ma.create_or_update_unique_gal_lig1(dic_data["gal_ligand"])
 
         # saving microwell plate collection data
         ma.create_or_update_collection(collection_id, dic_data, q_collection_id="raw",
