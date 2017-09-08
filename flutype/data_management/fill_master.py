@@ -51,6 +51,7 @@ or
 """
 
 from __future__ import print_function, absolute_import, division
+
 import os
 import sys
 import cv2
@@ -72,10 +73,11 @@ if path not in sys.path:
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flutype_webapp.settings")
 
 import django
-
 django.setup()
+
+import flutype.data_management.fill_database
 from flutype.models import RawSpotCollection
-from flutype.data_management.fill_database import Database
+
 
 ###############################################
 
@@ -636,11 +638,11 @@ class Master(object):
         return fname, fpath, created
 
     def write_db_to_master(self):
-        datatables_loaded = Database().load_database()
+        datatables_loaded = flutype.data_management.fill_database.DBDjango().load_database()
         self.write_data_tables(datatables_loaded)
         rscs = RawSpotCollection.objects.all()
         for rsc in rscs:
-            data_dic_rsc = Database().load_complete_collection_from_db(rsc)
+            data_dic_rsc = flutype.data_management.fill_database.DBDjango().load_complete_collection_from_db(rsc)
             self.write_complete_rsc_to_master(data_dic_rsc)
 
 
