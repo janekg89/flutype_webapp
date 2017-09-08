@@ -75,7 +75,6 @@ import django
 
 django.setup()
 ###############################################
-from flutype.data_management.read_flutype_analysis_db import load_procedure_data, load_db_from_formular
 
 # fix for py3
 try:
@@ -621,89 +620,3 @@ if __name__ == "__main__":
     path_master = "master/"
     ma = Master(path_master)
 
-    ################# fill master/collections ######################
-    PATTERN_DIR_MICROARRAY = "../flutype_analysis/data/{}"
-    PATTERN_DIR_MICROWELL = "../flutype_analysis/data/MTP/{}"
-
-    # all sid of microarray collections
-    microarray_collection_ids = ["2017-05-19_E5_X31",
-                                 "2017-05-19_E6_untenliegend_X31",
-                                 "2017-05-19_N5_X31",
-                                 "2017-05-19_N6_Pan",
-                                 "2017-05-19_N9_X31",
-                                 "2017-05-19_N10_Pan",
-                                 "2017-05-19_N11_Cal",
-                                 "flutype_test",
-                                 "P6_170613_Cal",
-                                 "P5_170612_X31",
-                                 "P3_170612_X31",
-                                 "2017-05-19_N7_Cal"
-                                 ]
-    # all sids of microwell collections
-    microwell_collection_ids = ["2017-05-12_MTP_R1",
-                                "2017-06-13_MTP"
-                                ]
-
-
-    def rename_dic(dic_data):
-        """
-        The dictionary in which is returned  from utils.load_data has different key naming than the once needed for dic_data in
-        method create_or_update_collection. rename_dic changes key names.
-
-        :param dic_data:
-        :return: dic_data: same values as before, different key names.
-        """
-        dic_data["gal_virus"] = dic_data.pop("gal_vir")
-        dic_data["gal_ligand"] = dic_data.pop("gal_pep")
-        if "tif" in dic_data:
-            dic_data["image"] = dic_data.pop("tif")
-        if "data" in dic_data:
-            dic_data["intensity"] = dic_data.pop("data")
-        elif "data_std" in dic_data:
-            dic_data["std"] = dic_data.pop("data_std")
-        return dic_data
-
-
-    # fill master/data_tables
-    path_formular_db = "media/forumular_db/"
-    # loads data tabels information from formular
-    data_tables_dic = load_db_from_formular(path_formular_db)
-    # saves data tables
-    ma.write_data_tables(data_tables_dic)
-
-    # read microarrays
-    for collection_id in microarray_collection_ids:
-        # loading gal_vi,gal_pep, picture,data, data_std
-        # dic_data = utils.load_data(collection_id, PATTERN_DIR_MICROARRAY.format(collection_id))#fixme
-
-        # renaming keys
-        dic_data = rename_dic(dic_data)
-
-        # loading procedure data from formular
-        dic_data["meta"] = load_procedure_data(PATTERN_DIR_MICROARRAY.format(collection_id))
-
-        # get_or_create_unique_ligand / unique_virus .
-        # important !!!! unique_gal_vir must be created before creating collection !!!!!
-        ma.create_or_update_unique_gal_lig2(dic_data["gal_virus"])
-        ma.create_or_update_unique_gal_lig1(dic_data["gal_ligand"])
-
-        # saving microarray collection data
-        ma.create_or_update_collection(collection_id, dic_data, q_collection_id="q001", quantified_only=False,
-                                       type="microarray")
-
-    # Read microwells
-    for collection_id in microwell_collection_ids:
-        # loading gal_vi,gal_pep, picture,data, data_std
-        # dic_data = utils.load_data(collection_id, PATTERN_DIR_MICROWELL.format(collection_id)) #fixme
-        # renaming keys
-        dic_data = rename_dic(dic_data)
-        # loading procedure data from formular
-        dic_data["meta"] = load_procedure_data(PATTERN_DIR_MICROWELL.format(collection_id))
-        # get_or_create_unique_ligand / unique_virus .
-        # important !!!! unique_gal_vir must be created before creating collection !!!!!
-        ma.create_or_update_unique_gal_lig2(dic_data["gal_virus"])
-        ma.create_or_update_unique_gal_lig1(dic_data["gal_ligand"])
-
-        # saving microwell plate collection data
-        ma.create_or_update_collection(collection_id, dic_data, q_collection_id="raw",
-                                       quantified_only=False, type="microwell")
