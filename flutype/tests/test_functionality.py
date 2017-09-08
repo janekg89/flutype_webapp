@@ -21,7 +21,7 @@ class SeleniumTestCase(LiveServerTestCase):
         self.driver.set_window_size(1024, 768)
         create_users(user_defs=user_defs)
         fill_database(path_master=path_master, collection_ids=[
-            "2017-05-19_E5_X31"
+            "2017-05-19_E5"
         ])
 
     def tearDown(self):
