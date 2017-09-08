@@ -168,27 +168,53 @@ class IOCollectionTestCase(TestCase):
         rsc = RawSpotCollection.objects.first()
 
         fname1, gal_file1 = self.db.load_gal1_from_db(rsc)
-        self.ma_test.create_or_update_gal_ligand(gal_file1, self.collection1_id, fname=fname1)
-        file_path = os.path.join(self.path_master_test,"collections", self.collection1_id, fname1)
+        self.ma_test.create_or_update_gal_lig1(gal_file1, self.collection1_id, fname=fname1)
+        file_path = os.path.join(self.ma_test.collections_path, self.collection1_id, fname1)
         self.assertTrue(Path(file_path).is_file())
 
         fname2, gal_file2 = self.db.load_gal2_from_db(rsc)
-        self.ma_test.create_or_update_gal_ligand(gal_file2, self.collection1_id, fname=fname2)
-        file_path = os.path.join(self.path_master_test, "collections", self.collection1_id, fname2)
+        self.ma_test.create_or_update_gal_lig2(gal_file2, self.collection1_id, fname=fname2)
+        file_path = os.path.join(self.ma_test.collections_path, self.collection1_id, fname2)
         self.assertTrue(Path(file_path).is_file())
+
+    def test_create_or_update_unique_gal_lig1(self):
+
+        rsc = RawSpotCollection.objects.first()
+
+        fname1, gal_file1 = self.db.load_gal1_from_db(rsc)
+        self.ma_test.create_or_update_unique_gal_lig1(gal_file1)
+        self.ma_test.create_or_update_gal_lig1(gal_file1, self.collection1_id)
+        file_path = os.path.join(self.ma_test.collections_path, self.collection1_id, "lig_fix_001.txt")
+        file_path_u = os.path.join(self.ma_test.unique_lig_gal_path, "lig_fix_001.txt")
+
+        self.assertTrue(Path(file_path).is_file())
+        self.assertTrue(Path(file_path_u).is_file())
+
+
+        fname2, gal_file2 = self.db.load_gal2_from_db(rsc)
+        self.ma_test.create_or_update_unique_gal_lig2(gal_file2)
+        self.ma_test.create_or_update_gal_lig2(gal_file2, self.collection1_id)
+        file_path = os.path.join(self.ma_test.collections_path, self.collection1_id, "lig_mob_001.txt")
+        file_path_u = os.path.join(self.ma_test.unique_vir_gal_path, "lig_mob_001.txt")
+
+        self.assertTrue(Path(file_path).is_file())
+        self.assertTrue(Path(file_path_u).is_file())
+
+
+
 
     def test_write_image_to_master(self):
         rsc = RawSpotCollection.objects.last()
         _ , image = self.db.load_image_from_db(rsc)
         self.ma_test.create_or_update_image(image,self.collection2_id)
-        file_path = os.path.join(self.path_master_test, "collections", self.collection2_id,"image.jpg")
+        file_path = os.path.join(self.ma_test.collections_path, self.collection2_id,"image.jpg")
         self.assertTrue(Path(file_path).is_file())
 
     def test_write_rawspot_meta_to_master(self):
         rsc = RawSpotCollection.objects.last()
         meta = self.db.load_raw_spot_meta_from_db(rsc)
         self.ma_test.create_or_update_meta(meta , self.collection2_id)
-        file_path = os.path.join(self.path_master_test, "collections", self.collection2_id,"meta.csv")
+        file_path = os.path.join(self.ma_test.collections_path, self.collection2_id,"meta.csv")
         self.assertTrue(Path(file_path).is_file())
 
     def test_write_rsc_steps_to_master(self):
@@ -197,7 +223,7 @@ class IOCollectionTestCase(TestCase):
         rsc = RawSpotCollection.objects.last()
         steps = self.db.load_process(rsc.process)
         self.ma_test.write_steps(steps, self.collection2_id)
-        file_path = os.path.join(self.path_master_test, "collections", self.collection2_id, "steps.csv")
+        file_path = os.path.join(self.ma_test.collections_path, self.collection2_id, "steps.csv")
         self.assertTrue(Path(file_path).is_file())
 
     def test_write_rsc_master(self):
@@ -225,6 +251,8 @@ class IOCollectionTestCase(TestCase):
 
     def test_write_complete_collection_to_master(self):
         pass
+
+
 
 
 
