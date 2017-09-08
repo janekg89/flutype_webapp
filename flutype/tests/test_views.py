@@ -289,7 +289,7 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
     def setUpTestData(cls):
         create_users(user_defs=user_defs)
         fill_database(path_master=path_master, collection_ids=[
-            "2017-05-19_E5_X31"
+            "2017-05-19_E5"
         ])
 
     def setUp(self):
@@ -419,7 +419,7 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         self.assertContains(response, "No process steps avialable for P001 process.")
 
     def test_process_with_process_steps_view_200(self):
-        fill_database(path_master=path_master, collection_ids=["2017-06-13_MTP"])
+        fill_database(path_master=path_master, collection_ids=["170509-00"])
         id = Process.objects.last().id
         response = self.c.post('/flutype/process/' + str(id) + "/", {})
         status = response.status_code
@@ -439,14 +439,14 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         self.assertContains(response, "No entries in database")
 
     def test_myexperiments_view_200_one_collection(self):
-        fill_database(path_master=path_master, collection_ids=["2017-06-13_MTP"])
+        fill_database(path_master=path_master, collection_ids=["170509-00"])
         response = self.c.post('/flutype/myexperiments/', {})
         status = response.status_code
         self.assertEqual(status, 200, "index view 200")
-        self.assertContains(response, "170613")
+        self.assertContains(response, "170509-00")
 
     def test_rawspotcollection_view_200(self):
-        fill_database(path_master=path_master, collection_ids=["2017-06-13_MTP"])
+        fill_database(path_master=path_master, collection_ids=["170509-00"])
         id = RawSpotCollection.objects.first().id
         response = self.c.post('/flutype/rawspotcollection/' + str(id) + '/', {})
         status = response.status_code
@@ -458,7 +458,7 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         self.assertContains(response, "<td>A/Aichi/2/68 </td>")
 
     def test_qspotcollection_view_200(self):
-        fill_database(path_master=path_master, collection_ids=["2017-06-13_MTP"])
+        fill_database(path_master=path_master, collection_ids=["170509-00"])
         id = SpotCollection.objects.first().id
         response = self.c.post('/flutype/qspotcollection/' + str(id) + '/', {})
         status = response.status_code
@@ -468,7 +468,7 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         self.assertContains(response, "<td>A/Aichi/2/68 </td>")
 
     def test_qspotcollection_data_view_200(self):
-        fill_database(path_master=path_master, collection_ids=["2017-06-13_MTP"])
+        fill_database(path_master=path_master, collection_ids=["170509-00"])
         id = SpotCollection.objects.first().id
         response = self.c.get('/flutype/qspotcollection/' + str(id) + '/data', {})
         status = response.status_code

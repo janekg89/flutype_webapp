@@ -1,4 +1,4 @@
-sid	ligand	concentration	buffer	ph	purity	produced_by	production_date	comment	labeling
-AK025	A001	0.25							
-AK050	A001	0.5							
-AK100	A001	1							
+	sid	labeling	concentration	buffer	ph	purity	produced_by	production_date	comment	ligand
+0	AK025		0.25							A001
+1	AK050		0.5							A001
+2	AK100		1.0							A001

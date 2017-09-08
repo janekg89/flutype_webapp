@@ -1,26 +1,26 @@
-sid	ligand	concentration	labeling	buffer	ph	active	passage_history	production_date	purity	comment	produced_by
-X31A	387139	0.833				False	Egg			Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot)	
-X31B	387139	0.927				False	Egg			Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot)	
-CAL1	1316510	0.333				False	Egg			Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot)	
-PAN1	381513	0.48				False	Egg			Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot)	
-PAN2	381513	0.353				False	Egg			Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot)	
-CAL2	1316510	0.367				False	Egg			Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot)	
-X31C	387139	0.05		PBST 		False	Egg			Labeling vom 11.1.17	
-X31D	387139					False	Egg			benutzt bei Publication	
-H1										benutzt bei Publication	
-H1N1										benutzt bei Publication	
-H5										benutzt bei Publication	
-H7										benutzt bei Publication	
-Vi	392809									benutzt bei Publication	
-NY	518981									benutzt bei Publication	
-X31	387139									benutzt bei den ersten Microarrays 2017	
-Pan	381513									benutzt bei den ersten Microarrays 2017	
-Cal	1316510									benutzt bei den ersten Microarrays 2017	
-X31-2-100	387139	0.1		Natriumhydrogencarbonat	8.5	False	Egg				
-X31-2-050	387139	0.05		Natriumhydrogencarbonat	8.5	False	Egg				
-X31-2-025	387139	0.025		Natriumhydrogencarbonat	8.5	False	Egg				
-X31-2-0125	387139	0.0125		Natriumhydrogencarbonat	8.5	False	Egg				
-X31-2-00625	387139	0.00625		Natriumhydrogencarbonat	8.5	False	Egg				
-X31-2-00313	387139	0.00313		Natriumhydrogencarbonat	8.5	False	Egg				
-X31-2-00156	387139	0.00156		Natriumhydrogencarbonat	8.5	False	Egg				
-X31-2-00078	387139	0.00078		Natriumhydrogencarbonat	8.5	False	Egg				
+	sid	labeling	concentration	buffer	ph	purity	produced_by	production_date	comment	ligand	passage_history	active
+0	X31A		0.833						Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot)	387139	Egg	False
+1	X31B		0.927						Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot)	387139	Egg	False
+2	CAL1		0.333						Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot)	1316510	Egg	False
+3	PAN1		0.48						Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot)	381513	Egg	False
+4	PAN2		0.353						Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot)	381513	Egg	False
+5	CAL2		0.367						Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot)	1316510	Egg	False
+6	X31C		0.05	PBST 					Labeling vom 11.1.17	387139	Egg	False
+7	X31D								benutzt bei Publication	387139	Egg	False
+8	H1								benutzt bei Publication			
+9	H1N1								benutzt bei Publication			
+10	H5								benutzt bei Publication			
+11	H7								benutzt bei Publication			
+12	Vi								benutzt bei Publication	392809		
+13	NY								benutzt bei Publication	518981		
+14	X31								benutzt bei den ersten Microarrays 2017	387139		
+15	Pan								benutzt bei den ersten Microarrays 2017	381513		
+16	Cal								benutzt bei den ersten Microarrays 2017	1316510		
+17	X31-2-100		0.1	natriumhydrogencarbonat	8.5					387139	Egg	False
+18	X31-2-050		0.05	natriumhydrogencarbonat	8.5					387139	Egg	False
+19	X31-2-025		0.025	natriumhydrogencarbonat	8.5					387139	Egg	False
+20	X31-2-0125		0.0125	natriumhydrogencarbonat	8.5					387139	Egg	False
+21	X31-2-00625		0.00625	natriumhydrogencarbonat	8.5					387139	Egg	False
+22	X31-2-00313		0.00313	natriumhydrogencarbonat	8.5					387139	Egg	False
+23	X31-2-00156		0.00156	natriumhydrogencarbonat	8.5					387139	Egg	False
+24	X31-2-00078		0.00078	natriumhydrogencarbonat	8.5					387139	Egg	False

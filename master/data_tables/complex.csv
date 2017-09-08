@@ -1,2 +1,2 @@
-sid	ligands_str	comment
-C01	P001-P002-P003	a test if complex works
+	sid	comment	ligands_str
+0	C01	a test if complex works	P001-P002-P003
