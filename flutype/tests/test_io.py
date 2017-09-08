@@ -38,8 +38,8 @@ class IODataTableTestCase(TestCase):
                                  "incubating"]
 
     def tearDown(self):
-        #shutil.rmtree(self.path_master_test)
-        pass
+        shutil.rmtree(self.path_master_test)
+
 
     def test_read_data_tables_from_master(self):
         self.assertTrue(set(self.data_table_keys).issubset(self.data_tables))
@@ -98,7 +98,7 @@ class IOCollectionTestCase(TestCase):
 
     def tearDown(self):
         create_users(user_defs=None, delete_all=True)
-        #shutil.rmtree(self.path_master_test)
+        shutil.rmtree(self.path_master_test)
 
     def load_process_from_db(self):
         p_db = Process.objects.first()
@@ -206,7 +206,9 @@ class IOCollectionTestCase(TestCase):
         self.assertTrue(Path(file_path).is_file())
 
     def test_write_rsc(self):
-        dic_data = self.db.load_raw_spot_collection_from_db()
+        rsc = RawSpotCollection.objects.last()
+        dic_data = self.db.load_raw_spot_collection_from_db(rsc)
+
 
 
 
