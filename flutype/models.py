@@ -25,7 +25,9 @@ from django.contrib.auth.models import User
 from model_utils.managers import InheritanceManager
 from polymorphic.models import PolymorphicModel
 from imagekit.models import ImageSpecField
-from imagekit.processors import Transpose, ResizeToFit
+from imagekit import ImageSpec
+from imagekit.forms import ProcessedImageField
+from imagekit.processors import Transpose, ResizeToFit, Adjust
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import fields
 
@@ -273,6 +275,7 @@ class Scanning(Step):
     pass
 
 
+
 class Drying(Step):
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
@@ -382,6 +385,19 @@ class ProcessStep(models.Model):
     start = models.DateTimeField(null=True, blank=True)
     finish = models.DateTimeField(null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
+    image = models.ImageField(upload_to="image", null=True, blank=True, storage=OverwriteStorage())
+    image_contrast = ImageSpecField(source='image',
+                                    processors=[Adjust(contrast=124, brightness=126)]
+                                    )
+    image_90 = ImageSpecField(source='image',
+                              processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(350, 100)],
+                              )
+    image_90_big = ImageSpecField(source='image',
+                              processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(2800, 880)],
+                              )
+
+    intensities = models.ForeignKey(GalFile, null=True, blank=True)
+
 
 
     # FIXME: property all users involved in the process, i.e.
@@ -404,6 +420,13 @@ class RawSpotCollection(Experiment):
     image_90 = ImageSpecField(source='image',
                               processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(350, 100)],
                               )
+    image_contrast = ImageSpecField(source='image',
+                                    processors=[Adjust(contrast=124, brightness=126)])
+
+    image_90_big = ImageSpecField(source='image',
+                                  processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(1400, 440)],
+                                  )
+
     gal_file1 = models.ForeignKey(GalFile, null=True, blank=True, related_name='gal_file1')
     gal_file2 = models.ForeignKey(GalFile, null=True, blank=True, related_name='gal_file2')
 

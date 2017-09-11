@@ -1,0 +1,161 @@
+{% extends "flutype/base.html" %}
+
+{% block head %}
+    <script type="text/javascript" src="{{ static('flutype/js/caman.full.min.js') }}"></script>
+{% endblock %}
+
+
+{% block content %}
+    <!-- Main Content -->
+<div id="imageContainer">
+<div  class="active">
+  <canvas id="canvas"></canvas>
+</div>
+</div>
+<div class="col-lg-6">
+  <div class="col-lg-6">
+    <label for="bright">Brightness</label>
+    <input id="bright" name="bright" type="range" min="1" max="120" value="5">
+    <label for="contrast">Contrast</label>
+    <input id="contrast" name="contrast" type="range" min="-10" max="120" value="4">
+  </div>
+  <div class="col-lg-6">
+    <label for="gamma">gamma</label>
+    <input id="gamma" name="gamma" type="range" min="1" max="10" value="1">
+    <label for="saturation">saturation</label>
+    <input id="saturation" name="saturation" type="range" min="1" max="100" value="1">
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block javascript %}
+    <script>
+    $(document).ready(function() {
+
+  var canvas = document.getElementById('canvas');
+  var ctx = canvas.getContext('2d');
+  var undoImg;
+  var img = new Image();
+loadImage = function(src){
+
+  img.crossOrigin = '';
+  img.src = src;
+
+  img.onload = function() {
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx.drawImage(img, 0, 0, img.width, img.height);
+  }
+}
+
+  loadImage("{{ image.url }}");
+  var $reset = $('#resetbtn');
+  var $autoCorrect = $('#auto');
+  var $saveBase64 = $('#saveBase64');
+  var $saveImg = $('#saveImg');
+  var $toImg = $('#toImg');
+  var $base64Img = $('#base64Img');
+  var $applyMask = $('#applyMask');
+  var $undoMask = $('#undoMask');
+  var $canvas = $('.active canvas');
+
+  /* As soon as slider value changes call applyFilters */
+  $(document).on('change', 'input[type=range]', function() {
+    var bright = parseInt($('#bright').val());
+    var cntrst = parseInt($('#contrast').val());
+    var gamma = parseInt($('#gamma').val());
+    var saturation = parseInt($('#saturation').val());
+
+    Caman('#canvas', img, function() {
+      this.revert(false);
+      this.brightness(bright).contrast(cntrst).gamma(gamma).saturation(saturation).render();
+    });
+  });
+
+  /* Creating custom filters */
+  Caman.Filter.register("auto", function() {
+	this.brightness(10);
+    this.contrast(13);
+	$("#bright").val(10)
+	$("#contrast").val(13)
+    this.render();
+  });
+  $reset.on('click', function(e) {
+    $('input[type=range]').val(0);
+    Caman('#canvas', img, function() {
+     this.revert(false);
+     this.render();
+    });
+  });
+
+    $autoCorrect.on('click', function(e) {
+    $('input[type=range]').val(0);
+    Caman('#canvas', img, function() {
+	  this.auto();
+      this.render();
+    });
+  });
+
+
+  /* You can also save it as a jpg image, extension need to be added later after saving image. */
+
+  $saveBase64.on('click', function(e) {
+	var can = document.getElementById('canvas');
+		$("#base64").val(can.toDataURL());
+  });
+
+   $saveImg.on('click', function(e) {
+    Caman('#canvas', img, function() {
+      this.render(function() {
+        this.save("jpeg");
+      });
+    });
+  });
+  $toImg.on('click', function(e) {
+   $base64Img.attr('src', $("#base64").val());
+
+  });
+  $undoMask.on('click', function(e) {
+	loadImage(undoImg);
+  });
+  $canvas.on('click', function(e) {
+	$applyMask.trigger('click')
+  });
+  $applyMask.on('click', function(e) {
+	var $maskDiv = $("#imageContainer .active div")[0];
+	var $canvas = $("#imageContainer .active canvas")[0];
+	if($maskDiv != undefined){
+		/*Caman('#canvas', img, function() {
+		  this.render(function() {
+			undoImg = this.toBase64();
+		  });
+		});*/
+		 var can = document.getElementById('canvas');
+		 undoImg =  can.toDataURL();
+		setTimeout(function(){
+			ctx.rect($maskDiv.offsetLeft - $canvas.offsetLeft, $maskDiv.offsetTop - $canvas.offsetTop,$maskDiv.offsetWidth,$maskDiv.offsetHeight );
+			ctx.fillStyle = 'black';
+			ctx.fill();
+			//ctx.lineWidth = 7;
+			//ctx.strokeStyle = 'black';
+			ctx.stroke();
+			$(".imageMask ").remove();
+		},500);
+	}
+  });
+          $("#imageContainer").dblclick(function(e){
+         	var x = e.offsetX;
+             var y = e.offsetY;
+         	$(".imageMask").draggable({disabled: true}).resizable({disabled: true});
+         	$(".imageMask").addClass("blur");
+         	$("#imageContainer .active").append('<div  class="imageMask ui-draggable ui-draggable-handle ui-resizable" style="left: '+(x-26)+'px; top: '+(y-23)+'px;"></div>');
+         	$("#imageContainer .active .imageMask:last-child").draggable({ containment: 'parent'}).resizable();
+         });
+});
+    </script>
+
+
+
+{% endblock %}

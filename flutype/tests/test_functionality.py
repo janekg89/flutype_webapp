@@ -68,7 +68,9 @@ class SeleniumTestCase(LiveServerTestCase):
         # page should be stable enough now, and we can perform desired actions
         elem = WebDriverWait(self.driver, 30).until(expected_conditions.visibility_of_element_located((By.ID, 'myDiv')))
 
-        # java_script = '$.ajax({ method: "GET", url: endpoint, success: function(data){ dataPlot = data; Plotly.newPlot('myDiv', Chart(dataPlot)); }, error: function(error_data){ console.log("error") console.log(error_data)  }});'
+        # java_script = '$.ajax({ method: "GET", url: endpoint, success: function(data){ dataPlot = data;
+        # Plotly.newPlot('myDiv', Chart(dataPlot)); }, error: function(error_data){ console.log("error")
+        # console.log(error_data)  }});'
         # dataPlot = self.driver.execute_async_script("dataPlot",elem)
         # self.driver.save_screenshot('screenshot.png')
 

@@ -25,7 +25,7 @@
             <!-- Raw Image -->
             <div class="row ">
                 {% if collection.image %}
-                    <a href="{{ collection.image.url }}" target="_blank">
+                    <a href={{ url('imageview', args=[collection.id]) }} target="_blank">
                         <img src={{ collection.image_90.url }} >
                     </a>
                 {% else %}

@@ -21,6 +21,8 @@ urlpatterns = [
 
     url(r'^process/(?P<pk>[0-9]+)/$', views.process_view, name='processview'),
 
+    url(r'^image/(?P<pk>[0-9]+)/$', views.image_view, name='imageview'),
+
     url(r'^peptidebatches/$', views.peptide_batch_view, name='peptidebatches'),
     url(r'^peptidebatches/new/$', views.peptide_batch_new, name='peptide_batch_new'),
     url(r'^peptidebatches/edit/(?P<pk>[0-9]+)/$', views.peptide_batch_edit, name='peptide_batch_edit'),
