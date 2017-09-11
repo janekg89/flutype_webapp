@@ -207,7 +207,6 @@ class DBDjango(object):
         user = get_user_or_none(peptide_batch)
 
         # fills peptide_batches
-
         peptide_b, created = PeptideBatch.objects.get_or_create(sid=peptide_batch["sid"],
                                                                 ligand=peptide,
                                                                 concentration=peptide_batch["concentration"],
@@ -433,7 +432,6 @@ class DBDjango(object):
     def create_or_update_process(self, steps):
         steps_in_process = []
         for index, step in steps.iterrows():
-            print(step.keys())
             process_step = Step.objects.get(sid=step["step"])
             steps_in_process.append(process_step)
 
@@ -443,11 +441,9 @@ class DBDjango(object):
             # if result
             if bool(result):
                 if int(result.group(1)) > max_name:
-                    print()
                     max_name = int(result.group(1))
             steps = list(process.steps.all())
-            print("This process steps:", steps_in_process)
-            print(" the steps of one process in all processes:", steps)
+
 
             if steps == steps_in_process:
                 return process, False
@@ -464,7 +460,7 @@ class DBDjango(object):
 
 
 
-    def create_or_update_process_and_process_steps(self, steps):
+    def create_or_update_process_and_process_steps(self, steps, dic_data):
         """
         :param meta: (dictionary -> keys with corresponding value ->  meta.csv)
                     keys :Manfacturer
@@ -488,11 +484,17 @@ class DBDjango(object):
             user = get_user_or_none(step)
             process_step, created = ProcessStep.objects.get_or_create(process=process,
                                                                       step=process_step,
-                                                                      index=index,
+                                                                      index=step["index"],
                                                                       user=user,
                                                                       start=step["start"],
-                                                                      finish=step["finish"]
+                                                                      finish=step["finish"],
+                                                                      comment=step["comment"]
                                                                       )
+            if bool(step["image"]):
+                process_step.image.save(step["image"] + ".jpg", dic_data["images"][step["image"]])
+
+
+
         process.save()
         return process, created
 
@@ -505,6 +507,7 @@ class DBDjango(object):
         data_dic_rsc["gal_lig2"] = self.load_gal2_from_db(raw_spot_collection)
         data_dic_rsc["process"] = self.load_process(raw_spot_collection.process)
         data_dic_rsc["image"] = self.load_image_from_db(raw_spot_collection)
+        data_dic_rsc["images"] = self.load_scanning_images_from_db(raw_spot_collection)
         return data_dic_rsc
 
     def fill_raw_collection(self, dic_data):
@@ -627,6 +630,15 @@ class DBDjango(object):
         except:
             image = None
         return "image",image
+
+
+    def load_scanning_images_from_db(self, raw_spot_collection):
+        images = []
+        for process_step in raw_spot_collection.process.processstep_set.all():
+            if process_step.image:
+                images.append(Image.open(process_step))
+
+        return "images",images
 
 
     def fill_gal_lig1(self, gal_lig, fname_gal_lig):

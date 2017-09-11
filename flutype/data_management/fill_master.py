@@ -142,6 +142,16 @@ class Master(object):
             data_tables_dic[key.group(1)].replace([np.NaN], [None], inplace=True)
         return data_tables_dic
 
+    def read_images(self, collection_id):
+        collection_path = os.path.join(self.collections_path, collection_id)
+        images = {}
+        for fn in os.listdir(collection_path):
+            result = re.search('(.*).jpg', fn)
+            if bool(result):
+                path_file = os.path.join(self.collections_path, collection_id, fn)
+                images[fn]=File(open(path_file, "rb"))
+        return images
+
 
 
 
@@ -274,14 +284,14 @@ class Master(object):
             meta = dict(reader)
         return meta
 
-    def create_or_update_image(self, image_data, collection_id):
+    def create_or_update_image(self, image_data, collection_id, fname="image.jpg"):
         """
 
         :param image_data:
         :param collection_id:
         :return:
         """
-        path_file = os.path.join(self.collections_path, collection_id, "image.jpg")
+        path_file = os.path.join(self.collections_path, collection_id, fname)
         collection_path = os.path.join(self.collections_path, collection_id)
         if not os.path.exists(collection_path):
             os.makedirs(collection_path)
@@ -289,6 +299,12 @@ class Master(object):
             pass
         else:
             image_data.save(path_file)
+
+
+    def create_or_update_images(self, images_data, collection_id):
+        for image_name in images_data.keys():
+            self.create_or_update_image(images_data[image_name],collection_id,image_name)
+
 
     def read_image(self, collection_id, format="cv2"):
         """
@@ -354,8 +370,9 @@ class Master(object):
         self.create_or_update_gal_lig1(dic_data["gal_lig1"][1], collection_id)
         self.create_or_update_gal_lig2(dic_data["gal_lig2"][1], collection_id)
         self.create_or_update_meta(dic_data["meta"], collection_id)
-        self.create_or_update_image(dic_data["image"][1], collection_id)
+        #self.create_or_update_image(dic_data["image"][1], collection_id)
         self.write_steps(dic_data["process"], collection_id)
+        self.create_or_update_images(dic_data["images"],collection_id)
 
     def write_sc_to_master(self,collection_id,q_collection_id,dic_data_sc):
 
@@ -511,6 +528,7 @@ class Master(object):
         dic_data["steps"] = self.read_steps(collection_id)
         dic_data["gal_ligand1"] = self.read_gal_ligand(collection_id, format="dj")
         dic_data["gal_ligand2"] = self.read_gal_virus(collection_id, format="dj")
+        dic_data["images"] = self.read_images(collection_id)
         # FIXME: IF dic_data["meta"][holdertype]=microarray ...
         # or think how to show and or store rawcollection/quantified colelction.
         try:
