@@ -1,3 +1,3 @@
-	id	process	step	index	user	start	finish	comment
-0	114	P003	S01	0	hmemczak	2017-05-09 16:00:00+00:00	2017-05-10 14:00:00+00:00	
-1	115	P003	I01	1	hmemczak	2017-05-09 16:00:00+00:00	2017-05-10 14:00:00+00:00	
+	id	process	step	index	user	start	finish	comment	image	intensities
+0	153	P004	S01	0	hmemczak	2017-05-09 16:00:00+00:00	2017-05-10 14:00:00+00:00			
+1	154	P004	I01	1	hmemczak	2017-05-09 16:00:00+00:00	2017-05-10 14:00:00+00:00			

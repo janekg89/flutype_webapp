@@ -108,3 +108,63 @@
     -moz-border-radius: 6px 0 6px 6px;
     border-radius: 6px 0 6px 6px;
 }
+
+/* Basic CSS Styling */
+
+body {
+  text-align: center;
+  margin: 0 auto;
+}
+
+h1 {
+  margin: 10px 0 0 0;
+}
+
+canvas {
+  margin: 10px 0;
+}
+
+.filters button {
+  margin: 10px 0;
+}
+
+input[type="range"] {
+  margin: 0 0 10px 0;
+}
+
+.p {
+  padding-top: 50px;
+  clear: both;
+}
+.imageMask{
+         background-color: #131212;
+         opacity:1;
+         position: absolute !important;
+         left: 85px;
+         top: 66px;
+         width: 60px;
+         height: 60px;
+         }
+         .imageMask:hover{
+         cursor:move;
+         }
+         #photoContainer{
+         width: 299px;
+         }
+         .blur{
+         -webkit-filter: blur(3px);
+		 filter: blur(3px);
+         opacity:1;
+         cursor:default!important;
+         }
+         .ui-resizable { position: relative;}
+         .ui-resizable-handle { position: absolute;font-size: 0.1px;z-index: 99999; display: block;}
+         .ui-resizable-disabled .ui-resizable-handle, .ui-resizable-autohide .ui-resizable-handle { display: none; }
+         .ui-resizable-n { cursor: n-resize; height: 7px; width: 100%; top: -5px; left: 0; }
+         .ui-resizable-s { cursor: s-resize; height: 7px; width: 100%; bottom: -5px; left: 0; }
+         .ui-resizable-e { cursor: e-resize; width: 7px; right: -5px; top: 0; height: 100%; }
+         .ui-resizable-w { cursor: w-resize; width: 7px; left: -5px; top: 0; height: 100%; }
+         .ui-resizable-se { cursor: se-resize; width: 12px; height: 12px; right: 1px; bottom: 1px; }
+         .ui-resizable-sw { cursor: sw-resize; width: 9px; height: 9px; left: -5px; bottom: -5px; }
+         .ui-resizable-nw { cursor: nw-resize; width: 9px; height: 9px; left: -5px; top: -5px; }
+         .ui-resizable-ne { cursor: ne-resize; width: 9px; height: 9px; right: -5px; top: -5px;}
