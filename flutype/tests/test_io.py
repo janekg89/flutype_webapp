@@ -17,6 +17,9 @@ class IODataTableTestCase(TestCase):
         self.ma = Master(path_master)
         self.ma_test = Master(self.path_master_test)
         self.db = DBDjango()
+        self.collection2_id = "2017-05-19_E5"
+        self.collection1_id = "170509-00"
+
         self.data_tables = self.ma.read_data_tables()
         self.data_table_keys = ['peptide',
                                  'virus',
@@ -43,6 +46,14 @@ class IODataTableTestCase(TestCase):
         self.db.fill_dt(self.data_tables)
         peptides = Peptide.objects.all()
         self.assertTrue(len(peptides) > 0)
+
+    def test_read_images(self):
+        #rsc = RawSpotCollection.objects.last()
+        images = self.ma.read_images(self.collection2_id)
+        self.assertEqual(images.keys()[0], 'image.jpg')
+        images = self.ma.read_images(self.collection1_id)
+        self.assertFalse(bool(images))
+
 
 
     def test_load_data_tables_from_db(self):
@@ -94,6 +105,7 @@ class IOCollectionTestCase(TestCase):
     def load_process_from_db(self):
         p_db = Process.objects.first()
         process = self.db.load_process(p_db)
+        print(process)
         self.assertTrue(set(self.process_keys).issubset(process))
 
     def test_load_gal_from_db(self):
@@ -247,3 +259,5 @@ class IOCollectionTestCase(TestCase):
         for file in files:
             file_path = os.path.join(self.ma_test.collections_path,sids[1], file)
             self.assertTrue(Path(file_path).is_file())
+
+

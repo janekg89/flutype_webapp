@@ -424,7 +424,7 @@ class RawSpotCollection(Experiment):
                                     processors=[Adjust(contrast=124, brightness=126)])
 
     image_90_big = ImageSpecField(source='image',
-                                  processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(1400, 440)],
+                                  processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(2800, 880)],
                                   )
 
     gal_file1 = models.ForeignKey(GalFile, null=True, blank=True, related_name='gal_file1')
