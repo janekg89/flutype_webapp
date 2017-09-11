@@ -765,3 +765,8 @@ def process_delete(request, pk):
         process.delete()
         return redirect('processes')
     return render(request, 'flutype/delete.html', {'process': process, 'type': 'process'})
+
+@login_required
+def image_view(request, pk):
+    rsc = get_object_or_404(RawSpotCollection, pk=pk)
+    return render(request, 'flutype/show_image.html', {'image': rsc.image_90_big})

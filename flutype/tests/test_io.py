@@ -64,8 +64,6 @@ class IODataTableTestCase(TestCase):
         for key in self.data_table_keys:
             self.assertTrue(set(datatables_loaded[key].keys()).issubset(datatables_loaded2[key]))
 
-
-
 class IOCollectionTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -73,7 +71,6 @@ class IOCollectionTestCase(TestCase):
         fill_database(path_master=path_master, collection_ids=[
             "170509-00","2017-05-19_E5"
         ])
-
 
     def setUp(self):
         self.collection1_id = "170509-00"
@@ -128,20 +125,17 @@ class IOCollectionTestCase(TestCase):
         std = sc1.pivot_std()
         self.assertEqual(std.shape, (8, 12))
 
-
     def test_load_spot_collection_from_db(self):
         rsc = RawSpotCollection.objects.first()
         sc1 = rsc.spotcollection_set.first()
         data_dic_sc = self.db.load_spot_collection_from_db(sc1)
         self.assertTrue(set(["meta","intensity","std"]).issubset(data_dic_sc))
 
-
     def test_load_raw_spot_collection_from_db(self):
         rsc = RawSpotCollection.objects.first()
         data_dic_rsc = self.db.load_raw_spot_collection_from_db(rsc)
         self.assertTrue(set(["meta","gal_lig1","gal_lig2","process","image"]).issubset(data_dic_rsc))
         self.assertFalse(set(["spot_collections"]).issubset(data_dic_rsc))
-
 
     def test_load_complete_collection_from_db(self):
         rsc = RawSpotCollection.objects.first()
@@ -184,7 +178,6 @@ class IOCollectionTestCase(TestCase):
         self.assertTrue(Path(file_path).is_file())
         self.assertTrue(Path(file_path_u).is_file())
 
-
         fname2, gal_file2 = self.db.load_gal2_from_db(rsc)
         self.ma_test.create_or_update_unique_gal_lig2(gal_file2)
         self.ma_test.create_or_update_gal_lig2(gal_file2, self.collection1_id)
@@ -193,7 +186,6 @@ class IOCollectionTestCase(TestCase):
 
         self.assertTrue(Path(file_path).is_file())
         self.assertTrue(Path(file_path_u).is_file())
-
 
     def test_write_image_to_master(self):
         rsc = RawSpotCollection.objects.last()
@@ -211,7 +203,6 @@ class IOCollectionTestCase(TestCase):
 
     def test_write_rsc_steps_to_master(self):
         dic_process= {}
-
         rsc = RawSpotCollection.objects.last()
         steps = self.db.load_process(rsc.process)
         self.ma_test.write_steps(steps, self.collection2_id)
@@ -231,10 +222,7 @@ class IOCollectionTestCase(TestCase):
         rsc = RawSpotCollection.objects.last()
         sc1 = rsc.spotcollection_set.first()
         data_dic_sc = self.db.load_spot_collection_from_db(sc1)
-
         self.ma_test.write_sc_to_master(self.collection2_id,"q001",data_dic_sc)
-
-
         files = ["intensity.csv", "std.csv","meta.csv"]
         for file in files:
             file_path = os.path.join(self.ma_test.collections_path,self.collection2_id,"q001",file)
