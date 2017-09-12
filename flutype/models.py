@@ -6,6 +6,7 @@ Django models for the flutype webapp.
 from __future__ import absolute_import, print_function, unicode_literals
 
 import os
+import hashlib
 import pandas as pd
 
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -25,11 +26,8 @@ from django.contrib.auth.models import User
 from model_utils.managers import InheritanceManager
 from polymorphic.models import PolymorphicModel
 from imagekit.models import ImageSpecField
-from imagekit import ImageSpec
-from imagekit.forms import ProcessedImageField
 from imagekit.processors import Transpose, ResizeToFit, Adjust
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes import fields
 
 
 CHAR_MAX_LENGTH = 50
@@ -328,7 +326,6 @@ class Process(models.Model):
     sid = models.CharField(max_length=CHAR_MAX_LENGTH, unique=True)
     steps = models.ManyToManyField(Step, through='ProcessStep')
     unique_ordering = models.CharField(max_length=CHAR_MAX_LENGTH)
-    user = models.ForeignKey(User, blank=True, null=True)
 
     def users(self):
         user_ids = self.processstep_set.values_list("user", flat="True").distinct()
@@ -345,7 +342,7 @@ class Process(models.Model):
         """ Creates DataFrame from given steps.
         :return:
         """
-        data = read_frame(self.processstep_set.all(), fieldnames=["step__sid", "index"])
+        data = read_frame(self.processstep_set.filter(collection_id=self.experiment_set.first()), fieldnames=["step__sid", "index"])
         data.sort_values(["index", "step__sid"], ascending=[1, 0])
         order_steps = data["step__sid"]
         vals = '-'.join(order_steps)
@@ -360,56 +357,10 @@ class Process(models.Model):
 
 
 
-    def save(self, *args, **kwargs):
-        self.unique_ordering = self.get_unique_ordering
-        super(Process, self).save(*args, **kwargs)
 
 
     def __str__(self):
         return self.sid
-
-
-
-
-class ProcessStep(models.Model):
-    """ Single step in an actual process.
-        Connecting the Steps to the process, creating an order of the steps.
-
-        index: position of step in the process.
-
-    """
-    process = models.ForeignKey(Process)
-    step = models.ForeignKey(Step)
-    index = models.IntegerField(blank=True, null=True)
-    user = models.ForeignKey(User, null=True, blank=True)
-    start = models.DateTimeField(null=True, blank=True)
-    finish = models.DateTimeField(null=True, blank=True)
-    comment = models.TextField(null=True, blank=True)
-    image = models.ImageField(upload_to="image", null=True, blank=True, storage=OverwriteStorage())
-    image_contrast = ImageSpecField(source='image',
-                                    processors=[Adjust(contrast=124, brightness=126)]
-                                    )
-    image_90 = ImageSpecField(source='image',
-                              processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(350, 100)],
-                              )
-    image_90_big = ImageSpecField(source='image',
-                              processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(2800, 880)],
-                              )
-
-    intensities = models.ForeignKey(GalFile, null=True, blank=True)
-
-
-
-    # FIXME: property all users involved in the process, i.e.
-    # everybody involved in any step in the process
-
-    class Meta:
-        unique_together = ('process', 'step', 'index')
-        ordering = ['index', ]
-
-    def __str__(self):
-        return str(self.process.sid + "-" + self.step.sid + "-" + str(self.index))
-
 
 class RawSpotCollection(Experiment):
     """
@@ -493,6 +444,60 @@ class RawSpotCollection(Experiment):
 
     # todo: RawSpots created via overwritten safe  with Galfile
     # todo: ligands1,ligands2 shell be uploaded via overwritten safe method.
+
+
+def md5(f):
+    hash_md5 = hashlib.md5()
+    for chunk in iter(lambda: f.read(4096), b""):
+        hash_md5.update(chunk)
+    return hash_md5.hexdigest()
+
+
+class ProcessStep(models.Model):
+    """ Single step in an actual process.
+        Connecting the Steps to the process, creating an order of the steps.
+
+        index: position of step in the process.
+
+    """
+    process = models.ForeignKey(Process)
+    step = models.ForeignKey(Step)
+    index = models.IntegerField(blank=True, null=True)
+    user = models.ForeignKey(User, null=True, blank=True)
+    start = models.DateTimeField(null=True, blank=True)
+    finish = models.DateTimeField(null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
+    image = models.ImageField(upload_to="image", null=True, blank=True, storage=OverwriteStorage())
+    image_contrast = ImageSpecField(source='image',
+                                    processors=[Adjust(contrast=124, brightness=126)]
+                                    )
+    image_90 = ImageSpecField(source='image',
+                              processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(350, 100)],
+                              )
+    image_90_big = ImageSpecField(source='image',
+                              processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(2800, 880)],
+                              )
+
+    intensities = models.ForeignKey(GalFile, null=True, blank=True)
+
+    image_hash = models.CharField(max_length=CHAR_MAX_LENGTH, null=True , blank=True)
+    collection_id =  models.CharField(max_length=CHAR_MAX_LENGTH)
+
+
+
+
+    # FIXME: property all users involved in the process, i.e.
+    # everybody involved in any step in the process
+
+    class Meta:
+        ordering = ['index']
+        unique_together = ["collection_id", "process","step","index"]
+
+    def __str__(self):
+        return str(self.process.sid + "-" + self.step.sid + "-" + str(self.index))
+
+
+
 
 class RawSpot(models.Model):
     """

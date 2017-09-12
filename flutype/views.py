@@ -770,3 +770,8 @@ def process_delete(request, pk):
 def image_view(request, pk):
     rsc = get_object_or_404(RawSpotCollection, pk=pk)
     return render(request, 'flutype/show_image.html', {'image': rsc.image_90_big})
+
+@login_required
+def image_process_view(request, pk):
+    ps = get_object_or_404(ProcessStep, pk=pk)
+    return render(request, 'flutype/show_image.html', {'image': ps.image_90_big})

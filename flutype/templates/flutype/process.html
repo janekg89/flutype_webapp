@@ -5,7 +5,7 @@
         <h2>Process: {{ process.sid }}</h2>
         {% if process.is_step_in_process() %}
             <table id="process" class="cell-border">
-                {% with prosteps = process.processstep_set.all() %}
+                {% with prosteps = process.processstep_set.filter(collection_id=process.experiment_set.first())%}
                     <thead>
                     <tr>
                         <th></th>
@@ -74,6 +74,7 @@
                             {% endif %}
                         {% endfor %}
                     </tr>
+
                     </tbody>
                 {% endwith %}
             </table>

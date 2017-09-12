@@ -1,7 +1,7 @@
 from flutype.data_management.fill_database import DBDjango, path_master, fill_database
 from flutype.data_management.fill_master import Master
 from flutype.data_management.fill_users import create_users, user_defs
-from flutype.models import Peptide, Process, RawSpotCollection
+from flutype.models import Peptide, Process, RawSpotCollection, Scanning
 import shutil
 import os
 from pathlib import Path
@@ -47,12 +47,29 @@ class IODataTableTestCase(TestCase):
         peptides = Peptide.objects.all()
         self.assertTrue(len(peptides) > 0)
 
+    def test_scanning_step(self):
+        self.db.fill_dt(self.data_tables)
+        scannings = Scanning.objects.all()
+        for scan in scannings:
+            db_scan_sid = scan.sid
+
+        steps = self.ma.read_steps(self.collection2_id)
+        self.assertEqual(steps["step"][0], db_scan_sid)
+
+        steps = self.ma.read_steps(self.collection1_id)
+        unique_ordering = self.db.unique_ordering(steps)
+        self.assertEqual(unique_ordering, "S01-I01")
+
+
+
     def test_read_images(self):
         #rsc = RawSpotCollection.objects.last()
         images = self.ma.read_images(self.collection2_id)
         self.assertEqual(images.keys()[0], 'image.jpg')
         images = self.ma.read_images(self.collection1_id)
         self.assertFalse(bool(images))
+
+
 
 
 
@@ -75,6 +92,13 @@ class IODataTableTestCase(TestCase):
         for key in self.data_table_keys:
             self.assertTrue(set(datatables_loaded[key].keys()).issubset(datatables_loaded2[key]))
 
+    def test_read_data_tables(self):
+        data_tables = self.ma.read_data_tables()
+        self.assertEqual(data_tables.keys(),['scanning', 'antibody_batch', 'washing', 'drying', 'virus', 'complex', 'spotting', 'virus_batch', 'peptide_batch',
+                                             'complex_batch', 'peptide', 'quenching', 'antibody', 'incubating'])
+
+
+
 class IOCollectionTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -95,7 +119,7 @@ class IOCollectionTestCase(TestCase):
         self.db = DBDjango()
         self.data_tables = self.ma.read_data_tables()
         self.process_keys = ["id", "process", "step", "index", "user", "start", "finish", "comment"]
-        self.rsc_meta_keys = ['surface_substance', 'manufacturer', 'sid', 'holder_type','holder_batch', 'user']
+        self.rsc_meta_keys = ['surface_substance', 'manufacturer', 'sid', 'holder_type','holder_batch']
         self.sc_meta_keys = ["comment","image2numeric_version","processing_type"]
 
     def tearDown(self):
@@ -259,5 +283,7 @@ class IOCollectionTestCase(TestCase):
         for file in files:
             file_path = os.path.join(self.ma_test.collections_path,sids[1], file)
             self.assertTrue(Path(file_path).is_file())
+
+
 
 
