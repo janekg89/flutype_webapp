@@ -64,10 +64,12 @@ from flutype.models import (Peptide,
                             Incubating,
                             Washing,
                             Drying,
+                            Scanning,
                             ProcessStep,
                             Process,
                             GalFile,
                             Step,
+                            md5,
                             )
 
 
@@ -286,6 +288,13 @@ class DBDjango(object):
                                                           )
         return incub, created
 
+    def create_or_update_scanning(self,scanning):
+        scan, created = Scanning.objects.get_or_create(sid=scanning["sid"],
+                                                       method=scanning["method"],
+                                                       )
+        return scan, created
+
+
     def fill_dt(self, data_tables):
         # Stores informations if any new media was loaded.
         created_p = []
@@ -301,6 +310,7 @@ class DBDjango(object):
         created_i = []
         created_w = []
         created_d = []
+        created_sc = []
 
         # fills ligands #############################
         for k, virus in data_tables["virus"].iterrows():
@@ -353,6 +363,9 @@ class DBDjango(object):
         for k, incubating in data_tables["incubating"].iterrows():
             _, created = self.create_or_update_incubating(incubating)
             created_i.append(created)
+        for k, scanning in data_tables["scanning"].iterrows():
+            _, created = self.create_or_update_scanning(scanning)
+            created_sc.append(created)
 
         print("updates to database:")
         print("virus:", any(created_v))
@@ -364,6 +377,8 @@ class DBDjango(object):
         print("incubating:", any(created_i))
         print("washing:", any(created_w))
         print("drying:", any(created_d))
+        print("scanning:", any(created_sc))
+
 
 
 
@@ -427,28 +442,23 @@ class DBDjango(object):
 
 
 
+    def unique_ordering(self,steps):
+        if steps["step"].empty:
+            vals = "NoSteps"
+        else:
+            order_steps = steps["step"]
+            vals = '-'.join(order_steps)
+        return vals
 
 
     def create_or_update_process(self, steps):
         steps_in_process = []
-        for index, step in steps.iterrows():
-            process_step = Step.objects.get(sid=step["step"])
-            steps_in_process.append(process_step)
-
-        max_name = 0
-        for process in Process.objects.all():
-            result = re.search('P(.*)', process.sid)
-            # if result
-            if bool(result):
-                if int(result.group(1)) > max_name:
-                    max_name = int(result.group(1))
-            steps = list(process.steps.all())
+        unique_ordering = self.unique_ordering(steps)
 
 
-            if steps == steps_in_process:
-                return process, False
-        new_sid = "P" + '{:03}'.format(max_name + 1)
-        process, created = Process.objects.get_or_create(sid=new_sid)
+
+
+        process, created = Process.objects.get_or_create(sid = unique_ordering)
 
         return process, created
 
@@ -460,7 +470,7 @@ class DBDjango(object):
 
 
 
-    def create_or_update_process_and_process_steps(self, steps, dic_data):
+    def create_or_update_process_and_process_steps(self, steps, images,collection_id):
         """
         :param meta: (dictionary -> keys with corresponding value ->  meta.csv)
                     keys :Manfacturer
@@ -482,18 +492,22 @@ class DBDjango(object):
             # process_step = get_step_or_none(step)
             process_step = Step.objects.get(sid=step["step"])
             user = get_user_or_none(step)
+            if bool(step["image"]):
+                image_hash = md5(images[step["image"]])
+            else:
+                image_hash = None
             process_step, created = ProcessStep.objects.get_or_create(process=process,
                                                                       step=process_step,
                                                                       index=step["index"],
                                                                       user=user,
                                                                       start=step["start"],
                                                                       finish=step["finish"],
-                                                                      comment=step["comment"]
+                                                                      comment=step["comment"],
+                                                                      image_hash = image_hash,
+                                                                      collection_id = collection_id
                                                                       )
             if bool(step["image"]):
-                process_step.image.save(step["image"] + ".jpg", dic_data["images"][step["image"]])
-
-
+                process_step.image.save(collection_id+step["step"]+str(step["index"])+".jpg", images[step["image"]])
 
         process.save()
         return process, created
@@ -526,7 +540,7 @@ class DBDjango(object):
         print(dic_data["meta"])
         print("Filling Collection with sid <{}>".format(dic_data["meta"]["sid"]))
 
-        process, process_created = self.create_or_update_process_and_process_steps(dic_data["steps"])
+        process, process_created = self.create_or_update_process_and_process_steps(dic_data["steps"],dic_data["images"],dic_data["meta"]["sid"] )
 
         gal_vir, gal_vir_created = self.fill_gal_lig2(dic_data["gal_ligand2"][0], dic_data["gal_ligand2"][1])
         gal_lig, gal_lig_created = self.fill_gal_lig1(dic_data["gal_ligand1"][0], dic_data["gal_ligand1"][1])
@@ -552,7 +566,6 @@ class DBDjango(object):
         meta["holder_batch"] = raw_spot_collection.batch
         meta["sid"] = raw_spot_collection.sid
         meta["surface_substance"] = raw_spot_collection.functionalization
-        meta["user"] = raw_spot_collection.process.user
         return meta
 
     def load_spot_collection_meta_from_db(self, spot_collection):
@@ -633,10 +646,10 @@ class DBDjango(object):
 
 
     def load_scanning_images_from_db(self, raw_spot_collection):
-        images = []
+        images = {}
         for process_step in raw_spot_collection.process.processstep_set.all():
             if process_step.image:
-                images.append(Image.open(process_step))
+                images[os.path.basename(process_step.image.name)] = Image.open(process_step.image)
 
         return "images",images
 

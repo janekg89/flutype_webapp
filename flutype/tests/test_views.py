@@ -411,12 +411,13 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         self.assertContains(response, "2017-05-19_E5")
 
     def test_process_view_200(self):
-        id = Process.objects.first().id
+        fill_database(path_master=path_master, collection_ids=["P6_170613_Cal"])
+        id = Process.objects.last().id
         response = self.c.post('/flutype/process/' + str(id) + "/", {})
         status = response.status_code
 
         self.assertEqual(status, 200, "index view 200")
-        self.assertContains(response, "No process steps avialable for P001 process.")
+        self.assertContains(response, "No process steps avialable for NoSteps process.")
 
     def test_process_with_process_steps_view_200(self):
         fill_database(path_master=path_master, collection_ids=["170509-00"])
@@ -446,16 +447,20 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         self.assertContains(response, "170509-00")
 
     def test_rawspotcollection_view_200(self):
-        fill_database(path_master=path_master, collection_ids=["170509-00"])
+        fill_database(path_master=path_master, collection_ids=["P6_170613_Cal"])
         id = RawSpotCollection.objects.first().id
         response = self.c.post('/flutype/rawspotcollection/' + str(id) + '/', {})
         status = response.status_code
         self.assertEqual(status, 200, "index view 200")
         self.assertContains(response, "<h1>Raw: 2017-05-19_E5 </h1>")
-        self.assertContains(response, "No process steps available for process.")
         self.assertContains(response, "Dye001")
         self.assertContains(response, "A001")
         self.assertContains(response, "<td>A/Aichi/2/68 </td>")
+
+        id = RawSpotCollection.objects.last().id
+        response = self.c.post('/flutype/rawspotcollection/' + str(id) + '/', {})
+        self.assertContains(response, "No process steps available for process.")
+
 
     def test_qspotcollection_view_200(self):
         fill_database(path_master=path_master, collection_ids=["170509-00"])
