@@ -46,7 +46,7 @@
                     <tbody>
                     {% if collection.experiment_type %}
                         <tr>
-                            <td><b>Experiment Type</b></td>
+                            <td><b>Experiment Type </b></td>
                             <td>{{ collection.experiment_type }}</td>
                         </tr>
                     {% endif %}
@@ -165,7 +165,7 @@
                     <h2>Process: {{ process.sid }}</h2>
                     {% if process.is_step_in_process() %}
                         <table id="processes" class="cell-border">
-                            {% with prosteps = process.processstep_set.all() %}
+                            {% with prosteps = process.processstep_set.filter(collection_id = collection.sid) %}
                                 <thead>
                                 <tr>
                                     <th></th>
@@ -271,6 +271,19 @@
                                         {% endif %}
                                     {% endfor %}
                                 </tr>
+
+                                <tr>
+                                    <th>Image</th>
+                                    {% for prostep in prosteps %}
+                                        {% if  prostep.image %}
+                                            <td> <a href={{ url('imageviewprocess', args=[prostep.id]) }} target="_blank">
+                                                <img src={{ prostep.image_90.url }} > </a> </td>
+                                        {% else %}
+                                            <td></td>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tr>
+
                                 </tbody>
                             {% endwith %}
                         </table>

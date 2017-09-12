@@ -33,8 +33,7 @@ class IOCollectionTestCase(TestCase):
         image_2 = Image.open(rsc.image_90)
         self.assertEqual(image[1].size, (2200,7200))
         self.assertEqual(image_2.size,(327, 100))
-        image_contrast = Image.open(rsc.image_contrast)
-        image_contrast.show()
+
 
 
 

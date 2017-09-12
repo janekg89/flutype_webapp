@@ -302,8 +302,10 @@ class Master(object):
 
 
     def create_or_update_images(self, images_data, collection_id):
-        for image_name in images_data.keys():
-            self.create_or_update_image(images_data[image_name],collection_id,image_name)
+        print(images_data)
+        if bool(images_data):
+            for image_name in images_data.keys():
+                self.create_or_update_image(images_data[image_name],collection_id,image_name)
 
 
     def read_image(self, collection_id, format="cv2"):
@@ -370,9 +372,9 @@ class Master(object):
         self.create_or_update_gal_lig1(dic_data["gal_lig1"][1], collection_id)
         self.create_or_update_gal_lig2(dic_data["gal_lig2"][1], collection_id)
         self.create_or_update_meta(dic_data["meta"], collection_id)
-        #self.create_or_update_image(dic_data["image"][1], collection_id)
+        self.create_or_update_image(dic_data["image"][1], collection_id)
         self.write_steps(dic_data["process"], collection_id)
-        self.create_or_update_images(dic_data["images"],collection_id)
+        self.create_or_update_images(dic_data["images"][1],collection_id)
 
     def write_sc_to_master(self,collection_id,q_collection_id,dic_data_sc):
 
