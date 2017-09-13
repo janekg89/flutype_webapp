@@ -1,10 +1,10 @@
 	sid	labeling	concentration	buffer	ph	purity	produced_by	production_date	comment	ligand	passage_history	active
-0	X31A		0.833						Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot)	387139	Egg	False
-1	X31B		0.927						Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot)	387139	Egg	False
-2	CAL1		0.333						Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot)	1316510	Egg	False
-3	PAN1		0.48						Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot)	381513	Egg	False
-4	PAN2		0.353						Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot)	381513	Egg	False
-5	CAL2		0.367						Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogefäße per Stamm (je 7 pro Aliguot)	1316510	Egg	False
+0	X31A		0.833						Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogef├ñ├ƒe per Stamm (je 7 pro Aliguot)	387139	Egg	False
+1	X31B		0.927						Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogef├ñ├ƒe per Stamm (je 7 pro Aliguot)	387139	Egg	False
+2	CAL1		0.333						Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogef├ñ├ƒe per Stamm (je 7 pro Aliguot)	1316510	Egg	False
+3	PAN1		0.48						Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogef├ñ├ƒe per Stamm (je 7 pro Aliguot)	381513	Egg	False
+4	PAN2		0.353						Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogef├ñ├ƒe per Stamm (je 7 pro Aliguot)	381513	Egg	False
+5	CAL2		0.367						Aliquotiert am 12.12.2016 zu je 100 mul in 14 Kryogef├ñ├ƒe per Stamm (je 7 pro Aliguot)	1316510	Egg	False
 6	X31C		0.05	PBST 					Labeling vom 11.1.17	387139	Egg	False
 7	X31D								benutzt bei Publication	387139	Egg	False
 8	H1								benutzt bei Publication			
@@ -24,3 +24,6 @@
 22	X31-2-00313		0.00313	natriumhydrogencarbonat	8.5					387139	Egg	False
 23	X31-2-00156		0.00156	natriumhydrogencarbonat	8.5					387139	Egg	False
 24	X31-2-00078		0.00078	natriumhydrogencarbonat	8.5					387139	Egg	False
+	Pan3								erste Messung mit Industry Spotter fixed_ligand	381513	Egg	False
+	Cal2								erste Messung mit Industry Spotter fixed_ligand	1316510	Egg	False
+	Ach1								erste Messung mit Industry Spotter fixed_ligand	387139	Egg	False
