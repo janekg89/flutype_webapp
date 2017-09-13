@@ -199,6 +199,7 @@ class DBDjango(object):
             peptide_batch["sid"] = None
 
         if "ligand" in peptide_batch:
+            print(peptide_batch["ligand"])
             peptide = Peptide.objects.get(sid=peptide_batch["ligand"])
 
         else:
@@ -222,7 +223,6 @@ class DBDjango(object):
         return peptide_b, created
 
     def create_or_update_antibody(self, antibody):
-
         antibod, created = Antibody.objects.get_or_create(sid=antibody["sid"],
                                                           target=antibody["target"],
                                                           name=antibody["name"],
@@ -233,6 +233,8 @@ class DBDjango(object):
     def create_or_update_antibody_batch(self, antibody_batch):
 
         if "ligand" in antibody_batch:
+            print(antibody_batch["ligand"])
+
             antibody = Antibody.objects.get(sid=antibody_batch["ligand"])
 
         else:
@@ -492,8 +494,11 @@ class DBDjango(object):
             # process_step = get_step_or_none(step)
             process_step = Step.objects.get(sid=step["step"])
             user = get_user_or_none(step)
+            print(images.keys())
+
             if bool(step["image"]):
-                image_hash = md5(images[step["image"]])
+                image_name = os.path.basename(step["image"])
+                image_hash = md5(images[image_name])
             else:
                 image_hash = None
             process_step, created = ProcessStep.objects.get_or_create(process=process,
@@ -507,7 +512,7 @@ class DBDjango(object):
                                                                       collection_id = collection_id
                                                                       )
             if bool(step["image"]):
-                process_step.image.save(collection_id+step["step"]+str(step["index"])+".jpg", images[step["image"]])
+                process_step.image.save(collection_id+image_name+str(step["index"])+".jpg", images[image_name])
 
         process.save()
         return process, created

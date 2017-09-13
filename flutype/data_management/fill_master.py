@@ -194,7 +194,7 @@ class Master(object):
         gal_ligand.to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
 
 
-    def read_gal_ligand(self, collection_id, format="pd"):
+    def read_gal_ligand(self, collection_id, format="pd", index=True):
         """
 
         :param collection_id:
@@ -210,7 +210,11 @@ class Master(object):
                 break
         gal_lig_f = os.path.join(self.collections_path, collection_id, f_name)
         if format == "pd":
-            gal_ligand = pd.read_csv(gal_lig_f, sep='\t', index_col="ID")
+            if index:
+                gal_ligand = pd.read_csv(gal_lig_f, sep='\t', index_col="ID")
+            else:
+                gal_ligand = pd.read_csv(gal_lig_f, sep='\t')
+
         elif format == "dj":
             gal_ligand = open(gal_lig_f, "rb")
         else:
