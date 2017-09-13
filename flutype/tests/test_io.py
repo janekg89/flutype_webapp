@@ -5,6 +5,7 @@ from flutype.models import Peptide, Process, RawSpotCollection, Scanning
 import shutil
 import os
 from pathlib import Path
+import numpy as np
 
 from django.test import TestCase
 
@@ -94,6 +95,23 @@ class IODataTableTestCase(TestCase):
         data_tables = self.ma.read_data_tables()
         self.assertEqual(set(data_tables.keys()),set(['scanning', 'antibody_batch', 'washing', 'drying', 'virus', 'complex', 'spotting', 'virus_batch', 'peptide_batch',
                                              'complex_batch', 'peptide', 'quenching', 'antibody', 'incubating']))
+
+
+    def Reshape_block(self):
+        shape= (4,6)
+
+        a = []
+        b = []
+
+        for i in range(shape[1]):
+            for ii in range(shape[0]):
+                a.append(i+1)
+                b.append(ii+1)
+        print(a)
+        print(b)
+
+
+
 
 
 
@@ -273,7 +291,6 @@ class IOCollectionTestCase(TestCase):
         for file in files:
             file_path = os.path.join(self.ma_test.collections_path,sids[1], file)
             self.assertTrue(Path(file_path).is_file())
-
 
 
 

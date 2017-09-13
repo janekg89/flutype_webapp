@@ -209,6 +209,7 @@ class Master(object):
                 f_name = fn
                 break
         gal_lig_f = os.path.join(self.collections_path, collection_id, f_name)
+        print(gal_lig_f)
         if format == "pd":
             if index:
                 gal_ligand = pd.read_csv(gal_lig_f, sep='\t', index_col="ID")
