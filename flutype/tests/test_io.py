@@ -65,7 +65,8 @@ class IODataTableTestCase(TestCase):
     def test_read_images(self):
         #rsc = RawSpotCollection.objects.last()
         images = self.ma.read_images(self.collection2_id)
-        self.assertEqual(images.keys()[0], 'image.jpg')
+        keys = images.keys()
+        self.assertEqual(keys[0], 'image.jpg')
         images = self.ma.read_images(self.collection1_id)
         self.assertFalse(bool(images))
 
@@ -94,8 +95,8 @@ class IODataTableTestCase(TestCase):
 
     def test_read_data_tables(self):
         data_tables = self.ma.read_data_tables()
-        self.assertEqual(data_tables.keys(),['scanning', 'antibody_batch', 'washing', 'drying', 'virus', 'complex', 'spotting', 'virus_batch', 'peptide_batch',
-                                             'complex_batch', 'peptide', 'quenching', 'antibody', 'incubating'])
+        self.assertEqual(set(data_tables.keys()),set(['scanning', 'antibody_batch', 'washing', 'drying', 'virus', 'complex', 'spotting', 'virus_batch', 'peptide_batch',
+                                             'complex_batch', 'peptide', 'quenching', 'antibody', 'incubating']))
 
 
 
