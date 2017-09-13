@@ -284,7 +284,7 @@ class Master(object):
             meta = dict(reader)
         return meta
 
-    def create_or_update_image(self, image_data, collection_id, fname="image.jpg"):
+    def create_or_update_image(self, image_data, collection_id,fname):
         """
 
         :param image_data:
@@ -302,9 +302,9 @@ class Master(object):
 
 
     def create_or_update_images(self, images_data, collection_id):
-        print(images_data)
         if bool(images_data):
             for image_name in images_data.keys():
+                #if collection_id in image_name:
                 self.create_or_update_image(images_data[image_name],collection_id,image_name)
 
 
@@ -372,7 +372,7 @@ class Master(object):
         self.create_or_update_gal_lig1(dic_data["gal_lig1"][1], collection_id)
         self.create_or_update_gal_lig2(dic_data["gal_lig2"][1], collection_id)
         self.create_or_update_meta(dic_data["meta"], collection_id)
-        self.create_or_update_image(dic_data["image"][1], collection_id)
+        #self.create_or_update_image(dic_data["image"][1], collection_id)
         self.write_steps(dic_data["process"], collection_id)
         self.create_or_update_images(dic_data["images"][1],collection_id)
 
@@ -531,12 +531,11 @@ class Master(object):
         dic_data["gal_ligand1"] = self.read_gal_ligand(collection_id, format="dj")
         dic_data["gal_ligand2"] = self.read_gal_virus(collection_id, format="dj")
         dic_data["images"] = self.read_images(collection_id)
-        # FIXME: IF dic_data["meta"][holdertype]=microarray ...
-        # or think how to show and or store rawcollection/quantified colelction.
-        try:
-            dic_data["image"] = self.read_image(collection_id, format="dj")
-        except:
-            pass
+
+        # try:
+        #     dic_data["image"] = self.read_image(collection_id, format="dj")
+        # except:
+        #     pass
         try:
             dic_data["intensity"] = self.read_intensity(collection_id, ".")
         except:
@@ -551,7 +550,6 @@ class Master(object):
         return dic_data
 
     def read_q_collection(self, collection_id, q_collection_id):
-        # FIXME: Read q_meta
         dic_data = {}
         dic_data["gal_ligand1"] = self.read_gal_ligand(collection_id)[0]
         dic_data["gal_ligand2"] = self.read_gal_virus(collection_id)[0]

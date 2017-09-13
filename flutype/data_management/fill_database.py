@@ -520,7 +520,7 @@ class DBDjango(object):
         data_dic_rsc["gal_lig1"] = self.load_gal1_from_db(raw_spot_collection)
         data_dic_rsc["gal_lig2"] = self.load_gal2_from_db(raw_spot_collection)
         data_dic_rsc["process"] = self.load_process(raw_spot_collection.process)
-        data_dic_rsc["image"] = self.load_image_from_db(raw_spot_collection)
+        # data_dic_rsc["image"] = self.load_image_from_db(raw_spot_collection)
         data_dic_rsc["images"] = self.load_scanning_images_from_db(raw_spot_collection)
         return data_dic_rsc
 
@@ -556,8 +556,8 @@ class DBDjango(object):
                                                                          gal_file1=gal_lig,
                                                                          gal_file2=gal_vir,
                                                                          process=process)
-        if "image" in dic_data:
-            raw_spot_collection.image.save(dic_data["meta"]["sid"] + ".jpg", dic_data["image"])
+        # if "image" in dic_data:
+        #     raw_spot_collection.image.save(dic_data["meta"]["sid"] + ".jpg", dic_data["image"])
 
     def load_raw_spot_meta_from_db(self, raw_spot_collection):
         meta = {}
@@ -647,7 +647,7 @@ class DBDjango(object):
 
     def load_scanning_images_from_db(self, raw_spot_collection):
         images = {}
-        for process_step in raw_spot_collection.process.processstep_set.all():
+        for process_step in raw_spot_collection.process.processstep_set.filter(collection_id=raw_spot_collection.sid):
             if process_step.image:
                 images[os.path.basename(process_step.image.name)] = Image.open(process_step.image)
 
