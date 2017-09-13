@@ -1,5 +1,5 @@
-	id	process	step	index	user	start	finish	comment	image	intensities
-0	140	P002	S01	0	hmemczak	2014-05-06 00:00:00+00:00	2014-05-06 00:00:00+00:00			
-1	141	P002	Q01	1	hmemczak					
-2	142	P002	W003	2	hmemczak					
-3	143	P002	I01	3	hmemczak					
+	id	process	step	index	user	start	finish	comment	image	intensities	image_hash	collection_id
+0	118	S01-Q01-W003-I01	S01	0	hmemczak	2014-05-06 00:00:00+00:00	2014-05-06 00:00:00+00:00					140516
+1	119	S01-Q01-W003-I01	Q01	1	hmemczak							140516
+2	120	S01-Q01-W003-I01	W003	2	hmemczak							140516
+3	121	S01-Q01-W003-I01	I01	3	hmemczak							140516

@@ -66,12 +66,9 @@ class IODataTableTestCase(TestCase):
         #rsc = RawSpotCollection.objects.last()
         images = self.ma.read_images(self.collection2_id)
         keys = images.keys()
-        #self.assertEqual(keys[0], 'image.jpg')
+        self.assertEqual(list(keys)[0], 'image.jpg')
         images = self.ma.read_images(self.collection1_id)
         self.assertFalse(bool(images))
-
-
-
 
 
     def test_load_data_tables_from_db(self):
@@ -171,25 +168,24 @@ class IOCollectionTestCase(TestCase):
     def test_load_raw_spot_collection_from_db(self):
         rsc = RawSpotCollection.objects.first()
         data_dic_rsc = self.db.load_raw_spot_collection_from_db(rsc)
-        self.assertTrue(set(["meta","gal_lig1","gal_lig2","process","image"]).issubset(data_dic_rsc))
+        self.assertTrue(set(["meta","gal_lig1","gal_lig2","process","images"]).issubset(data_dic_rsc))
         self.assertFalse(set(["spot_collections"]).issubset(data_dic_rsc))
 
     def test_load_complete_collection_from_db(self):
         rsc = RawSpotCollection.objects.first()
         data_dic_rsc = self.db.load_complete_collection_from_db(rsc)
-        self.assertTrue(set(["spot_collections","meta", "gal_lig1", "gal_lig2", "process", "image"]).issubset(data_dic_rsc))
+        self.assertTrue(set(["spot_collections","meta", "gal_lig1", "gal_lig2", "process", "images"]).issubset(data_dic_rsc))
 
     def test_load_image(self):
         rsc = RawSpotCollection.objects.first()
-        fname, image = self.db.load_image_from_db(rsc)
-        self.assertEqual(image, None)
+        fname, image = self.db.load_scanning_images_from_db(rsc)
+        self.assertFalse(bool(image))
 
         rsc = RawSpotCollection.objects.last()
-        fname, image = self.db.load_image_from_db(rsc)
-        self.assertEqual(image.format, "JPEG")
+        fname, image = self.db.load_scanning_images_from_db(rsc)
+        self.assertEqual(list(image.values())[0].format, "JPEG")
 
     def test_write_ligand_to_master(self):
-
         rsc = RawSpotCollection.objects.first()
 
         fname1, gal_file1 = self.db.load_gal1_from_db(rsc)
@@ -224,13 +220,6 @@ class IOCollectionTestCase(TestCase):
         self.assertTrue(Path(file_path).is_file())
         self.assertTrue(Path(file_path_u).is_file())
 
-    def test_write_image_to_master(self):
-        rsc = RawSpotCollection.objects.last()
-        _ , image = self.db.load_image_from_db(rsc)
-        self.ma_test.create_or_update_image(image,self.collection2_id)
-        file_path = os.path.join(self.ma_test.collections_path, self.collection2_id,"image.jpg")
-        self.assertTrue(Path(file_path).is_file())
-
     def test_write_rawspot_meta_to_master(self):
         rsc = RawSpotCollection.objects.last()
         meta = self.db.load_raw_spot_meta_from_db(rsc)
@@ -250,7 +239,7 @@ class IOCollectionTestCase(TestCase):
         rsc = RawSpotCollection.objects.last()
         dic_data = self.db.load_raw_spot_collection_from_db(rsc)
         self.ma_test.write_rsc_to_master(self.collection2_id,dic_data)
-        files = ["meta.csv","steps.csv","image.jpg","lig_mob_001.txt","lig_fix_001.txt"]
+        files = ["meta.csv","steps.csv","2017-05-19_E5SC0010.jpg","lig_mob_001.txt","lig_fix_001.txt"]
         for file in files:
             file_path = os.path.join(self.ma_test.collections_path, self.collection2_id, file)
             self.assertTrue(Path(file_path).is_file())
@@ -273,14 +262,14 @@ class IOCollectionTestCase(TestCase):
             self.ma_test.write_complete_rsc_to_master(data_dic_rsc)
             sids.append(data_dic_rsc["meta"]["sid"])
 
-        files = ["image.jpg","meta.csv", "steps.csv", "lig_mob_001.txt", "lig_fix_001.txt"]
+        files = ["2017-05-19_E5SC0010.jpg","meta.csv", "steps.csv", "lig_mob_001.txt", "lig_fix_001.txt"]
         for file in files[1:]:
             file_path = os.path.join(self.ma_test.collections_path,sids[0], file)
             self.assertTrue(Path(file_path).is_file())
 
         file_path = os.path.join(self.ma_test.collections_path, sids[0], files[0])
         self.assertFalse(Path(file_path).is_file())
-        files = ["image.jpg","meta.csv", "steps.csv", "lig_mob_002.txt", "lig_fix_002.txt"]
+        files = ["meta.csv", "steps.csv", "lig_mob_002.txt", "lig_fix_002.txt"]
         for file in files:
             file_path = os.path.join(self.ma_test.collections_path,sids[1], file)
             self.assertTrue(Path(file_path).is_file())

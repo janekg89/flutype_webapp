@@ -1,1 +1,1 @@
-	id	process	step	index	user	start	finish	comment	image	intensities
+	id	process	step	index	user	start	finish	comment	image	intensities	image_hash	collection_id
