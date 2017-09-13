@@ -29,10 +29,9 @@ class IOCollectionTestCase(TestCase):
 
     def test_image_versions(self):
         rsc = RawSpotCollection.objects.first()
-        image = self.db.load_image_from_db(rsc)
-        image_2 = Image.open(rsc.image_90)
-        self.assertEqual(image[1].size, (2200,7200))
-        self.assertEqual(image_2.size,(327, 100))
+        images = self.db.load_scanning_images_from_db(rsc)
+        self.assertEqual(images[1]["2017-05-19_E5SC0010.jpg"].size, (2200,7200))
+
 
 
 
