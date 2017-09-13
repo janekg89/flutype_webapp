@@ -16,6 +16,7 @@ install:
 before_script:
   python manage.py collectstatic
 script:
+- manage.py test flutype
 - coverage run --source='.' manage.py test flutype --exclude-tag=local
 after_success:
   coveralls
