@@ -1,9 +1,2 @@
-	id	process	step	index	user	start	finish	comment	image	intensities	image_hash	collection_id
-0	116	SC001	SC001	0				probe	image/2017-05-19_N7SC0010.jpg		a6cecf19e65459c8557d0797233c3d79	2017-05-19_N7
-1	117	SC001	SC001	0				probe	image/2017-05-19_N5SC0010.jpg		6dcb8d35e469e4fe33a3e7ec9ddf540b	2017-05-19_N5
-2	122	SC001	SC001	0				probe	image/2017-05-19_E5SC0010.jpg		c7b0e871ed45fd0dd41f6d41148f1110	2017-05-19_E5
-3	134	SC001	SC001	0				probe	image/2017-05-19_N10SC0010.jpg		e66ea99cd53986a0635467c16bca8e20	2017-05-19_N10
-4	135	SC001	SC001	0				probe	image/2017-05-19_N11SC0010.jpg		2d09b1fc7765244290ffd803f7414d65	2017-05-19_N11
-5	136	SC001	SC001	0				probe	image/2017-05-19_E6SC0010.jpg		fca02c19e89ee8e1a29454ad4da15754	2017-05-19_E6
-6	137	SC001	SC001	0				probe	image/2017-05-19_N6SC0010.jpg		9fef859d59a8a7dc0397da30c04e9ee2	2017-05-19_N6
-7	138	SC001	SC001	0				probe	image/2017-05-19_N9SC0010.jpg		e0b5dea591601349fc1a648c6b09bd7f	2017-05-19_N9
+	id	process	step	index	user	start	finish	comment	image	intensities
+			SC001	0				probe	image.jpg	

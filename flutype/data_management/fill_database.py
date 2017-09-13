@@ -492,6 +492,7 @@ class DBDjango(object):
         # experiment = Experiment.objects.get(sid=meta["sid"])
         for index, step in steps.iterrows():
             # process_step = get_step_or_none(step)
+            print(step["step"])
             process_step = Step.objects.get(sid=step["step"])
             user = get_user_or_none(step)
             print(images.keys())

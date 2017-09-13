@@ -1,7 +1,7 @@
 	id	process	step	index	user	start	finish	comment	image	intensities
 			S03	0						
 			SC001	1					/home/janekg89/170725_N13/N13_(=N1)_170731_600_100_635.jpg	
-			w004	2						
-			SC01	3					/home/janekg89/170725_N13/N13_(=N1)_170731_600_100_635_gewaschenH2O.jpg	
+			W004	2						
+			SC001	3					/home/janekg89/170725_N13/N13_(=N1)_170731_600_100_635_gewaschenH2O.jpg	
 			I01	4						
-			SC01	5					/home/janekg89/170725_N13/N13_(=N1)_170725_600_100_nach Virus_alle farben.jpg	
+			SC001	5					/home/janekg89/170725_N13/N13_(=N1)_170725_600_100_nach Virus_alle farben.jpg	

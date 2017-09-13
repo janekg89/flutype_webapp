@@ -72,6 +72,32 @@ def peptide_batches_not_in_master(ma,gal_lig_fix):
     s_b.update(s_vb)
     return(s_gal - s_b)
 
+def reshape_gal_file(shape, gal_file):
+
+    a = []
+    b = []
+    for i in range(shape[1]):
+        for ii in range(shape[0]):
+            a.append(i )
+            b.append(ii )
+
+    gal_file["row_factor"] = 0
+    gal_file["column_factor"] = 0
+
+    print(a)
+    print(b)
+
+    for block_num,block_factor  in enumerate(a):
+        gal_file.loc[gal_file["Block"] == block_num+1, "row_factor"] = block_factor
+    for block_num, block_factor in enumerate(b):
+        gal_file.loc[gal_file["Block"] == block_num+1, "column_factor"] = block_factor
+
+    gal_file["Row"]=gal_file["Row"]+(gal_file["Row"].max()*gal_file["row_factor"])
+    gal_file["Column"]=gal_file["Column"]+(gal_file["Column"].max()*gal_file["column_factor"])
+
+    return gal_file
+
+
 ####################################################################
 if __name__ == "__main__":
     ma_path = "../master_uncomplete/"
@@ -83,11 +109,14 @@ if __name__ == "__main__":
     ma_path_standard = "../master/"
     ma_standard = Master(ma_path_standard)
     gal_lig_fix = gal_reformat(ma)
-    subset = peptide_batches_not_in_master(ma_standard,gal_lig_fix)
-    print(subset)
-    fp = os.path.join(ma.collections_path,"170725_N13","lig_fix_011.txt")
-    gal_lig_fix.to_csv(fp, sep='\t')
+    #subset = peptide_batches_not_in_master(ma_standard,gal_lig_fix)
+
+
+    gal_lig_fix=  reshape_gal_file((4,8), gal_lig_fix)
+    gal_lig_fix = gal_lig_fix.reset_index(drop=True)
+    fp = os.path.join(ma.collections_path,"170725_N13","lig_fix_012.txt")
+    gal_lig_fix.to_csv(fp, sep='\t',index=True , index_label="ID")
     gal_lig_fix["Name"] = "Pan3"
-    fp2 = os.path.join(ma.collections_path,"170725_N13","lig_mob_011.txt")
-    gal_lig_fix.to_csv(fp2, sep='\t')
+    fp2 = os.path.join(ma.collections_path,"170725_N13","lig_mob_012.txt")
+    gal_lig_fix.to_csv(fp2, sep='\t', index=True,index_label="ID")
 
