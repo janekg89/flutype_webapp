@@ -1,0 +1,7 @@
+	id	process	step	index	user	start	finish	comment	image	intensities
+			S03	0						
+			SC001	1				Wavelength: 635 Intensity: 600 Gain:100	N14_(=N2)_170725_600_100_635.jpg	
+			SC001	2				Wavelength: 532 Intensity: 600 Gain:100	N14_(=N2)_170725_600_100_532.jpg	
+			W004	3						
+			SC001	4				Wavelength: 635 Intensity: 600 Gain:100	N14_(=N2)_170731_600_100_635_gewaschenH2O.jpg	
+			SC001	5				Wavelength: 532 Intensity: 600 Gain:100	N14_(=N2)_170731_600_100_532_gewaschenH2O.jpg	
