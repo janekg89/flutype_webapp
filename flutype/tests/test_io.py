@@ -94,7 +94,7 @@ class IODataTableTestCase(TestCase):
     def test_read_data_tables(self):
         data_tables = self.ma.read_data_tables()
         self.assertEqual(set(data_tables.keys()),set(['scanning', 'antibody_batch', 'washing', 'drying', 'virus', 'complex', 'spotting', 'virus_batch', 'peptide_batch',
-                                             'complex_batch', 'peptide', 'quenching', 'antibody', 'incubating']))
+                                             'complex_batch', 'peptide', 'quenching', 'antibody', 'incubating', 'blocking']))
 
 
     def Reshape_block(self):
@@ -257,9 +257,10 @@ class IOCollectionTestCase(TestCase):
         rsc = RawSpotCollection.objects.last()
         dic_data = self.db.load_raw_spot_collection_from_db(rsc)
         self.ma_test.write_rsc_to_master(self.collection2_id,dic_data)
-        files = ["meta.csv","steps.csv","2017-05-19_E5SC0010.jpg","lig_mob_001.txt","lig_fix_001.txt"]
+        files = ["meta.csv","steps.csv","2017-05-19_E5-SC001-0.jpg","lig_mob_001.txt","lig_fix_001.txt"]
         for file in files:
             file_path = os.path.join(self.ma_test.collections_path, self.collection2_id, file)
+            print file
             self.assertTrue(Path(file_path).is_file())
 
     def test_write_sc_to_master(self):
