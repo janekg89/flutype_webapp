@@ -65,6 +65,7 @@ from flutype.models import (Peptide,
                             Washing,
                             Drying,
                             Scanning,
+                            Blocking,
                             ProcessStep,
                             Process,
                             GalFile,
@@ -296,6 +297,13 @@ class DBDjango(object):
                                                        )
         return scan, created
 
+    def create_or_update_blocking(self,blocking):
+        block, created = Blocking.objects.get_or_create(sid=blocking["sid"],
+                                                       method=blocking["method"],
+                                                       duration=blocking["duration"],
+                                                       substance=blocking["substance"])
+        return block, created
+
 
     def fill_dt(self, data_tables):
         # Stores informations if any new media was loaded.
@@ -368,6 +376,9 @@ class DBDjango(object):
         for k, scanning in data_tables["scanning"].iterrows():
             _, created = self.create_or_update_scanning(scanning)
             created_sc.append(created)
+        for k, blocking in data_tables["blocking"].iterrows():
+            _, created = self.create_or_update_blocking(blocking)
+            created_sc.append(created)
 
         print("updates to database:")
         print("virus:", any(created_v))
@@ -434,6 +445,10 @@ class DBDjango(object):
         data_tables["drying"] =read_frame(Drying.objects.all())
         data_tables["quenching"] =read_frame(Quenching.objects.all())
         data_tables["incubating"] =read_frame(Incubating.objects.all())
+        data_tables["scanning"] =read_frame(Scanning.objects.all())
+        data_tables["blocking"] =read_frame(Blocking.objects.all())
+
+
 
         data_tables = drop_unnessecary_keys(data_tables)
 
@@ -513,7 +528,7 @@ class DBDjango(object):
                                                                       collection_id = collection_id
                                                                       )
             if bool(step["image"]):
-                process_step.image.save(collection_id+image_name+str(step["index"])+".jpg", images[image_name])
+                process_step.image.save(collection_id+"-"+step["step"]+"-"+str(step["index"])+".jpg", images[image_name])
 
         process.save()
         return process, created
