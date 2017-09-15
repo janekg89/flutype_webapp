@@ -127,9 +127,6 @@ class Master(object):
         file_path = os.path.join(collection_path,"steps.csv")
         steps_dic.to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
 
-
-
-
     def read_data_tables(self):
         """
         :return: data_tables_dic
@@ -151,9 +148,6 @@ class Master(object):
                 path_file = os.path.join(self.collections_path, collection_id, fn)
                 images[fn]=File(open(path_file, "rb"))
         return images
-
-
-
 
     def read_steps(self, collection_id):
         file_path = os.path.join(self.collections_path, collection_id, "steps.csv")
@@ -196,7 +190,6 @@ class Master(object):
 
     def read_gal_ligand(self, collection_id, format="pd", index=True):
         """
-
         :param collection_id:
         :param format: "pd": read as panadas dataFrame
                        "dj": django File ("rb")
