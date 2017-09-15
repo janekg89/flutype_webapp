@@ -33,7 +33,7 @@
                     </thead>
                     <tbody>
                     {% for c in collections %}
-                        <tr>
+                        <img>
                             <td class="warning">
                                 <b><a href="{{ url('rawspotcollectionview', args=[c.id]) }}"> {{ c.sid }}</a></b>
                             <td>{{ c.batch }}</td>
@@ -83,8 +83,13 @@
                                     {{ c.gal_file2.sid }}</a></td>
                             <td><a href="{{ c.gal_file1.file.url }}" target="_blank">
                                     {{ c.gal_file1.sid }}</a></td>
-
-                            <td><a href="{{ url('processview', args=[c.process.id]) }}"> {{ c.process.sid }}  </a></td>
+                            <!-- process -->
+                            <td>
+                                <a href="{{ url('processview', args=[c.process.id]) }}"> {{ c.process.sid }}</a>
+                                <br />
+                                {{ c.process.name }}
+                            </td>
+                            <!-- user -->
                             {% if c.process.users() %}
                                 <td>
                                  {% for user in c.process.users() %}
@@ -110,7 +115,9 @@
 {% block javascript %}
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
-            $('#collections').DataTable();
+            $('#collections').DataTable({
+                pageLength: 25,
+            });
         });
     </script>
 {% endblock %}
