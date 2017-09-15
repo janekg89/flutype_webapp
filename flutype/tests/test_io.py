@@ -97,24 +97,6 @@ class IODataTableTestCase(TestCase):
                                              'complex_batch', 'peptide', 'quenching', 'antibody', 'incubating', 'blocking']))
 
 
-    def Reshape_block(self):
-        shape= (4,6)
-
-        a = []
-        b = []
-
-        for i in range(shape[1]):
-            for ii in range(shape[0]):
-                a.append(i+1)
-                b.append(ii+1)
-        print(a)
-        print(b)
-
-
-
-
-
-
 class IOCollectionTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -257,7 +239,7 @@ class IOCollectionTestCase(TestCase):
         rsc = RawSpotCollection.objects.last()
         dic_data = self.db.load_raw_spot_collection_from_db(rsc)
         self.ma_test.write_rsc_to_master(self.collection2_id,dic_data)
-        files = ["meta.csv","steps.csv","2017-05-19_E5-SC001-0.jpg","lig_mob_001.txt","lig_fix_001.txt"]
+        files = ["meta.csv","steps.csv","2017-05-19_E5image.jpg","lig_mob_001.txt","lig_fix_001.txt"]
         for file in files:
             file_path = os.path.join(self.ma_test.collections_path, self.collection2_id, file)
             print file
@@ -281,7 +263,7 @@ class IOCollectionTestCase(TestCase):
             self.ma_test.write_complete_rsc_to_master(data_dic_rsc)
             sids.append(data_dic_rsc["meta"]["sid"])
 
-        files = ["2017-05-19_E5SC0010.jpg","meta.csv", "steps.csv", "lig_mob_001.txt", "lig_fix_001.txt"]
+        files = ["2017-05-19_E5image.jpg","meta.csv", "steps.csv", "lig_mob_001.txt", "lig_fix_001.txt"]
         for file in files[1:]:
             file_path = os.path.join(self.ma_test.collections_path,sids[0], file)
             self.assertTrue(Path(file_path).is_file())

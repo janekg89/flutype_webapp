@@ -29,7 +29,7 @@ def extract_peptide_batch(ma):
     return peptide_batch
 
 def gal_reformat(ma):
-    gal_lig_fix = ma.read_gal_ligand("170725_N13", index= False)
+    gal_lig_fix = ma.read_gal_ligand("170725_N15", index= False)
     gal_lig_fix_new = pd.DataFrame(gal_lig_fix[0][["Block","Row","Column","Name"]])
     mapping = {"Empty":"NO",
                "Panama":"Pan3",
@@ -97,6 +97,24 @@ def reshape_gal_file(shape, gal_file):
 
     return gal_file
 
+def three_viruses_gal(gal_file):
+    virus_map = {}
+    for i in range(1,33):
+        if i <= 12:
+            virus_map[i] = "Ach1"
+        elif 12 < i <= 24:
+            virus_map[i] = "Cal2"
+        elif 24 < i:
+            virus_map[i] = "Pan3"
+
+
+
+
+
+    for key in virus_map.keys():
+        gal_file.loc[gal_file["Block"]== key , "Name"] =virus_map[key]
+    return gal_file
+
 
 ####################################################################
 if __name__ == "__main__":
@@ -114,9 +132,11 @@ if __name__ == "__main__":
 
     gal_lig_fix=  reshape_gal_file((4,8), gal_lig_fix)
     gal_lig_fix = gal_lig_fix.reset_index(drop=True)
-    fp = os.path.join(ma.collections_path,"170725_N13","lig_fix_012.txt")
+    fp = os.path.join(ma.collections_path,"170725_P7","lig_fix_012.txt")
     gal_lig_fix.to_csv(fp, sep='\t',index=True , index_label="ID")
-    gal_lig_fix["Name"] = "Pan3"
-    fp2 = os.path.join(ma.collections_path,"170725_N13","lig_mob_012.txt")
+
+    #gal_lig_fix = three_viruses_gal(gal_lig_fix)
+    gal_lig_fix["Name"] = "Ach1"
+    fp2 = os.path.join(ma.collections_path,"170725_P7","lig_mob_016.txt")
     gal_lig_fix.to_csv(fp2, sep='\t', index=True,index_label="ID")
 
