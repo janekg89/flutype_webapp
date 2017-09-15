@@ -669,10 +669,16 @@ class Master(object):
             self.write_complete_rsc_to_master(data_dic_rsc)
 
 
-
 ####################################################################
 if __name__ == "__main__":
+    ''' 
+    WRITES EVERYTHING IN MASTER;
+    !!! OVERWRITES EXISTING DATA !!!
+    '''
+    write_master = False
+
     # path to the master folder
     path_master = "master/"
-    ma = Master(path_master).write_db_to_master()
+    if write_master:
+        ma = Master(path_master).write_db_to_master()
 
