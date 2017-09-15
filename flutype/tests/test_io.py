@@ -127,7 +127,6 @@ class IOCollectionTestCase(TestCase):
     def load_process_from_db(self):
         p_db = Process.objects.first()
         process = self.db.load_process(p_db)
-        print(process)
         self.assertTrue(set(self.process_keys).issubset(process))
 
     def test_load_gal_from_db(self):
@@ -242,7 +241,6 @@ class IOCollectionTestCase(TestCase):
         files = ["meta.csv","steps.csv","2017-05-19_E5image.jpg","lig_mob_001.txt","lig_fix_001.txt"]
         for file in files:
             file_path = os.path.join(self.ma_test.collections_path, self.collection2_id, file)
-            print file
             self.assertTrue(Path(file_path).is_file())
 
     def test_write_sc_to_master(self):

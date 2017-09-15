@@ -359,6 +359,8 @@ class Process(models.Model):
 
 
 
+
+
     def __str__(self):
         return self.sid
 
@@ -383,6 +385,14 @@ class RawSpotCollection(Experiment):
 
     ligands1 = models.ManyToManyField(Ligand, related_name="ligands1")
     ligands2 = models.ManyToManyField(Ligand, related_name="ligands2")
+
+    @property
+    def is_picture_in_rsc(self):
+        result = False
+        for processstep in self.process.processstep_set.filter(collection_id = self.sid):
+            if processstep.image:
+                result = True
+        return result
 
     @property
     def viruses1(self):
