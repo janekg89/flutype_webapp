@@ -13,29 +13,43 @@
     <div class="row"></div>
 
     <div class="row-fluid">
+
         <div class='col-lg-2 '>
             <!-- Title -->
             <div class="row ">
+                {% if type == "quantified" %}
+                    <button class = "btn btn-default" href="{{ url('rawspotcollectionview', args=[collection.pk]) }}">
+                        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                            <b>  back to Raw Spot Collection </b>
+                    </button>
+                {% endif %}
+
                 {% if type == "raw" %}
                     <h1>Raw: {{ collection.sid }} </h1>
                 {% else %}
                     <h1>Quantified: {{ q_collection.sid }}</h1>
                 {% endif %}
             </div>
-            <!-- Raw Image -->
-            <div class="row ">
-                {% if collection.image %}
-                    <a href={{ url('imageview', args=[collection.id]) }} target="_blank">
-                        <img src={{ collection.image_90.url }} >
-                    </a>
-                {% else %}
-                    <i class="fa fa-5x fa-ban"></i><br/>
-                    <b>No image available</b>
+            <!-- Collection/QCollection Info -->
+            <div class="row">
+                {% if type == "raw" %}
+                    <h2>Quantified Collections</h2>
+                    {% if collection.is_spot_collection() %}
+                        <p>
+                            {% for sc in collection.spotcollection_set.all() %}
+                                <a href="{{ url('qspotcollectionview', args=[sc.id]) }}">
+                                    <b>QuantifiedCollection:{{ sc.sid }}</b></a>
+                                <br/>
+                            {% endfor %}
+                        </p>
+                    {% else %}
+                        No quantified collection available
+                    {% endif %}
                 {% endif %}
             </div>
+
             <!-- Eperiment Information -->
             <div class="row">
-                <h2>Experiment Information</h2>
                 <table id="experiment" class="cell-border">
                     <thead>
                     <tr>
@@ -102,31 +116,6 @@
 
                     </tbody>
                 </table>
-            </div>
-            <!-- Collection/QCollection Info -->
-            <div class="row">
-                {% if type == "raw" %}
-                    <h2>Quantified Collections</h2>
-                    {% if collection.is_spot_collection() %}
-                        <p>
-                            {% for sc in collection.spotcollection_set.all() %}
-                                <a href="{{ url('qspotcollectionview', args=[sc.id]) }}">
-                                    <b>QuantifiedCollection:{{ sc.sid }}</b></a>
-                                <br/>
-                            {% endfor %}
-                        </p>
-                    {% else %}
-                        No quantified collection available
-                    {% endif %}
-                {% else %}
-
-                    <h2>Raw Collection</h2>
-                    <p>
-                        <a href="{{ url('rawspotcollectionview', args=[collection.pk]) }}">
-                            <b>RawCollection:{{ collection.sid }}</b></a><br/>
-                    </p>
-
-                {% endif %}
             </div>
 
             <!-- Heat map  -->
@@ -257,7 +246,6 @@
                                                 <img src={{ prostep.image_90.url }} > </a> </td>
                                                 <td> {{ prostep.image.name}}</td>
                                             {% else %}
-                                                <td></td>
                                                 <td></td>
                                             {% endif %}
 
