@@ -234,8 +234,7 @@ class GalFile(models.Model):
 
 
 class Step(models.Model):
-    """
-    Steps in the process.
+    """ Steps in the process.
 
         index: number of steps which gives the order
     """
@@ -350,19 +349,23 @@ class Process(models.Model):
 
     @property
     def get_unique_ordering2(self):
-        order_steps = self.processstep_set.order_by('index').values_list('step__sid', flat=True)
-        vals = '-'.join(order_steps)
-        return vals
+        # FIXME: does this work ?
+        ordered_step_ids = self.processstep_set.order_by('index').values_list('step__sid', flat=True)
+        return  '-'.join(ordered_step_ids)
 
+    # FIXME: function for creating the sid belongs here, not in the import
 
-
-
-
-
-
+    @property
+    def name(self):
+        ordered_step_methods = self.processstep_set.order_by('index').values_list('step__method', flat=True)
+        # FIXME: filter necessary
+        values = [item for item in ordered_step_methods if item is not None]
+        return '; '.join(values)
 
     def __str__(self):
         return self.sid
+
+
 
 class RawSpotCollection(Experiment):
     """
@@ -491,13 +494,9 @@ class ProcessStep(models.Model):
     intensities = models.ForeignKey(GalFile, null=True, blank=True)
 
     image_hash = models.CharField(max_length=CHAR_MAX_LENGTH, null=True , blank=True)
+    # FIXME: try as foreign key with blank=True
     collection_id =  models.CharField(max_length=CHAR_MAX_LENGTH)
 
-
-
-
-    # FIXME: property all users involved in the process, i.e.
-    # everybody involved in any step in the process
 
     class Meta:
         ordering = ['index']
