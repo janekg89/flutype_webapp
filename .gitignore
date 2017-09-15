@@ -1,16 +1,21 @@
-# Created by .ignore support plugin (hsz.mobi)
 .idea/
-migrations/
 *.pyc
+
+migrations/
+
+# cache
 flutype/__pycache__/
 flutype_webapp/__pycache__/
 flutype_webapp/migrations/__pycache__/
-/static/
+media/CACHE/
+
+# deploy settings and static data
 flutype_webapp/deploy_settings.py
 dbdata/
+/static/
+
 # tests & phantomjs
 ghostdriver.log
 node_modules/
-media/CACHE/
 htmlcov/
 .coverage

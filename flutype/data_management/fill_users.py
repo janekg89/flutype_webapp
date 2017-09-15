@@ -30,10 +30,7 @@ user_defs = [
     UserDef("mhovestaedt", "Marc", "Hovestädt", "hovestaedt@uni-potsdam.de"),
     UserDef("ssaenger", "Sandra", "Sänger", "SaengerS@rki.de"),
     UserDef("bay", "Bernhard", "Ay", "aybernha@uni-potsdam.de")
-
 ]
-
-
 ########################################################
 
 
