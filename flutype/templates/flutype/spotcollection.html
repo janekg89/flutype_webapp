@@ -18,10 +18,10 @@
             <!-- Title -->
             <div class="row ">
                 {% if type == "quantified" %}
-                    <button class = "btn btn-default" href="{{ url('rawspotcollectionview', args=[collection.pk]) }}">
+                    <a class = "btn btn-default" href="{{ url('rawspotcollectionview', args=[collection.pk]) }}">
                         <i class="fa fa-arrow-up" aria-hidden="true"></i>
                             <b>  back to Raw Spot Collection </b>
-                    </button>
+                    </a>
                 {% endif %}
 
                 {% if type == "raw" %}
@@ -148,6 +148,7 @@
                     </ul>
                 </div>
             </div>
+
             <!-- Process Information -->
             <div class="row">
                 {% with process = collection.process %}
@@ -155,7 +156,6 @@
                     {% if process.is_step_in_process() %}
                         <table id="processes" class="cell-border">
                             {% with prosteps = process.processstep_set.filter(collection_id = collection.sid) %}
-
 
                                  <thead>
                                     <tr>
@@ -169,86 +169,66 @@
                                         <th>Finish</th>
                                         <th>Comment</th>
                                         <th>Image</th>
-                                        <th>Name</th>
                                     </tr>
                                  </thead>
-
 
                                 <tbody>
 
                                 {% for prostep in prosteps %}
                                     <tr>
                                         {% with p = prostep.step.get_step_type %}
+                                            <th>
                                             {% if  p.__class__.__name__ == "Washing" %}
-                                                <th><p> # {{ prostep.index + 1 }} <i class="fa fa-shower" aria-hidden="true"> </i>
-                                                </p> {{ p.__class__.__name__ }}</th>
+                                                # {{ prostep.index + 1 }} <i class="fa fa-shower" aria-hidden="true"> </i><br />
+                                                {{ p.__class__.__name__ }}
                                             {% elif p.__class__.__name__ == "Drying" %}
-                                                <th><p> # {{ prostep.index + 1 }} <i class="fa fa-bullhorn" aria-hidden="true"></i>
-                                                </p>{{ p.__class__.__name__ }}</th>
+                                                # {{ prostep.index + 1 }} <i class="fa fa-bullhorn" aria-hidden="true"></i><br />
+                                                {{ p.__class__.__name__ }}
                                             {% elif p.__class__.__name__ == "Spotting" %}
-                                                <th><p> # {{ prostep.index + 1 }} <i class="fa fa-anchor fa-fw"
-                                                                                     aria-hidden="true"></i>
-                                                </p>{{ p.__class__.__name__ }} / Immobilization
-                                                </th>
+                                                # {{ prostep.index + 1 }} <i class="fa fa-anchor fa-fw" aria-hidden="true"></i><br />
+                                                {{ p.__class__.__name__ }} / Immobilization
                                             {% elif p.__class__.__name__ == "Quenching" %}
-                                                <th><p> # {{ prostep.index + 1 }} <i class="fa fa-chain-broken"
-                                                                                     aria-hidden="true"></i>
-                                                </p> {{ p.__class__.__name__ }}</th>
+                                                # {{ prostep.index + 1 }} <i class="fa fa-chain-broken" aria-hidden="true"></i><br />
+                                                {{ p.__class__.__name__ }}
                                             {% elif p.__class__.__name__ == "Incubating" %}
-                                                <th><p> # {{ prostep.index + 1 }} <i class="fa fa-tint" aria-hidden="true"></i>
-                                                </p> {{ p.__class__.__name__ }}</th>
+                                                # {{ prostep.index + 1 }} <i class="fa fa-tint" aria-hidden="true"></i><br />
+                                                {{ p.__class__.__name__ }}
                                             {% elif p.__class__.__name__ == "Blocking" %}
-                                                <th><p> # {{ prostep.index + 1 }} <i class="fa fa-pause" aria-hidden="true"></i>
-                                                </p> {{ p.__class__.__name__ }}</th>
+                                                # {{ prostep.index + 1 }} <i class="fa fa-pause" aria-hidden="true"></i><br />
+                                                {{ p.__class__.__name__ }}
                                             {% elif p.__class__.__name__ == "Scanning" %}
-                                                <th><p> # {{ prostep.index + 1 }} <i class="fa fa-camera" aria-hidden="true"></i>
-                                                </p> {{ p.__class__.__name__ }}</th>
+                                                # {{ prostep.index + 1 }} <i class="fa fa-camera" aria-hidden="true"></i><br />
+                                                {{ p.__class__.__name__ }}
                                             {% endif %}
+                                            </th>
 
                                             <td> {{ p.sid }}</td>
                                             <td> {{ p.method }}</td>
-                                            {% if  p.substance %}
-                                                <td> {{ p.substance }}</td>
-                                            {% else %}
-                                                <td></td>
-                                            {% endif %}
-                                            {% if  p.duration %}
-                                                    <td> {{ p.duration }}</td>
-                                                {% else %}
-                                                    <td></td>
-                                                {% endif %}
-                                            {% if  prostep.user %}
-                                            <td> {{ prostep.user }}</td>
-                                            {% else %}
-                                                <td></td>
-                                            {% endif %}
-
-                                            {% if  prostep.start %}
-                                                <td> {{ prostep.start }}</td>
-                                            {% else %}
-                                                <td></td>
-                                            {% endif %}
-
-                                            {% if  prostep.finish %}
-                                                <td> {{ prostep.finish }}</td>
-                                            {% else %}
-                                                <td></td>
-                                            {% endif %}
-
-                                            {% if  prostep.comment %}
-                                                <td> {{ prostep.comment }}</td>
-                                            {% else %}
-                                                <td></td>
-                                            {% endif %}
-
+                                            <td>
+                                                {% if  p.substance %}{{ p.substance }}{% endif %}
+                                            </td>
+                                            <td>
+                                                {% if  p.duration %}{{ p.duration }}{% endif %}
+                                            </td>
+                                            <td>
+                                                {% if  prostep.user %}{{ prostep.user }}{% endif %}
+                                            </td>
+                                            <td>
+                                                {% if  prostep.start %}{{ prostep.start }}{% endif %}
+                                            </td>
+                                            <td>
+                                                {% if  prostep.finish %}{{ prostep.finish }}{% endif %}
+                                            </td>
+                                            <td>
+                                                {% if  prostep.comment %}{{ prostep.comment }}{% endif %}
+                                            </td>
+                                            <td>
                                             {% if  prostep.image %}
-                                            <td> <a href={{ url('imageviewprocess', args=[prostep.id]) }} target="_blank">
-                                                <img src={{ prostep.image_90.url }} > </a> </td>
-                                                <td> {{ prostep.image.name}}</td>
-                                            {% else %}
-                                                <td></td>
+                                             <a href={{ url('imageviewprocess', args=[prostep.id]) }} target="_blank" title="{{ prostep.image.name}}">
+                                                <img src={{ prostep.image_90.url }}>
+                                             </a>
                                             {% endif %}
-
+                                            </td>
                                         {% endwith %}
                                     </tr>
                                 {% endfor %}
