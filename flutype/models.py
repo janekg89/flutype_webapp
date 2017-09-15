@@ -472,7 +472,7 @@ class ProcessStep(models.Model):
                                     processors=[Adjust(contrast=124, brightness=126)]
                                     )
     image_90 = ImageSpecField(source='image',
-                              processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(350, 100)],
+                              processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(700, 200)],
                               )
     image_90_big = ImageSpecField(source='image',
                               processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(2800, 880)],

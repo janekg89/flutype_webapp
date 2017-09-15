@@ -166,30 +166,47 @@
                     {% if process.is_step_in_process() %}
                         <table id="processes" class="cell-border">
                             {% with prosteps = process.processstep_set.filter(collection_id = collection.sid) %}
-                                <thead>
-                                <tr>
-                                    <th></th>
-                                    {% for prostep in prosteps %}
+
+
+                                 <thead>
+                                    <tr>
+                                        <th>Step Type</th>
+                                        <th>Sid</th>
+                                        <th>Method</th>
+                                        <th>Substance</th>
+                                        <th>Duration</th>
+                                        <th>User</th>
+                                        <th>Start</th>
+                                        <th>Finish</th>
+                                        <th>Comment</th>
+                                        <th>Image</th>
+                                        <th>Name</th>
+                                    </tr>
+                                 </thead>
+
+
+                                <tbody>
+
+                                {% for prostep in prosteps %}
+                                    <tr>
                                         {% with p = prostep.step.get_step_type %}
-                                            {% if  prostep.step.get_step_type.__class__.__name__ == "Washing" %}
-                                                <th><p> # {{ prostep.index + 1 }} <i class="fa fa-shower"
-                                                                                     aria-hidden="true"> </i>
+                                            {% if  p.__class__.__name__ == "Washing" %}
+                                                <th><p> # {{ prostep.index + 1 }} <i class="fa fa-shower" aria-hidden="true"> </i>
                                                 </p> {{ p.__class__.__name__ }}</th>
                                             {% elif p.__class__.__name__ == "Drying" %}
-                                                <th><p> # {{ prostep.index + 1 }} <i class="fa fa-bullhorn"
-                                                                                     aria-hidden="true"></i>
+                                                <th><p> # {{ prostep.index + 1 }} <i class="fa fa-bullhorn" aria-hidden="true"></i>
                                                 </p>{{ p.__class__.__name__ }}</th>
                                             {% elif p.__class__.__name__ == "Spotting" %}
-                                                <th><p> # {{ prostep.index + 1 }} <i class="fa fa-tint"
+                                                <th><p> # {{ prostep.index + 1 }} <i class="fa fa-anchor fa-fw"
                                                                                      aria-hidden="true"></i>
-                                                </p>{{ p.__class__.__name__ }}</th>
+                                                </p>{{ p.__class__.__name__ }} / Immobilization
+                                                </th>
                                             {% elif p.__class__.__name__ == "Quenching" %}
                                                 <th><p> # {{ prostep.index + 1 }} <i class="fa fa-chain-broken"
                                                                                      aria-hidden="true"></i>
                                                 </p> {{ p.__class__.__name__ }}</th>
                                             {% elif p.__class__.__name__ == "Incubating" %}
-                                                <th><p> # {{ prostep.index + 1 }} <i class="fa fa-link"
-                                                                                     aria-hidden="true"></i>
+                                                <th><p> # {{ prostep.index + 1 }} <i class="fa fa-tint" aria-hidden="true"></i>
                                                 </p> {{ p.__class__.__name__ }}</th>
                                             {% elif p.__class__.__name__ == "Blocking" %}
                                                 <th><p> # {{ prostep.index + 1 }} <i class="fa fa-pause" aria-hidden="true"></i>
@@ -197,101 +214,56 @@
                                             {% elif p.__class__.__name__ == "Scanning" %}
                                                 <th><p> # {{ prostep.index + 1 }} <i class="fa fa-camera" aria-hidden="true"></i>
                                                 </p> {{ p.__class__.__name__ }}</th>
-
                                             {% endif %}
-                                        {% endwith %}
-                                    {% endfor %}
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <th>Sid</th>
-                                    {% for prostep in prosteps %}
-                                        <td> {{ prostep.step.get_step_type.sid }}</td>
-                                    {% endfor %}
-                                </tr>
-                                <tr>
-                                    <th>Method</th>
-                                    {% for prostep in prosteps %}
-                                        <td> {{ prostep.step.get_step_type.method }}</td>
-                                    {% endfor %}
-                                </tr>
-                                <tr>
-                                    <th>Substance</th>
-                                    {% for prostep in prosteps %}
-                                        {% if  prostep.step.get_step_type.substance %}
-                                            <td> {{ prostep.step.get_step_type.substance }}</td>
-                                        {% else %}
-                                            <td></td>
-                                        {% endif %}
-                                    {% endfor %}
-                                </tr>
-                                <tr>
-                                    <th>Duration</th>
-                                    {% for prostep in prosteps %}
-                                        {% if  prostep.step.get_step_type.duration %}
-                                            <td> {{ prostep.step.get_step_type.duration }}</td>
-                                        {% else %}
-                                            <td></td>
-                                        {% endif %}
-                                    {% endfor %}
-                                </tr>
 
-                                <tr>
-                                    <th>User</th>
-                                    {% for prostep in prosteps %}
-                                        {% if  prostep.user %}
+                                            <td> {{ p.sid }}</td>
+                                            <td> {{ p.method }}</td>
+                                            {% if  p.substance %}
+                                                <td> {{ p.substance }}</td>
+                                            {% else %}
+                                                <td></td>
+                                            {% endif %}
+                                            {% if  p.duration %}
+                                                    <td> {{ p.duration }}</td>
+                                                {% else %}
+                                                    <td></td>
+                                                {% endif %}
+                                            {% if  prostep.user %}
                                             <td> {{ prostep.user }}</td>
-                                        {% else %}
-                                            <td></td>
-                                        {% endif %}
-                                    {% endfor %}
-                                </tr>
-                                <tr>
-                                    <th>Start</th>
-                                    {% for prostep in prosteps %}
-                                        {% if  prostep.start %}
-                                            <td> {{ prostep.start }}</td>
-                                        {% else %}
-                                            <td></td>
-                                        {% endif %}
-                                    {% endfor %}
-                                </tr>
-                                <tr>
-                                    <th>Finish</th>
-                                    {% for prostep in prosteps %}
-                                        {% if  prostep.finish %}
-                                            <td> {{ prostep.finish }}</td>
-                                        {% else %}
-                                            <td></td>
-                                        {% endif %}
-                                    {% endfor %}
-                                </tr>
+                                            {% else %}
+                                                <td></td>
+                                            {% endif %}
 
-                                <tr>
-                                    <th>Comment</th>
-                                    {% for prostep in prosteps %}
-                                        {% if  prostep.comment %}
-                                            <td> {{ prostep.comment }}</td>
-                                        {% else %}
-                                            <td></td>
-                                        {% endif %}
-                                    {% endfor %}
-                                </tr>
+                                            {% if  prostep.start %}
+                                                <td> {{ prostep.start }}</td>
+                                            {% else %}
+                                                <td></td>
+                                            {% endif %}
 
-                                <tr>
-                                    <th>Image</th>
-                                    {% for prostep in prosteps %}
-                                        {% if  prostep.image %}
+                                            {% if  prostep.finish %}
+                                                <td> {{ prostep.finish }}</td>
+                                            {% else %}
+                                                <td></td>
+                                            {% endif %}
+
+                                            {% if  prostep.comment %}
+                                                <td> {{ prostep.comment }}</td>
+                                            {% else %}
+                                                <td></td>
+                                            {% endif %}
+
+                                            {% if  prostep.image %}
                                             <td> <a href={{ url('imageviewprocess', args=[prostep.id]) }} target="_blank">
                                                 <img src={{ prostep.image_90.url }} > </a> </td>
-                                        {% else %}
-                                            <td></td>
-                                        {% endif %}
-                                    {% endfor %}
-                                </tr>
+                                                <td> {{ prostep.image.name}}</td>
+                                            {% else %}
+                                                <td></td>
+                                                <td></td>
+                                            {% endif %}
 
-                                </tbody>
+                                        {% endwith %}
+                                    </tr>
+                                {% endfor %}
                             {% endwith %}
                         </table>
                     {% else %}

@@ -469,12 +469,7 @@ class DBDjango(object):
 
 
     def create_or_update_process(self, steps):
-        steps_in_process = []
         unique_ordering = self.unique_ordering(steps)
-
-
-
-
         process, created = Process.objects.get_or_create(sid = unique_ordering)
 
         return process, created
@@ -508,6 +503,7 @@ class DBDjango(object):
         for index, step in steps.iterrows():
             # process_step = get_step_or_none(step)
             print(step["step"])
+
             process_step = Step.objects.get(sid=step["step"])
             user = get_user_or_none(step)
             print(images.keys())
@@ -528,7 +524,8 @@ class DBDjango(object):
                                                                       collection_id = collection_id
                                                                       )
             if bool(step["image"]):
-                process_step.image.save(collection_id+"-"+step["step"]+"-"+str(step["index"])+".jpg", images[image_name])
+                #process_step.image.save(collection_id+"-"+step["step"]+"-"+str(step["index"])+".jpg", images[image_name])
+                process_step.image.save(collection_id+image_name, images[image_name])
 
         process.save()
         return process, created

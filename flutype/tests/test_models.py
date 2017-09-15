@@ -31,7 +31,7 @@ class IOCollectionTestCase(TestCase):
         rsc = RawSpotCollection.objects.first()
         images = self.db.load_scanning_images_from_db(rsc)
         print(images[1])
-        self.assertEqual(images[1]["2017-05-19_E5-SC001-0.jpg"].size, (2200,7200))
+        self.assertEqual(images[1]["2017-05-19_E5image.jpg"].size, (2200,7200))
 
 
 
