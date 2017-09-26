@@ -1,4 +1,4 @@
-pyexcel
+pyexcel==0.5.3
 pyexcel-ods
 
 opencv-python
