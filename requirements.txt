@@ -1,5 +1,5 @@
 pyexcel==0.5.3
-pyexcel-ods
+pyexcel-ods==0.5.0
 
 opencv-python
 Pillow==4.1.1
