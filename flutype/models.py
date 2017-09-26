@@ -62,6 +62,12 @@ class Substance(DjangoChoices):
     substance model
     """
     nhs_3d = ChoiceItem("3D-NHS")
+    no = ChoiceItem("No")
+    epoxy_3d = ChoiceItem("3D-Epoxy")
+
+
+
+
 
 
 class ExperimentType(DjangoChoices):

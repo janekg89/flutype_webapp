@@ -12,6 +12,8 @@ import pandas as pd
 from PIL import Image
 from django.core.files import File
 from django_pandas.io import read_frame
+from datetime import timedelta
+
 ###########################################################
 # setup django (add current path to sys.path)
 path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../'))
@@ -258,23 +260,26 @@ class DBDjango(object):
         return antibody_b, created
 
     def create_or_update_washing(self, washing):
+        d = self.delta_time_or_none(washing["duration"])
         washing, created = Washing.objects.get_or_create(sid=washing["sid"],
                                                          method=washing["method"],
-                                                         duration=washing["duration"],
+                                                         duration=d,
                                                          substance=washing["substance"])
         return washing, created
 
     def create_or_update_quenching(self, quenching):
+        d = self.delta_time_or_none(quenching["duration"])
         quenching, created = Quenching.objects.get_or_create(sid=quenching["sid"],
                                                              method=quenching["method"],
-                                                             duration=quenching["duration"],
+                                                             duration=d,
                                                              substance=quenching["substance"])
         return quenching, created
 
     def create_or_update_drying(self, drying):
+        d = self.delta_time_or_none(drying["duration"])
         drying, created = Drying.objects.get_or_create(sid=drying["sid"],
                                                        method=drying["method"],
-                                                       duration=drying["duration"],
+                                                       duration=d,
                                                        substance=drying["substance"])
         return drying, created
 
@@ -285,9 +290,10 @@ class DBDjango(object):
         return spotti, created
 
     def create_or_update_incubating(self, incubating):
+        d = self.delta_time_or_none(incubating["duration"])
         incub, created = Incubating.objects.get_or_create(sid=incubating["sid"],
                                                           method=incubating["method"],
-                                                          duration=incubating["duration"]
+                                                          duration=d
                                                           )
         return incub, created
 
@@ -298,11 +304,21 @@ class DBDjango(object):
         return scan, created
 
     def create_or_update_blocking(self,blocking):
+
+        d = self.delta_time_or_none(blocking["duration"])
         block, created = Blocking.objects.get_or_create(sid=blocking["sid"],
                                                        method=blocking["method"],
-                                                       duration=blocking["duration"],
+                                                       duration=d,
                                                        substance=blocking["substance"])
         return block, created
+
+    def delta_time_or_none(self,minutes):
+        if minutes:
+            d = timedelta(minutes=int(minutes))
+        else:
+            d = minutes
+        return d
+
 
 
     def fill_dt(self, data_tables):
