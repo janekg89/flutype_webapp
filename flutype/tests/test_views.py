@@ -452,7 +452,7 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         response = self.c.post('/flutype/rawspotcollection/' + str(id) + '/', {})
         status = response.status_code
         self.assertEqual(status, 200, "index view 200")
-        self.assertContains(response, "<h1>Raw: 2017-05-19_E5 </h1>")
+        self.assertContains(response, '<a href="/flutype/qspotcollection/1/">')
         self.assertContains(response, "Dye001")
         self.assertContains(response, "A001")
         self.assertContains(response, "<td>A/Aichi/2/68 </td>")
@@ -468,7 +468,7 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         response = self.c.post('/flutype/qspotcollection/' + str(id) + '/', {})
         status = response.status_code
         self.assertEqual(status, 200, "index view 200")
-        self.assertContains(response, "<b>RawCollection:2017-05-19_E5</b>")
+        self.assertContains(response, 'href="/flutype/rawspotcollection/1/"')
         self.assertContains(response, "A001")
         self.assertContains(response, "<td>A/Aichi/2/68 </td>")
 

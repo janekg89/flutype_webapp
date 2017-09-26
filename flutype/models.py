@@ -222,6 +222,10 @@ class ComplexBatch(LigandBatch):
     """
     a complex composed of ligands model
     """
+    pass
+
+class BufferBatch(LigandBatch):
+    pass
 
 
 
