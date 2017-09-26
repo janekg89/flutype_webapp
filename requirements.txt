@@ -2,7 +2,7 @@ pyexcel==0.5.3
 pyexcel-ods==0.5.0
 
 opencv-python==3.3.0.10
-Pillow==4.1.1
+Pillow==4.2.1
 gunicorn
 psycopg2
 jinja2
