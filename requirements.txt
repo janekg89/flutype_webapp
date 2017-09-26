@@ -14,7 +14,7 @@ willow==1.0
 
 
 django>=1.11.4
-django-pandas
+django-pandas==0.4.4
 django-choices
 django-debug-toolbar
 django-model-utils
