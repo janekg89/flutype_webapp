@@ -41,6 +41,8 @@
                                     <i class="fa fa-building-o"></i>&nbsp;
                                 {% elif c.experiment_type == "microarray" %}
                                     <i class="fa fa-building"></i>&nbsp;
+                                {% elif c.experiment_type == "elisa" %}
+                                    <i class="fa fa-building-o"></i>&nbsp;
                                 {% endif %}
                                 {{ c.experiment_type }}</td>
                             <td>{{ c.functionalization}}</td>
