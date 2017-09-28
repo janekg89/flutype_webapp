@@ -3,7 +3,7 @@
 1	Empty	Empty					
 2	Dye001						DY-634
 3	P001	Peptide 6	KKK		FYDYDVFY	amide	PeB-Lys
-4	P002		KK	├ƒA├ƒA	LGVIWAGGNTNY	amide	PeC-Lys
+4	P002		KK	Γö£╞ÆAΓö£╞ÆA	LGVIWAGGNTNY	amide	PeC-Lys
 5	P003				SGFLLISNGVHWV	amide	PeA
 6	P004				ARDFYDYDVFYYAMD 	amide	PeB
 7	P005				ARDFYGYDVFFYAMD	amide	PeBGF
@@ -17,9 +17,9 @@
 15	P013		C-KK		FYGYDVFF	amide	PN
 16	P014	Peptid 10	Ahx-KK		FYDYDVFY	amide	
 17	P015	Peptid 12	KK-SG		FYDYDVFY	amide	
-18	P016	Peptid 13		├ƒA├ƒA├ƒA	FYDYDVFY	amide	
-19	P017	Peptid 14		├ƒA├ƒAK	FYDYDVFY	amide	
-20	P018	Peptid 15	├ƒAKK		FYDYDVFY	amide	
+18	P016	Peptid 13		Γö£╞ÆAΓö£╞ÆAΓö£╞ÆA	FYDYDVFY	amide	
+19	P017	Peptid 14		Γö£╞ÆAΓö£╞ÆAK	FYDYDVFY	amide	
+20	P018	Peptid 15	Γö£╞ÆAKK		FYDYDVFY	amide	
 21	P019	Peptid 16	KKK		FYDYDVFY	amide	
 22	P020	Peptid 17	KKK		FYDYDVFF	amide	
 23	P1						
@@ -65,3 +65,4 @@
 	pep62		KKK		ARLPR		
 	pep63		KKK		ARLPRTMV		
 	Christian						
+	neutra1	Neutravidin					
