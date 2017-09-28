@@ -138,6 +138,13 @@ def about_en_view(request):
 def about_de_view(request):
     return render(request, "flutype/about.html", {"language": "de"})
 
+def how_en_view(request):
+    return render(request, "flutype/how.html", {"language": "en"})
+
+
+def how_de_view(request):
+    return render(request, "flutype/how.html", {"language": "de"})
+
 
 @login_required
 def peptide_batch_view(request):
