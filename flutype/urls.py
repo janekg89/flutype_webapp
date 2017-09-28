@@ -9,6 +9,9 @@ urlpatterns = [
     url(r'^about/$', views.about_en_view, name='about'),
     url(r'^about_de/$', views.about_de_view, name='about_de'),
 
+    url(r'^how/$', views.how_en_view, name='how'),
+    url(r'^how_de/$', views.how_de_view, name='how_de'),
+
     url(r'^steps/$', views.steps_view, name='steps'),
     url(r'^steps/new/(?P<class_name>\w+)/$', views.step_new, name='step_new'),
     url(r'^steps/edit/(?P<pk>[0-9]+)/$', views.step_edit, name='step_edit'),
