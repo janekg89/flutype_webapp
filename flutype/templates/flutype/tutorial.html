@@ -1,0 +1,250 @@
+{% extends "flutype/base.html" %}
+
+{% block content %}
+    <!-- Main Content -->
+    <div class="row">
+        <div class="pull-right">
+            {% if language == "en" %}
+                <a class="btn btn-default active"> <span class="bfh-languages" data-language="en_US"
+                                                         data-flags="true"> </span> </a>
+                <a class="btn btn-default" href="{{ url("tutorial_de") }}"> <span class="bfh-languages"
+                                                                             data-language="de_DE"
+                                                                             data-flags="true"> </span> </a>
+            {% elif language == "de" %}
+                <a class="btn btn-default" href="{{ url("tutorial") }}"> <span class="bfh-languages" data-language="en_US"
+                                                                          data-flags="true"> </span> </a>
+                <a class="btn btn-default active"> <span class="bfh-languages" data-language="de_DE"
+                                                         data-flags="true"> </span> </a>
+            {% endif %}
+        </div>
+        <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+            {% if language == "de" %}
+                <h1>Example</h1>
+                <p> Noch keine Beschreibung auf deutsch.</p>
+            {% elif language == "en" %}
+                <h1>How to load a study into the database ?</h1>
+                <div class="row">
+                    <p> Here, I will show  an example of a study which shows how to prepare the data to upload it into
+                        the databse. Im my case the study actually aims to show you how to upload a study with all kinds
+                        of measuremnt types. Therefore, I will give you an step by step tutorial. Let's start.
+                    </p>
+                    <h2> Step 1: Study </h2>
+                    We start with selecting an identification string (sid) for the study. I recommend to find a convention
+                    for the naming of the studies to not get name conflicts. Since it is an tutorial, I name my study:
+                    "170929-tutorial". The task of a study can be described by a comment.
+                    The following table shows the description of my study.
+                    <table>
+                        <tr>
+                            <th> sid </th>
+                            <td> 170929-tutorial</td>
+                        </tr>
+                        <tr>
+                            <th> comment</th>
+                            <td> The task of the study is to demonstrate how a study can be uploaded into the database.
+                            Therefore, three different types of experiments are included into the study. The aim is to
+                            select very differnet kinds of experiments to get an preferably complete demonstartion of what
+                            can be uploaded and how.</td>
+                        </tr>
+                    </table>
+                    allright. Now we have defined a study. Let's go ahead and add some measurements to the study.
+                    <h2> Step 2: Elisa Measurement </h2>
+                    We start with an elisa measurement without any peptides involved. A measurement contains several
+                    informations about the measurement. We start of with the most general information, the meta data.
+                    <h3> Step 2.1: Measurement Meta</h3>
+                    <table>
+                        <tr>
+                            <th> sid </th>
+                            <td> 170929-tutorial-elisa-1</td>
+                        </tr>
+                        <tr>
+                            <th>batch_sid</th>
+                            <td> 12345689</td>
+                        </tr>
+                        <tr>
+                            <th> measurement_type </th>
+                            <td> elisa </td>
+                        </tr>
+                        <tr>
+                            <th> user </th>
+                            <td> ssanger </td>
+                        </tr>
+                        <tr>
+                            <th> surface_substance </th>
+                            <td> No </td>
+                        </tr>
+                        <tr>
+                            <th>manufacturer</th>
+                            <td> Thermo F96 Maxisorp </td>
+                        </tr>
+                    </table>
+                    Allright, let's go quickly through the table. The sid is now a specific sid of the measurement.
+                    Again, make sure there is no name conflict with exisiting sid.<b> Any sids introduced in the following
+                    have to be unique!</b> The batch sid refers to the batch of the microwell plate. The measurement type
+                    has to be chosen from  three choises. elisa, microarray, microwell. Microarray and microwell refer to
+                    respectivly to fluoresence measurements. The user can be choosen from the
+                    <a href="{{ url('users') }}"> users list </a>. The surface substance refers to the functionalization
+                    of the microwell plate. In this measurement no ligands were bound to the surface of the microwell
+                    plate.  Therefore, also no fictionalization was necessary. We enter an "No", which is different to an
+                    empty space. An empty space refers to an unknown value
+                    (<a href="https://en.wikipedia.org/wiki/NaN"> NaN </a>). The manufacturer refers to the manufacturer
+                    of the microwell plate. That's it with the meta data of a measurement. Let's continue with the next
+                    important measuremnt related information, the ligands and their positions on the microwell plate.
+                    <h3>Step 2.2 Measurment Ligands</h3>
+                    <p>
+                        Let's start with some general information related to ligands.
+                        Peptides, antibodies, viruses and any combination of several ligands (complexes) are referred to as
+                        ligands. Each of them is an ligand type and has its specific information. A peptide, for example,
+                        is described by thr linker,spacer, sequence and c-terminus. Besides the specific information
+                        all ligands share the fields sid and comment. However, it might be interesting also to conduct
+                        measurements with different concentrations of the ligands, which is not captured by a ligand. Here, the
+                        concept of ligand batches comes into play. I ligand batch links a ligand to the following batch
+                        related properties: labeling, concentration, buffer, pH, purity, production date. As always,
+                        sid have to be defined also for ligand batches. Keep in mind that ligand batches are particular
+                        important, because these sid are later on used in the gal files. Ligand batches, can be of 5
+                        different type depending on what kind of ligand they are referenced to, virus batch, peptide batch,
+                        antibody batch, complex batch, buffer batch. The buffer batch is a batch without any ligands. The
+                        remaining 4 should be self explaining.
+                        </p>
+
+                    <p>
+                        Now back to our measurement. In this example we do not immobilize any ligands on the surface. This
+                        reduces our work. No, need to define any peptides or peptide batches. However, still we are
+                        supposed to deliver a so called gal file, which maps a ligand batch to a location on
+                        a microwell plate. Since no ligands are present in any well, we fill all entries in the table
+                        with "No". Note that the table has to have the same dimensions as the microwell plate.
+                        For microarrays it might be more reasonable to provide a gal file, which is fine too.
+                    </p>
+                        <table>
+                            <caption>Fixed Ligand Batches Location on Microwell Plate</caption>
+                        <thead><tr><th></th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th></tr></thead><tbody>
+                         <tr><th>A</th><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+                         <tr><th>B</th><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+                         <tr><th>C</th><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+                         <tr><th>D</th><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+                         <tr><th>E</th><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+                         <tr><th>F</th><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+                         <tr><th>G</th><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+                         <tr><th>H</th><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+                        </tbody></table>
+
+                    <p>
+                        Alright, fixed ligand location within the microwell are provided. Let's continue with the analyt
+                        ligand location. First, we check which ligands were incubated. For this example we decided to
+                        pick the following: X31, Panama, California. First, one has to check if these viruses are already
+                        listed in the database. Therefore, let's open a new tab with the virus list by following this
+                        <a href="{{ url('viruses') }}"> link </a> or by clicking on Ligands and than on Virus in the
+                        navigation menu. If the virus is already present in the database just note the sid and go on,
+                        otherwise search for the virus in <a href="https://www.ncbi.nlm.nih.gov/taxonomy">here</a> and
+                        provide the taxonomy id for the virus and the following additional informations.
+                    </p>
+
+                    <table >
+                        <caption>Viruses</caption>
+                    <thead><tr class="tableizer-firstrow"><th>sid</th><th>comment</th><th>tax_id</th><th>link_db</th><th>subtype</th><th>isolation_country</th><th>collection_date</th><th>strain</th></tr></thead><tbody>
+                     <tr><td>387139</td><td>&nbsp;</td><td>387139</td><td>https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=387139</td><td>H3N2</td><td>Japan</td><td>1968</td><td>A/Aichi/2/68 </td></tr>
+                     <tr><td>1316510</td><td>&nbsp;</td><td>1316510</td><td>https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=1316510</td><td>H1N1</td><td>USA</td><td>2009</td><td>A/California/7/2009</td></tr>
+                     <tr><td>381513</td><td>&nbsp;</td><td>381513</td><td>https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=381513</td><td>H3N2</td><td>Panama</td><td>1999</td><td>A/Panama/2007/1999</td></tr>
+                     <tr><td>&nbsp;</td></tr>
+                     <tr><td></td></tr>
+                    </tbody></table>
+
+                    Ok, now let's decide what kind of concentration we want to use or more generally speaking define the
+                    analyt batches. We are planning to incubate the three viruses in various concentrations but also
+                    some buffer as refrence. First, one has to check again if the batches are allready defined.
+                    Therefore, let's open a new tab with the virus batch list by following this
+                    <a href="{{ url('viruses') }}"> link </a> or by clicking on Batches and than on Virus in the
+                        navigation menu. In the following, we provide some batches which we want to use for
+                        the incubation. Pay attention, that the collumn "ligand" no takes the preselected ligands sids.
+                    <table >
+                        <caption>Virus Batches</caption>
+                    <thead><tr><th>sid</th><th>labeling</th><th>concentration</th><th>buffer</th><th>ph</th><th>purity</th><th>produced_by</th><th>production_date</th><th>comment</th><th>ligand</th><th>passage_history</th><th>active</th></tr></thead><tbody>
+                     <tr><td>Pan_RKI_1</td><td>&nbsp;</td><td>1</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Pan_RKI_0.5</td><td>&nbsp;</td><td>0.5</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Pan_RKI_0.25</td><td>&nbsp;</td><td>0.25</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Pan_RKI_0.125</td><td>&nbsp;</td><td>0.125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Pan_RKI_0.0625</td><td>&nbsp;</td><td>0.0625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Pan_RKI_0.03125</td><td>&nbsp;</td><td>0.03125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Pan_RKI_0.015625</td><td>&nbsp;</td><td>0.015625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Pan_RKI_0.0078125</td><td>&nbsp;</td><td>0.0078125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Pan_RKI_0.00390625</td><td>&nbsp;</td><td>0.00390625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Pan_RKI_0.001953125</td><td>&nbsp;</td><td>0.001953125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Pan_RKI_0.0009765625</td><td>&nbsp;</td><td>0.0009765625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Pan_RKI_0.00048828125</td><td>&nbsp;</td><td>0.0004882813</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>X31_RKI_1</td><td>&nbsp;</td><td>1</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>X31_RKI_0.5</td><td>&nbsp;</td><td>0.5</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>X31_RKI_0.25</td><td>&nbsp;</td><td>0.25</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>X31_RKI_0.125</td><td>&nbsp;</td><td>0.125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>X31_RKI_0.0625</td><td>&nbsp;</td><td>0.0625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>X31_RKI_0.03125</td><td>&nbsp;</td><td>0.03125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>X31_RKI_0.015625</td><td>&nbsp;</td><td>0.015625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>X31_RKI_0.0078125</td><td>&nbsp;</td><td>0.0078125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>X31_RKI_0.00390625</td><td>&nbsp;</td><td>0.00390625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>X31_RKI_0.001953125</td><td>&nbsp;</td><td>0.001953125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>X31_RKI_0.0009765625</td><td>&nbsp;</td><td>0.0009765625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>X31_RKI_0.00048828125</td><td>&nbsp;</td><td>0.0004882813</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Call_RKI_1</td><td>&nbsp;</td><td>1</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Call_RKI_0.5</td><td>&nbsp;</td><td>0.5</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Call_RKI_0.25</td><td>&nbsp;</td><td>0.25</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Call_RKI_0.125</td><td>&nbsp;</td><td>0.125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Call_RKI_0.0625</td><td>&nbsp;</td><td>0.0625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Call_RKI_0.03125</td><td>&nbsp;</td><td>0.03125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Call_RKI_0.015625</td><td>&nbsp;</td><td>0.015625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Call_RKI_0.0078125</td><td>&nbsp;</td><td>0.0078125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Call_RKI_0.00390625</td><td>&nbsp;</td><td>0.00390625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Call_RKI_0.001953125</td><td>&nbsp;</td><td>0.001953125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Call_RKI_0.0009765625</td><td>&nbsp;</td><td>0.0009765625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td>Call_RKI_0.00048828125</td><td>&nbsp;</td><td>0.0004882813</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                     <tr><td></td></tr>
+                    </tbody></table>
+
+                    <table>
+                        <caption>Buffer Batches</caption>
+                    <thead><tr><th>sid</th><th>Buffer-001</th><th>ph</th><th>produced_by</th><th>production_date</th><th>comment</th></tr></thead><tbody>
+                     <tr><td>buffer001</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>ssandra</td><td>19.7.2017</td><td></td></tr>
+                    </tbody></table>
+
+                    Alright, since the batches are now defined we can continue with the gal file for the analyt.
+                    Just as a reminder, the gal file maps a ligand batch to a location on a microwell plate.
+                    <table>
+                        <caption>Analyt Batches Location on Microwell Plate</caption>
+                    <thead><tr><th></th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th></tr></thead><tbody>
+                     <tr><td>A</td><td>Pan_RKI_1</td><td>Pan_RKI_0.5</td><td>Pan_RKI_0.25</td><td>Pan_RKI_0.125</td><td>Pan_RKI_0.0625</td><td>Pan_RKI_0.03125</td><td>Pan_RKI_0.015625</td><td>Pan_RKI_0.0078125</td><td>Pan_RKI_0.00390625</td><td>Pan_RKI_0.001953125</td><td>Pan_RKI_0.0009765625</td><td>Pan_RKI_0.00048828125</td></tr>
+                     <tr><td>B</td><td>Pan_RKI_1</td><td>Pan_RKI_0.5</td><td>Pan_RKI_0.25</td><td>Pan_RKI_0.125</td><td>Pan_RKI_0.0625</td><td>Pan_RKI_0.03125</td><td>Pan_RKI_0.015625</td><td>Pan_RKI_0.0078125</td><td>Pan_RKI_0.00390625</td><td>Pan_RKI_0.001953125</td><td>Pan_RKI_0.0009765625</td><td>Pan_RKI_0.00048828125</td></tr>
+                     <tr><td>C</td><td>X31_RKI_1</td><td>X31_RKI_0.5</td><td>X31_RKI_0.25</td><td>X31_RKI_0.125</td><td>X31_RKI_0.0625</td><td>X31_RKI_0.03125</td><td>X31_RKI_0.015625</td><td>X31_RKI_0.0078125</td><td>X31_RKI_0.00390625</td><td>X31_RKI_0.001953125</td><td>X31_RKI_0.0009765625</td><td>X31_RKI_0.00048828125</td></tr>
+                     <tr><td>D</td><td>X31_RKI_1</td><td>X31_RKI_0.5</td><td>X31_RKI_0.25</td><td>X31_RKI_0.125</td><td>X31_RKI_0.0625</td><td>X31_RKI_0.03125</td><td>X31_RKI_0.015625</td><td>X31_RKI_0.0078125</td><td>X31_RKI_0.00390625</td><td>X31_RKI_0.001953125</td><td>X31_RKI_0.0009765625</td><td>X31_RKI_0.00048828125</td></tr>
+                     <tr><td>E</td><td>Call_RKI_1</td><td>Call_RKI_0.5</td><td>Call_RKI_0.25</td><td>Call_RKI_0.125</td><td>Call_RKI_0.0625</td><td>Call_RKI_0.03125</td><td>Call_RKI_0.015625</td><td>Call_RKI_0.0078125</td><td>Call_RKI_0.00390625</td><td>Call_RKI_0.001953125</td><td>Call_RKI_0.0009765625</td><td>Call_RKI_0.00048828125</td></tr>
+                     <tr><td>F</td><td>Call_RKI_1</td><td>Call_RKI_0.5</td><td>Call_RKI_0.25</td><td>Call_RKI_0.125</td><td>Call_RKI_0.0625</td><td>Call_RKI_0.03125</td><td>Call_RKI_0.015625</td><td>Call_RKI_0.0078125</td><td>Call_RKI_0.00390625</td><td>Call_RKI_0.001953125</td><td>Call_RKI_0.0009765625</td><td>Call_RKI_0.00048828125</td></tr>
+                     <tr><td>G</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+                     <tr><td>H</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td></tr>
+                    </tbody></table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                </div>
+
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
