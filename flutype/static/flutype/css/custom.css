@@ -168,3 +168,13 @@ input[type="range"] {
          .ui-resizable-sw { cursor: sw-resize; width: 9px; height: 9px; left: -5px; bottom: -5px; }
          .ui-resizable-nw { cursor: nw-resize; width: 9px; height: 9px; left: -5px; top: -5px; }
          .ui-resizable-ne { cursor: ne-resize; width: 9px; height: 9px; right: -5px; top: -5px;}
+
+.ul {
+    text-align: left;
+    display: block;
+    list-style-type: disc;
+    margin-top: 1em;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 40px;
+}

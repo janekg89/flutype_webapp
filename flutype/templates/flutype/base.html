@@ -141,6 +141,21 @@
 
                         </ul>
                     </li>
+
+                    <li class="dropdown active">
+                        <a data-toggle="dropdown" role="button" aria-expanded="false"> <i class="fa fa-question fa-fw"
+                        ></i> How <span class="caret"></span> </a>
+                        <ul class="dropdown-menu" role="menu">
+                             <li><a href="{{ url('database_scheme') }}">Database Schema <span class="sr-only">(current)
+                             </span></a></li>
+                            <li><a href="{{ url('tutorial') }}">Tutorial <span class="sr-only">(current)
+                             </span></a></li>
+
+
+
+                        </ul>
+                    </li>
+
                     <li class="active"><a href="{{ url('users') }}"> <i class="fa fa-group fa-fw"></i> Users <span
                             class="sr-only">(current)</span></a></li>
 
@@ -148,8 +163,7 @@
                 <li class="active"><a href="{{ url('about') }}"><i class="fa fa-info fa-fw"></i> About <span
                         class="sr-only">(current)</span></a></li>
 
-                 <li class="active"><a href="{{ url('how') }}"><i class="fa fa-question fa-fw"></i> How <span
-                        class="sr-only">(current)</span></a></li>
+
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
