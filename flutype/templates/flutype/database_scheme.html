@@ -1,0 +1,128 @@
+{% extends "flutype/base.html" %}
+
+{% block content %}
+    <!-- Main Content -->
+    <div class="row">
+        <div class="pull-right">
+            {% if language == "en" %}
+                <a class="btn btn-default active"> <span class="bfh-languages" data-language="en_US"
+                                                         data-flags="true"> </span> </a>
+                <a class="btn btn-default" href="{{ url("database_scheme_de") }}"> <span class="bfh-languages"
+                                                                             data-language="de_DE"
+                                                                             data-flags="true"> </span> </a>
+            {% elif language == "de" %}
+                <a class="btn btn-default" href="{{ url("database_scheme") }}"> <span class="bfh-languages" data-language="en_US"
+                                                                          data-flags="true"> </span> </a>
+                <a class="btn btn-default active"> <span class="bfh-languages" data-language="de_DE"
+                                                         data-flags="true"> </span> </a>
+            {% endif %}
+        </div>
+        <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+            {% if language == "de" %}
+                <h1>Wie sollte ich die Daten für die Datenbank zur Verfügung stellen?</h1>
+                <p> Noch keine Beschreibung auf deutsch.</p>
+            {% elif language == "en" %}
+                <h1>How to prepare content for database ?</h1>
+                <div class="row">
+                    <h2>
+                        Overall View
+                    </h2>
+                    <div style="overflow:auto; height:500px ">
+                        <img src="{{ static('flutype/images/diagram.png') }}" width="3500"/>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <h2>Study</h2>
+                    <img src="{{ static('flutype/images/study-sceme-1.png') }}" align="left" width="400"/>
+                    <p>Here, I explain how the content has to be prepared to fit into the database. Therefore, I start
+                        with
+                        the biggest unit in the database, the <b> study </b>. A study contains a collection of
+                        measurements
+                        and it has a task. The measurements are conducted to investigate that task. In figure to the
+                        left the
+                        schematic structure of a study is shown. I go through the figure in detail. This structure
+                        obviously
+                        corresponds to the structure of the data for the import. Therefore, I recommend to read this
+                        first before
+                        examining the different examples of how to import data.
+                    </p>
+                    <p>
+                        By conducting a study an unique identification string (<b>sid</b>) has to be defined. The
+                        recommendation is to start the string with a date. Additionally a task of the study should be
+                        declared and
+                        written into the <b>comment</b>. Any related files can be attached to the study. These files can
+                        be
+                        thought of a the <b>raw doc</b>uments. Most importantly, any number of <b>measurements</b> can
+                        be
+                        linked to a study. For each measurement thereby, an unique identification string (<b>sid</b>),
+                        an
+                        <b> batch sid</b> , <b> measurement type </b>, <b> fixed ligand distribution</b>,
+                        <b> analyt distribution </b>, <b> comment </b> , <b> process </b> and the <b> raw docs </b> can
+                        be defined.
+                        In the following, I will go through each point to clarify what I mean.
+                    </p>
+                    <ul>
+                        <li><b>sid</b> (mandatory)- is an unique identification string.</li>
+                        <li><b>batch sid </b> - is an unique identification string for a batch of microarrays or
+                            microwell plates.
+                        </li>
+                        <li><b> measurement type </b> - can be chosen from microarray, microwellplate and elisa.</li>
+                        <li><b>fixed ligand distribution</b></li>
+                        (mandatory)- are described by the gal file of the ligands
+                        which are immobilized / spotted. Alternatively, a table with rows and columns can be given.
+                        The content of the fields shell be the sids of the ligand batches. This is described in
+                        ligands section.
+                        <li><b> analyt distribution </b> (mandatory)- has the same format as the fixed ligand
+                            distribution.
+                            Howerver, the distribution of the analyt. Most often the gal file will be filled with the
+                            virus batch sid
+                        </li>
+                        <li><b> comment </b> - is given any additional information to the experiment.</li>
+                        <li><b> process </b> (mandatory)- an excel sheet with ordered steps in the process. How to
+                            define
+                            steps in an process is described in the process section
+                        </li>
+                        and is
+                        probably better to understand by checking the examples.
+                        <li><b> raw docs </b> - are any files corresponding to the measurement additionally to the
+                            existing information.
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <h2> Ligands</h2>
+                    <div style="overflow:auto; height:500px ">
+                        <img src="{{ static('flutype/images/ligands-sceme.png') }}" width="1000"/>
+                    </div>
+                    <p>
+                        Ligands can be either antibodies, peptides, viruses or a complex which is a set of any of the
+                        ligands.
+                        The biggest unit in the ligands scheme is the ligand batch. It links to one of described ligands
+                        but also adds informations about the labeling, concentration, buffer, ph, purity, production date,
+                        pruduced_by and a comment.
+                    </p>
+                </div>
+
+                <div class="row">
+                    <h2> Process</h2>
+
+
+                    <div style="overflow:auto; height:500px ">
+                        <img src="{{ static('flutype/images/process_sceme-1.png') }}" width="1200"/>
+                    </div>
+                    <p>
+                        The process containes an ordered list of steps.The possible steps are of
+                        the type: scanning, quenching, spotting, blocking ,drying , incubating and washing. the same
+                        steps can be added multiple times into the process. Think for example of the same washing
+                        procedure which is performed multiple times during the process. Further, a starting time,
+                        finishing time, image, intensity file and an comment can be linked to a specific step in
+                        the process. Image and intensity linking is espacially meant to for the scanning step,
+                        which should provides either an image or intensity file.
+                    </p>
+                </div>
+
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

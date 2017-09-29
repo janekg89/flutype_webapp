@@ -138,12 +138,21 @@ def about_en_view(request):
 def about_de_view(request):
     return render(request, "flutype/about.html", {"language": "de"})
 
-def how_en_view(request):
-    return render(request, "flutype/how.html", {"language": "en"})
+@login_required
+def database_scheme_en_view(request):
+    return render(request, "flutype/database_scheme.html", {"language": "en"})
 
+@login_required
+def database_scheme_de_view(request):
+    return render(request, "flutype/database_scheme.html", {"language": "de"})
 
-def how_de_view(request):
-    return render(request, "flutype/how.html", {"language": "de"})
+@login_required
+def tutorial_en_view(request):
+    return render(request, "flutype/tutorial.html", {"language": "en"})
+
+@login_required
+def tutorial_de_view(request):
+    return render(request, "flutype/tutorial.html", {"language": "de"})
 
 
 @login_required

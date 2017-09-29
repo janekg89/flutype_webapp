@@ -9,8 +9,11 @@ urlpatterns = [
     url(r'^about/$', views.about_en_view, name='about'),
     url(r'^about_de/$', views.about_de_view, name='about_de'),
 
-    url(r'^how/$', views.how_en_view, name='how'),
-    url(r'^how_de/$', views.how_de_view, name='how_de'),
+    url(r'^database_scheme/$', views.database_scheme_en_view, name='database_scheme'),
+    url(r'^database_scheme_de/$', views.database_scheme_de_view, name='database_scheme_de'),
+
+    url(r'^tutorial/$', views.tutorial_en_view, name='tutorial'),
+    url(r'^tutorial_de/$', views.tutorial_de_view, name='tutorial_de'),
 
     url(r'^steps/$', views.steps_view, name='steps'),
     url(r'^steps/new/(?P<class_name>\w+)/$', views.step_new, name='step_new'),
