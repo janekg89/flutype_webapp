@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import os
 from django.urls.base import reverse
 
 from rest_framework.decorators import api_view
@@ -8,7 +9,7 @@ from rest_framework.response import Response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 
-
+from .helper import generate_tree, tar_tree
 from .forms import PeptideForm, VirusForm, AntibodyForm, AntibodyBatchForm, \
     PeptideBatchForm, VirusBatchForm, StepForm, QuenchingForm, WashingForm, \
     DryingForm, SpottingForm, BlockingForm, IncubatingForm, ScanningForm, ProcessForm,\
@@ -16,7 +17,6 @@ from .forms import PeptideForm, VirusForm, AntibodyForm, AntibodyBatchForm, \
 
 from .models import RawSpotCollection, SpotCollection, Process, PeptideBatch, \
     Peptide, VirusBatch, Virus, AntibodyBatch, Antibody, Step, ProcessStep
-
 from django.forms import formset_factory, inlineformset_factory
 from django.shortcuts import get_object_or_404, render, redirect
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -132,6 +132,7 @@ def users_view(request):
 
 
 def about_en_view(request):
+
     return render(request, "flutype/about.html", {"language": "en"})
 
 
@@ -148,11 +149,21 @@ def database_scheme_de_view(request):
 
 @login_required
 def tutorial_en_view(request):
+    path_file = os.path.dirname(__file__)
+    path_tutorial = os.path.join(path_file,"static/flutype/tutorial/")
+    generate_tree(path_tutorial)
+    print(tar_tree(path_tutorial))
+
     return render(request, "flutype/tutorial.html", {"language": "en"})
 
 @login_required
 def tutorial_de_view(request):
     return render(request, "flutype/tutorial.html", {"language": "de"})
+
+@login_required
+def tutorial_tree_view(request):
+    return render(request, "flutype/tree.html")
+
 
 
 @login_required
