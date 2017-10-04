@@ -13,6 +13,8 @@ urlpatterns = [
     url(r'^database_scheme_de/$', views.database_scheme_de_view, name='database_scheme_de'),
 
     url(r'^tutorial/$', views.tutorial_en_view, name='tutorial'),
+    url(r'^tree/$', views.tutorial_tree_view, name='tutorial_tree'),
+
     url(r'^tutorial_de/$', views.tutorial_de_view, name='tutorial_de'),
 
     url(r'^steps/$', views.steps_view, name='steps'),

@@ -178,3 +178,10 @@ input[type="range"] {
     margin-right: 0;
     padding-left: 40px;
 }
+
+ .left    { text-align: left; }
+      .right   { text-align: right; }
+      .center  { text-align: center; }
+      .justify { text-align: justify; }
+      .start   { text-align: start; }
+      .end     { text-align: end; }
