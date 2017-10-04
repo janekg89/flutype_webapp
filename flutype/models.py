@@ -298,7 +298,6 @@ class Incubating(Step):
     duration = models.DurationField(null=True, blank=True)
 
 
-
 class Quenching(Step):
     duration = models.DurationField(null=True, blank=True)
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)

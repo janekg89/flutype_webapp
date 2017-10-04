@@ -2,7 +2,7 @@
 
 {% block content %}
     <!-- Main Content -->
-    <div class="row">
+    <div class="row" align="left">
         <div class="pull-right">
             {% if language == "en" %}
                 <a class="btn btn-default active"> <span class="bfh-languages" data-language="en_US"
@@ -22,36 +22,70 @@
                 <h1>Example</h1>
                 <p> Noch keine Beschreibung auf deutsch.</p>
             {% elif language == "en" %}
-                <h1>How to load a study into the database ?</h1>
-                <div class="row">
-                    <p> Here, I will show  an example of a study which shows how to prepare the data to upload it into
-                        the databse. Im my case the study actually aims to show you how to upload a study with all kinds
-                        of measuremnt types. Therefore, I will give you an step by step tutorial. Let's start.
+                <h1>How to Upload Data?</h1>
+                <div class="row align-left">
+
+                    <p > The concept of uploading data into the database
+                        can be devided into two parts. On the one hand, one has to fill in general data, which is
+                        important for all measurements and not related to a specific measurement. Ligands, ligands
+                        batches and process steps are these kind of data. It is possible to add/modify this content
+                        directly in the browser.
+                        On the other hand, there are measurement specific information, which use the general data. The
+                        measurement specific information has to be saved with a specific pattern into a directory. This
+                        directory can finally be used to upload the measurements. While creating such a directory,
+                        it is important to check if all ligands, ligand batches and process steps are already in the
+                        database. This tutorial shows the workflow. The biggest unit in the database is a
+                        study. It refers to a collection of measurements, which were measured collectively  for a
+                        reason. In this tutorial, I will show  an example of how to upload a study. This study aims to
+                        show how to prepare the data to upload it into the database. Hence, it is reasonable to upload a
+                        study containing three unequal measurements. The directory with the study is ziped and can be
+                        downloaded <a href="{{ static('flutype/tutorial/170929-tutorial/raw_docs/tree.tar.gz') }}"> here </a>.
+                        The related directory tree can be seen <a href="{{ url("tutorial_tree")}}"> here</a>.
+                        Now, I will give you a step by step tutorial. Let's start.
                     </p>
-                    <h2> Step 1: Study </h2>
-                    We start with selecting an identification string (sid) for the study. I recommend to find a convention
-                    for the naming of the studies to not get name conflicts. Since it is an tutorial, I name my study:
-                    "170929-tutorial". The task of a study can be described by a comment.
-                    The following table shows the description of my study.
-                    <table>
+                    <h2> 1. Study </h2>
+                    <p > A study contains meta data, measurements and raw docs. Let's start with the meta data.
+                    Meta data contains an identification string (sid) for the study and a comment. For the sid I
+                    recommend to find a convention for the naming of the studies to not get name conflicts.
+                    Since our study is an tutorial, I name my study: "170929-tutorial".
+                    The task of a study is described in the results field and the results of the study are described in
+                    the results field. Don't worry if you not have any results yet. They can be updated afterwards.
+                    Results related documents can be uploaded into the folder raw docs. The raw docs folder will be
+                    explained later. Now back to the meta data of our exemple.
+
+                    The following table shows the meta data of my study. this table is saved as meta.tsv in the main
+                    directory of the study.</p>
+
+                    <table class="table table-striped">
                         <tr>
                             <th> sid </th>
                             <td> 170929-tutorial</td>
                         </tr>
                         <tr>
-                            <th> comment</th>
+                            <th> task </th>
                             <td> The task of the study is to demonstrate how a study can be uploaded into the database.
                             Therefore, three different types of experiments are included into the study. The aim is to
-                            select very differnet kinds of experiments to get an preferably complete demonstartion of what
+                            select very different kinds of experiments to get an preferably complete demonstration of what
                             can be uploaded and how.</td>
                         </tr>
+                        <tr>
+                            <th> result </th>
+                            <td> </td>
+                        </tr>
                     </table>
-                    allright. Now we have defined a study. Let's go ahead and add some measurements to the study.
-                    <h2> Step 2: Elisa Measurement </h2>
-                    We start with an elisa measurement without any peptides involved. A measurement contains several
-                    informations about the measurement. We start of with the most general information, the meta data.
-                    <h3> Step 2.1: Measurement Meta</h3>
-                    <table>
+                    Allright, we have defined a study. Most importantly we can add measuremnts to our study.
+                    This is going to be covered in the next section. But further, it is possible to upload any
+                    additional documents related to the study. To do so, just paste them into the "raw docs" folder of
+                    the study. In this study, I add the
+                    <a href="{{ static('flutype/tutorial/170929-tutorial/raw_docs/tree.tar.gz') }}">zipped folder </a>
+                    of the study to the raw docs. Now, let's go ahead and add some measurements to the study.
+
+                    <h2> 2. Elisa Measurement </h2>
+                    For any measurement the same five informations have to be given: meta data, ligands, process, results
+                    and raw docs. We start with an elisa measurement without any peptides involved.
+                    We start of with the most general information, the meta data.
+                    <h3> 2.1 Elisa Meta</h3>
+                    <table class="table table-striped">
                         <tr>
                             <th> sid </th>
                             <td> 170929-tutorial-elisa-1</td>
@@ -77,33 +111,36 @@
                             <td> Thermo F96 Maxisorp </td>
                         </tr>
                     </table>
-                    Allright, let's go quickly through the table. The sid is now a specific sid of the measurement.
-                    Again, make sure there is no name conflict with exisiting sid.<b> Any sids introduced in the following
-                    have to be unique!</b> The batch sid refers to the batch of the microwell plate. The measurement type
-                    has to be chosen from  three choises. elisa, microarray, microwell. Microarray and microwell refer to
-                    respectivly to fluoresence measurements. The user can be choosen from the
-                    <a href="{{ url('users') }}"> users list </a>. The surface substance refers to the functionalization
+                    Alright, let's go quickly through the table. The sid is a unique id of the measurement.
+                    Again, make sure there is no name conflict with existing sids.<b> Any sid introduced in the following
+                    has to be unique!</b> The batch sid refers to the batch of the microwell plate. The measurement type
+                    has to be chosen from  three choises. elisa, microarray and microwell. Both, microarray and microwell
+                    refer to fluoresence measurements. The user can be chosen from the <a href="{{ url('users') }}">
+                    users list </a>. The surface substance refers to the functionalization
                     of the microwell plate. In this measurement no ligands were bound to the surface of the microwell
-                    plate.  Therefore, also no fictionalization was necessary. We enter an "No", which is different to an
+                    plate.  Therefore, also no fuctionalization was necessary. We enter a "No", which is different to an
                     empty space. An empty space refers to an unknown value
                     (<a href="https://en.wikipedia.org/wiki/NaN"> NaN </a>). The manufacturer refers to the manufacturer
-                    of the microwell plate. That's it with the meta data of a measurement. Let's continue with the next
-                    important measuremnt related information, the ligands and their positions on the microwell plate.
-                    <h3>Step 2.2 Measurment Ligands</h3>
+                    of the microwell plate. These are the meta data of a measurement. This table is saved as "meta.tsv"
+                    in the main directory of a measurement folder. Let's continue with the next
+                    important measurement related information, the ligands and their positions on the microwell plate.
+                    <h3>2.2 Elisa Ligands</h3>
                     <p>
                         Let's start with some general information related to ligands.
                         Peptides, antibodies, viruses and any combination of several ligands (complexes) are referred to as
                         ligands. Each of them is an ligand type and has its specific information. A peptide, for example,
-                        is described by thr linker,spacer, sequence and c-terminus. Besides the specific information
-                        all ligands share the fields sid and comment. However, it might be interesting also to conduct
-                        measurements with different concentrations of the ligands, which is not captured by a ligand. Here, the
-                        concept of ligand batches comes into play. I ligand batch links a ligand to the following batch
-                        related properties: labeling, concentration, buffer, pH, purity, production date. As always,
-                        sid have to be defined also for ligand batches. Keep in mind that ligand batches are particular
-                        important, because these sid are later on used in the gal files. Ligand batches, can be of 5
-                        different type depending on what kind of ligand they are referenced to, virus batch, peptide batch,
-                        antibody batch, complex batch, buffer batch. The buffer batch is a batch without any ligands. The
-                        remaining 4 should be self explaining.
+                        is described by a linker, spacer, sequence and c-terminus. Besides the specific information,
+                        all ligands share the fields: sid and comment. However, it might be interesting also to conduct
+                        measurements with e.g. different concentrations of the ligands, which is not captured by the ligands related
+                        informations. Here, the concept of ligand batches comes into play.
+                        A ligand batch links a ligand to the following batch
+                        related properties: labeling, concentration, buffer, pH, purity and production date.
+                        Also for ligand batches, a sid has to be defined. Keep in mind that ligand batches are
+                        particularly important, because their sids are later on used for referencing in the gal files.
+                        Ligand batches, can be of five
+                        different types depending on what kind of ligand they are linked to: virus batch, peptide batch,
+                        antibody batch, complex batch and buffer batch. The buffer batch is a batch without a link to
+                        a ligand. The remaining four should be self explaining.
                         </p>
 
                     <p>
@@ -112,10 +149,11 @@
                         supposed to deliver a so called gal file, which maps a ligand batch to a location on
                         a microwell plate. Since no ligands are present in any well, we fill all entries in the table
                         with "No". Note that the table has to have the same dimensions as the microwell plate.
-                        For microarrays it might be more reasonable to provide a gal file, which is fine too.
+                        For microarrays it might be more reasonable to provide a gal file, which is fine too. This table
+                        is saved as "lig_fix_XXX.txt" in the main directory of the measurement.
                     </p>
-                        <table>
-                            <caption>Fixed Ligand Batches Location on Microwell Plate</caption>
+                        <table class="table table-striped">
+                            <caption > Fixed Ligand Batches Location on Microwell Plate </caption>
                         <thead><tr><th></th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th></tr></thead><tbody>
                          <tr><th>A</th><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
                          <tr><th>B</th><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
@@ -126,19 +164,20 @@
                          <tr><th>G</th><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
                          <tr><th>H</th><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
                         </tbody></table>
-
                     <p>
                         Alright, fixed ligand location within the microwell are provided. Let's continue with the analyt
-                        ligand location. First, we check which ligands were incubated. For this example we decided to
-                        pick the following: X31, Panama, California. First, one has to check if these viruses are already
-                        listed in the database. Therefore, let's open a new tab with the virus list by following this
-                        <a href="{{ url('viruses') }}"> link </a> or by clicking on Ligands and than on Virus in the
+                        ligand location. First, we check which analyts were incubated. For this example, we decided to
+                        pick the following: X31, Panama, California. One has to check if these viruses are already
+                        listed in the database. Therefore, let's open a new tab with the virus list by clicking the
+                        following <a href="{{ url('viruses') }}"> link </a> or on "Ligands" and than on "Virus" in the
                         navigation menu. If the virus is already present in the database just note the sid and go on,
-                        otherwise search for the virus in <a href="https://www.ncbi.nlm.nih.gov/taxonomy">here</a> and
-                        provide the taxonomy id for the virus and the following additional informations.
+                        otherwise search for the virus <a href="https://www.ncbi.nlm.nih.gov/taxonomy">here</a> and
+                        provide the taxonomy id  and the following additional informations for the virus. Virus informations
+                        are general informations and once provided, they can be used in any measurement. <a href="{{ url('virus_new') }}"> New viruses</a> and
+                        in general ligands can be created by clicking on the  green plus symbol in each ligands table.
                     </p>
 
-                    <table >
+                    <table class="table table-striped">
                         <caption>Viruses</caption>
                     <thead><tr class="tableizer-firstrow"><th>sid</th><th>comment</th><th>tax_id</th><th>link_db</th><th>subtype</th><th>isolation_country</th><th>collection_date</th><th>strain</th></tr></thead><tbody>
                      <tr><td>387139</td><td>&nbsp;</td><td>387139</td><td>https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=387139</td><td>H3N2</td><td>Japan</td><td>1968</td><td>A/Aichi/2/68 </td></tr>
@@ -150,92 +189,1214 @@
 
                     Ok, now let's decide what kind of concentration we want to use or more generally speaking define the
                     analyt batches. We are planning to incubate the three viruses in various concentrations but also
-                    some buffer as refrence. First, one has to check again if the batches are allready defined.
-                    Therefore, let's open a new tab with the virus batch list by following this
-                    <a href="{{ url('viruses') }}"> link </a> or by clicking on Batches and than on Virus in the
-                        navigation menu. In the following, we provide some batches which we want to use for
-                        the incubation. Pay attention, that the collumn "ligand" no takes the preselected ligands sids.
-                    <table >
+                    some buffer as reference. First, one has to check again if the batches are already defined.
+                    Therefore, let's open a new tab with the virus batch list by clicking on the following
+                    <a href="{{ url('virusbatches') }}"> link </a> or on "Batches" and than on "Virus" in the
+                        navigation menu. In the following, we provide some batches, which we want to use for
+                        the incubation. Take a closer look on the collumn "ligand". It takes the preselected ligands sids.
+                        Again, you can create theses ligand batches by clicking in the green plus symbole on
+                    <a href="{{ url('virusbatches') }}"> virus batches side </a> or on any other ligand batches side.
+                    <table id ="virusbatch" class="table table-striped">
                         <caption>Virus Batches</caption>
-                    <thead><tr><th>sid</th><th>labeling</th><th>concentration</th><th>buffer</th><th>ph</th><th>purity</th><th>produced_by</th><th>production_date</th><th>comment</th><th>ligand</th><th>passage_history</th><th>active</th></tr></thead><tbody>
-                     <tr><td>Pan_RKI_1</td><td>&nbsp;</td><td>1</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Pan_RKI_0.5</td><td>&nbsp;</td><td>0.5</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Pan_RKI_0.25</td><td>&nbsp;</td><td>0.25</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Pan_RKI_0.125</td><td>&nbsp;</td><td>0.125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Pan_RKI_0.0625</td><td>&nbsp;</td><td>0.0625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Pan_RKI_0.03125</td><td>&nbsp;</td><td>0.03125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Pan_RKI_0.015625</td><td>&nbsp;</td><td>0.015625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Pan_RKI_0.0078125</td><td>&nbsp;</td><td>0.0078125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Pan_RKI_0.00390625</td><td>&nbsp;</td><td>0.00390625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Pan_RKI_0.001953125</td><td>&nbsp;</td><td>0.001953125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Pan_RKI_0.0009765625</td><td>&nbsp;</td><td>0.0009765625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Pan_RKI_0.00048828125</td><td>&nbsp;</td><td>0.0004882813</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>X31_RKI_1</td><td>&nbsp;</td><td>1</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>X31_RKI_0.5</td><td>&nbsp;</td><td>0.5</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>X31_RKI_0.25</td><td>&nbsp;</td><td>0.25</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>X31_RKI_0.125</td><td>&nbsp;</td><td>0.125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>X31_RKI_0.0625</td><td>&nbsp;</td><td>0.0625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>X31_RKI_0.03125</td><td>&nbsp;</td><td>0.03125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>X31_RKI_0.015625</td><td>&nbsp;</td><td>0.015625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>X31_RKI_0.0078125</td><td>&nbsp;</td><td>0.0078125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>X31_RKI_0.00390625</td><td>&nbsp;</td><td>0.00390625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>X31_RKI_0.001953125</td><td>&nbsp;</td><td>0.001953125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>X31_RKI_0.0009765625</td><td>&nbsp;</td><td>0.0009765625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>X31_RKI_0.00048828125</td><td>&nbsp;</td><td>0.0004882813</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Call_RKI_1</td><td>&nbsp;</td><td>1</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Call_RKI_0.5</td><td>&nbsp;</td><td>0.5</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Call_RKI_0.25</td><td>&nbsp;</td><td>0.25</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Call_RKI_0.125</td><td>&nbsp;</td><td>0.125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Call_RKI_0.0625</td><td>&nbsp;</td><td>0.0625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Call_RKI_0.03125</td><td>&nbsp;</td><td>0.03125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Call_RKI_0.015625</td><td>&nbsp;</td><td>0.015625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Call_RKI_0.0078125</td><td>&nbsp;</td><td>0.0078125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Call_RKI_0.00390625</td><td>&nbsp;</td><td>0.00390625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Call_RKI_0.001953125</td><td>&nbsp;</td><td>0.001953125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Call_RKI_0.0009765625</td><td>&nbsp;</td><td>0.0009765625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td>Call_RKI_0.00048828125</td><td>&nbsp;</td><td>0.0004882813</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
-                     <tr><td></td></tr>
-                    </tbody></table>
+                    <thead><tr><th>sid</th><th>labeling</th><th>concentration</th><th>buffer</th><th>ph</th><th>purity</th><th>produced_by</th><th>production_date</th><th>comment</th><th>ligand</th><th>passage_history</th><th>active</th></tr></thead>
+                    <tbody>
+                         <tr><td>Pan_RKI_1</td><td>&nbsp;</td><td>1</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Pan_RKI_0.5</td><td>&nbsp;</td><td>0.5</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Pan_RKI_0.25</td><td>&nbsp;</td><td>0.25</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Pan_RKI_0.125</td><td>&nbsp;</td><td>0.125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Pan_RKI_0.0625</td><td>&nbsp;</td><td>0.0625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Pan_RKI_0.03125</td><td>&nbsp;</td><td>0.03125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Pan_RKI_0.015625</td><td>&nbsp;</td><td>0.015625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Pan_RKI_0.0078125</td><td>&nbsp;</td><td>0.0078125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Pan_RKI_0.00390625</td><td>&nbsp;</td><td>0.00390625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Pan_RKI_0.001953125</td><td>&nbsp;</td><td>0.001953125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Pan_RKI_0.0009765625</td><td>&nbsp;</td><td>0.0009765625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Pan_RKI_0.00048828125</td><td>&nbsp;</td><td>0.0004882813</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>381513</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>X31_RKI_1</td><td>&nbsp;</td><td>1</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>X31_RKI_0.5</td><td>&nbsp;</td><td>0.5</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>X31_RKI_0.25</td><td>&nbsp;</td><td>0.25</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>X31_RKI_0.125</td><td>&nbsp;</td><td>0.125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>X31_RKI_0.0625</td><td>&nbsp;</td><td>0.0625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>X31_RKI_0.03125</td><td>&nbsp;</td><td>0.03125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>X31_RKI_0.015625</td><td>&nbsp;</td><td>0.015625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>X31_RKI_0.0078125</td><td>&nbsp;</td><td>0.0078125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>X31_RKI_0.00390625</td><td>&nbsp;</td><td>0.00390625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>X31_RKI_0.001953125</td><td>&nbsp;</td><td>0.001953125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>X31_RKI_0.0009765625</td><td>&nbsp;</td><td>0.0009765625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>X31_RKI_0.00048828125</td><td>&nbsp;</td><td>0.0004882813</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>387139</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Call_RKI_1</td><td>&nbsp;</td><td>1</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Call_RKI_0.5</td><td>&nbsp;</td><td>0.5</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Call_RKI_0.25</td><td>&nbsp;</td><td>0.25</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Call_RKI_0.125</td><td>&nbsp;</td><td>0.125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Call_RKI_0.0625</td><td>&nbsp;</td><td>0.0625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Call_RKI_0.03125</td><td>&nbsp;</td><td>0.03125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Call_RKI_0.015625</td><td>&nbsp;</td><td>0.015625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Call_RKI_0.0078125</td><td>&nbsp;</td><td>0.0078125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Call_RKI_0.00390625</td><td>&nbsp;</td><td>0.00390625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Call_RKI_0.001953125</td><td>&nbsp;</td><td>0.001953125</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Call_RKI_0.0009765625</td><td>&nbsp;</td><td>0.0009765625</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                         <tr><td>Call_RKI_0.00048828125</td><td>&nbsp;</td><td>0.0004882813</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>Virus concentration dependence measurements at RKI</td><td>1316510</td><td>Egg</td><td>TRUE</td></tr>
+                        </tbody>
+                    </table>
 
-                    <table>
+                    <table class="table table-striped">
                         <caption>Buffer Batches</caption>
-                    <thead><tr><th>sid</th><th>Buffer-001</th><th>ph</th><th>produced_by</th><th>production_date</th><th>comment</th></tr></thead><tbody>
-                     <tr><td>buffer001</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>ssandra</td><td>19.7.2017</td><td></td></tr>
+                    <thead><tr><th>sid</th><th>buffer</th><th>ph</th><th>produced_by</th><th>production_date</th><th>comment</th></tr></thead><tbody>
+                     <tr><td>Buffer-001</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>ssandra</td><td>19.7.2017</td><td></td></tr>
                     </tbody></table>
 
+                    For the buffer batch no ligands have to be provided.
                     Alright, since the batches are now defined we can continue with the gal file for the analyt.
+                    In this example we again display a rows and columns representation of the gal file.
                     Just as a reminder, the gal file maps a ligand batch to a location on a microwell plate.
-                    <table>
+                    <table id="test" class="table table-striped">
                         <caption>Analyt Batches Location on Microwell Plate</caption>
                     <thead><tr><th></th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th></tr></thead><tbody>
-                     <tr><td>A</td><td>Pan_RKI_1</td><td>Pan_RKI_0.5</td><td>Pan_RKI_0.25</td><td>Pan_RKI_0.125</td><td>Pan_RKI_0.0625</td><td>Pan_RKI_0.03125</td><td>Pan_RKI_0.015625</td><td>Pan_RKI_0.0078125</td><td>Pan_RKI_0.00390625</td><td>Pan_RKI_0.001953125</td><td>Pan_RKI_0.0009765625</td><td>Pan_RKI_0.00048828125</td></tr>
-                     <tr><td>B</td><td>Pan_RKI_1</td><td>Pan_RKI_0.5</td><td>Pan_RKI_0.25</td><td>Pan_RKI_0.125</td><td>Pan_RKI_0.0625</td><td>Pan_RKI_0.03125</td><td>Pan_RKI_0.015625</td><td>Pan_RKI_0.0078125</td><td>Pan_RKI_0.00390625</td><td>Pan_RKI_0.001953125</td><td>Pan_RKI_0.0009765625</td><td>Pan_RKI_0.00048828125</td></tr>
-                     <tr><td>C</td><td>X31_RKI_1</td><td>X31_RKI_0.5</td><td>X31_RKI_0.25</td><td>X31_RKI_0.125</td><td>X31_RKI_0.0625</td><td>X31_RKI_0.03125</td><td>X31_RKI_0.015625</td><td>X31_RKI_0.0078125</td><td>X31_RKI_0.00390625</td><td>X31_RKI_0.001953125</td><td>X31_RKI_0.0009765625</td><td>X31_RKI_0.00048828125</td></tr>
-                     <tr><td>D</td><td>X31_RKI_1</td><td>X31_RKI_0.5</td><td>X31_RKI_0.25</td><td>X31_RKI_0.125</td><td>X31_RKI_0.0625</td><td>X31_RKI_0.03125</td><td>X31_RKI_0.015625</td><td>X31_RKI_0.0078125</td><td>X31_RKI_0.00390625</td><td>X31_RKI_0.001953125</td><td>X31_RKI_0.0009765625</td><td>X31_RKI_0.00048828125</td></tr>
-                     <tr><td>E</td><td>Call_RKI_1</td><td>Call_RKI_0.5</td><td>Call_RKI_0.25</td><td>Call_RKI_0.125</td><td>Call_RKI_0.0625</td><td>Call_RKI_0.03125</td><td>Call_RKI_0.015625</td><td>Call_RKI_0.0078125</td><td>Call_RKI_0.00390625</td><td>Call_RKI_0.001953125</td><td>Call_RKI_0.0009765625</td><td>Call_RKI_0.00048828125</td></tr>
-                     <tr><td>F</td><td>Call_RKI_1</td><td>Call_RKI_0.5</td><td>Call_RKI_0.25</td><td>Call_RKI_0.125</td><td>Call_RKI_0.0625</td><td>Call_RKI_0.03125</td><td>Call_RKI_0.015625</td><td>Call_RKI_0.0078125</td><td>Call_RKI_0.00390625</td><td>Call_RKI_0.001953125</td><td>Call_RKI_0.0009765625</td><td>Call_RKI_0.00048828125</td></tr>
-                     <tr><td>G</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
-                     <tr><td>H</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td></tr>
+                     <tr><th>A</th><td>Pan_RKI_1</td><td>Pan_RKI_0.5</td><td>Pan_RKI_0.25</td><td>Pan_RKI_0.125</td><td>Pan_RKI_0.0625</td><td>Pan_RKI_0.03125</td><td>Pan_RKI_0.015625</td><td>Pan_RKI_0.0078125</td><td>Pan_RKI_0.00390625</td><td>Pan_RKI_0.001953125</td><td>Pan_RKI_0.0009765625</td><td>Pan_RKI_0.00048828125</td></tr>
+                     <tr><th>B</th><td>Pan_RKI_1</td><td>Pan_RKI_0.5</td><td>Pan_RKI_0.25</td><td>Pan_RKI_0.125</td><td>Pan_RKI_0.0625</td><td>Pan_RKI_0.03125</td><td>Pan_RKI_0.015625</td><td>Pan_RKI_0.0078125</td><td>Pan_RKI_0.00390625</td><td>Pan_RKI_0.001953125</td><td>Pan_RKI_0.0009765625</td><td>Pan_RKI_0.00048828125</td></tr>
+                     <tr><th>C</th><td>X31_RKI_1</td><td>X31_RKI_0.5</td><td>X31_RKI_0.25</td><td>X31_RKI_0.125</td><td>X31_RKI_0.0625</td><td>X31_RKI_0.03125</td><td>X31_RKI_0.015625</td><td>X31_RKI_0.0078125</td><td>X31_RKI_0.00390625</td><td>X31_RKI_0.001953125</td><td>X31_RKI_0.0009765625</td><td>X31_RKI_0.00048828125</td></tr>
+                     <tr><th>D</th><td>X31_RKI_1</td><td>X31_RKI_0.5</td><td>X31_RKI_0.25</td><td>X31_RKI_0.125</td><td>X31_RKI_0.0625</td><td>X31_RKI_0.03125</td><td>X31_RKI_0.015625</td><td>X31_RKI_0.0078125</td><td>X31_RKI_0.00390625</td><td>X31_RKI_0.001953125</td><td>X31_RKI_0.0009765625</td><td>X31_RKI_0.00048828125</td></tr>
+                     <tr><th>E</th><td>Call_RKI_1</td><td>Call_RKI_0.5</td><td>Call_RKI_0.25</td><td>Call_RKI_0.125</td><td>Call_RKI_0.0625</td><td>Call_RKI_0.03125</td><td>Call_RKI_0.015625</td><td>Call_RKI_0.0078125</td><td>Call_RKI_0.00390625</td><td>Call_RKI_0.001953125</td><td>Call_RKI_0.0009765625</td><td>Call_RKI_0.00048828125</td></tr>
+                     <tr><th>F</th><td>Call_RKI_1</td><td>Call_RKI_0.5</td><td>Call_RKI_0.25</td><td>Call_RKI_0.125</td><td>Call_RKI_0.0625</td><td>Call_RKI_0.03125</td><td>Call_RKI_0.015625</td><td>Call_RKI_0.0078125</td><td>Call_RKI_0.00390625</td><td>Call_RKI_0.001953125</td><td>Call_RKI_0.0009765625</td><td>Call_RKI_0.00048828125</td></tr>
+                     <tr><th>G</th><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+                     <tr><th>H</th><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td></tr>
                     </tbody></table>
+                    This information is saved as "lig_mob_XXX.txt" in the main directory of the measuremnt.
+                    We completed all relevant ligand related information for our elisa experiment.
+
+                    <h3>2.3 Elisa Process</h3>
+                    Let's start with a general description of a process.
+                    The process is described by process steps within a measurement.
+                    A process step can be of various types: blocking, drying, incubating-analyt, incubating,
+                    quenching, scanning, spotting and washing.
+                    Each step is described by  a sid , method, temperature and comment. Some of the steps take also the
+                    information substance and duration. Let's take a look at each step.
+
+                    <table id="process" class="table table-striped ">
+                            <thead>
+                            <tr>
+                                <th>Step Type</th>
+                                <th>Sid</th>
+                                <th>Method</th>
+                                <th>Temperature</th>
+                                <th>Comment</th>
+                                <th>Substance</th>
+                                <th>Duration</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th> <i class="fa fa-pause" aria-hidden="true"></i> Blocking </th>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                </tr>
+
+                                <tr>
+                                    <th><i class="fa fa-bullhorn" aria-hidden="true"> </i> "Drying </th>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                </tr>
+
+                                <tr>
+                                    <th> <i class="fa fa-tint" aria-hidden="true"></i> Incubating-Analyt </th>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-ban text-danger" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                </tr>
+
+                                <tr>
+                                    <th> <i class="fa fa-tint" aria-hidden="true"></i> Incubating </th>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                </tr>
+
+                                <tr>
+                                    <th><i class="fa fa-chain-broken" aria-hidden="true"></i> Quenching </th>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                </tr>
+
+                                 <tr>
+                                    <th> <i class="fa fa-camera" aria-hidden="true"></i> Scanning </th><td><i class="fa fa-check text-success" aria-hidden="true"></i> </td><td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-ban text-danger" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-ban text-danger" aria-hidden="true"></i> </td>
+                                </tr>
+
+                                <tr>
+                                    <th><i class="fa fa-anchor fa-fw" aria-hidden="true"> </i> "Spotting / Immobilzation </th>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-ban text-danger" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-ban text-danger" aria-hidden="true"></i> </td>
+                                </tr>
+
+                                <tr>
+                                    <th><i class="fa fa-shower" aria-hidden="true"> </i> Washing </th>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                    <td><i class="fa fa-check text-success" aria-hidden="true"></i> </td>
+                                </tr>
+                            </tbody>
+                    </table>
+                    <p> Any defined process step is reusable also in different processes. Thus, it is a general
+                        information. A process can contain many steps in an arbitrary ordering and with additional
+                        experiment specific informations. We explain this concept based on our example.
+                        So, let's go back to our elisa example. </p>
+                    <p>
+                        Typically, the first step in the process is the spotting/immobilization step. However,
+                        no peptides are immobilized in this example. Instead, the first step is the incubation of an
+                        antibody. Steps are
+                        reusable elements, so let's check first if we declared a similar step
+                        <a href="{{ url('steps') }}"> here </a>. If not, you can define a new step again by clicking on
+                        the green plus symbole.  This workflow applies to all the following
+                        steps. I give now a list of steps, which we use in this examplary process.
+                    </p>
+
+                    <table id="process" class="table table-striped ">
+                            <thead>
+                            <tr>
+                                <th>Step Type</th>
+                                <th>Sid</th>
+                                <th>Method</th>
+                                <th>Temperature</th>
+                                <th>Comment</th>
+                                <th>Substance</th>
+                                <th>Duration</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th> <i class="fa fa-tint" aria-hidden="true"></i> Incubating-Analyt </th>
+                                    <td> IA01 </td>
+                                    <td> Air displacement pipette 50 micro liter </td>
+                                    <td> 22 °C </td>
+                                    <td> </td>
+                                    <td> <i class="fa fa-ban text-danger" aria-hidden="true"></i> </td>
+                                    <td> 00:01:00:00 (dd:hh:mm:ss) </td>
+                                </tr>
+
+                                <tr>
+                                    <th> <i class="fa fa-pause" aria-hidden="true"></i> Blocking </th>
+                                    <td> B01 </td>
+                                    <td> Air displacement pipette 100 micro liter </td>
+                                    <td> 37 °C </td>
+                                    <td> </td>
+                                    <td> MB PBST </td>
+                                    <td> 00:01:00:00 </td>
+                                </tr>
+
+                                <tr>
+                                    <th><i class="fa fa-shower" aria-hidden="true"> </i> Washing </th>
+                                    <td> W01 </td>
+                                    <td> Air displacement pipette  300 micro liter </td>
+                                    <td> 22°C </td>
+                                    <td>  </td>
+                                    <td> PBST </td>
+                                    <td> 00:00:00:30</td>
+                                </tr>
+
+                                <tr>
+                                    <th> <i class="fa fa-tint" aria-hidden="true"></i> Incubating </th>
+                                    <td> I01 </td>
+                                    <td> Air displacement pipette  50 micro liter</td>
+                                    <td> 37 °C </td>
+                                    <td>  </td>
+                                    <td> 1:1000 Antibody H1N1 Goat Serotec IAV </td>
+                                    <td> 00:01:00:00  </td>
+                                </tr>
+                                <tr>
+                                    <th> <i class="fa fa-tint" aria-hidden="true"></i> Incubating </th>
+                                    <td> I02 </td>
+                                    <td> Air displacement pipette 50 micro liter</td>
+                                    <td> 37 °C </td>
+                                    <td>  </td>
+                                    <td> 1:1000 2.AK Rabbit-Anti-Goat HRP (Dako) </td>
+                                    <td> 00:01:00:00  </td>
+                                </tr>
+
+                                <tr>
+                                    <th> <i class="fa fa-tint" aria-hidden="true"></i> Incubating </th>
+                                    <td> I03 </td>
+                                    <td> Air displacement pipette 50 micro liter </td>
+                                    <td> </td>
+                                    <td> Substrate Incubation </td>
+                                    <td> TMB </td>
+                                    <td> 00:01:00:00  </td>
+                                </tr>
+
+                                <tr>
+                                    <th> <i class="fa fa-tint" aria-hidden="true"></i> Incubating </th>
+                                    <td> I04 </td>
+                                    <td> Air displacement pipette 50 micro liter </td>
+                                    <td>  </td>
+                                    <td> Stopping Substance Incubation </td>
+                                    <td> H2SO4 </td>
+                                    <td>   </td>
+                                </tr>
+
+                                <tr>
+                                    <th> <i class="fa fa-camera" aria-hidden="true"></i> Scanning </th>
+                                    <td> SC01 </td>
+                                    <td> Smart Microplate Reader Biocompare 450nm </td>
+                                    <td> </td>
+                                    <td>   </td>
+                                    <td> <i class="fa fa-ban text-danger" aria-hidden="true"></i> </td>
+                                    <td> <i class="fa fa-ban text-danger" aria-hidden="true"></i> </td>
+                                </tr>
+                            </tbody>
+                    </table>
+
+                    So, now that we defined all steps used in the process, let's include theses steps into a process.
+                    Therefore, we take the sid and fill them into a table, which can take even more additional
+                    informations about the step.
+
+                    <table class="table table-striped ">
+                      <tr>
+                        <th>step</th>
+                        <th>index</th>
+                        <th>user</th>
+                        <th>start</th>
+                        <th>image</th>
+                        <th>intensities</th>
+                        <th>comment</th>
+                      </tr>
+                      <tr>
+                        <td>IA01</td>
+                        <td>0</td>
+                        <td>ssaenger</td>
+                        <td>2017.09.27, 09:30 </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>B01</td>
+                        <td>1</td>
+                        <td>ssaenger</td>
+                        <td>2017.09.27, 10:30 </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>I01</td>
+                        <td>2</td>
+                        <td>ssaenger</td>
+                        <td>2017.09.27, 10:30</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>W01</td>
+                        <td>3</td>
+                        <td>ssaenger</td>
+                        <td>2017.09.27, 11:30</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>W01</td>
+                        <td>4</td>
+                        <td>ssaenger</td>
+                        <td>2017.09.27, 11:35</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>W01</td>
+                        <td>5</td>
+                        <td>ssaenger</td>
+                        <td>2017.09.27, 11:40</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>I02</td>
+                        <td>6</td>
+                        <td>ssaenger</td>
+                        <td>2017.09.27, 11:45</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>W01</td>
+                        <td>7</td>
+                        <td>ssaenger</td>
+                        <td>2017.09.27, 12:45</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>W01</td>
+                        <td>8</td>
+                        <td>ssaenger</td>
+                        <td>2017.09.27, 12:50</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>W01</td>
+                        <td>9</td>
+                        <td>ssaenger</td>
+                        <td>2017.09.27, 12:55</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>I03</td>
+                        <td>10</td>
+                        <td>ssaenger</td>
+                        <td>2017.09.27, 13:00</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>I04</td>
+                        <td>11</td>
+                        <td>ssaenger</td>
+                        <td>2017.09.27, 13:10</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>SC01</td>
+                        <td>12</td>
+                        <td>ssaenger</td>
+                        <td>2017.09.27, 14:00</td>
+                        <td></td>
+                        <td>intensity_final.tsv</td>
+                        <td></td>
+                      </tr>
+                    </table>
+
+                    I go quickly through the table above. The first column "step" takes the sid of the step
+                    defined before hand.
+                    The second column "index" describes the chronological position of the step in the process.
+                    The "user" is the person who conducted this step. "Start" is the starting time of the step. The "image"
+                    field is left blank for every step in this example. Normally it takes the name of an image file,
+                    which shall be saved in the main directory of the measurement folder. Generally it is reasonable to
+                    use it for microarrays within the scanning step. There, images not intensities are the output of
+                    the reader. In the microarray measurement example (4.3) this is described in more detail.
+                    The opposite applies to microwell plates. The intensity file name can be plugin in the "intensity"
+                    field. Last, a "comment" can be written for every step.
+                    With all these informations in place we have complete all the relavant information
+                    related to the process. The above table has to be saved as "steps.tsv" into the main directory of the
+                    measurement.
+                    <h3>2.4. Elisa Results</h3>
+                    In this section, we are going to deal with informations related to the measurement results.
+                    Measurement results describe the intensities resulting from the measurement. In this example we
+                    measured the intensities during the last step of our process and saved it as "intensity_final.tsv"
+                    in the main folder of the measurement. If we want to use the file we have to save it again in a
+                    folder within the results folder. It might seam to be a redundant procedure.
+                    However, the aim is to decouple the results from the process. In the microwell example, this approach
+                    might become clearer. There, multiple scans have been performed during one process. From theses scans
+                    three different results have been optained. Often in might be interessting to subtract the background
+                    or to do even more sophisticated post processing of the results. This concept makes it possible to save
+                    the results in the database aswell.
+
+                     
+                    of the measured The measurement results meta and intensity.
+
+                    <h3>2.5 Elisa Raw Docs</h3>
+                    Just like for the studies section, a measurement can contain additional
+                    files (paper, powerpoint, images , ...) , which do not fit into
+                    the database structure provided so far. Just upload them into the folder "raw_docs". For this elisa
+                    measurement I dont have any additional data so we just leave the folder empty. We have finished with
+                    the this measurement.  Let's continue with the next measuremnt.
+
+                    <h2>3.  Microwell Measurement </h2>
+                    The microwell measurement will be in parts similar to the elisa measurement. The similar parts can
+                    be reused for this measurement. In particular we are using the same gal file of the analyt and some
+                    process steps which we defined beforehand. Let's see how this works. For any measurement the same
+                    five steps have to be performed: meta, ligands, process, results and raw_docs. So let's start again
+                    with the meta.
+                    <h3>3.1 Microwell Meta</h3>
+                    <table class="table table-striped">
+                        <tr>
+                            <th> sid </th>
+                            <td> 170929-tutorial-microwell-1</td>
+                        </tr>
+                        <tr>
+                            <th>batch_sid</th>
+                            <td> 161118</td>
+                        </tr>
+                        <tr>
+                            <th> measurement_type </th>
+                            <td> microwell </td>
+                        </tr>
+                        <tr>
+                            <th> user </th>
+                            <td> hmemczak </td>
+                        </tr>
+                        <tr>
+                            <th> surface_substance </th>
+                            <td> 3D-NHS </td>
+                        </tr>
+                        <tr>
+                            <th>manufacturer</th>
+                            <td> PolyAn </td>
+                        </tr>
+                    </table>
+                    <h3>3.2 Microwell Ligands</h3>
+                    Now to the ligands. In this measurement, we have decided to use the following peptides.
+                    <table class="table table-striped">
+                        <caption>Peptides</caption>
+                    <thead>
+                    <tr>
+                        <th>sid</th>
+                        <th>linker</th>
+                        <th>spacer</th>
+                        <th>sequence</th>
+                        <th>c-terminus</th>
+                        <th>name</th>
+                        <th>comment</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                    <td>P001</td>
+                    <td>Peptide 6</td>
+                    <td>KKK</td>
+                    <td>&nbsp;</td>
+                    <td>FYDYDVFY</td>
+                    <td>amide</td>
+                    <td>PeB-Lys</td>
+                    </tr>
+                    <tr>
+                    <td>P008</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>amide</td>
+                    <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                    <td>P009</td>
+                    <td>&nbsp;</td>
+                    <td>KKK</td>
+                    <td>&nbsp;</td>
+                    <td>LYGYDVFF</td>
+                    <td>amide</td>
+                    <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                    <td>P010</td>
+                    <td>&nbsp;</td>
+                    <td>KKK</td>
+                    <td>&nbsp;</td>
+                    <td>FYGYDVAF</td>
+                    <td>amide</td>
+                    <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                    <td>P011</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>amide</td>
+                    <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                    <td>P012</td>
+                    <td>Fetuin</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>Fetuin</td>
+                    </tr>
+                    <tr>
+                    <td>P013</td>
+                    <td>&nbsp;</td>
+                    <td>C-KK</td>
+                    <td>&nbsp;</td>
+                    <td>FYGYDVFF</td>
+                    <td>amide</td>
+                    <td>PN</td>
+                    </tr>
 
 
+                    </tbody>
+                    </table>
+                    For the ligand batches these are the choises:
+                    <table id ="peptidebatch" class="table table-striped">
+                        <caption>Peptide Batches</caption>
+                    <thead>
+                    <tr>
+                        <th>sid</th>
+                        <th>labeling</th>
+                        <th>concentration</th>
+                        <th>buffer</th>
+                        <th>ph</th>
+                        <th>purity</th>
+                        <th>produced_by</th>
+                        <th>production_date</th>
+                        <th>comment</th>
+                        <th>ligand</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                    <td>2</td>
+                    <td>L001</td>
+                    <td>&nbsp;</td>
+                    <td>0.1</td>
+                    <td>natriumhydrogencarbonat</td>
+                    <td>8.5</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>2017-05-09</td>
+                    <td>&nbsp;</td>
+                    <td>P012</td>
+                    </tr>
+                    <tr>
+                    <td>3</td>
+                    <td>L002</td>
+                    <td>&nbsp;</td>
+                    <td>1</td>
+                    <td>natriumhydrogencarbonat</td>
+                    <td>8.5</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>P001</td>
+                    </tr>
+                    <tr>
+                    <td>4</td>
+                    <td>L003</td>
+                    <td>&nbsp;</td>
+                    <td>1</td>
+                    <td>natriumhydrogencarbonat</td>
+                    <td>8.5</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>P008</td>
+                    </tr>
+                    <tr>
+                    <td>5</td>
+                    <td>L004</td>
+                    <td>&nbsp;</td>
+                    <td>1</td>
+                    <td>natriumhydrogencarbonat</td>
+                    <td>8.5</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>P009</td>
+                    </tr>
+                    <tr>
+                    <td>6</td>
+                    <td>L005</td>
+                    <td>&nbsp;</td>
+                    <td>1</td>
+                    <td>natriumhydrogencarbonat</td>
+                    <td>8.5</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>P010</td>
+                    </tr>
+                    <tr>
+                    <td>7</td>
+                    <td>L006</td>
+                    <td>&nbsp;</td>
+                    <td>1</td>
+                    <td>natriumhydrogencarbonat</td>
+                    <td>8.5</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>P011</td>
+                    </tr>
+                    <tr>
+                    <td>8</td>
+                    <td>L007</td>
+                    <td>&nbsp;</td>
+                    <td>0.07</td>
+                    <td>natriumhydrogencarbonat</td>
+                    <td>8.5</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>P013</td>
+                    </tr>
+                    </tbody>
+                    </table>
+                    <table class="table table-striped">
+                        <caption>Buffer Batches</caption>
+                    <thead><tr><th>sid</th><th>buffer</th><th>ph</th><th>produced_by</th><th>production_date</th><th>comment</th></tr></thead><tbody>
+                     <tr><td>Buffer-001</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>ssandra</td><td>19.7.2017</td><td></td></tr>
+                    </tbody></table>
+                    The field "ligand" again takes the sids from the predefined peptides. Let's continue
+                    with the peptides gal file. In contrast to the elisa example I show here the format of the gal file.
+                    The representations from the elisa example ,however , would be fine too.
+                    <table id="gal_fix_lig" class="table table-striped">
+                    <thead><tr><th>ID</th><th>Block</th><th>Row</th><th>Column</th><th>Name</th></tr></thead>
+                    <tbody>
+     <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>L002</td></tr>
+     <tr><td>2</td><td>1</td><td>1</td><td>2</td><td>L002</td></tr>
+     <tr><td>3</td><td>1</td><td>1</td><td>3</td><td>L002</td></tr>
+     <tr><td>4</td><td>1</td><td>1</td><td>4</td><td>L002</td></tr>
+     <tr><td>5</td><td>1</td><td>1</td><td>5</td><td>L002</td></tr>
+     <tr><td>6</td><td>1</td><td>1</td><td>6</td><td>L002</td></tr>
+     <tr><td>7</td><td>1</td><td>1</td><td>7</td><td>L002</td></tr>
+     <tr><td>8</td><td>1</td><td>1</td><td>8</td><td>L002</td></tr>
+     <tr><td>9</td><td>1</td><td>1</td><td>9</td><td>L002</td></tr>
+     <tr><td>10</td><td>1</td><td>1</td><td>10</td><td>L002</td></tr>
+     <tr><td>11</td><td>1</td><td>1</td><td>11</td><td>L002</td></tr>
+     <tr><td>12</td><td>1</td><td>1</td><td>12</td><td>L002</td></tr>
+     <tr><td>13</td><td>1</td><td>2</td><td>1</td><td>L003</td></tr>
+     <tr><td>14</td><td>1</td><td>2</td><td>2</td><td>L003</td></tr>
+     <tr><td>15</td><td>1</td><td>2</td><td>3</td><td>L003</td></tr>
+     <tr><td>16</td><td>1</td><td>2</td><td>4</td><td>L003</td></tr>
+     <tr><td>17</td><td>1</td><td>2</td><td>5</td><td>L003</td></tr>
+     <tr><td>18</td><td>1</td><td>2</td><td>6</td><td>L003</td></tr>
+     <tr><td>19</td><td>1</td><td>2</td><td>7</td><td>L003</td></tr>
+     <tr><td>20</td><td>1</td><td>2</td><td>8</td><td>L003</td></tr>
+     <tr><td>21</td><td>1</td><td>2</td><td>9</td><td>L003</td></tr>
+     <tr><td>22</td><td>1</td><td>2</td><td>10</td><td>L003</td></tr>
+     <tr><td>23</td><td>1</td><td>2</td><td>11</td><td>L003</td></tr>
+     <tr><td>24</td><td>1</td><td>2</td><td>12</td><td>L003</td></tr>
+     <tr><td>25</td><td>1</td><td>3</td><td>1</td><td>L004</td></tr>
+     <tr><td>26</td><td>1</td><td>3</td><td>2</td><td>L004</td></tr>
+     <tr><td>27</td><td>1</td><td>3</td><td>3</td><td>L004</td></tr>
+     <tr><td>28</td><td>1</td><td>3</td><td>4</td><td>L004</td></tr>
+     <tr><td>29</td><td>1</td><td>3</td><td>5</td><td>L004</td></tr>
+     <tr><td>30</td><td>1</td><td>3</td><td>6</td><td>L004</td></tr>
+     <tr><td>31</td><td>1</td><td>3</td><td>7</td><td>L004</td></tr>
+     <tr><td>32</td><td>1</td><td>3</td><td>8</td><td>L004</td></tr>
+     <tr><td>33</td><td>1</td><td>3</td><td>9</td><td>L004</td></tr>
+     <tr><td>34</td><td>1</td><td>3</td><td>10</td><td>L004</td></tr>
+     <tr><td>35</td><td>1</td><td>3</td><td>11</td><td>L004</td></tr>
+     <tr><td>36</td><td>1</td><td>3</td><td>12</td><td>L004</td></tr>
+     <tr><td>37</td><td>1</td><td>4</td><td>1</td><td>L005</td></tr>
+     <tr><td>38</td><td>1</td><td>4</td><td>2</td><td>L005</td></tr>
+     <tr><td>39</td><td>1</td><td>4</td><td>3</td><td>L005</td></tr>
+     <tr><td>40</td><td>1</td><td>4</td><td>4</td><td>L005</td></tr>
+     <tr><td>41</td><td>1</td><td>4</td><td>5</td><td>L005</td></tr>
+     <tr><td>42</td><td>1</td><td>4</td><td>6</td><td>L005</td></tr>
+     <tr><td>43</td><td>1</td><td>4</td><td>7</td><td>L005</td></tr>
+     <tr><td>44</td><td>1</td><td>4</td><td>8</td><td>L005</td></tr>
+     <tr><td>45</td><td>1</td><td>4</td><td>9</td><td>L005</td></tr>
+     <tr><td>46</td><td>1</td><td>4</td><td>10</td><td>L005</td></tr>
+     <tr><td>47</td><td>1</td><td>4</td><td>11</td><td>L005</td></tr>
+     <tr><td>48</td><td>1</td><td>4</td><td>12</td><td>L005</td></tr>
+     <tr><td>49</td><td>1</td><td>5</td><td>1</td><td>L006</td></tr>
+     <tr><td>50</td><td>1</td><td>5</td><td>2</td><td>L006</td></tr>
+     <tr><td>51</td><td>1</td><td>5</td><td>3</td><td>L006</td></tr>
+     <tr><td>52</td><td>1</td><td>5</td><td>4</td><td>L006</td></tr>
+     <tr><td>53</td><td>1</td><td>5</td><td>5</td><td>L006</td></tr>
+     <tr><td>54</td><td>1</td><td>5</td><td>6</td><td>L006</td></tr>
+     <tr><td>55</td><td>1</td><td>5</td><td>7</td><td>L006</td></tr>
+     <tr><td>56</td><td>1</td><td>5</td><td>8</td><td>L006</td></tr>
+     <tr><td>57</td><td>1</td><td>5</td><td>9</td><td>L006</td></tr>
+     <tr><td>58</td><td>1</td><td>5</td><td>10</td><td>L006</td></tr>
+     <tr><td>59</td><td>1</td><td>5</td><td>11</td><td>L006</td></tr>
+     <tr><td>60</td><td>1</td><td>5</td><td>12</td><td>L006</td></tr>
+     <tr><td>61</td><td>1</td><td>6</td><td>1</td><td>L001</td></tr>
+     <tr><td>62</td><td>1</td><td>6</td><td>2</td><td>L001</td></tr>
+     <tr><td>63</td><td>1</td><td>6</td><td>3</td><td>L001</td></tr>
+     <tr><td>64</td><td>1</td><td>6</td><td>4</td><td>L001</td></tr>
+     <tr><td>65</td><td>1</td><td>6</td><td>5</td><td>L001</td></tr>
+     <tr><td>66</td><td>1</td><td>6</td><td>6</td><td>L001</td></tr>
+     <tr><td>67</td><td>1</td><td>6</td><td>7</td><td>L001</td></tr>
+     <tr><td>68</td><td>1</td><td>6</td><td>8</td><td>L001</td></tr>
+     <tr><td>69</td><td>1</td><td>6</td><td>9</td><td>L001</td></tr>
+     <tr><td>70</td><td>1</td><td>6</td><td>10</td><td>L001</td></tr>
+     <tr><td>71</td><td>1</td><td>6</td><td>11</td><td>L001</td></tr>
+     <tr><td>72</td><td>1</td><td>6</td><td>12</td><td>L001</td></tr>
+     <tr><td>73</td><td>1</td><td>7</td><td>1</td><td>L007</td></tr>
+     <tr><td>74</td><td>1</td><td>7</td><td>2</td><td>L007</td></tr>
+     <tr><td>75</td><td>1</td><td>7</td><td>3</td><td>L007</td></tr>
+     <tr><td>76</td><td>1</td><td>7</td><td>4</td><td>L007</td></tr>
+     <tr><td>77</td><td>1</td><td>7</td><td>5</td><td>L007</td></tr>
+     <tr><td>78</td><td>1</td><td>7</td><td>6</td><td>L007</td></tr>
+     <tr><td>79</td><td>1</td><td>7</td><td>7</td><td>L007</td></tr>
+     <tr><td>80</td><td>1</td><td>7</td><td>8</td><td>L007</td></tr>
+     <tr><td>81</td><td>1</td><td>7</td><td>9</td><td>L007</td></tr>
+     <tr><td>82</td><td>1</td><td>7</td><td>10</td><td>L007</td></tr>
+     <tr><td>83</td><td>1</td><td>7</td><td>11</td><td>L007</td></tr>
+     <tr><td>84</td><td>1</td><td>7</td><td>12</td><td>L007</td></tr>
+     <tr><td>85</td><td>1</td><td>8</td><td>1</td><td>Buffer01</td></tr>
+     <tr><td>86</td><td>1</td><td>8</td><td>2</td><td>Buffer01</td></tr>
+     <tr><td>87</td><td>1</td><td>8</td><td>3</td><td>Buffer01</td></tr>
+     <tr><td>88</td><td>1</td><td>8</td><td>4</td><td>Buffer01</td></tr>
+     <tr><td>89</td><td>1</td><td>8</td><td>5</td><td>Buffer01</td></tr>
+     <tr><td>90</td><td>1</td><td>8</td><td>6</td><td>Buffer01</td></tr>
+     <tr><td>91</td><td>1</td><td>8</td><td>7</td><td>Buffer01</td></tr>
+     <tr><td>92</td><td>1</td><td>8</td><td>8</td><td>Buffer01</td></tr>
+     <tr><td>93</td><td>1</td><td>8</td><td>9</td><td>Buffer01</td></tr>
+     <tr><td>94</td><td>1</td><td>8</td><td>10</td><td>Buffer01</td></tr>
+     <tr><td>95</td><td>1</td><td>8</td><td>11</td><td>Buffer01</td></tr>
+     <tr><td>96</td><td>1</td><td>8</td><td>12</td><td>Buffer01</td></tr>
+    </tbody>
+                    </table>
+
+                    Now, let's focus on analyts. We decided to use the same analyts, analyt batches and analyt
+                    gal file like in the elisa measurement. So we don't have to introduce new ligands and
+                    ligand batches but only copy/paste the analyt gal file from the elisa measurement.
+                    Let's continue with the processes
+                    <h3> 3.3 Microwell Process</h3>
+                    Remember that you first should check if we already declared a step
+                    <a href="{{ url('steps') }}"> here </a>. These are the overall steps we are planning to make.
+                    <table id="process" class="table table-striped ">
+                            <thead>
+                            <tr>
+                                <th>Step Type</th>
+                                <th>Sid</th>
+                                <th>Method</th>
+                                <th>Temperature</th>
+                                <th>Comment</th>
+                                <th>Substance</th>
+                                <th>Duration</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr >
+                                    <th> <i class="fa fa-anchor fa-fw" aria-hidden="true"> </i> "Spotting / Immobilzation </th>
+                                    <td> SP01 </td>
+                                    <td> Air displacement pipette 20 micro liter </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> <i class="fa fa-ban text-danger" aria-hidden="true"></i> </td>
+                                    <td> <i class="fa fa-ban text-danger" aria-hidden="true"></i> </td>
+                                </tr>
+
+                                <tr class="success">
+                                    <th><i class="fa fa-shower" aria-hidden="true"> </i> Washing </th>
+                                    <td> W01 </td>
+                                    <td> Air displacement pipette  300 micro liter </td>
+                                    <td> 22°C </td>
+                                    <td>  </td>
+                                    <td> PBST </td>
+                                    <td> 00:00:00:30</td>
+                                </tr>
+
+                                <tr>
+                                    <th><i class="fa fa-shower" aria-hidden="true"> </i> Drying </th>
+                                    <td> D01 </td>
+                                    <td> Nitrogen dryer low power, 10cm from target  </td>
+                                    <td>  </td>
+                                    <td>  </td>
+                                    <td> N2 </td>
+                                    <td> 00:00:00:30</td>
+                                </tr>
 
 
+                                <tr class="success">
+                                    <th > <i class="fa fa-pause" aria-hidden="true"></i> Blocking </th>
+                                    <td> B01 </td>
+                                    <td> Air displacement pipette 100 micro liter </td>
+                                    <td> 37 °C </td>
+                                    <td> </td>
+                                    <td> MB PBST </td>
+                                    <td> 00:01:00:00 </td>
+                                </tr>
+
+                                 <tr class="success">
+                                    <th> <i class="fa fa-tint" aria-hidden="true"></i> Incubating-Analyt </th>
+                                    <td> IA01 </td>
+                                    <td> Air displacement pipette 50 micro liter </td>
+                                    <td> 22 °C </td>
+                                    <td> </td>
+                                    <td> <i class="fa fa-ban text-danger" aria-hidden="true"></i> </td>
+                                    <td> 00:01:00:00 </td>
+                                </tr>
+
+                                <tr>
+                                    <th> <i class="fa fa-camera" aria-hidden="true"></i> Scanning </th>
+                                    <td> SC02 </td>
+                                    <td> Flurescence Reader ABC </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> <i class="fa fa-ban text-danger" aria-hidden="true"></i> </td>
+                                    <td> <i class="fa fa-ban text-danger" aria-hidden="true"></i> </td>
+                                </tr>
+
+                            </tbody>
+                    </table>
+                    We have already declared some process step in the elisa measurement. The green marked process steps
+                    are the same as in the elisa measurement, so we would not have to declare them once again but just
+                    use the sids in the Process.
+                    That is why one should check if the steps already exist <a href="{{ url('steps') }}"> here </a>.
+                    The process in this example was performed in the following way.
+
+                    <table class="table table-striped ">
+                      <tr>
+                        <th>step</th>
+                        <th>index</th>
+                        <th>user</th>
+                        <th>start</th>
+                        <th>image</th>
+                        <th>intensities</th>
+                        <th>comment</th>
+                      </tr>
+                      <tr>
+                        <td>SP01</td>
+                        <td>0</td>
+                        <td>hmemczak</td>
+                        <td>2017.09.27, 09:00 </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>W01</td>
+                        <td>1</td>
+                        <td>hmemczak</td>
+                        <td>2017.09.27, 10:00 </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>W01</td>
+                        <td>2</td>
+                        <td>hmemczak</td>
+                        <td>2017.09.27, 10:10</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>D01</td>
+                        <td>3</td>
+                        <td>hmemczak</td>
+                        <td>2017.09.27, 10:15</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+
+                      <tr>
+                        <td>B01</td>
+                        <td>6</td>
+                        <td>hmemczak</td>
+                        <td>2017.09.27, 10:20</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
 
 
+                      <tr>
+                        <td>SC02</td>
+                        <td>7</td>
+                        <td>hmemczak</td>
+                        <td>2017.09.27, 12:00</td>
+                        <td></td>
+                        <td>first_intensity.tsv</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>IA01</td>
+                        <td>8</td>
+                        <td>hmemczak</td>
+                        <td>2017.09.27, 13:00</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>W01</td>
+                        <td>9</td>
+                        <td>hmemczak</td>
+                        <td>2017.09.27, 14:30</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>D01</td>
+                        <td>10</td>
+                        <td>hmemczak</td>
+                        <td>2017.09.27, 14:40</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+
+                      <tr>
+                        <td>SC02</td>
+                        <td>11</td>
+                        <td>hmemczak</td>
+                        <td>2017.09.27, 15:00</td>
+                        <td></td>
+                        <td>intensity_final.tsv</td>
+                        <td></td>
+                      </tr>
+                    </table>
+
+                    <h3>3.4 Microwell Results </h3>
+                    In this example we want to show how to upload three results. The first result will be the
+                    intensities from the the first scanning (process step 7), the second result will be the the
+                    intensity from the final scanning and the third will be a subtraction of one from the other.
+                    <a href="{{ url("tutorial_tree")}}"> Here</a>, have a look into the directory
+                    "170929-tutorial-microwell-1/results/". Any directory in the results directory should have a
+                    "intensities.tcv" and a "meta.tsv". the intensities file contain gal file like intensities.
+                    The meta file contains the processing type and a comment. The processing type names the method how
+                    the intensities were generated (e. g. Florescence Reader, Genepix, Image2Numeric0.1, ...).
+                    The comments can be used to described more in detail how the intensity values have been obtained.
+                    here, the meta example of the substration reslt. The other once can be find in
+                    <a href="{{ static('flutype/tutorial/170929-tutorial/raw_docs/tree.tar.gz') }}"> here </a>.
+                    <table class="table table-striped">
+                        <tr>
+                            <th> processing_type</th>
+                            <td> Fluorescence Reader</td>
+                        </tr>
+                        <tr>
+                            <th> comment</th>
+                            <td> The values for intensities have been obtained by subtracting the intensities obtained
+                                by the fluorescence reader before and after the incubation.</td>
+                        </tr>
+                    </table>
+
+                    <h3>3.5 Microwell Raw Docs </h3>
+                        Further documents could be attached to any measurement. For this measurement, however,
+                        no further documents are attached.
+                    <h2> Microarray Measurement</h2>
+                    The microarray measurement will focus on incooperating multiple images from a scanner.
+                    For any measurement the same five steps have to be performed: meta, ligands, process, results and
+                    raw_docs. So let's start again with the meta.
+
+                    <h3> 2.1 Microwell Meta</h3>
+                    <table class="table table-striped">
+                        <tr>
+                            <th> sid </th>
+                            <td> 170929-tutorial-microarray-1</td>
+                        </tr>
+                        <tr>
+                            <th>batch_sid</th>
+                            <td> ABC123_321</td>
+                        </tr>
+                        <tr>
+                            <th> measurement_type </th>
+                            <td> microarray </td>
+                        </tr>
+                        <tr>
+                            <th> user </th>
+                            <td> mhovestaedt </td>
+                        </tr>
+                        <tr>
+                            <th> surface_substance </th>
+                            <td> 3D-NHS </td>
+                        </tr>
+                        <tr>
+                            <th>manufacturer</th>
+                            <td> PolyAn </td>
+                        </tr>
+                    </table>
+                    <h3> 2.2 Microwell Ligands</h3>
+                    Again Ligands which want to be used have to be defined before hand. Relevant peptide for this example
+                    are already defined <a href="{{ url('peptides') }}"> here </a>. If you want to add new ligands again
+                    click on the green plus symbole or follow the <a href="{{ url('peptide_new') }}"> link </a>.
+                    Remember the sids are unique.
+                    The same applies for the peptide batches. Relevant peptide batches for this example
+                    are already defined <a href="{{ url('peptidebatches') }}"> here </a>.
+                    If you want to add new ligand batches again click on the green plus symbole or follow the
+                    <a href="{{ url('peptide_batch_new') }}"> link </a>. The microarrays were spotted with the industry
+                    spotter with 5200 spots. Therefore, I will not show the content of the file in the browser but feel
+                    free to download the <a href="{{ static('flutype/tutorial/170929-tutorial/raw_docs/tree.tar.gz') }}"> tree.tar.gz </a> and
+                    open the "/170929-tutorial/170929-tutorial-microarray-1/lig_mob_012.txt".
+                    <h3> 2.3 Microwell Process</h3>
+                    Most of the process information is similar to the microwell example. The biggest difference are
+                    several images resulting from several scannings of the microarray plate. Again, have a look at the
+                    exisiting process steps <a href="{{ url('peptide_batch_new') }}"> here </a> or click on process and
+                    than on process steps in the navigation menu. Create a new steps by clicking the green plus symbole.
+                    Here are the steps that I declared for this measuremnt.
+                    <table id="process" class="table table-striped ">
+                            <thead>
+                            <tr>
+                                <th>Step Type</th>
+                                <th>Sid</th>
+                                <th>Method</th>
+                                <th>Temperature</th>
+                                <th>Comment</th>
+                                <th>Substance</th>
+                                <th>Duration</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr >
+                                    <th> <i class="fa fa-anchor fa-fw" aria-hidden="true"> </i> "Spotting / Immobilzation </th>
+                                    <td> SP03 </td>
+                                    <td> Air displacement pipette 20 micro liter </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> <i class="fa fa-ban text-danger" aria-hidden="true"></i> </td>
+                                    <td> <i class="fa fa-ban text-danger" aria-hidden="true"></i> </td>
+                                </tr>
+
+                                <tr>
+                                    <th><i class="fa fa-camera" aria-hidden="true"> </i> Scannig </th>
+                                    <td> SC001 </td>
+                                    <td> Genepix </td>
+                                    <td>  </td>
+                                    <td> </td>
+                                    <td> <i class="fa fa-ban text-danger" aria-hidden="true"> </td>
+                                    <td> <i class="fa fa-ban text-danger" aria-hidden="true"> </td>
+                                </tr>
+
+                                <tr>
+                                    <th><i class="fa fa-shower" aria-hidden="true"> </i> Washing </th>
+                                    <td> W005 </td>
+                                    <td> Water from the tab  </td>
+                                    <td>  </td>
+                                    <td>  </td>
+                                    <td> H20 </td>
+                                    <td> 00:00:00:30</td>
+                                </tr>
 
 
+                                 <tr>
+                                    <th> <i class="fa fa-tint" aria-hidden="true"></i> Incubating-Analyt </th>
+                                    <td> IA02 </td>
+                                    <td> Air displacement pipette, covered In  fridge </td>
+                                    <td> 5 °C </td>
+                                    <td> </td>
+                                    <td> <i class="fa fa-ban text-danger" aria-hidden="true"></i> </td>
+                                    <td> 00:12:00:00 </td>
+                                </tr>
+
+                            </tbody>
+                    </table>
+
+                    If all steps are declared. Let's show the content of the steps.tsv for this process.
+
+                    <table class="table table-striped ">
+                        <thead>
+                            <tr>
+                                <th>step</th>
+                                <th>index</th>
+                                <th>user</th>
+                                <th>start</th>
+                                <th>image</th>
+                                <th>intensities</th>
+                                <th>comment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                        <td><i class="fa fa-anchor fa-fw" aria-hidden="true"> </i> S03 </td>
+                        <td>0</td>
+                        <td>mhovestaedt</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td> <i class="fa fa-camera" aria-hidden="true"> </i>  SC001</td>
+                        <td>1</td>
+                        <td>mhovestaedt</td>
+                        <td></td>
+                        <td>N13_(=N1)_170731_600_100_635.jpg</td>
+                        <td></td>
+                        <td>Wavelength: 635 Intensity: 600 Gain:100</td>
+                      </tr>
+                      <tr>
+                        <td> <i class="fa fa-shower" aria-hidden="true"> </i>  W004</td>
+                        <td>2</td>
+                        <td>mhovestaedt</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td><i class="fa fa-camera" aria-hidden="true"> </i> SC001</td>
+                        <td>3</td>
+                        <td>mhovestaedt</td>
+                        <td></td>
+                        <td>N13_(=N1)_170731_600_100_532_gewaschenH2O.jpg</td>
+                        <td></td>
+                        <td>Wavelength: 532 Intensity: 600 Gain:100</td>
+                      </tr>
+                      <tr>
+                        <td><i class="fa fa-camera" aria-hidden="true"> </i> SC001</td>
+                        <td>4</td>
+                        <td>mhovestaedt</td>
+                        <td></td>
+                        <td>N13_(=N1)_170731_600_100_635_gewaschenH2O.jpg</td>
+                        <td></td>
+                        <td>Wavelength: 635 Intensity: 600 Gain:100</td>
+                      </tr>
+                      <tr>
+                        <td><i class="fa fa-tint" aria-hidden="true"></i> IA02</td>
+                        <td>5</td>
+                        <td>mhovestaedt</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                          <td><i class="fa fa-camera" aria-hidden="true"> </i> SC001</td>
+                        <td>6</td>
+                        <td>mhovestaedt</td>
+                        <td></td>
+                        <td>N13_(=N1)_170725_600_100_nach_Virus_alle_farben.jpg</td>
+                        <td></td>
+                        <td>Wavelength: 635 Intensity: 600 Gain:100</td>
+                      </tr>
+
+                        </tbody>
 
 
+                    </table>
 
+                    The files in the images collumn corespond to the files int he folder of the measurement.
 
-
-
-
-
-
-
-
+                    <h3> 2.4 Microwell Results</h3>
+                    No results in this example.
+                    <h3> 2.5 Microwell Raw Docs</h3>
+                    No rar docs in this example.
 
 
 
@@ -244,7 +1405,29 @@
 
                 </div>
 
+
+
             {% endif %}
         </div>
     </div>
 {% endblock %}
+
+{% block javascript %}
+
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#virusbatch').DataTable({
+                 pageLength: 5,
+            });
+        });
+    </script>
+
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#gal_fix_lig').DataTable({
+                 pageLength: 5,
+            });
+        });
+    </script>
+{% endblock %}
+
