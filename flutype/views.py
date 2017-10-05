@@ -150,7 +150,7 @@ def database_scheme_de_view(request):
 @login_required
 def tutorial_en_view(request):
     path_file = os.path.dirname(__file__)
-    path_tutorial = os.path.join(path_file,"static/flutype/tutorial/")
+    path_tutorial = os.path.join(path_file,"static/flutype/tutorial")
     generate_tree(path_tutorial)
     print(tar_tree(path_tutorial))
 
