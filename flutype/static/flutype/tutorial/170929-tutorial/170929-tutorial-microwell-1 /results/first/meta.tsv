@@ -1,0 +1,4 @@
+sid	first
+comment	measurement of intensities before incubation with no post processing
+processing_type	Fluorescence Intensity Reader 1.23
+intensity_file	final_sub.tsv
