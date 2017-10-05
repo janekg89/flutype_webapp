@@ -3,9 +3,8 @@ from __future__ import unicode_literals
 from django.contrib import admin
 from .models import Peptide, PeptideBatch, Virus, VirusBatch, Antibody, AntibodyBatch, Complex, ComplexBatch, \
     ProcessStep, Step, Spotting, Washing, Drying, Quenching, Blocking, Scanning, Incubating, \
-    Process, GalFile, Experiment, RawSpotCollection, RawSpot,SpotCollection, Spot
+    Process, GalFile, Measurement, RawSpotCollection, RawSpot,SpotCollection, Spot
 from .forms import ProcessAdminForm
-
 
 class PeptideAdmin(admin.ModelAdmin):
     fields = ['sid', 'linker', 'spacer', 'sequence', 'c_terminus', 'name', 'comment']
@@ -15,7 +14,6 @@ class AntibodyAdmin(admin.ModelAdmin):
     fields = ['sid', 'target','name', 'link_db', 'comment']
 class ComplexAdmin(admin.ModelAdmin):
     fields = ['sid','ligands','comment']
-
 
 
 batch_fields = ['sid', 'ligand','concentration', 'buffer', 'ph', 'purity', 'produced_by','production_date', 'comment']
