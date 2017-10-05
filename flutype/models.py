@@ -6,42 +6,22 @@ Django models for the flutype webapp.
 from __future__ import absolute_import, print_function, unicode_literals
 
 import os
-import hashlib
-import pandas as pd
-
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.contrib.auth.models import User as DUser
 from djchoices import DjangoChoices, ChoiceItem
 from django.core.files.storage import FileSystemStorage
-
 from django_pandas.io import read_frame
 from flutype_webapp.settings import MEDIA_ROOT
-
 fs = FileSystemStorage(location=MEDIA_ROOT)
-
 from django.conf import settings
-from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.contrib.auth.models import User
+from .behaviours import Statusable, Timestampable, Sidable, Userable, Commentable,FileAttachable
 from model_utils.managers import InheritanceManager
 from polymorphic.models import PolymorphicModel
 from imagekit.models import ImageSpecField
 from imagekit.processors import Transpose, ResizeToFit, Adjust
 from django.contrib.contenttypes.models import ContentType
-
-
-CHAR_MAX_LENGTH = 50
-
-class OverwriteStorage(FileSystemStorage):
-    """
-    Overwrite storage overwrites existing names by deleting the resources.
-    ! Use with care. This deletes files from the media folder !
-    """
-
-    def get_available_name(self, name, **kwargs):
-        if self.exists(name):
-            os.remove(os.path.join(settings.MEDIA_ROOT, name))
-        return name
+from .helper import OverwriteStorage, CHAR_MAX_LENGTH, md5
 
 
 #############################################################
@@ -56,7 +36,6 @@ class Buffer(DjangoChoices):
     pbst = ChoiceItem("PBST")
     natriumhydrogencarbonat = ChoiceItem("Natriumhydrogencarbonat")
 
-
 class Substance(DjangoChoices):
     """
     substance model
@@ -65,12 +44,7 @@ class Substance(DjangoChoices):
     no = ChoiceItem("No")
     epoxy_3d = ChoiceItem("3D-Epoxy")
 
-
-
-
-
-
-class ExperimentType(DjangoChoices):
+class MeasurementType(DjangoChoices):
     """
     holder type model
     """
@@ -94,18 +68,13 @@ class ProcessingType(DjangoChoices):
 # Ligand
 ########################################
 
-class Ligand(PolymorphicModel):
+class Ligand(Sidable, Commentable,PolymorphicModel):
     """
     Generic ligand.
     This can be for instance a peptide, virus or antibody.
     """
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH, null=True)
-    comment = models.TextField(blank=True, null=True)
-
     def __str__(self):
         return self.sid
-
-
 
 class Peptide(Ligand):
     """
@@ -117,26 +86,21 @@ class Peptide(Ligand):
     c_terminus = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
 
-
 class Virus(Ligand):
     """
     Virus ligand
     """
     tax_id = models.CharField(max_length=CHAR_MAX_LENGTH, null=True)
     link_db = models.URLField(blank=True, null=True)
-    # fludb_id
     subtype = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     isolation_country = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     collection_date = models.CharField(max_length=10, blank=True, null=True)
     strain = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
 
-
 class Antibody(Ligand):
     target = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
-    # FIXME: monoclonal/polyclonal
     link_db = models.URLField(blank=True, null=True)
-
 
 class Complex(Ligand):
     complex_ligands = models.ManyToManyField(Ligand, related_name="complex_ligands")
@@ -148,14 +112,11 @@ class Complex(Ligand):
         vals = '-'.join(ligands)
         return vals
 
-
-
-
 ########################################
 # Batch
 ########################################
 
-class Batch(models.Model):
+class Batch(Sidable,Commentable,models.Model):
     """
     Batch model as abstract class not stored in database.
     The various ligand batches inherit from this class.
@@ -164,7 +125,6 @@ class Batch(models.Model):
                 This also handles the flurofix (fluorescent peptides)
 
     """
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     labeling = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
 
     concentration = models.FloatField(validators=[MinValueValidator(0)],
@@ -176,7 +136,6 @@ class Batch(models.Model):
                                blank=True, null=True)
     produced_by = models.ForeignKey(User, blank=True, null=True)
     production_date = models.DateField(blank=True, null=True)
-    comment = models.TextField(blank=True, null=True)
 
     class Meta:
         abstract = True
@@ -193,8 +152,6 @@ class LigandBatch(Batch):
         mobile: is the ligand immobilized on surface, or in solution (other options ?)
     """
     ligand = models.ForeignKey(Ligand, blank=True, null=True)
-
-
 
 
 class VirusBatch(LigandBatch):
@@ -228,6 +185,14 @@ class BufferBatch(LigandBatch):
     pass
 
 
+########################################
+# Gal files
+########################################
+class GalFile(Sidable,models.Model):
+    file = models.FileField(upload_to="gal_file", null=True, blank=True, storage=OverwriteStorage())
+
+    def __str__(self):
+        return self.sid
 
 
 ########################################
@@ -235,24 +200,16 @@ class BufferBatch(LigandBatch):
 ########################################
 # The steps in the process.
 
-class GalFile(models.Model):
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
-    file = models.FileField(upload_to="gal_file", null=True, blank=True, storage=OverwriteStorage())
-
-    def __str__(self):
-        return self.sid
 
 
-class Step(models.Model):
+class Step(Sidable,Commentable,models.Model):
     """ Steps in the process.
 
         index: number of steps which gives the order
     """
     objects = InheritanceManager()
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     method = models.CharField(max_length=300, null=True, blank=True)
     temperature = models.CharField(max_length=300, null=True, blank=True)
-    comment = models.TextField(blank=True, null=True)
 
     @property
     def get_step_type(self):
@@ -270,68 +227,50 @@ class Washing(Step):
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
 
-
-
 class Blocking(Step):
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
 
-
-
 class Scanning(Step):
     pass
-
-
 
 class Drying(Step):
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
 
-
 class Spotting(Step):
     """ Spotting method and media related to spotting. """
     pass
 
-
-
 class Incubating(Step):
     duration = models.DurationField(null=True, blank=True)
-
 
 class Quenching(Step):
     duration = models.DurationField(null=True, blank=True)
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
 
 
-########################################
-# Gal files
-########################################
-
-
-
-class Experiment(models.Model):
+class Measurement(Sidable, Commentable,Timestampable,Statusable,FileAttachable, models.Model):
     """
-    FIXME: an experiment can have multiple image/data files
     """
-
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
-    experiment_type = models.CharField(max_length=CHAR_MAX_LENGTH, choices=ExperimentType.choices)
+    experiment_type = models.CharField(max_length=CHAR_MAX_LENGTH, choices=MeasurementType.choices)
     batch = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     functionalization = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Substance.choices)
     manufacturer = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Manufacturer.choices)
     process = models.ForeignKey("Process", blank=True, null=True)
-    comment = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.sid
 
+class Study(Sidable,Timestampable,Statusable,FileAttachable,models.Model):
+    task = models.TextField(blank=True, null=True)
+    result = models.TextField(blank=True, null=True)
 
-class Process(models.Model):
+class Process(Sidable,models.Model):
     """ A process is a collection of process steps.
     Every step has an index.
 
     """
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH, unique=True)
     steps = models.ManyToManyField(Step, through='ProcessStep')
     unique_ordering = models.CharField(max_length=CHAR_MAX_LENGTH)
 
@@ -376,7 +315,7 @@ class Process(models.Model):
 
 
 
-class RawSpotCollection(Experiment):
+class RawSpotCollection(Measurement):
     """
     A collection of raw spots: Information for a Collection of Spots collected at once for one microarray,
     one microwellplate
@@ -387,7 +326,6 @@ class RawSpotCollection(Experiment):
                               )
     image_contrast = ImageSpecField(source='image',
                                     processors=[Adjust(contrast=124, brightness=126)])
-
     image_90_big = ImageSpecField(source='image',
                                   processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(2800, 880)],
                                   )
@@ -468,14 +406,10 @@ class RawSpotCollection(Experiment):
     # todo: ligands1,ligands2 shell be uploaded via overwritten safe method.
 
 
-def md5(f):
-    hash_md5 = hashlib.md5()
-    for chunk in iter(lambda: f.read(4096), b""):
-        hash_md5.update(chunk)
-    return hash_md5.hexdigest()
 
 
-class ProcessStep(models.Model):
+
+class ProcessStep(Userable, Commentable, models.Model):
     """ Single step in an actual process.
         Connecting the Steps to the process, creating an order of the steps.
 
@@ -485,10 +419,7 @@ class ProcessStep(models.Model):
     process = models.ForeignKey(Process)
     step = models.ForeignKey(Step)
     index = models.IntegerField(blank=True, null=True)
-    user = models.ForeignKey(User, null=True, blank=True)
     start = models.DateTimeField(null=True, blank=True)
-    finish = models.DateTimeField(null=True, blank=True)
-    comment = models.TextField(null=True, blank=True)
     image = models.ImageField(upload_to="image", null=True, blank=True, storage=OverwriteStorage())
     image_contrast = ImageSpecField(source='image',
                                     processors=[Adjust(contrast=124, brightness=126)]
@@ -506,7 +437,6 @@ class ProcessStep(models.Model):
     # FIXME: try as foreign key with blank=True
     collection_id =  models.CharField(max_length=CHAR_MAX_LENGTH)
 
-
     class Meta:
         ordering = ['index']
         unique_together = ["collection_id", "process","step","index"]
@@ -515,15 +445,13 @@ class ProcessStep(models.Model):
         return str(self.process.sid + "-" + self.step.sid + "-" + str(self.index))
 
 
-
-
 class RawSpot(models.Model):
     """
     spot model
     """
     raw_spot_collection = models.ForeignKey(RawSpotCollection)
-    ligand1 = models.ForeignKey(LigandBatch, related_name="ligand1", null=True, blank=True)
-    ligand2 = models.ForeignKey(LigandBatch, related_name="ligand2", null=True, blank=True)
+    ligandbatch1 = models.ForeignKey(LigandBatch, related_name="ligand1", null=True, blank=True)
+    ligandbatch2 = models.ForeignKey(LigandBatch, related_name="ligand2", null=True, blank=True)
     column = models.IntegerField()
     row = models.IntegerField()
 
@@ -542,19 +470,12 @@ class RawSpot(models.Model):
 # Quantified interaction strength
 #####################################
 
-class SpotCollection(models.Model):
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
+class SpotCollection(Sidable, Commentable, FileAttachable, models.Model):
     raw_spot_collection = models.ForeignKey(RawSpotCollection)
-    image2numeric_version = models.FloatField(default=0.1)
     processing_type = models.CharField(max_length=CHAR_MAX_LENGTH,
                                        choices=ProcessingType.choices,
                                        blank=True,
                                        null=True)
-    comment = models.TextField(default="A spot detecting script has located the spots in the image."
-                                       "The spots are centered in a larger square."
-                                       "The intesity values are calculated as the total intensity over that square. "
-                                       "The image is not preprocessed.")
-
 
     def __str__(self):
         return str(self.raw_spot_collection.sid+"+"+self.sid)
@@ -572,13 +493,11 @@ class SpotCollection(models.Model):
         return std
 
 
-# perhaps name Interaction
 class Spot(models.Model):
     """
     spot model
     """
     raw_spot = models.ForeignKey(RawSpot)
-
     ############in results#########################
     intensity = models.FloatField(null=True, blank=True)
     std = models.FloatField(null=True, blank=True)

@@ -5,7 +5,7 @@ from django.contrib import admin
 
 from .models import Peptide, PeptideBatch, Virus, VirusBatch, Antibody, AntibodyBatch, Complex, \
     ProcessStep, Step, Spotting, Washing, Drying, Quenching, Blocking, Scanning, Incubating, \
-    Process, GalFile, Experiment, RawSpotCollection, RawSpot,SpotCollection, Spot
+    Process, GalFile, Measurement, RawSpotCollection, RawSpot,SpotCollection, Spot
 
 class OrderedModelMultipleChoiceField(forms.ModelMultipleChoiceField):
     def clean(self, value):
