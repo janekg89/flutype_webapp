@@ -47,6 +47,7 @@ collection_ids = ["2017-05-19_E5_X31",
 ###########################################################
 from django.contrib.auth.models import User
 import flutype.data_management.fill_master
+from flutype.helper import md5
 from flutype.models import (Peptide,
                             PeptideBatch,
                             Virus,
@@ -72,7 +73,6 @@ from flutype.models import (Peptide,
                             Process,
                             GalFile,
                             Step,
-                            md5,
                             )
 
 
@@ -939,7 +939,12 @@ def fill_database(path_master, collection_ids):
     # many 2many relation
     db.fillmany2many_rawspots_peptides_viruses()
 
-
+def fill_study(path_study, study_id,):
+    collections =  set(next(os.walk(path_study))[1]) - {'raw_docs'}
+    for collection_id in collections:
+        #dic_data_dj = ma.read_raw_collection(collection_id)
+        pass
+    return collections
 ##############################################################
 if __name__ == "__main__":
     coll_path = os.path.join(path_master, "collections/")
