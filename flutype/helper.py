@@ -1,7 +1,10 @@
 from __future__ import absolute_import, print_function, unicode_literals
 from django.core.files.storage import FileSystemStorage
+from flutype_webapp.settings import MEDIA_ROOT
 import os
 import hashlib
+import csv
+import pandas as pd
 
 
 CHAR_MAX_LENGTH = 50
@@ -28,6 +31,8 @@ def md5(f):
         hash_md5.update(chunk)
     return hash_md5.hexdigest()
 
+
+
 class OverwriteStorage(FileSystemStorage):
     """
     Overwrite storage overwrites existing names by deleting the resources.
@@ -36,5 +41,12 @@ class OverwriteStorage(FileSystemStorage):
 
     def get_available_name(self, name, **kwargs):
         if self.exists(name):
-            os.remove(os.path.join(settings.MEDIA_ROOT, name))
+            os.remove(os.path.join(MEDIA_ROOT, name))
         return name
+
+def read_tsv_diconary(fpath):
+    with open(fpath, 'r') as f:
+        reader = csv.reader(f, delimiter="\t")
+    return dict(reader)
+def read_tsv_table(fpath):
+    return pd.read_csv(fpath, sep="\t", encoding='utf-8', dtype=str)

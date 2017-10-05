@@ -1,4 +1,4 @@
-from flutype.data_management.fill_database import DBDjango, path_master, fill_database
+from flutype.data_management.fill_database import DBDjango, path_master, fill_database, fill_study
 from flutype.data_management.fill_master import Master
 from flutype.data_management.fill_users import create_users, user_defs
 from flutype.models import Peptide, Process, RawSpotCollection, Scanning
@@ -60,6 +60,11 @@ class IODataTableTestCase(TestCase):
         steps = self.ma.read_steps(self.collection1_id)
         unique_ordering = self.db.unique_ordering(steps)
         self.assertEqual(unique_ordering, "S01-I01")
+
+    def test_fill_study(self):
+         path_study = os.path.join(self.ma.path,"studies","170929-tutorial")
+         print(fill_study(path_study,"170929-tutorial"))
+
 
 
 
@@ -272,6 +277,8 @@ class IOCollectionTestCase(TestCase):
         for file in files:
             file_path = os.path.join(self.ma_test.collections_path,sids[1], file)
             self.assertTrue(Path(file_path).is_file())
+
+
 
 
 

@@ -12,16 +12,15 @@ from django.core.files.storage import FileSystemStorage
 from django_pandas.io import read_frame
 from flutype_webapp.settings import MEDIA_ROOT
 fs = FileSystemStorage(location=MEDIA_ROOT)
-from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
-from .behaviours import Statusable, Timestampable, Sidable, Userable, Commentable,FileAttachable
+from .behaviours import Statusable, Timestampable, Sidable, Userable, Commentable, FileAttachable, Hidable
 from model_utils.managers import InheritanceManager
 from polymorphic.models import PolymorphicModel
 from imagekit.models import ImageSpecField
 from imagekit.processors import Transpose, ResizeToFit, Adjust
 from django.contrib.contenttypes.models import ContentType
-from .helper import OverwriteStorage, CHAR_MAX_LENGTH, md5
+from .helper import OverwriteStorage, CHAR_MAX_LENGTH
 
 
 #############################################################
@@ -249,8 +248,11 @@ class Quenching(Step):
     duration = models.DurationField(null=True, blank=True)
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
 
+class Study(Sidable, Timestampable, Statusable, FileAttachable, Hidable, models.Model):
+    task = models.TextField(blank=True, null=True)
+    result = models.TextField(blank=True, null=True)
 
-class Measurement(Sidable, Commentable,Timestampable,Statusable,FileAttachable, models.Model):
+class Measurement(Sidable, Commentable, Timestampable, Statusable, FileAttachable, Hidable, models.Model):
     """
     """
     experiment_type = models.CharField(max_length=CHAR_MAX_LENGTH, choices=MeasurementType.choices)
@@ -258,13 +260,13 @@ class Measurement(Sidable, Commentable,Timestampable,Statusable,FileAttachable, 
     functionalization = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Substance.choices)
     manufacturer = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Manufacturer.choices)
     process = models.ForeignKey("Process", blank=True, null=True)
+    study = models.ForeignKey(Study, blank=True, null=True)
 
     def __str__(self):
         return self.sid
 
-class Study(Sidable,Timestampable,Statusable,FileAttachable,models.Model):
-    task = models.TextField(blank=True, null=True)
-    result = models.TextField(blank=True, null=True)
+
+
 
 class Process(Sidable,models.Model):
     """ A process is a collection of process steps.
