@@ -49,5 +49,11 @@ class FileAttachable(models.Model):
     class Meta:
         abstract = True
 
+class Hidable(models.Model):
+    hidden = models.BooleanField(default=False)
+
+    class Meta:
+        abstract = True
+
 
 

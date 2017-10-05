@@ -97,6 +97,7 @@ class Master(object):
 
         """
         self.path = path
+        self.path_study = os.path.join(self.path, "studies")
         self.data_tables_path = os.path.join(self.path, "data_tables")
         self.collections_path = os.path.join(self.path, "collections")
         self.unique_vir_gal_path = os.path.join(self.path, "unique_gal_ligand2")
@@ -381,132 +382,11 @@ class Master(object):
         rel_path = os.path.join(collection_id, q_collection_id)
         self.create_or_update_meta(dic_data_sc["meta"], rel_path)
 
-
     def write_complete_rsc_to_master(self, data_dic_rsc):
         self.write_rsc_to_master(data_dic_rsc["meta"]["sid"],data_dic_rsc)
         for sc_id in data_dic_rsc["spot_collections"].keys():
             self.write_sc_to_master(data_dic_rsc["meta"]["sid"],sc_id,data_dic_rsc["spot_collections"][sc_id])
 
-
-    '''
-    def create_or_update_collection(self, collection_id, dic_data, q_collection_id="not", quantified_only=False,
-                                    type="microarray"):
-
-        """
-        The method is updating the desired data in the collection folder of one collection. The keys corresond to the specific data, which shell by updated.
-        :param  collection_id: collection sid
-        :param  dic_data: a dictionary containing one of the following keys. Their values contain the corresponding data:
-                            keys (data_format):     gal_ligand   (pandas.DataFrame -> Columns: "Row", "Column", "Name")
-                                                    gal_virus    (pandas.DataFrame -> Columns: "Row", "Column", "Name")
-                                                    meta         (dictionary -> keys with corresponding value go to meta.csv)
-                                                    image        (cv2 image file in grayscale)
-                                                    intensity    (pandas.DataFrame -> Columns: "Columns" Index:"Row" Value: Intenstities)
-                                                    std          (pandas.DataFrame -> Columns: "Columns" Index:"Row" Value: Standard deviation)
-                                                    q_meta       (dictionary -> keys with corresponding value go to q_meta.csv)
-        :param  q_collection_id: "not" -> Only raw data is updated. The following keys are taken into cosiderations:
-                                                          (for Microarrays: gal_ligand, gal_virus, meta, image)
-                                                          (for Microwell plate: gal_ligand, gal_virus, meta, image)
-                              "quantified_collection_name" ->  An extra folder with "quantified_collection_name" is generated with
-                                                            (std, data, q_meta)
-        :param type : "microarray" or "microwell"
-        :param quantified_only: raw collections are not created_or_updated
-
-        :return:
-        """
-
-        collection_path = os.path.join(self.collections_path, collection_id)
-        q_collection_path = os.path.join(collection_path, q_collection_id)
-
-        # creates path to collection if not yet present
-        if not os.path.exists(collection_path):
-            os.makedirs(collection_path)
-
-        if type == "microarray":
-            if q_collection_id == "not":
-                # saves raw data
-                self.create_or_update_gal_ligand(dic_data["gal_ligand"], collection_id)
-                self.create_or_update_gal_virus(dic_data["gal_virus"], collection_id)
-                self.create_or_update_meta(dic_data["meta"], collection_id)
-                self.create_or_update_image(dic_data["image"], collection_id)
-                self.create_or_update_intensity(dic_data["intensity"], collection_id=collection_id,
-                                                q_collection_id=q_collection_id)
-
-            elif quantified_only:
-                # creates path to quantified collection if not yet present
-                if not os.path.exists(q_collection_path):
-                    os.makedirs(q_collection_path)
-
-                # saves quantified data
-                self.create_or_update_intensity(dic_data["intensity"], collection_id=collection_id,
-                                                q_collection_id=q_collection_id)
-                if "std" in dic_data:
-                    self.create_or_update_std(dic_data["std"], collection_id=collection_id,
-                                              q_collection_id=q_collection_id)
-
-            else:
-                # saves raw and quantified data
-                self.create_or_update_gal_ligand(dic_data["gal_ligand"], collection_id)
-                self.create_or_update_gal_virus(dic_data["gal_virus"], collection_id)
-                self.create_or_update_meta(dic_data["meta"], collection_id)
-
-                if "image" in dic_data:
-                    self.create_or_update_image(dic_data["image"], collection_id)
-                if "intensity" in dic_data:
-                    # creates path to quantified collection if not yet present
-                    if not os.path.exists(q_collection_path):
-                        os.makedirs(q_collection_path)
-                    self.create_or_update_intensity(dic_data["intensity"], collection_id=collection_id,
-                                                    q_collection_id=q_collection_id)
-                if "std" in dic_data:
-                    self.create_or_update_std(dic_data["std"], collection_id=collection_id,
-                                              q_collection_id=q_collection_id)
-
-        elif type == "microwell":
-            if q_collection_id == "raw":
-                # saves raw data
-                self.create_or_update_gal_ligand(dic_data["gal_ligand"], collection_id)
-                self.create_or_update_gal_virus(dic_data["gal_virus"], collection_id)
-                self.create_or_update_meta(dic_data["meta"], collection_id)
-                if "intensity" in dic_data:
-                    if not os.path.exists(q_collection_path):
-                        os.makedirs(q_collection_path)
-                    self.create_or_update_intensity(dic_data["intensity"], collection_id=collection_id,
-                                                    q_collection_id=q_collection_id)
-
-        elif quantified_only:
-            # creates path to quantified collection if not yet present
-            if not os.path.exists(q_collection_path):
-                os.makedirs(q_collection_path)
-
-            self.create_or_update_intensity(dic_data["intensity"], collection_id=collection_id,
-                                            q_collection_id=q_collection_id)
-            if "std" in dic_data:
-                self.create_or_update_std(dic_data["std"], collection_id=collection_id, q_collection_id=q_collection_id)
-    '''
-    '''
-    def flush_collection(self, collection, quantified=False, only_quantified=False, user_input=True):
-
-        """
-        All data in Master folder will be deleted.
-
-        :param collection: collection sid
-
-        :param only_quantified:
-        :param user_input: if False the user does not need to input yes for the command.
-        :return:
-        """
-        if user_input:
-            if only_quantified:
-                text = "the quantified collections of raw collection <{}>".format(collection)
-            else:
-                text = "the <{}> raw collection"
-            user_input = input("Type yes if you really want to delete {}  ".format(text))
-            if user_input == "yes":
-                pass
-            else:
-                return
-                
-    '''
     def read_raw_collection(self, collection_id):
         """
         reads data of one collection in the master folder.
@@ -530,15 +410,14 @@ class Master(object):
         dic_data["gal_ligand2"] = self.read_gal_virus(collection_id, format="dj")
         dic_data["images"] = self.read_images(collection_id)
 
-        # try:
-        #     dic_data["image"] = self.read_image(collection_id, format="dj")
-        # except:
-        #     pass
         try:
             dic_data["intensity"] = self.read_intensity(collection_id, ".")
         except:
             pass
         return dic_data
+
+    def read_study(self,study_id):
+        pass
 
     def read_dic_spots(self, collection_id):
         dic_data = {}
