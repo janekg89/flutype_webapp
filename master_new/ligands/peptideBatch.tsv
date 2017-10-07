@@ -1,0 +1,240 @@
+sid	labeling	concentration	buffer	ph	purity	produced_by	production_date	comment	ligand
+			natriumhydrogencarbonat	8.5					Empty
+Buffer01									Buffer001
+L001		0.1	natriumhydrogencarbonat	8.5			2017-05-09		P012
+L002		1	natriumhydrogencarbonat	8.5					P001
+L003		1	natriumhydrogencarbonat	8.5					P008
+L004		1	natriumhydrogencarbonat	8.5					P009
+L005		1	natriumhydrogencarbonat	8.5					P010
+L006		1	natriumhydrogencarbonat	8.5					P011
+L007		0.07	natriumhydrogencarbonat	8.5					P013
+P1									P1
+P3									P3
+P4									P4
+P5									P5
+P6									P6
+P7									P7
+P8									P8
+P10									P10
+P13									P13
+DYE025		0.25							Dye001
+DYE050		0.5							Dye001
+DYE100		1							Dye001
+NEN025		0.25							P013
+NEN050		0.5							P013
+NEN100		1							P013
+FEU025		0.25							P012
+FEU050		0.5							P012
+FEU100		1							P012
+KLOS025		0.25							P030
+KLOS050		0.5							P030
+KLOS100		1							P030
+KLOA025		0.25							P031
+KLOA050		0.5							P031
+KLOA100		1							P031
+P6025		0.25							P001
+P6050		0.5							P001
+P6100		1							P001
+P7025		0.25							P008
+P7050		0.5							P008
+P7100		1							P008
+P8025		0.25							P009
+P8050		0.5							P009
+P8100		1							P008
+P9025		0.25							P010
+P9050		0.5							P010
+P9100		1							P010
+P10025		0.25							P014
+P10050		0.5							P014
+P10100		1							P014
+P11025		0.25							P011
+P11050		0.5							P011
+P11100		1							P011
+P12025		0.25							P015
+P12050		0.5							P015
+P12100		1							P015
+P13025		0.25							P016
+P13050		0.5							P016
+P13100		1							P016
+P14025		0.25							P017
+P14050		0.5							P017
+P14100		1							P017
+P16025		0.25							P019
+P16050		0.5							P019
+P16100		1							P019
+Buffer									Buffer001
+P032-1:50		50	natriumhydrogencarbonat	8.5					P032
+P012-2		2	natriumhydrogencarbonat	8.5					P012
+P012-1		1	natriumhydrogencarbonat	8.5					P012
+P012-05		0.5	natriumhydrogencarbonat	8.5					P012
+P012-025		0.25	natriumhydrogencarbonat	8.5					P012
+P012-0125		0.125	natriumhydrogencarbonat	8.5					P012
+P012-00625		0.0625	natriumhydrogencarbonat	8.5					P012
+P012-00313		0.0313	natriumhydrogencarbonat	8.5					P012
+P012-00156		0.0156	natriumhydrogencarbonat	8.5					P012
+P019-2		2	natriumhydrogencarbonat	8.5					P019
+P019-1		1	natriumhydrogencarbonat	8.5					P019
+P019-05		0.5	natriumhydrogencarbonat	8.5					P019
+P019-025		0.25	natriumhydrogencarbonat	8.5					P019
+P019-0125		0.125	natriumhydrogencarbonat	8.5					P019
+P019-00625		0.0625	natriumhydrogencarbonat	8.5					P019
+P019-00313		0.0313	natriumhydrogencarbonat	8.5					P019
+P019-00156		0.0156	natriumhydrogencarbonat	8.5					P019
+P011-2		2	natriumhydrogencarbonat	8.5					P011
+P011-1		1	natriumhydrogencarbonat	8.5					P011
+P011-05		0.5	natriumhydrogencarbonat	8.5					P011
+P011-025		0.25	natriumhydrogencarbonat	8.5					P011
+P011-0125		0.125	natriumhydrogencarbonat	8.5					P011
+P011-00625		0.0625	natriumhydrogencarbonat	8.5					P011
+P011-00313		0.0313	natriumhydrogencarbonat	8.5					P011
+P011-00156		0.0156	natriumhydrogencarbonat	8.5					P011
+P001-2		2	natriumhydrogencarbonat	8.5					P001
+P001-1		1	natriumhydrogencarbonat	8.5					P001
+P001-05		0.5	natriumhydrogencarbonat	8.5					P001
+P001-025		0.25	natriumhydrogencarbonat	8.5					P001
+P001-0125		0.125	natriumhydrogencarbonat	8.5					P001
+P001-00625		0.0625	natriumhydrogencarbonat	8.5					P001
+P001-00313		0.0313	natriumhydrogencarbonat	8.5					P001
+P001-00156		0.0156	natriumhydrogencarbonat	8.5					P001
+P008-2		2	natriumhydrogencarbonat	8.5					P008
+P008-1		1	natriumhydrogencarbonat	8.5					P008
+P008-05		0.5	natriumhydrogencarbonat	8.5					P008
+P008-025		0.25	natriumhydrogencarbonat	8.5					P008
+P008-0125		0.125	natriumhydrogencarbonat	8.5					P008
+P008-00625		0.0625	natriumhydrogencarbonat	8.5					P008
+P008-00313		0.0313	natriumhydrogencarbonat	8.5					P008
+P008-00156		0.0156	natriumhydrogencarbonat	8.5					P008
+P009-2		2	natriumhydrogencarbonat	8.5					P009
+P009-1		1	natriumhydrogencarbonat	8.5					P009
+P009-05		0.5	natriumhydrogencarbonat	8.5					P009
+P009-025		0.25	natriumhydrogencarbonat	8.5					P009
+P009-0125		0.125	natriumhydrogencarbonat	8.5					P009
+P009-00625		0.0625	natriumhydrogencarbonat	8.5					P009
+P009-00313		0.0313	natriumhydrogencarbonat	8.5					P009
+P009-00156		0.0156	natriumhydrogencarbonat	8.5					P009
+P010-2		2	natriumhydrogencarbonat	8.5					P010
+P010-1		1	natriumhydrogencarbonat	8.5					P010
+P010-05		0.5	natriumhydrogencarbonat	8.5					P010
+P010-025		0.25	natriumhydrogencarbonat	8.5					P010
+P010-0125		0.125	natriumhydrogencarbonat	8.5					P010
+P010-00625		0.0625	natriumhydrogencarbonat	8.5					P010
+P010-00313		0.0313	natriumhydrogencarbonat	8.5					P010
+P010-00156		0.0156	natriumhydrogencarbonat	8.5					P010
+P013-100		0.1	natriumhydrogencarbonat	8.5					P013
+P013-050		0.05	natriumhydrogencarbonat	8.5					P013
+P013-025		0.025	natriumhydrogencarbonat	8.5					P013
+P013-0125		0.0125	natriumhydrogencarbonat	8.5					P013
+P013-00625		0.00625	natriumhydrogencarbonat	8.5					P013
+P013-00313		0.00313	natriumhydrogencarbonat	8.5					P013
+P013-00156		0.00156	natriumhydrogencarbonat	8.5					P013
+P013-00078		0.00078	natriumhydrogencarbonat	8.5					P013
+1.0_pep6		1							P001
+0.5_pep6		0.5							P001
+0.25_pep6		0.25							P001
+1.0_pep7		1							pep7
+0.5_pep7		0.5							pep7
+0.25_pep7		0.25							pep7
+1.0_pep8		1							pep8
+0.5_pep8		0.5							pep8
+0.25_pep8		0.25							pep8
+1.0_pep9		1							pep9
+0.5_pep9		0.5							pep9
+0.25_pep9		0.25							pep9
+1.0_pep10		1							P014
+0.5_pep10		0.5							P014
+0.25_pep10		0.25							P014
+1.0_pep11		1							pep11
+0.5_pep11		0.5							pep11
+0.25_pep11		0.25							pep11
+1.0_pep12		1							P015
+0.5_pep12		0.5							P015
+0.25_pep12		0.25							P015
+1.0_pep13		1							P016
+0.5_pep13		0.5							P016
+0.25_pep13		0.25							P016
+1.0_pep14		1							P017
+0.5_pep14		0.5							P017
+0.25_pep14		0.25							P017
+1.0_pep16		1							P019
+0.5_pep16		0.5							P019
+0.25_pep16		0.25							P019
+1.0_pep37		1							pep37
+0.5_pep37		0.5							pep37
+0.25_pep37		0.25							pep37
+1.0_pep39		1							pep39
+0.5_pep39		0.5							pep39
+0.25_pep39		0.25							pep39
+1.0_pep40		1							pep40
+0.5_pep40		0.5							pep40
+0.25_pep40		0.25							pep40
+1.0_pep41		1							pep41
+0.5_pep41		0.5							pep41
+0.25_pep41		0.25							pep41
+1.0_pep43		1							pep43
+0.5_pep43		0.5							pep43
+0.25_pep43		0.25							pep43
+1.0_pep44		1							pep44
+0.5_pep44		0.5							pep44
+0.25_pep44		0.25							pep44
+1.0_pep45		1							pep45
+0.5_pep45		0.5							pep45
+0.25_pep45		0.25							pep45
+1.0_pep46		1							pep46
+0.5_pep46		0.5							pep46
+0.25_pep46		0.25							pep46
+1.0_pep47		1							pep47
+0.5_pep47		0.5							pep47
+0.25_pep47		0.25							pep47
+1.0_pep48		1							pep48
+0.5_pep48		0.5							pep48
+0.25_pep48		0.25							pep48
+1.0_pep49		1							pep49
+0.5_pep49		0.5							pep49
+0.25_pep49		0.25							pep49
+1.0_pep50		1							pep50
+0.5_pep50		0.5							pep50
+0.25_pep50		0.25							pep50
+1.0_pep52		1							pep52
+0.5_pep52		0.5							pep52
+0.25_pep52		0.25							pep52
+1.0_pep54		1							pep54
+0.5_pep54		0.5							pep54
+0.25_pep54		0.25							pep54
+1.0_pep55		1							pep55
+0.5_pep55		0.5							pep55
+0.25_pep55		0.25							pep55
+1.0_pep56		1							pep56
+0.5_pep56		0.5							pep56
+0.25_pep56		0.25							pep56
+1.0_pep57		1							pep57
+0.5_pep57		0.5							pep57
+0.25_pep57		0.25							pep57
+1.0_pep58		1							pep58
+0.5_pep58		0.5							pep58
+0.25_pep58		0.25							pep58
+1.0_pep59		1							pep59
+0.5_pep59		0.5							pep59
+0.25_pep59		0.25							pep59
+1.0_pep60		1							pep60
+0.5_pep60		0.5							pep60
+0.25_pep60		0.25							pep60
+1.0_pep61		1							pep61
+0.5_pep61		0.5							pep61
+0.25_pep61		0.25							pep61
+1.0_pep63		1							pep63
+0.5_pep63		0.5							pep63
+0.25_pep63		0.25							pep63
+1.0_Kloe_Amid		1							P031
+0.5_Kloe_Amid		0.5							P031
+0.25_Kloe_Amid		0.25							P031
+1.0_pep_Nenad		1							P013
+0.5_pep_Nenad		0.5							P013
+0.25_pep_Nenad		0.25							P013
+Puffer									Buffer001
+Wasser									Empty
+1.0_Leuchtefix		1							Dye001
+0.5_Leuchtefix		0.5							Dye001
+0.25_Leuchtefix		0.25							Dye001
+1.0_Christian		1							Christian
+0.5_Christian		0.5							Christian
+0.25_Christian		0.25							Christian
