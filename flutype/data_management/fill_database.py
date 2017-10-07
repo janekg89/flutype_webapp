@@ -257,6 +257,11 @@ class DBDjango(object):
                                                                   production_date=antibody_batch["production_date"],
                                                                   comment=antibody_batch["comment"]
                                                                   )
+
+
+
+
+
         return antibody_b, created
 
     def create_or_update_washing(self, washing):
