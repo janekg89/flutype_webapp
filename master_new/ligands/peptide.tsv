@@ -2,7 +2,7 @@ sid	comment	linker	spacer	sequence	c_terminus	name
 Empty	Empty					
 Dye001						DY-634
 P001	Peptide 6	KKK		FYDYDVFY	amide	PeB-Lys
-P002		KK	Γö£╞ÆAΓö£╞ÆA	LGVIWAGGNTNY	amide	PeC-Lys
+P002		KK	?A?A	LGVIWAGGNTNY	amide	PeC-Lys
 P003				SGFLLISNGVHWV	amide	PeA
 P004				ARDFYDYDVFYYAMD 	amide	PeB
 P005				ARDFYGYDVFFYAMD	amide	PeBGF
@@ -16,9 +16,9 @@ P012	Fetuin					Fetuin
 P013		C-KK		FYGYDVFF	amide	PN
 P014	Peptid 10	Ahx-KK		FYDYDVFY	amide	
 P015	Peptid 12	KK-SG		FYDYDVFY	amide	
-P016	Peptid 13		Γö£╞ÆAΓö£╞ÆAΓö£╞ÆA	FYDYDVFY	amide	
-P017	Peptid 14		Γö£╞ÆAΓö£╞ÆAK	FYDYDVFY	amide	
-P018	Peptid 15	Γö£╞ÆAKK		FYDYDVFY	amide	
+P016	Peptid 13		?A?A?A	FYDYDVFY	amide	
+P017	Peptid 14		?A?AK	FYDYDVFY	amide	
+P018	Peptid 15	?AKK		FYDYDVFY	amide	
 P019	Peptid 16	KKK		FYDYDVFY	amide	
 P020	Peptid 17	KKK		FYDYDVFF	amide	
 P1						
