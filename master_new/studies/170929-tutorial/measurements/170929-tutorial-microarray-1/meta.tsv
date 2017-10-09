@@ -1,5 +1,6 @@
-surface_substance	3D-NHS
-holder_batch	ABC123_321
-holder_type	microarray
-user	mhovestaedt
+functionalization	3D-NHS
+batch_sid	ABC123_321
+measurement_type	microarray
 manufacturer	PolyAn
+comment	
+hidden	TRUE

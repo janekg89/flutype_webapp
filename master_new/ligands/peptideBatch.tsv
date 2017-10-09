@@ -1,6 +1,4 @@
 sid	labeling	concentration	buffer	ph	purity	produced_by	production_date	comment	ligand
-			natriumhydrogencarbonat	8.5					Empty
-Buffer01									Buffer001
 L001		0.1	natriumhydrogencarbonat	8.5			2017-05-09		P012
 L002		1	natriumhydrogencarbonat	8.5					P001
 L003		1	natriumhydrogencarbonat	8.5					P008
@@ -62,7 +60,6 @@ P14100		1							P017
 P16025		0.25							P019
 P16050		0.5							P019
 P16100		1							P019
-Buffer									Buffer001
 P032-1:50		50	natriumhydrogencarbonat	8.5					P032
 P012-2		2	natriumhydrogencarbonat	8.5					P012
 P012-1		1	natriumhydrogencarbonat	8.5					P012
@@ -230,8 +227,6 @@ P013-00078		0.00078	natriumhydrogencarbonat	8.5					P013
 1.0_pep_Nenad		1							P013
 0.5_pep_Nenad		0.5							P013
 0.25_pep_Nenad		0.25							P013
-Puffer									Buffer001
-Wasser									Empty
 1.0_Leuchtefix		1							Dye001
 0.5_Leuchtefix		0.5							Dye001
 0.25_Leuchtefix		0.25							Dye001

@@ -4,17 +4,11 @@ Script for filling database from backup
 from __future__ import print_function, absolute_import, division
 import os
 import sys
-from django.core.files import File
-import warnings
-import re
-import pandas as pd
-from PIL import Image
-from django.core.files import File
-from django_pandas.io import read_frame
-from datetime import timedelta
+
 ###########################################################
 # setup django (add current path to sys.path)
 path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../'))
+from django.apps import apps
 
 if path not in sys.path:
     sys.path.append(path)
@@ -24,39 +18,9 @@ import django
 django.setup()
 
 ###########################################################
-from django.contrib.auth.models import User
-import flutype.data_management.fill_master
-from flutype.helper import md5
-from flutype.data_management.fill_database import DBDjango
-from flutype.helper import get_or_create_object_from_dic
+from flutype.helper import md5, fill_multiple_models_from_dict
 from flutype.data_management.master import LIGAND_BATCHES, LIGANDS, STEPS
-from flutype.models import (Peptide,
-                            PeptideBatch,
-                            Virus,
-                            Complex,
-                            ComplexBatch,
-                            VirusBatch,
-                            Antibody,
-                            AntibodyBatch,
-                            Ligand,
-                            LigandBatch,
-                            RawSpotCollection,
-                            SpotCollection,
-                            RawSpot,
-                            Spot,
-                            Spotting,
-                            Quenching,
-                            Incubating,
-                            Washing,
-                            Drying,
-                            Scanning,
-                            Blocking,
-                            ProcessStep,
-                            Process,
-                            GalFile,
-                            Step,
-                            Study
-                            )
+
 
 
 class DatabaseDJ(object):
@@ -68,13 +32,32 @@ class DatabaseDJ(object):
 
 
 
+    def update_ligands(self,ligands):
+        fill_multiple_models_from_dict(ligands)
 
-    def get_or_create_ligand(self,ligand,ligand_dic):
-        return get_or_create_object_from_dic(ligand,ligand_dic)
+    def update_ligand_batches(self,ligand_batches):
+        fill_multiple_models_from_dict(ligand_batches)
+
+    def update_steps(self,steps):
+        fill_multiple_models_from_dict(steps)
+
+    def update_studies(self,studies):
+        Study = apps.get_model("flutype", model_name="Study")
+        for keys in studies:
+            Study.objects.get_or_create()
+
+class Study(object):
+    def __init__(self):
+        pass
 
 
+class Measurement(object):
+    def __init__(self):
+        self.Study = Study
 
-
+class Results(object):
+    def __init__(self):
+        self.Measurement = Measurement
 
 
 if __name__ == "__main__":
