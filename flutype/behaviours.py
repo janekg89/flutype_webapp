@@ -41,11 +41,12 @@ class Commentable(models.Model):
     class Meta:
         abstract = True
 
-class Files(models.Model):
+class RawDoc(models.Model):
     file = models.FileField(upload_to="raw_docs", null=True, blank=True, storage=OverwriteStorage())
 
 class FileAttachable(models.Model):
-    files = models.ManyToManyField(Files,blank=True)
+
+    files = models.ManyToManyField(RawDoc,blank=True)
     class Meta:
         abstract = True
 

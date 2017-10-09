@@ -22,6 +22,7 @@ class MasterTestCase(TestCase):
         self.assertEqual(set(self.ma.read_ligand_batches().keys()),ligand_batches)
         self.assertEqual(set(self.ma.read_studies().keys()),{'170929-tutorial'})
 
+
     def test_study_init(self):
         path_study = os.path.join(self.ma.path_study,next(iter(self.ma.study_sids)))
         st = Study(path_study)

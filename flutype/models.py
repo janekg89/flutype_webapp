@@ -67,11 +67,15 @@ class ProcessingType(DjangoChoices):
 # Ligand
 ########################################
 
-class Ligand(Sidable, Commentable,PolymorphicModel):
+class Ligand(PolymorphicModel):
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+
     """
     Generic ligand.
     This can be for instance a peptide, virus or antibody.
     """
+
     def __str__(self):
         return self.sid
 
@@ -244,6 +248,9 @@ class Spotting(Step):
 class Incubating(Step):
     duration = models.DurationField(null=True, blank=True)
 
+class IncubatingAnalyt(Step):
+    duration = models.DurationField(null=True, blank=True)
+
 class Quenching(Step):
     duration = models.DurationField(null=True, blank=True)
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
@@ -255,8 +262,8 @@ class Study(Sidable, Timestampable, Statusable, FileAttachable, Hidable, models.
 class Measurement(Sidable, Commentable, Timestampable, Statusable, FileAttachable, Hidable, models.Model):
     """
     """
-    experiment_type = models.CharField(max_length=CHAR_MAX_LENGTH, choices=MeasurementType.choices)
-    batch = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
+    measurement_type = models.CharField(max_length=CHAR_MAX_LENGTH, choices=MeasurementType.choices)
+    batch_sid = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     functionalization = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Substance.choices)
     manufacturer = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Manufacturer.choices)
     process = models.ForeignKey("Process", blank=True, null=True)
@@ -332,8 +339,8 @@ class RawSpotCollection(Measurement):
                                   processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(2800, 880)],
                                   )
 
-    gal_file1 = models.ForeignKey(GalFile, null=True, blank=True, related_name='gal_file1')
-    gal_file2 = models.ForeignKey(GalFile, null=True, blank=True, related_name='gal_file2')
+    lig_fix = models.ForeignKey(GalFile, null=True, blank=True, related_name='lig_fix')
+    lig_mob = models.ForeignKey(GalFile, null=True, blank=True, related_name='lig_mob')
 
     ligands1 = models.ManyToManyField(Ligand, related_name="ligands1")
     ligands2 = models.ManyToManyField(Ligand, related_name="ligands2")
