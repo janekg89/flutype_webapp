@@ -21,7 +21,7 @@ from imagekit.models import ImageSpecField
 from imagekit.processors import Transpose, ResizeToFit, Adjust
 from django.contrib.contenttypes.models import ContentType
 from .helper import OverwriteStorage, CHAR_MAX_LENGTH
-from .managers import LigandBatchManager,ComplexManager, StepManager,StudyManager
+from .managers import LigandBatchManager,ComplexManager, StepManager,StudyManager, MeasurementManager , GalFileManager, ProcessManager
 
 
 #############################################################
@@ -162,7 +162,6 @@ class LigandBatch(Batch):
         mobile: is the ligand immobilized on surface, or in solution (other options ?)
     """
     ligand = models.ForeignKey(Ligand, blank=True, null=True)
-
     objects = LigandBatchManager()
 
 
@@ -174,29 +173,36 @@ class VirusBatch(LigandBatch):
 
     passage_history = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     active = models.NullBooleanField(blank=True, null=True)
+    objects = LigandBatchManager()
 
 
 class PeptideBatch(LigandBatch):
     """
     peptide batch model
     """
+    objects = LigandBatchManager()
+
 
 
 class AntibodyBatch(LigandBatch):
     """
     peptide batch model
     """
-    pass
+    objects = LigandBatchManager()
+
 
 class ComplexBatch(LigandBatch):
     """
     a complex composed of ligands model
     """
 
-    pass
+    objects = LigandBatchManager()
+
 
 class BufferBatch(LigandBatch):
-    pass
+
+    objects = LigandBatchManager()
+
 
 
 ########################################
@@ -204,6 +210,7 @@ class BufferBatch(LigandBatch):
 ########################################
 class GalFile(Sidable,models.Model):
     file = models.FileField(upload_to="gal_file", null=True, blank=True, storage=OverwriteStorage())
+    objects = GalFileManager()
 
     def __str__(self):
         return self.sid
@@ -240,35 +247,49 @@ class Step(Sidable,Commentable,models.Model):
 class Washing(Step):
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
+    objects =  StepManager()
 
 class Blocking(Step):
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
+    objects =  StepManager()
+
 
 class Scanning(Step):
-    pass
+    objects =  StepManager()
+
 
 class Drying(Step):
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
+    objects =  StepManager()
+
 
 class Spotting(Step):
     """ Spotting method and media related to spotting. """
-    pass
+    objects =  StepManager()
+
 
 class Incubating(Step):
     duration = models.DurationField(null=True, blank=True)
+    objects =  StepManager()
+
 
 class IncubatingAnalyt(Step):
     duration = models.DurationField(null=True, blank=True)
+    objects =  StepManager()
+
 
 class Quenching(Step):
     duration = models.DurationField(null=True, blank=True)
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
+    objects =  StepManager()
+
 
 class Study(Sidable, Timestampable, Statusable, FileAttachable, Hidable, models.Model):
     task = models.TextField(blank=True, null=True)
     result = models.TextField(blank=True, null=True)
+    objects = StudyManager()
 
 class Measurement(Sidable, Commentable, Timestampable, Statusable, FileAttachable, Hidable, models.Model):
     """
@@ -279,6 +300,7 @@ class Measurement(Sidable, Commentable, Timestampable, Statusable, FileAttachabl
     manufacturer = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Manufacturer.choices)
     process = models.ForeignKey("Process", blank=True, null=True)
     study = models.ForeignKey(Study, blank=True, null=True)
+    objects = MeasurementManager()
 
     def __str__(self):
         return self.sid
@@ -293,6 +315,7 @@ class Process(Sidable,models.Model):
     """
     steps = models.ManyToManyField(Step, through='ProcessStep')
     unique_ordering = models.CharField(max_length=CHAR_MAX_LENGTH)
+    objects = ProcessManager()
 
     def users(self):
         user_ids = self.processstep_set.values_list("user", flat="True").distinct()
@@ -340,16 +363,6 @@ class RawSpotCollection(Measurement):
     A collection of raw spots: Information for a Collection of Spots collected at once for one microarray,
     one microwellplate
     """
-    image = models.ImageField(upload_to="image", null=True, blank=True, storage=OverwriteStorage())
-    image_90 = ImageSpecField(source='image',
-                              processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(350, 100)],
-                              )
-    image_contrast = ImageSpecField(source='image',
-                                    processors=[Adjust(contrast=124, brightness=126)])
-    image_90_big = ImageSpecField(source='image',
-                                  processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(2800, 880)],
-                                  )
-
     lig_fix = models.ForeignKey(GalFile, null=True, blank=True, related_name='lig_fix')
     lig_mob = models.ForeignKey(GalFile, null=True, blank=True, related_name='lig_mob')
 
@@ -422,8 +435,6 @@ class RawSpotCollection(Measurement):
         concentration.fillna(value="", inplace=True)
         return concentration
 
-    # todo: RawSpots created via overwritten safe  with Galfile
-    # todo: ligands1,ligands2 shell be uploaded via overwritten safe method.
 
 
 
@@ -455,7 +466,7 @@ class ProcessStep(Userable, Commentable, models.Model):
 
     image_hash = models.CharField(max_length=CHAR_MAX_LENGTH, null=True , blank=True)
     # FIXME: try as foreign key with blank=True
-    collection_id =  models.CharField(max_length=CHAR_MAX_LENGTH)
+    raw_spot_collection =  models.ForeignKey(RawSpotCollection)
 
     class Meta:
         ordering = ['index']
