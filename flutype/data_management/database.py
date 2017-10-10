@@ -30,34 +30,16 @@ class DatabaseDJ(object):
         self.steps = STEPS
         self.ligand_batches = LIGAND_BATCHES
 
-
-
-    def update_ligands(self,ligands):
+    def update_ligands_or_batches(self,ligands):
         fill_multiple_models_from_dict(ligands)
-
-    def update_ligand_batches(self,ligand_batches):
-        fill_multiple_models_from_dict(ligand_batches)
 
     def update_steps(self,steps):
         fill_multiple_models_from_dict(steps)
 
-    def update_studies(self,studies):
+    def update_studies(self,study_dics):
         Study = apps.get_model("flutype", model_name="Study")
-        for keys in studies:
-            Study.objects.get_or_create()
-
-class Study(object):
-    def __init__(self):
-        pass
-
-
-class Measurement(object):
-    def __init__(self):
-        self.Study = Study
-
-class Results(object):
-    def __init__(self):
-        self.Measurement = Measurement
+        for study_sid in study_dics:
+            Study.objects.get_or_create(**study_dics[study_sid])
 
 
 if __name__ == "__main__":

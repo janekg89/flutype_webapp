@@ -31,13 +31,19 @@ def tar_tree(path):
     return os.path.isfile(path_file)
 
 
+def unique_ordering(steps):
+    if steps["step"].empty:
+        vals = "NoSteps"
+    else:
+        order_steps = steps["step"]
+        vals = '-'.join(order_steps)
+    return vals
+
 def md5(f):
     hash_md5 = hashlib.md5()
     for chunk in iter(lambda: f.read(4096), b""):
         hash_md5.update(chunk)
     return hash_md5.hexdigest()
-
-
 
 class OverwriteStorage(FileSystemStorage):
     """
@@ -62,6 +68,8 @@ def read_tsv_diconary(fpath):
             if value == "TRUE":
                 value = True
             d[key] = value
+            if value == "":
+                value = None
     return d
 
 
@@ -72,17 +80,14 @@ def read_tsv_table(fpath):
 
 
 
+
+
 def create_study(**study_dic):
 
     Study = apps.get_model("flutype", model_name="Study")
     study, created = Study.objects.get_or_create(**study_dic["meta"])
     ##########################################################
-    #Raw Docs
-    add_raw_docs_model(study, study_dic["raw_docs_fpaths"])
-    ##########################################################
-    #measurements
-    for measurement in study_dic["measurements"]:
-        get_or_create_measurement( study, **study_dic["measurements"][measurement])
+
 
 def add_raw_docs_model(model,raw_docs_fpaths):
     for fpath in raw_docs_fpaths:
@@ -99,26 +104,6 @@ def get_or_create_raw_doc(fpath):
     raw_doc.file.save(os.path.basename(fpath), File(open(fpath, "rb")))
     return raw_doc, created
 
-
-def get_or_create_measurement(study,**measurement_dic):
-
-    Measurement = apps.get_model("flutype", model_name="Measurement")
-    ##########################################################
-    # steps
-
-    measurement, created = Measurement.objects.get_or_create(study=study,**measurement_dic["meta"])
-    ##########################################################
-
-
-    # Raw Docs
-    add_raw_docs_model(measurement, measurement_dic["raw_docs_fpaths"])
-    ##########################################################
-    # gal_file
-
-
-
-    ##########################################################
-    # results
 
 def get_or_create_process():
     pass
@@ -165,39 +150,14 @@ def get_duration_or_none(duration):
 
 
 
+
 def get_or_create_object_from_dic(object_n, **kwargs):
 
     object_capitalized = object_n.capitalize()
     model = get_model_by_name(object_capitalized)
-    if "user" in kwargs:
-        kwargs["user"]=get_user_or_none(kwargs["user"])
-    if "produced_by" in kwargs:
-        kwargs["produced_by"]=get_user_or_none(kwargs["produced_by"])
-    if "duration" in kwargs:
-        kwargs["duration"] = get_duration_or_none(kwargs["duration"])
+    print(object_capitalized)
+    object, created = model.objects.get_or_create(**kwargs)
 
-
-
-    ###################################################
-    if 'complex_ligands' in kwargs:
-            ligands_str = kwargs['complex_ligands']
-            del kwargs['complex_ligands']
-            object, created = model.objects.get_or_create(**kwargs)
-            for ligand_sid in ligands_str.split('-'):
-                ligand = get_ligand_or_none(ligand_sid)
-                object.complex_ligands.add(ligand)
-    ####################################################
-    elif 'ligand' in kwargs:
-        ligand= get_ligand_or_none(kwargs['ligand'])
-        del kwargs['ligand']
-        object, created = model.objects.get_or_create(ligand=ligand,
-                                                      **kwargs)
-
-    else:
-        object, created = model.objects.get_or_create(**kwargs)
-    #for key in dict:
-    #    if key!= "sid":
-    #       object.__setattr__(key,dict[key])
     return object, created
 
 
