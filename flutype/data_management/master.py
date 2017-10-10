@@ -18,7 +18,7 @@ from flutype.helper import read_tsv_diconary , read_tsv_table
 ###############################################
 
 STEPS = {"blocking","drying","incubating","incubatingAnalyt","quenching","scanning","spotting","washing"}
-LIGANDS = {"antibody","peptide","virus","complex"}
+LIGANDS = {"antibody","peptide","virus"}
 LIGAND_BATCHES =  {"antibodyBatch","peptideBatch","virusBatch","complexBatch","bufferBatch"}
 
 class BaseAll(object):
@@ -65,6 +65,12 @@ class Master(BaseAll):
 
         return dic_ligands
 
+    def read_complex(self):
+        complex_dic = {}
+        path_complex = os.path.join(self.path_ligands, "complex.tsv")
+        complex_dic["complex"]= read_tsv_table(path_complex)
+        return complex_dic
+
     def read_steps(self):
 
         dic_steps = {}
@@ -109,6 +115,7 @@ class Base(BaseAll):
 
     def get_meta(self):
         self.meta["sid"]= self.sid
+        return self.meta
 
 
 class Study(Base):
@@ -153,12 +160,8 @@ class Measurement(Base):
         self.Study = Study(os.path.join(self.path, "../.."))
 
         self.path_mob_lig = os.path.join(self.path, "lig_mob.txt")
-        self.mob_lig = read_tsv_table(self.path_mob_lig)
         self.path_fix_lig = os.path.join(self.path, "lig_fix.txt")
-        self.fix_lig = read_tsv_table(self.path_fix_lig)
-
         self.path_steps = os.path.join(self.path, "steps.tsv")
-        self.steps = read_tsv_table(self.path_steps)
 
         self.path_results = os.path.join(self.path,"results")
         self.results_sids = set(next(os.walk(self.path_results))[1])
@@ -166,18 +169,13 @@ class Measurement(Base):
 
     def read(self):
         dic_measurement = {"meta":self.get_meta(),
-                           "lig_mob":self.mob_lig,
-                           "lig_fix":self.fix_lig,
-                           "steps":self.steps,
+                           "lig_mob_path":self.path_mob_lig,
+                           "lig_fix_path":self.path_fix_lig,
+                           "steps_path":self.path_steps,
                            "raw_docs_fpaths":self.get_raw_docs_fpaths(),
                            "results":self.read_results()
                            }
         return dic_measurement
-
-    def get_meta(self):
-        self.meta["sid"] = self.sid
-
-
 
 
     def read_results(self):
@@ -204,9 +202,9 @@ class MeasurementResult(Base):
 
 
     def read(self):
-        dic_results ={"intensity":self.intensity,
-                      "comment":self.meta["comment"],
-                      "processing_type":self.meta["processing_type"]}
+        dic_results ={"meta":self.get_meta(),
+                    "intensity":self.intensity,
+                    }
         return dic_results
 
     def write(self, dic_results):
