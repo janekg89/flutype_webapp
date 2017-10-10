@@ -60,7 +60,12 @@ class StudyManager(models.Manager):
             for fpath in kwargs["raw_docs_fpaths"]:
                 raw_doc , _ = get_or_create_raw_doc(fpath=fpath)
                 self.files.add(raw_doc)
+class MeasurementManger(models.Manager):
+    def create(self, *args, **kwargs):
+        pass
 
+class SpotcollectionManager(models.Manager):
+    pass
 
 
 

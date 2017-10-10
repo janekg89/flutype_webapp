@@ -21,6 +21,7 @@ from imagekit.models import ImageSpecField
 from imagekit.processors import Transpose, ResizeToFit, Adjust
 from django.contrib.contenttypes.models import ContentType
 from .helper import OverwriteStorage, CHAR_MAX_LENGTH
+from .managers import LigandBatchManager,ComplexManager, StepManager,StudyManager
 
 
 #############################################################
@@ -71,6 +72,7 @@ class Ligand(PolymorphicModel):
     sid = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
 
+
     """
     Generic ligand.
     This can be for instance a peptide, virus or antibody.
@@ -88,6 +90,7 @@ class Peptide(Ligand):
     sequence = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     c_terminus = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+
 
 class Virus(Ligand):
     """
@@ -107,6 +110,8 @@ class Antibody(Ligand):
 
 class Complex(Ligand):
     complex_ligands = models.ManyToManyField(Ligand, related_name="complex_ligands")
+    objects = ComplexManager()
+
 
     @property
     def ligands_str(self):
@@ -140,6 +145,8 @@ class Batch(Sidable,Commentable,models.Model):
     produced_by = models.ForeignKey(User, blank=True, null=True)
     production_date = models.DateField(blank=True, null=True)
 
+
+
     class Meta:
         abstract = True
 
@@ -155,6 +162,9 @@ class LigandBatch(Batch):
         mobile: is the ligand immobilized on surface, or in solution (other options ?)
     """
     ligand = models.ForeignKey(Ligand, blank=True, null=True)
+
+    objects = LigandBatchManager()
+
 
 
 class VirusBatch(LigandBatch):
@@ -182,6 +192,7 @@ class ComplexBatch(LigandBatch):
     """
     a complex composed of ligands model
     """
+
     pass
 
 class BufferBatch(LigandBatch):
