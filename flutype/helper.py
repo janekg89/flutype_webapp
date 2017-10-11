@@ -9,7 +9,7 @@ from django.apps import apps
 import numpy as np
 import datetime
 from django.core.files import File
-
+import re
 
 
 CHAR_MAX_LENGTH = 50
@@ -78,7 +78,75 @@ def read_tsv_table(fpath):
     table.replace([np.NaN], [None], inplace=True)
     return table
 
+def get_or_create_raw_spots(**kwargs):
+    raw_spots = []
+    RawSpot = apps.get_model("flutype","RawSpot")
+    lig_mob = read_gal_file(kwargs["lig_mob_path"])
+    lig_fix = read_gal_file(kwargs["lig_fix_path"])
+    spots = pd.DataFrame(lig_fix[["Name","Row","Column"]], columns=["Name","Row","Column"])
+    spots = spots.rename(columns={"Name":"lig_fix_batch"})
+    spots["lig_mob_batch"]= lig_mob["Name"].values
+    spots["raw_spot_collection"]=kwargs["raw_spot_collection"]
+    print(spots)
+    for k, spot in spots.iterrows():
+        RawSpot.objects.create(**spot)
+    return raw_spots
 
+
+
+def create_spots(**kwargs):
+    Spot = apps.get_model("flutype","Spot")
+    spots = read_gal_file(kwargs["intensities"])
+    if "std" in kwargs:
+        spots["std"]=kwargs["std"].values
+
+
+
+def get_unique_galfile(name_presilbe, **kwargs):
+    GalFile = apps.get_model("flutype", model_name="GalFile")
+    this_gal = read_gal_file(kwargs["path"])
+    max_name = 0
+    for gal_file in GalFile.objects.all():
+        result = re.search(name_presilbe + '(.*)', gal_file.sid)
+        if bool(result):
+            if int(result.group(1)) > max_name:
+                max_name = int(result.group(1))
+
+            df_gal = pd.read_csv(gal_file.file.path, sep='\t', index_col="ID")
+            if df_gal.equals(this_gal):
+                return gal_file, max_name
+
+    return None, max_name
+
+def read_gal_file(fpath):
+    try:
+        this_gal = pd.read_csv(fpath, sep='\t', index_col="ID")
+        this_gal.replace([np.NaN], [None], inplace=True)
+        this_gal.replace(["NO"], [None], inplace=True)
+
+
+    except:
+        this_gal = pd.read_csv(fpath, sep='\t')
+        this_gal = raws_and_cols_to_gal_file(this_gal)
+        this_gal.replace([np.NaN], [None], inplace=True)
+
+
+    return this_gal
+
+def gal_file_to_rows_and_cols(this_gal):
+    pass
+
+
+def raws_and_cols_to_gal_file(this_gal):
+    this_gal = this_gal.stack()
+    data = {"ID":range(1, 1 + len(this_gal.values)),
+            "Row": this_gal.index.get_level_values(0),
+            "Column": this_gal.index.get_level_values(1),
+            "Name": this_gal.values
+            }
+    df = pd.DataFrame(data=data)
+    df1 = df.set_index("ID")
+    return df1
 
 
 
@@ -94,24 +162,13 @@ def add_raw_docs_model(model,raw_docs_fpaths):
         raw_doc ,_ = get_or_create_raw_doc(fpath)
         model.files.add(raw_doc)
 
-def get_or_create_gal_file(fpath):
-    pass
-
 
 def get_or_create_raw_doc(fpath):
     RawDoc = apps.get_model("flutype", model_name="RawDoc")
     raw_doc, created = RawDoc.objects.get_or_create()
-    raw_doc.file.save(os.path.basename(fpath), File(open(fpath, "rb")))
+    with open(fpath, "rb") as f:
+        raw_doc.file.save(os.path.basename(fpath), File(f))
     return raw_doc, created
-
-
-def get_or_create_process():
-    pass
-
-
-
-
-
 
 
 def get_model_by_name(name):
@@ -155,7 +212,6 @@ def get_or_create_object_from_dic(object_n, **kwargs):
 
     object_capitalized = object_n.capitalize()
     model = get_model_by_name(object_capitalized)
-    print(object_capitalized)
     object, created = model.objects.get_or_create(**kwargs)
 
     return object, created

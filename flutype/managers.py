@@ -5,12 +5,13 @@ from django.core.files import File
 
 
 from flutype.helper import get_ligand_or_none, get_user_or_none, get_duration_or_none,\
-    get_or_create_raw_doc, unique_ordering, read_tsv_table
+    get_or_create_raw_doc, unique_ordering, read_tsv_table, get_unique_galfile,\
+    create_spots, get_or_create_raw_spots
 
 from polymorphic.manager import PolymorphicManager
 import pandas as pd
 import re
-
+import os
 
 
 try:
@@ -80,8 +81,8 @@ class StudyManager(models.Manager):
             for measurement in kwargs["measurements"]:
                 measurement_dic = kwargs["measurements"][measurement]
                 measurement_dic["meta"]["study"] = object
-                Measurement = apps.get_model("flutype", model_name="Measurement")
-                measurement, created = Measurement.objects.get_or_create(**measurement_dic)
+                RawSpotCollection = apps.get_model("flutype", model_name="RawSpotCollection")
+                measurement, created = RawSpotCollection.objects.get_or_create(**measurement_dic)
 
 
         return object, created
@@ -104,22 +105,27 @@ class MeasurementManager(models.Manager):
 
         if "lig_mob_path" in kwargs:
             Galfile = apps.get_model("flutype", model_name="Galfile")
-            lig_mob, created = Galfile.objects.get_or_create(lig_path=kwargs["lig_mob_path"])
+            lig_mob, created_m = Galfile.objects.get_or_create(lig_path=kwargs["lig_mob_path"])
             object.lig_mob = lig_mob
-            lig_fix, created = Galfile.objects.get_or_create(lig_path=kwargs["lig_fix_path"])
+            lig_fix, created_l = Galfile.objects.get_or_create(lig_path=kwargs["lig_fix_path"])
             object.lig_fix =lig_fix
+            kwargs["raw_spot_collection"]=object
+            _ = get_or_create_raw_spots(**kwargs)
+
+
 
         if "steps_path" in kwargs:
-            kwargs["raw_spot_collection"]= object
-            Process = apps.get_model("flutype", model_name="Process")
-            Process.objects.get_or_create(**kwargs)
+            if kwargs["steps_path"]!= None:
+                kwargs["raw_spot_collection"]= object
+                Process = apps.get_model("flutype", model_name="Process")
+                Process.objects.get_or_create(**kwargs)
 
         if "results" in kwargs:
             for result in kwargs["results"]:
                 results_dic = kwargs["results"][result]
                 results_dic["meta"]["raw_spot_collection"]= object
-                #Spotcollection = apps.get_model("flutype", model_name="Spotcollection")
-                #spotcollection, created = Spotcollection.objects.get_or_create(**results_dic)
+                Spotcollection = apps.get_model("flutype", model_name="Spotcollection")
+                spotcollection, created = Spotcollection.objects.get_or_create(**results_dic)
 
         return object, created
 
@@ -127,69 +133,89 @@ class ProcessManager(models.Manager):
 
     def get_or_create(self,*args,**kwargs):
 
-        steps = read_tsv_table(kwargs["steps_path"])
+        intensity_path = kwargs["steps_path"]
+        steps = read_tsv_table(intensity_path)
         raw_spot_collection = kwargs["raw_spot_collection"]
 
 
 
         kwargs = {"sid": unique_ordering(steps)}
         object, created = super(ProcessManager, self).get_or_create(*args, **kwargs)
+        steps["start"]=steps["start"].str.replace('.', '-')
+        for _ , step in steps.iterrows():
 
-        for step in steps:
-            print(step)
-            Step = apps.get_model("flutype","Step")
-
+            Step= apps.get_model("flutype","Step")
+            step_object = Step.objects.get(sid=step["step"])
             ProcessStep = apps.get_model("flutype","ProcessStep")
-            GalFile= apps.get_model("flutype","GalFile")
-            object_gal_file, _ = GalFile.objects.get_or_create(step)
+            process_step_object , _ = ProcessStep.objects.get_or_create(step=step_object,
+                                                                        index=step["index"],
+                                                                        start=step["start"],
+                                                                        comment = step["comment"],
+                                                                        raw_spot_collection=raw_spot_collection,
+                                                                        process=object
+                                                                        )
+            if step["intensities"] is not None:
+                intensity_fpath = os.path.join(os.path.dirname(intensity_path),step["intensities"])
+                intensities_path_dic = {"intensities" :intensity_fpath}
+                GalFile = apps.get_model("flutype", "GalFile")
+                object_gal_file, _ = GalFile.objects.get_or_create(**intensities_path_dic)
+                process_step_object.intensities =object_gal_file
 
-            ProcessStep.objects.get_or_create(step=step["step"],
-                                              index=step["index"],
-                                              start=step["start"],
-                                              comment = step["comment"],
-                                              intensities = object_gal_file,
-                                              raw_spot_collection = raw_spot_collection)
-            ProcessStep.intensities.save()
 
 
 
 
-            step_object =Step.objects.get(sid=step)
 
         return object, created
 
 
-class ProcessStepManager(models.Manager):
-    def create(self, *args, **kwargs):
-        pass
 
 class GalFileManager(models.Manager):
 
     def get_or_create(self,*args, **kwargs):
+        if "sid" in kwargs:
+            object, created = super(GalFileManager, self).get_or_create(*args, **kwargs)
+            return object, created
+
         if "lig_path" in kwargs:
-            GalFile = apps.get_model("flutype", model_name="GalFile")
-            this_gal = pd.read_csv(kwargs["lig_path"], sep='\t', index_col="ID")
-            max_name = 0
-            for gal_file in GalFile.objects.all():
+            kwargs["path"]= kwargs["lig_path"]
+            object, max_name = get_unique_galfile( "gal_lig_", **kwargs)
+            if object is None:
+                sid = "gal_lig_{:03}".format(max_name + 1)
+                meta = {"sid":sid}
+                object, _ = super(GalFileManager, self).get_or_create(**meta)
+                with open(kwargs["lig_path"]) as f:
+                    object.file.save("{}.txt".format(object.sid), File(f))
+                return object, True
+            else:
+                return object, False
 
-                result = re.search('gal_lig_(.*)', gal_file.sid)
-                if int(result.group(1)) > max_name:
-                    max_name = int(result.group(1))
+        if "intensities" in kwargs and kwargs["intensities"] is not None:
+            kwargs["path"]= kwargs["intensities"]
 
-                df_gal = pd.read_csv(gal_file.file.path, sep='\t', index_col="ID")
-                if df_gal.equals(this_gal):
-                    return gal_file , False
+            object, max_name = get_unique_galfile("intensities_", **kwargs)
+            if object is None:
+                sid = "intensity_{:03}".format(max_name + 1)
+                meta = {"sid": sid}
+                object, _ = super(GalFileManager, self).get_or_create(**meta)
+                with open(kwargs["intensities"]) as f:
+                    object.file.save("{}.txt".format(object.sid), File(f))
+                return object, True
+            else:
+                return object, False
 
-            object = super(GalFileManager, self).create(sid= "gal_lig_{:03}".format(max_name+1))
-            object.file.save("{}.txt".format(object.sid), File(open(kwargs["lig_path"])))
-            return object, True
-
-        if "intensity" in kwargs:
-            if kwargs["intensity"]:
-                print("hi")
-
-
-
+        elif "std" in kwargs and kwargs["std"] is not None:
+            kwargs["path"]=kwargs["std"]
+            object, max_name = get_unique_galfile("std_", **kwargs)
+            if object is None:
+                    sid = "std_{:03}".format(max_name + 1)
+                    meta = {"sid": sid}
+                    object, _ = super(GalFileManager, self).get_or_create(**meta)
+                    with open(kwargs["intensities"]) as f:
+                        object.file.save("{}.txt".format(object.sid), File(f))
+                    return object, True
+            else:
+                return object, False
 
 
 
@@ -210,21 +236,37 @@ class SpotcollectionManager(models.Manager):
                 raw_doc , _ = get_or_create_raw_doc(fpath=fpath)
                 object.files.add(raw_doc)
 
-        if "std" in kwargs:
-            pass
-
-
-        elif "intensity" in kwargs:
-            pass
-
-
-
+        if "std" in kwargs or "intensities" in kwargs:
+            kwargs["spot_collection"]=object
+            GalFile = apps.get_model("flutype", "GalFile")
+            object_gal_file, _ = GalFile.objects.get_or_create(**kwargs)
+            object.int_gal = object_gal_file
 
 
 
 
 
         return object, created
+
+
+class SpotManager(models.Manager):
+    def get_or_create(self, *args, **kwargs):
+        if "lig_fix_batch" in kwargs and isinstance(kwargs['lig_fix_batch'], basestring):
+            LigandBatch = apps.get_model("flutype","LigandBatch")
+            ligandobject, created_l = LigandBatch.objects.get(sid="lig_fix_batch")
+            kwargs["lig_fix_batch"] = ligandobject
+            return super(SpotManager, self).get_or_create(**kwargs)
+
+        if "lig_mob_batch" in kwargs and isinstance(kwargs['lig_mob_batch'], basestring):
+            LigandBatch = apps.get_model("flutype","LigandBatch")
+            ligandobject, created_l = LigandBatch.objects.get(sid="lig_mob_batch")
+            kwargs["lig_mob_batch"] = ligandobject
+            return super(SpotManager, self).get_or_create(**kwargs)
+
+
+
+
+
 
 
 
