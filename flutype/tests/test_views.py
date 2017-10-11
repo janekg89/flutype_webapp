@@ -36,7 +36,7 @@ class ViewTestCaseNoDataLogOut(TestCase):
     def test_about_view(self):
         response = self.c.post('/flutype/about/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "login view 200")
+        self.assertEqual(status, 200, "lgin view 200")
         self.assertContains(response, "<h1>FluType</h1>")
 
     #######################################################################

@@ -38,7 +38,17 @@ class DatabaseDJTestCase(TestCase):
         self.db.update_ligands_or_batches(ligand_batches)
 
     def test_update_steps(self):
+        ligands = self.ma.read_ligands()
+        complex = self.ma.read_complex()
+
+        self.db.update_ligands_or_batches(ligands)
+        self.db.update_ligands_or_batches(complex)
+
+        ligand_batches = self.ma.read_ligand_batches()
+        self.db.update_ligands_or_batches(ligand_batches)
+
         steps = self.ma.read_steps()
+
         self.db.update_steps(steps)
 
     def test_update_study(self):
