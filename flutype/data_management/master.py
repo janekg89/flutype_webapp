@@ -185,6 +185,10 @@ class Measurement(Base):
             dic_results[result] = MeasurementResult(path_result).read()
         return dic_results
 
+    def read_steps(self):
+        pass
+
+
 
     def write(self, dict):
         pass
@@ -195,16 +199,21 @@ class MeasurementResult(Base):
     def __init__(self, path):
         Base.__init__(self,path)
         self.Measurement = Measurement(os.path.join(self.path, "../.."))
-
         self.path_intensity = os.path.join(self.path, self.meta["intensity_file"])
-        self.intensity = read_tsv_table(self.path_intensity)
+        self.path_std = os.path.join(self.path, )
 
 
 
     def read(self):
-        dic_results ={"meta":self.get_meta(),
-                    "intensity":self.intensity,
-                    }
+        dic_results = {}
+        del self.meta["intensity_file"]
+        if "std" in self.meta and self.meta["std"] is not None:
+            dic_results["std"]=os.path.join(self.path, self.meta["std"])
+            del self.meta["std"]
+
+        dic_results["meta"] =self.get_meta()
+        dic_results["intensities"]= self.path_intensity
+
         return dic_results
 
     def write(self, dic_results):

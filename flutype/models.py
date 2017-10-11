@@ -21,7 +21,8 @@ from imagekit.models import ImageSpecField
 from imagekit.processors import Transpose, ResizeToFit, Adjust
 from django.contrib.contenttypes.models import ContentType
 from .helper import OverwriteStorage, CHAR_MAX_LENGTH
-from .managers import LigandBatchManager,ComplexManager, StepManager,StudyManager, MeasurementManager , GalFileManager, ProcessManager
+from .managers import LigandBatchManager,ComplexManager, StepManager,StudyManager, MeasurementManager , GalFileManager, \
+    ProcessManager , SpotcollectionManager,SpotManager
 
 
 #############################################################
@@ -368,6 +369,7 @@ class RawSpotCollection(Measurement):
 
     ligands1 = models.ManyToManyField(Ligand, related_name="ligands1")
     ligands2 = models.ManyToManyField(Ligand, related_name="ligands2")
+    objects = MeasurementManager()
 
     @property
     def is_picture_in_rsc(self):
@@ -470,7 +472,7 @@ class ProcessStep(Userable, Commentable, models.Model):
 
     class Meta:
         ordering = ['index']
-        unique_together = ["collection_id", "process","step","index"]
+        unique_together = ["raw_spot_collection", "process","step","index"]
 
     def __str__(self):
         return str(self.process.sid + "-" + self.step.sid + "-" + str(self.index))
@@ -481,10 +483,11 @@ class RawSpot(models.Model):
     spot model
     """
     raw_spot_collection = models.ForeignKey(RawSpotCollection)
-    ligandbatch1 = models.ForeignKey(LigandBatch, related_name="ligand1", null=True, blank=True)
-    ligandbatch2 = models.ForeignKey(LigandBatch, related_name="ligand2", null=True, blank=True)
+    lig_fix_batch = models.ForeignKey(LigandBatch, related_name="lig_fix_batch", null=True, blank=True)
+    lig_mob_batch= models.ForeignKey(LigandBatch, related_name="lig_mob_batch", null=True, blank=True)
     column = models.IntegerField()
     row = models.IntegerField()
+    objects = SpotManager()
 
 
     class Meta:
@@ -503,10 +506,14 @@ class RawSpot(models.Model):
 
 class SpotCollection(Sidable, Commentable, FileAttachable, models.Model):
     raw_spot_collection = models.ForeignKey(RawSpotCollection)
+    std_gal = models.ForeignKey(GalFile,null=True, blank=True,related_name="std_gal")
+    int_gal = models.ForeignKey(GalFile,null=True, blank=True,related_name="int_gal")
+
     processing_type = models.CharField(max_length=CHAR_MAX_LENGTH,
                                        choices=ProcessingType.choices,
                                        blank=True,
                                        null=True)
+    objects = SpotcollectionManager()
 
     def __str__(self):
         return str(self.raw_spot_collection.sid+"+"+self.sid)
