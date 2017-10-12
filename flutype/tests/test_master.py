@@ -30,11 +30,11 @@ class MasterTestCase(TestCase):
         self.assertEqual(st.Master.study_sids,{'170929-tutorial'})
         self.assertEqual(st.raw_docs_fnames,{'tree.tar.gz'})
         self.assertEqual(st.measurement_sids, {'170929-tutorial-elisa-1',
-                                               '170929-tutorial-microwell-1 ',
+                                               '170929-tutorial-microwell-1',
                                                '170929-tutorial-microarray-1'})
         self.assertEqual(set(st.meta.keys()),{'task', 'result'})
         self.assertEqual(set(st.read_measurements().keys()),{'170929-tutorial-elisa-1',
-                                                             '170929-tutorial-microwell-1 ',
+                                                             '170929-tutorial-microwell-1',
                                                              '170929-tutorial-microarray-1'})
 
 

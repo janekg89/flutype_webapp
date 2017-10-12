@@ -1,3 +1,0 @@
-comment	subtracted the intensities of the first scanning from the second scanning
-processing_type	Fluorescence Intensity Reader 1.23
-intensity_file	intensity_sub.tsv
