@@ -20,6 +20,8 @@ from flutype.helper import read_tsv_diconary , read_tsv_table
 STEPS = {"blocking","drying","incubating","incubatingAnalyt","quenching","scanning","spotting","washing"}
 LIGANDS = {"antibody","peptide","virus"}
 LIGAND_BATCHES =  {"antibodyBatch","peptideBatch","virusBatch","complexBatch","bufferBatch"}
+MASTERPATH = os.path.join(BASEPATH, "master_new")
+
 
 class BaseAll(object):
     def __init__(self, path):
@@ -200,7 +202,7 @@ class MeasurementResult(Base):
         Base.__init__(self,path)
         self.Measurement = Measurement(os.path.join(self.path, "../.."))
         self.path_intensity = os.path.join(self.path, self.meta["intensity_file"])
-        self.path_std = os.path.join(self.path, )
+        self.path_std = os.path.join(self.path )
 
 
 
@@ -213,6 +215,10 @@ class MeasurementResult(Base):
 
         dic_results["meta"] =self.get_meta()
         dic_results["intensities"]= self.path_intensity
+        dic_results["raw_docs_fpaths"]= self.raw_docs_fpaths
+
+
+
 
         return dic_results
 
@@ -220,8 +226,8 @@ class MeasurementResult(Base):
         pass
 
 if __name__ == "__main__":
+    pass
 
-    MASTERPATH=os.path.join(BASEPATH,"Master_new")
     #Master(MASTERPATH).write()
 
 

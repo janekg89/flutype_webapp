@@ -4,6 +4,7 @@ from django.db import models
 from djchoices import DjangoChoices, ChoiceItem
 from django.contrib.auth.models import User
 from .helper import OverwriteStorage, CHAR_MAX_LENGTH
+from django.apps import apps
 
 class Status(DjangoChoices):
     PLANNING = ChoiceItem("planning")
@@ -41,12 +42,10 @@ class Commentable(models.Model):
     class Meta:
         abstract = True
 
-class RawDoc(models.Model):
-    file = models.FileField(upload_to="raw_docs", null=True, blank=True, storage=OverwriteStorage())
 
 class FileAttachable(models.Model):
+    files = models.ManyToManyField("RawDoc",blank=True)
 
-    files = models.ManyToManyField(RawDoc,blank=True)
     class Meta:
         abstract = True
 
@@ -56,5 +55,10 @@ class Hidable(models.Model):
     class Meta:
         abstract = True
 
+class Hashable(models.Model):
+    hash = models.CharField(max_length=CHAR_MAX_LENGTH,blank=True, null=True)
+
+    class Meta:
+        abstract = True
 
 
