@@ -14,7 +14,7 @@ from flutype_webapp.settings import MEDIA_ROOT
 fs = FileSystemStorage(location=MEDIA_ROOT)
 from django.db import models
 from django.contrib.auth.models import User
-from .behaviours import Statusable, Timestampable, Sidable, Userable, Commentable, FileAttachable, Hidable
+from .behaviours import Statusable, Timestampable, Sidable, Userable, Commentable, FileAttachable, Hidable, Hashable
 from model_utils.managers import InheritanceManager
 from polymorphic.models import PolymorphicModel
 from imagekit.models import ImageSpecField
@@ -22,7 +22,7 @@ from imagekit.processors import Transpose, ResizeToFit, Adjust
 from django.contrib.contenttypes.models import ContentType
 from .helper import OverwriteStorage, CHAR_MAX_LENGTH
 from .managers import LigandBatchManager,ComplexManager, StepManager,StudyManager, MeasurementManager , GalFileManager, \
-    ProcessManager , SpotcollectionManager,SpotManager
+    ProcessManager , SpotcollectionManager,RawSpotManager, RawDocManager
 
 
 #############################################################
@@ -52,6 +52,14 @@ class MeasurementType(DjangoChoices):
     microarray = ChoiceItem("microarray")
     microwell = ChoiceItem("microwell")
     elisa = ChoiceItem("elisa")
+
+class GalType(DjangoChoices):
+    """
+    holder type model
+    """
+    std = ChoiceItem("std")
+    intensity = ChoiceItem("intensity")
+    ligand_batch = ChoiceItem("ligand_batch")
 
 
 class Manufacturer(DjangoChoices):
@@ -210,6 +218,7 @@ class BufferBatch(LigandBatch):
 # Gal files
 ########################################
 class GalFile(Sidable,models.Model):
+    type = models.CharField(max_length=CHAR_MAX_LENGTH, choices=GalType.choices)
     file = models.FileField(upload_to="gal_file", null=True, blank=True, storage=OverwriteStorage())
     objects = GalFileManager()
 
@@ -306,6 +315,9 @@ class Measurement(Sidable, Commentable, Timestampable, Statusable, FileAttachabl
     def __str__(self):
         return self.sid
 
+    class Meta:
+        abstract = True
+
 
 
 
@@ -357,6 +369,9 @@ class Process(Sidable,models.Model):
     def __str__(self):
         return self.sid
 
+class RawDoc(Sidable, Hashable,  models.Model):
+    file = models.FileField(upload_to="raw_docs", storage=OverwriteStorage())
+    objects = RawDocManager()
 
 
 class RawSpotCollection(Measurement):
@@ -369,7 +384,6 @@ class RawSpotCollection(Measurement):
 
     ligands1 = models.ManyToManyField(Ligand, related_name="ligands1")
     ligands2 = models.ManyToManyField(Ligand, related_name="ligands2")
-    objects = MeasurementManager()
 
     @property
     def is_picture_in_rsc(self):
@@ -442,7 +456,7 @@ class RawSpotCollection(Measurement):
 
 
 
-class ProcessStep(Userable, Commentable, models.Model):
+class ProcessStep(Userable, Commentable, Hashable, models.Model):
     """ Single step in an actual process.
         Connecting the Steps to the process, creating an order of the steps.
 
@@ -451,6 +465,8 @@ class ProcessStep(Userable, Commentable, models.Model):
     """
     process = models.ForeignKey(Process)
     step = models.ForeignKey(Step)
+    raw_spot_collection =  models.ForeignKey(RawSpotCollection)
+
     index = models.IntegerField(blank=True, null=True)
     start = models.DateTimeField(null=True, blank=True)
     image = models.ImageField(upload_to="image", null=True, blank=True, storage=OverwriteStorage())
@@ -466,9 +482,7 @@ class ProcessStep(Userable, Commentable, models.Model):
 
     intensities = models.ForeignKey(GalFile, null=True, blank=True)
 
-    image_hash = models.CharField(max_length=CHAR_MAX_LENGTH, null=True , blank=True)
-    # FIXME: try as foreign key with blank=True
-    raw_spot_collection =  models.ForeignKey(RawSpotCollection)
+
 
     class Meta:
         ordering = ['index']
@@ -487,7 +501,7 @@ class RawSpot(models.Model):
     lig_mob_batch= models.ForeignKey(LigandBatch, related_name="lig_mob_batch", null=True, blank=True)
     column = models.IntegerField()
     row = models.IntegerField()
-    objects = SpotManager()
+    objects = RawSpotManager()
 
 
     class Meta:
@@ -540,7 +554,10 @@ class Spot(models.Model):
     intensity = models.FloatField(null=True, blank=True)
     std = models.FloatField(null=True, blank=True)
     spot_collection = models.ForeignKey(SpotCollection)
-    # TODO: add Coordinates on image
+
+    class Meta:
+        unique_together = ('raw_spot', 'spot_collection')
+
 
     def __str__(self):
         return str("column:"+str(self.raw_spot.column)+"-"+"row:"+str(self.raw_spot.row)+"-"+"intensity:"+str(self.intensity))
