@@ -3,44 +3,41 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="pull-right">
-                <a href="{{ url('peptide_new') }}" class="top-menu"><span
+                <a href="{{ url('complex_new') }}" class="top-menu"><span
                         class="fa fa-plus-circle fa-4x text-success"></span></a>
             </div>
             {% if type == "fixed" %}
-                <h1>Fixed Peptides</h1>
+                <h1>Fixed Complexes</h1>
             {% elif type == "mobile" %}
-                <h1>Mobile Peptides</h1>
+                <h1>Mobile Complexes</h1>
             {% else %}
-                <h1>Peptides</h1>
+                <h1>Complexes</h1>
 
             {% endif %}
-            {% if peptides %}
-                <table id="peptides" class="table table-striped">
+            {% if complexes %}
+                <table id="complexes" class="table table-striped">
                     <thead>
                     <tr>
-                        <th>Sid</th>
-                        <th></th>
-                        <th>Spacer</th>
-                        <th>Sequence</th>
-                        <th>C-Terminus</th>
-                        <th>Name</th>
+                        <th>Sid </th>
+                        <th>Ligands</th>
                         <th>Comment</th>
                         <th>Edit</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for p in peptides.all() %}
+                    {% for c in complexes.all() %}
                         <tr>
-                            <td class="warning"><b> {{ p.sid }}</b></td>
-                            <td>{{ p.linker }}</td>
-                            <td>{{ p.spacer }}</td>
-                            <td>{{ p.sequence }}</td>
-                            <td>{{ p.c_terminus }}</td>
-                            <td>{{ p.name }}</td>
-                            <td>{{ p.comment }}</td>
-                            <td><a href="{{ url('peptide_edit', args=[p.id]) }}" class="top-menu"><span
+                            <td class="warning"><b> {{ c.sid }}</b></td>
+                            <td>
+                                 {% for l in c.complex_ligands.all() %}
+                                     {{ l.sid }}
+                                 {% endfor %}
+                            </td>
+
+                            <td>{{ c.comment }}</td>
+                            <td><a href="{{ url('complex_edit', args=[c.id]) }}" class="top-menu"><span
                                     class="fa fa-pencil" aria-hidden="true"></span> </a>
-                                <a href="{{ url('peptide_delete', args=[p.id]) }}" class="top-menu"><span
+                                <a href="{{ url('complex_delete', args=[c.id]) }}" class="top-menu"><span
                                         class="fa fa-trash text-danger" aria-hidden="true"></span> </a></td>
                         </tr>
                     {% endfor %}
@@ -56,7 +53,7 @@
 {% block javascript %}
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
-            $('#peptides').DataTable({});
+            $('#complexes').DataTable({});
         });
 
     </script>

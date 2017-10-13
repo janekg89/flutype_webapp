@@ -5,7 +5,7 @@ from django.contrib import admin
 
 from .models import Peptide, PeptideBatch, Virus, VirusBatch, Antibody, AntibodyBatch, Complex, \
     ProcessStep, Step, Spotting, Washing, Drying, Quenching, Blocking, Scanning, Incubating, \
-    Process, GalFile, Measurement, RawSpotCollection, RawSpot,SpotCollection, Spot
+    Process, GalFile, Measurement, RawSpotCollection, RawSpot,SpotCollection, Spot, ComplexBatch
 
 class OrderedModelMultipleChoiceField(forms.ModelMultipleChoiceField):
     def clean(self, value):
@@ -20,6 +20,12 @@ class PeptideForm(forms.ModelForm):
     class Meta:
         model = Peptide
         fields = ['sid', 'linker', 'spacer', 'sequence', 'c_terminus', 'name', 'comment']
+
+
+class ComplexForm(forms.ModelForm):
+    class Meta:
+        model = Complex
+        fields = ['sid', 'complex_ligands', 'comment']
 
 
 class VirusForm(forms.ModelForm):
@@ -39,6 +45,11 @@ batch_fields = ['sid', 'ligand','concentration', 'buffer', 'ph', 'purity', 'prod
 class PeptideBatchForm(forms.ModelForm):
     class Meta:
         model = PeptideBatch
+        fields = batch_fields
+
+class ComplexBatchForm(forms.ModelForm):
+    class Meta:
+        model = ComplexBatch
         fields = batch_fields
 
 
