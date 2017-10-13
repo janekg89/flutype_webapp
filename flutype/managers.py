@@ -88,7 +88,7 @@ class RawDocManager(models.Manager):
             with open(kwargs["fpath"], "rb") as f:
                 raw_doc_dic["hash"] = md5(f)
                 raw_doc, created = super(RawDocManager,self).get_or_create(**raw_doc_dic)
-                raw_doc.file.save(os.path.basename(raw_doc_dic["sid"]), File(f))
+                raw_doc.file.save(os.path.basename(raw_doc_dic["sid"]), f)
 
         return raw_doc, created
 
@@ -116,6 +116,15 @@ class MeasurementManager(models.Manager):
             this_measurement.save()
             kwargs["raw_spot_collection"]=this_measurement
             kwargs["raw_spots"] , _ = get_or_create_raw_spots(**kwargs)
+
+            for raw_spot in kwargs["raw_spots"]:
+                try:
+                    this_measurement.ligands2.add(raw_spot.lig_mob_batch.ligand)
+                    this_measurement.ligands1.add(raw_spot.lig_fix_batch.ligand)
+                except:
+                    pass
+
+
 
 
 
@@ -191,6 +200,7 @@ class GalFileManager(models.Manager):
                 this_gal, _ = super(GalFileManager, self).get_or_create(**meta)
                 f = read_gal_file_to_temporaray_file(kwargs["path"])
                 this_gal.file.save("{}.txt".format(this_gal.sid), File(f))
+                f.close()
                 return this_gal, True
             else:
                 return this_gal, False
@@ -204,6 +214,8 @@ class GalFileManager(models.Manager):
                 this_gal, _ = super(GalFileManager, self).get_or_create(**meta)
                 f = read_gal_file_to_temporaray_file(kwargs["path"])
                 this_gal.file.save("{}.txt".format(this_gal.sid), File(f))
+                f.close()
+
                 return this_gal, True
             else:
                 return this_gal, False
@@ -219,6 +231,8 @@ class GalFileManager(models.Manager):
                 this_gal, _ = super(GalFileManager, self).get_or_create(**meta)
                 f = read_gal_file_to_temporaray_file(kwargs["path"])
                 this_gal.file.save("{}.txt".format(this_gal.sid), File(f))
+                f.close()
+
                 return this_gal, True
             else:
                 return this_gal, False
