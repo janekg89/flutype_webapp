@@ -1,0 +1,125 @@
+{% extends "flutype/base.html" %}
+{% block content %}
+    <!-- LIST OF RAWSPOTCOLLECTION -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="pull-right">
+                <a href="#" class="top-menu"><span class="fa fa-plus-circle fa-4x text-success"></span></a>
+            </div>
+        {% if type == "all" %}
+            <h1>Measurements</h1>
+        {% elif type == "my" %}
+            <h1>My Measurements</h1>
+        {% endif %}
+
+            {% if collections %}
+                <table id="collections" class="table table-striped">
+                    <caption>Raw Spot Collections</caption>
+                    <thead>
+                    <tr>
+                        <th>Sid</th>
+                        <th>Batch</th>
+                        <th>Measurement Type</th>
+                        <th>Functionalization</th>
+                        <th>Manufacturer</th>
+                        <th>Image</th>
+                        <th>Results</th>
+                        <th>Virus</th>
+                        <th>Gal Mobile</th>
+                        <th>Gal Fixed</th>
+                        <th>Process</th>
+                        <th>Process Users</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for c in collections %}
+                        <img>
+                            <td class="warning">
+                                <b><a href="{{ url('rawspotcollectionview', args=[c.id]) }}"> {{ c.sid }}</a></b>
+                            <td>{{ c.batch_sid }}</td>
+                            <td>{% if c.measurement_type == "microwell" %}
+                                    <i class="fa fa-building-o"></i>&nbsp;
+                                {% elif c.measurement_type == "microarray" %}
+                                    <i class="fa fa-building"></i>&nbsp;
+                                {% elif c.measurement_type == "elisa" %}
+                                    <i class="fa fa-building-o"></i>&nbsp;
+                                {% endif %}
+                                {{ c.measurement_type }}</td>
+                            <td>{{ c.functionalization}}</td>
+                            <td>{{ c.manufacturer }}</td>
+                            <td>
+                                {% if c.is_picture_in_rsc %}
+                                    {% with prosteps = c.processstep_set.all() %}
+                                        {% for prostep in prosteps %}
+                                            {% if  prostep.image %}
+                                                     <a alt="{{  prostep.image }}" href="{{  prostep.image.url }}" target="blank">
+                                                        <i class="fa fa-file-image-o"></i>
+                                                     </a>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endwith %}
+                                {% else %}
+                                                <i class="fa fa-ban fa-stack text-danger"></i>
+                                {%  endif %}
+                            </td>
+
+                            <td>{% if c.is_spot_collection() %}
+                                     <i class="fa fa-check-square-o" style="color:green" aria-hidden="true"></i>
+
+                                    {% for s in c.spotcollection_set.all() %}
+                                     <a href="{{ url('qspotcollectionview', args=[s.id]) }}"
+                                        target="_blank">{{ s.sid }}</a>
+                                     {% endfor %}
+
+                                {% else %}
+                                    <i class="fa fa-ban text-danger"></i>
+                                {%  endif %}</td>
+                            <td>
+                                {%  for virus in c.viruses2.all()%}
+                                    {% if virus.strain %}
+                                    {{ virus.strain}}
+                                    {% endif %}
+                                    {% endfor %}
+                            </td>
+                            <td><a href="{{ c.lig_mob.file.url }}" target="_blank">
+                                    {{ c.lig_mob.sid }}</a></td>
+                            <td><a href="{{ c.lig_fix.file.url }}" target="_blank">
+                                    {{ c.lig_fix.sid }}</a></td>
+                            <!-- process -->
+                            <td>
+                                <a href="{{ url('processview', args=[c.process.id]) }}"> {{ c.process.sid }}</a>
+                                <br />
+                                {{ c.process.name }}
+                            </td>
+                            <!-- user -->
+                            {% if c.process.users() %}
+                                <td>
+                                 {% for user in c.process.users() %}
+                                {{ user.first_name }} {{ user.last_name }}
+                                {% endfor %}
+                                </td>
+                                {% else %}
+                                <td></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+            {% else %}
+                <p>No entries in database.</p>
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#collections').DataTable({
+                pageLength: 25,
+            });
+        });
+    </script>
+{% endblock %}
