@@ -14,7 +14,6 @@
     <link rel="stylesheet" type="text/css"
           href="{{ static('winmarkltd-BootstrapFormHelpers-d4201db/dist/css/bootstrap-formhelpers.min.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ static('flutype/font-awesome-4.7.0/css/font-awesome.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ static('flutype/css/custom.css') }}"/>
 
     <!-- JS -->
 
@@ -28,6 +27,8 @@
 
     <script type="text/javascript"
             src="{{ static('winmarkltd-BootstrapFormHelpers-d4201db/dist/js/bootstrap-formhelpers.min.js') }}"></script>
+        <link rel="stylesheet" type="text/css" href="{{ static('flutype/css/custom.css') }}"/>
+
 
     <!-- HEAD -->
     {% block head %}{% endblock %}
@@ -35,8 +36,7 @@
 
 </head>
 <body>
-
-<nav class="navbar navbar-default navbar-inverse">
+<nav id = "main-navbar" class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -217,6 +217,16 @@
     <!-- /#page-wrapper -->
 </div>
 <!-- /#wrapper -->
+<script>
+ $(window).resize(function () {
+   $('body').css('padding-top', parseInt($('#main-navbar').css("height"))+10);
+});
+
+$(window).load(function () {
+   $('body').css('padding-top', parseInt($('#main-navbar').css("height"))+10);
+});
+
+</script>
 
 {% block javascript %}{% endblock %}
 </body>
