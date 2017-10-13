@@ -83,7 +83,56 @@ def index_view(request):
     return render(request,
                   'flutype/index.html', context)
 
+
+
 @login_required
+def my_index_view(request):
+    studies = Study.objects.filter(raw_spot_collection__processstep__user=request.user).distinct()
+    context = {
+        'type': 'my',
+        'studies': studies,
+    }
+    return render(request,
+                  'flutype/index.html', context)
+
+@login_required
+def measurements_view(request):
+    collections = RawSpotCollection.objects.all()
+    context = {
+        'type': 'all',
+        'collections': collections,
+    }
+    return render(request,
+                  'flutype/study.html', context)
+@login_required
+def my_measurements_view(request):
+    collections = RawSpotCollection.objects.filter(processstep__user=request.user).distinct()
+    context = {
+        'type': 'my',
+        'collections': collections,
+    }
+    return render(request,
+                  'flutype/study.html', context)
+
+
+
+
+@login_required
+def study_view(request, pk):
+    """ Renders detailed RawSpotCollection View. """
+
+    study = get_object_or_404(Study, id=pk)
+
+
+    collections = RawSpotCollection.objects.filter(study=study)
+
+    context = {
+        'type': 'all',
+        'collections': collections,
+    }
+    return render(request,
+                  'flutype/index.html', context)
+
 def study_view(request, pk):
     """ Renders detailed RawSpotCollection View. """
 
@@ -121,18 +170,6 @@ def process_view(request, pk):
     return render(request,
                   'flutype/process.html', context)
 
-
-@login_required
-def my_index_view(request):
-    collections = RawSpotCollection.objects.filter(process__processstep__user=request.user).distinct()
-
-    print(collections.values_list("sid", flat=True))
-    context = {
-        'type': 'my',
-        'collections': collections,
-    }
-    return render(request,
-                  'flutype/index.html', context)
 
 
 @login_required
