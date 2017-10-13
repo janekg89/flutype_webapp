@@ -1,7 +1,14 @@
 {% extends "flutype/base.html" %}
 {% block content %}
+
     {% if type == "peptide" %}
     <h1> Peptide Information</h1>
+
+    {% elif type == "complex" %}
+        <h1> Complex Information</h1>
+    {% elif type == "complex_batch" %}
+        <h1> Complex  Batch Information</h1>
+
     {%elif type == "virus"  %}
         <h1> Virus Information</h1>
 
@@ -44,17 +51,18 @@
 
     {% if type == "peptide" %}
        <form action={{url('peptides')}}>
+    {% elif type == "complex" %}
+       <form action={{url('complexes')}}>
+    {% elif type == "complex_batch" %}
+       <form action={{url('complexbatches')}}>
     {%elif type == "virus"  %}
        <form action={{url('viruses')}}>
     {%elif type == "antibody"  %}
        <form action={{url('antibodies')}}>
-
     {%elif type == "peptide_batch"  %}
        <form action={{url('peptidebatches')}}>
-
     {%elif type == "antibody_batch"  %}
        <form action={{url('antibodybatches')}}>
-
     {%elif type == "virus_batch"  %}
        <form action={{url('virusbatches')}}>
     {%elif type == "step"  %}
