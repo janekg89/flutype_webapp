@@ -343,17 +343,6 @@ class Process(Sidable,models.Model):
         return result
 
     @property
-    def get_unique_ordering(self):
-        """ Creates DataFrame from given steps.
-        :return:
-        """
-        data = read_frame(self.processstep_set.filter(collection_id=self.experiment_set.first()), fieldnames=["step__sid", "index"])
-        data.sort_values(["index", "step__sid"], ascending=[1, 0])
-        order_steps = data["step__sid"]
-        vals = '-'.join(order_steps)
-        return vals
-
-    @property
     def get_unique_ordering2(self):
         # FIXME: does this work ?
         ordered_step_ids = self.processstep_set.order_by('index').values_list('step__sid', flat=True)
@@ -426,30 +415,30 @@ class RawSpotCollection(Measurement):
         return result
 
     def pivot_ligand1(self):
-        data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "ligand1__ligand__sid"])
-        lig1 = data.pivot(index="row", columns="column", values="ligand1__ligand__sid")
+        data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "lig_fix_batch__ligand__sid"])
+        lig1 = data.pivot(index="row", columns="column", values="lig_fix_batch__ligand__sid")
         lig1.fillna(value="", inplace=True)
         return lig1
 
     def pivot_ligand2(self):
         try:
-            data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "ligand2__ligand__virus__subtype"])
-            lig2 = data.pivot(index="row", columns="column", values="ligand2__ligand__virus__subtype")
+            data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "lig_mob_batch__ligand__virus__subtype"])
+            lig2 = data.pivot(index="row", columns="column", values="lig_mob_batch__ligand__virus__subtype")
         except:
-            data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "ligand2__ligand__sid"])
-            lig2 = data.pivot(index="row", columns="column", values="ligand2__ligand__sid")
+            data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "lig_mob_batch__ligand__sid"])
+            lig2 = data.pivot(index="row", columns="column", values="lig_mob_batch__ligand__sid")
         lig2.fillna(value="", inplace=True)
         return lig2
 
     def pivot_concentration1(self):
-        data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "ligand1__concentration"])
-        concentration = data.pivot(index="row", columns="column", values="ligand1__concentration")
+        data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "lig_fix_batch__concentration"])
+        concentration = data.pivot(index="row", columns="column", values="lig_fix_batch__concentration")
         concentration.fillna(value="", inplace=True)
         return concentration
 
     def pivot_concentration2(self):
-        data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "ligand2__concentration"])
-        concentration = data.pivot(index="row", columns="column", values="ligand2__concentration")
+        data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "lig_mob_batch__concentration"])
+        concentration = data.pivot(index="row", columns="column", values="lig_mob_batch__concentration")
         concentration.fillna(value="", inplace=True)
         return concentration
 

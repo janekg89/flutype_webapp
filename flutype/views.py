@@ -46,16 +46,16 @@ def empty_list(max):
 def barplot_data_view(request, pk):
     sc = get_object_or_404(SpotCollection, id=pk)
     all_spots = sc.spot_set.all()
-    spot_lig1 = all_spots.values_list("raw_spot__ligand1__sid", flat=True)
+    spot_lig1 = all_spots.values_list("raw_spot__lig_fix_batch__sid", flat=True)
     lig1 = spot_lig1.distinct()
     box_list = []
     for lig in lig1:
         a = {}
-        a["intensity"] = all_spots.filter(raw_spot__ligand1__sid=lig).values_list("intensity", flat=True)
-        a["lig2"] = all_spots.filter(raw_spot__ligand1__sid=lig).values_list("raw_spot__ligand2__sid", flat=True)
-        a["lig1"] = all_spots.filter(raw_spot__ligand1__sid=lig).values_list("raw_spot__ligand1__ligand__sid").first()
-        a["lig1_con"] = all_spots.filter(raw_spot__ligand1__sid=lig).values_list(
-            "raw_spot__ligand1__concentration").first()
+        a["intensity"] = all_spots.filter(raw_spot__lig_fix_batch__sid=lig).values_list("intensity", flat=True)
+        a["lig2"] = all_spots.filter(raw_spot__lig_fix_batch__sid=lig).values_list("raw_spot__lig_mob_batch__sid", flat=True)
+        a["lig1"] = all_spots.filter(raw_spot__lig_fix_batch__sid=lig).values_list("raw_spot__lig_fix_batch__ligand__sid").first()
+        a["lig1_con"] = all_spots.filter(raw_spot__lig_fix_batch__sid=lig).values_list(
+            "raw_spot__lig_fix_batch__concentration").first()
         box_list.append(a)
     data = {
         "box_list": box_list,
