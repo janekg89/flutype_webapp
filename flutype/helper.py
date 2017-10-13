@@ -10,8 +10,7 @@ import numpy as np
 import datetime
 import re
 import tempfile
-
-
+import io
 
 CHAR_MAX_LENGTH = 50
 
@@ -153,7 +152,9 @@ def read_gal_file(fpath):
     return this_gal
 
 def read_gal_file_to_temporaray_file(fpath):
-    f = tempfile.NamedTemporaryFile()
+    #f = tempfile.TemporaryFile()
+    f= io.StringIO()
+
     gal_file = read_gal_file(fpath)
     gal_file.to_csv(f, sep=str('\t'), index="True", encoding='utf-8')
     return f
@@ -167,11 +168,11 @@ def raws_and_cols_to_gal_file(this_gal):
     this_gal = this_gal.stack()
     id = range(1, 1 + len(this_gal.values))
     data = {"ID":id ,
-            "Row": map(str,this_gal.index.get_level_values(0)),
-            "Column": map(str,this_gal.index.get_level_values(1)),
-            "Name":map(str, this_gal.values)
+            "Row": list(map(str,this_gal.index.get_level_values(0))),
+            "Column": list(map(str,this_gal.index.get_level_values(1))),
+            "Name":list(map(str, this_gal.values))
             }
-    df = pd.DataFrame(data= data )
+    df = pd.DataFrame(data=data)
     df1 = df.set_index("ID")
     return df1
 

@@ -19,11 +19,11 @@
                     <tr>
                         <th>Sid</th>
                         <th>Batch</th>
-                        <th>Experiment Type</th>
+                        <th>Measurement Type</th>
                         <th>Functionalization</th>
                         <th>Manufacturer</th>
                         <th>Image</th>
-                        <th>Quantified Collection</th>
+                        <th>Results</th>
                         <th>Virus</th>
                         <th>Gal Mobile</th>
                         <th>Gal Fixed</th>
@@ -36,20 +36,20 @@
                         <img>
                             <td class="warning">
                                 <b><a href="{{ url('rawspotcollectionview', args=[c.id]) }}"> {{ c.sid }}</a></b>
-                            <td>{{ c.batch }}</td>
-                            <td>{% if c.experiment_type == "microwell" %}
+                            <td>{{ c.batch_sid }}</td>
+                            <td>{% if c.measurement_type == "microwell" %}
                                     <i class="fa fa-building-o"></i>&nbsp;
-                                {% elif c.experiment_type == "microarray" %}
+                                {% elif c.measurement_type == "microarray" %}
                                     <i class="fa fa-building"></i>&nbsp;
-                                {% elif c.experiment_type == "elisa" %}
+                                {% elif c.measurement_type == "elisa" %}
                                     <i class="fa fa-building-o"></i>&nbsp;
                                 {% endif %}
-                                {{ c.experiment_type }}</td>
+                                {{ c.measurement_type }}</td>
                             <td>{{ c.functionalization}}</td>
                             <td>{{ c.manufacturer }}</td>
                             <td>
                                 {% if c.is_picture_in_rsc %}
-                                    {% with prosteps = c.process.processstep_set.filter(collection_id = c.sid) %}
+                                    {% with prosteps = c.processstep_set.all() %}
                                         {% for prostep in prosteps %}
                                             {% if  prostep.image %}
                                                      <a alt="{{  prostep.image }}" href="{{  prostep.image.url }}" target="blank">
@@ -81,10 +81,10 @@
                                     {% endif %}
                                     {% endfor %}
                             </td>
-                            <td><a href="{{ c.gal_file2.file.url }}" target="_blank">
-                                    {{ c.gal_file2.sid }}</a></td>
-                            <td><a href="{{ c.gal_file1.file.url }}" target="_blank">
-                                    {{ c.gal_file1.sid }}</a></td>
+                            <td><a href="{{ c.lig_mob.file.url }}" target="_blank">
+                                    {{ c.lig_mob.sid }}</a></td>
+                            <td><a href="{{ c.lig_fix.file.url }}" target="_blank">
+                                    {{ c.lig_fix.sid }}</a></td>
                             <!-- process -->
                             <td>
                                 <a href="{{ url('processview', args=[c.process.id]) }}"> {{ c.process.sid }}</a>

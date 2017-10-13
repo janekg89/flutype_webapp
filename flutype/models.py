@@ -312,6 +312,8 @@ class Measurement(Sidable, Commentable, Timestampable, Statusable, FileAttachabl
     study = models.ForeignKey(Study, blank=True, null=True)
     objects = MeasurementManager()
 
+
+
     def __str__(self):
         return self.sid
 
@@ -388,7 +390,7 @@ class RawSpotCollection(Measurement):
     @property
     def is_picture_in_rsc(self):
         result = False
-        for processstep in self.process.processstep_set.filter(collection_id = self.sid):
+        for processstep in self.processstep_set.all():
             if processstep.image:
                 result = True
         return result
