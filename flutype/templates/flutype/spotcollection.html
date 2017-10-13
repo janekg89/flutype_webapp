@@ -151,11 +151,11 @@
 
             <!-- Process Information -->
             <div class="row">
-                {% with process = collection.process %}
-                    <h2>Process: {{ process.sid }}</h2>
-                    {% if process.is_step_in_process() %}
+                {% with c = collection%}
+                    <h2>Process: {{ c.process.sid }}</h2>
+                    {% if c.process.is_step_in_process() %}
                         <table id="processes" class="cell-border">
-                            {% with prosteps = process.processstep_set.filter(collection_id = collection.sid) %}
+                            {% with prosteps = c.processstep_set.all() %}
 
                                  <thead>
                                     <tr>
@@ -191,6 +191,9 @@
                                                 # {{ prostep.index + 1 }} <i class="fa fa-chain-broken" aria-hidden="true"></i><br />
                                                 {{ p.__class__.__name__ }}
                                             {% elif p.__class__.__name__ == "Incubating" %}
+                                                # {{ prostep.index + 1 }} <i class="fa fa-tint" aria-hidden="true"></i><br />
+                                                {{ p.__class__.__name__ }}
+                                            {% elif p.__class__.__name__ == "IncubatingAnalyt" %}
                                                 # {{ prostep.index + 1 }} <i class="fa fa-tint" aria-hidden="true"></i><br />
                                                 {{ p.__class__.__name__ }}
                                             {% elif p.__class__.__name__ == "Blocking" %}

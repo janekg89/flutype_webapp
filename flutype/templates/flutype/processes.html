@@ -13,8 +13,7 @@
                 <table id="processes" class="table table-striped">
                     <thead>
                     <tr>
-                        <th>Sid</th>
-                        <th>Steps</th>
+                        <th>Step IDs</th>
                         <th>Applied on RawSpot Collections</th>
                         <th>Edit</th>
                     </tr>
@@ -23,11 +22,10 @@
                     {% for process in processes %}
                         <tr>
                             <td><a href="{{ url('processview', args=[process.id]) }}"> {{ process.sid }}  </a></td>
-                            <td>{{ process.get_unique_ordering }}</td>
                             <td>
-                                {% for experiment in process.experiment_set.all() %}
+                                {% for rawspotcollection in process.rawspotcollection_set.all() %}
                                     <a href="
-                                    {{ url('rawspotcollectionview', args=[experiment.id]) }}">{{ experiment.sid }}</a>
+                                    {{ url('rawspotcollectionview', args=[rawspotcollection.id]) }}">{{ rawspotcollection.sid }}</a>
                                 {% endfor %}
                             </td>
                             <td><a href="{{ url('process_edit', args=[process.id]) }}" class="top-menu"><span
