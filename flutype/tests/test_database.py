@@ -122,7 +122,6 @@ class DatabaseDJTestCase(TestCase):
         gal3 = read_gal_file(path_gal_lig)
         #print(gal3.equals(gal1))
         #print(gal3.equals(gal1))
-        print(gal1.iloc[0][2] == gal3.iloc[0][2])
         print(gal1.iloc[0][2])
         print(gal3.iloc[0][2])
 
