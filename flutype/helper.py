@@ -105,13 +105,22 @@ def create_spots(**kwargs):
         std = read_gal_file(kwargs["std"])
         list_std = std["Name"].values
         spots["std"]=[float(i) for i in list_std]
+
     for k, spot in spots.iterrows():
         this_spot,_ = Spot.objects.get_or_create(raw_spot = spot["raw_spot"],
                                                 spot_collection = spot["spot_collection"])
+
+
         if "std" in kwargs:
             this_spot.intensity = spot["intensity"]
             this_spot.std = spot["std"]
             this_spot.save()
+
+        else:
+            this_spot.intensity = spot["intensity"]
+            this_spot.save()
+
+
 
 
 
