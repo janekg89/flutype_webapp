@@ -48,6 +48,23 @@ urlpatterns = [
     url(r'^peptides_mobile/$', views.peptide_mobile_view, name='peptides_mobile'),
     url(r'^peptides_fixed/$', views.peptide_fixed_view, name='peptides_fixed'),
 
+    url(r'^complexes/$', views.complex_view, name='complexes'),
+    url(r'^complexes/new/$', views.complex_new, name='complex_new'),
+    url(r'^complexes/edit/(?P<pk>[0-9]+)/$', views.complex_edit, name='complex_edit'),
+    url(r'^complexes/delete/(?P<pk>[0-9]+)/$', views.complex_delete, name='complex_delete'),
+
+    url(r'^complexes_mobile/$', views.complex_mobile_view, name='complexes_mobile'),
+    url(r'^complexes_fixed/$', views.complex_fixed_view, name='complexes_fixed'),
+
+    url(r'^complexbatches/$', views.complex_batch_view, name='complexbatches'),
+    url(r'^complexbatches/new/$', views.complex_batch_new, name='complex_batch_new'),
+    url(r'^complexbatches/edit/(?P<pk>[0-9]+)/$', views.complex_batch_edit, name='complex_batch_edit'),
+    url(r'^complexbatches/delete/(?P<pk>[0-9]+)/$', views.complex_batch_delete, name='complex_batch_delete'),
+
+    url(r'^complexbatches_mobile/$', views.complex_batch_mobile_view, name='complexbatches_mobile'),
+    url(r'^complexbatches_fixed/$', views.complex_batch_fixed_view, name='complexbatches_fixed'),
+
+
     url(r'^virusbatches/$', views.virus_batch_view, name='virusbatches'),
     url(r'^virusbatches/new/$', views.virus_batch_new, name='virus_batch_new'),
     url(r'^virusbatches/edit/(?P<pk>[0-9]+)/$', views.virus_batch_edit, name='virus_batch_edit'),

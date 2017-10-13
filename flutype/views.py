@@ -11,12 +11,10 @@ from django.contrib.auth.models import User
 
 from .helper import generate_tree, tar_tree
 from .forms import PeptideForm, VirusForm, AntibodyForm, AntibodyBatchForm, \
-    PeptideBatchForm, VirusBatchForm, StepForm, QuenchingForm, WashingForm, \
-    DryingForm, SpottingForm, BlockingForm, IncubatingForm, ScanningForm, ProcessForm,\
-     Steps2Form, ProcessStepForm
+    PeptideBatchForm, VirusBatchForm, ProcessStepForm, ComplexBatchForm, ComplexForm
 
 from .models import RawSpotCollection, SpotCollection, Process, PeptideBatch, \
-    Peptide, VirusBatch, Virus, AntibodyBatch, Antibody, Step, ProcessStep
+    Peptide, VirusBatch, Virus, AntibodyBatch, Antibody, Step, ProcessStep, Complex, ComplexBatch
 from django.forms import formset_factory, inlineformset_factory
 from django.shortcuts import get_object_or_404, render, redirect
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -178,7 +176,7 @@ def peptide_batch_view(request):
 
 @login_required
 def peptide_batch_mobile_view(request):
-    peptide_batches = PeptideBatch.objects.filter(ligand2__isnull=False).distinct()
+    peptide_batches = PeptideBatch.objects.filter(lig_mob_batch__isnull=False).distinct()
     context = {
         'type': "mobile",
         'peptide_batches': peptide_batches,
@@ -189,7 +187,7 @@ def peptide_batch_mobile_view(request):
 
 @login_required
 def peptide_batch_fixed_view(request):
-    peptide_batches = PeptideBatch.objects.filter(ligand1__isnull=False).distinct()
+    peptide_batches = PeptideBatch.objects.filter(lig_fix_batch__isnull=False).distinct()
     context = {
         'type': "fixed",
         'peptide_batches': peptide_batches,
@@ -243,7 +241,7 @@ def virus_batch_view(request):
 
 @login_required
 def virus_batch_mobile_view(request):
-    virus_batches = VirusBatch.objects.filter(ligand2__isnull=False).distinct()
+    virus_batches = VirusBatch.objects.filter(lig_mob_batch__isnull=False).distinct()
     context = {
 
         'type': "mobile",
@@ -255,7 +253,7 @@ def virus_batch_mobile_view(request):
 
 @login_required
 def virus_batch_fixed_view(request):
-    virus_batches = VirusBatch.objects.filter(ligand1__isnull=False).distinct()
+    virus_batches = VirusBatch.objects.filter(lig_fix_batch__isnull=False).distinct()
     context = {
         'type': "fixed",
         'virus_batches': virus_batches,
@@ -276,7 +274,7 @@ def antibody_batch_view(request):
 
 @login_required
 def antibody_batch_mobile_view(request):
-    antibody_batches = AntibodyBatch.objects.filter(ligand2__isnull=False).distinct()
+    antibody_batches = AntibodyBatch.objects.filter(lig_mob_batch__isnull=False).distinct()
     context = {
         'type': "mobile",
 
@@ -288,7 +286,7 @@ def antibody_batch_mobile_view(request):
 
 @login_required
 def antibody_batch_fixed_view(request):
-    antibody_batches = AntibodyBatch.objects.filter(ligand1__isnull=False).distinct()
+    antibody_batches = AntibodyBatch.objects.filter(lig_fix_batch__isnull=False).distinct()
     context = {
         'type': "fixed",
         'antibody_batches': antibody_batches,
@@ -483,6 +481,133 @@ def peptide_new(request):
     else:
         form = PeptideForm()
         return render(request, 'flutype/create.html', {'form': form, 'type': 'peptide'})
+
+@login_required
+def complex_view(request):
+    complexes = Complex.objects.all()
+    context = {
+        'complexes': complexes,
+    }
+    return render(request,
+                  'flutype/complexes.html', context)
+
+
+@login_required
+def complex_mobile_view(request):
+    complexes = Complex.objects.filter(ligands2__isnull=False).distinct()
+    context = {
+        'type': "mobile",
+        'complexes': complexes,
+    }
+    return render(request,
+                  'flutype/complexes.html', context)
+
+
+@login_required
+def complex_fixed_view(request):
+    complexes = Complex.objects.filter(ligands1__isnull=False).distinct()
+
+    context = {
+        'type': "fixed",
+        'complexes': complexes,
+    }
+    return render(request,
+                  'flutype/complexes.html', context)
+
+
+@login_required
+def complex_new(request):
+    if request.method == 'POST':
+        form = ComplexForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('complexes')
+    else:
+        form = ComplexForm()
+        return render(request, 'flutype/create.html', {'form': form, 'type': 'complex'})
+
+@login_required
+def complex_delete(request, pk):
+    complex = get_object_or_404(Complex, pk=pk)
+    if request.method == 'POST':
+        complex.delete()
+        return redirect('peptides')
+    return render(request, 'flutype/delete.html', {'complex': complex, 'type': 'complex'})
+
+
+@login_required
+def complex_edit(request, pk):
+    instance = get_object_or_404(Complex, pk=pk)
+    if request.method == 'POST':
+        form = ComplexForm(request.POST, instance=instance)
+        if form.is_valid():
+            form.save()
+            return redirect('complexes')
+    else:
+        form = ComplexForm(instance=instance)
+        return render(request, 'flutype/create.html', {'form': form, 'type': 'complex'})
+
+@login_required
+def complex_batch_delete(request, pk):
+    complex_batch = get_object_or_404(ComplexBatch, pk=pk)
+    if request.method == 'POST':
+        complex_batch.delete()
+        return redirect('complexbatches')
+    return render(request, 'flutype/delete.html', {'complex_batch': complex_batch, 'type': 'complex_batch'})
+
+@login_required
+def complex_batch_edit(request, pk):
+    instance = get_object_or_404(ComplexBatch, pk=pk)
+    if request.method == 'POST':
+        form = ComplexBatchForm(request.POST, instance=instance)
+        if form.is_valid():
+            form.save()
+            return redirect('complexbatches')
+    else:
+        form = ComplexBatchForm(instance=instance)
+        return render(request, 'flutype/create.html', {'form': form, 'type': 'complex_batch'})
+
+@login_required
+def complex_batch_new(request):
+    if request.method == 'POST':
+        form = ComplexBatchForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('complexbatches')
+    else:
+        form = ComplexBatchForm()
+        return render(request, 'flutype/create.html', {'form': form, 'type': 'complex_batch'})
+
+@login_required
+def complex_batch_view(request):
+    complex_batches = ComplexBatch.objects.all()
+    context = {
+        'complex_batches': complex_batches,
+    }
+    return render(request,
+                  'flutype/complexbatches.html', context)
+
+
+@login_required
+def complex_batch_mobile_view(request):
+    complex_batches = ComplexBatch.objects.filter(lig_mob_batch__isnull=False).distinct()
+    context = {
+        'type': "mobile",
+        'complex_batches': complex_batches,
+    }
+    return render(request,
+                  'flutype/complexbatches.html', context)
+
+
+@login_required
+def complex_batch_fixed_view(request):
+    complex_batches = ComplexBatch.objects.filter(lig_fix_batch__isnull=False).distinct()
+    context = {
+        'type': "fixed",
+        'complex_batches': complex_batches,
+    }
+    return render(request,
+                  'flutype/complexbatches.html', context)
 
 
 @login_required

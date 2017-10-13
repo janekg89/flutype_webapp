@@ -19,7 +19,6 @@ from model_utils.managers import InheritanceManager
 from polymorphic.models import PolymorphicModel
 from imagekit.models import ImageSpecField
 from imagekit.processors import Transpose, ResizeToFit, Adjust
-from django.contrib.contenttypes.models import ContentType
 from .helper import OverwriteStorage, CHAR_MAX_LENGTH
 from .managers import LigandBatchManager,ComplexManager, StepManager,StudyManager, MeasurementManager , GalFileManager, \
     ProcessManager , SpotcollectionManager,RawSpotManager, RawDocManager
