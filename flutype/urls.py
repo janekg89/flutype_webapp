@@ -4,6 +4,8 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index_view, name='index'),
+    url(r'^study/(?P<pk>[0-9]+)/$', views.index_view, name='study'),
+
     url(r'^myexperiments/$', views.my_index_view, name='my_index'),
     url(r'^users/$', views.users_view, name='users'),
     url(r'^about/$', views.about_en_view, name='about'),

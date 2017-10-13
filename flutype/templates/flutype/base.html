@@ -54,12 +54,18 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                {% if request.user.is_authenticated %}
-                    <li class="active"><a href="{{ url('index') }}"><i class="fa fa-building fa-fw"></i> Experiments
-                        <span class="sr-only">(current)</span></a></li>
+                {% if request.user.is_authenticated %}<li class="dropdown active">
+                        <a class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-certificate" aria-hidden="true"></i> Experiments <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url('index') }}">Studies</a></li>
+                                <li><a href="{{ url('peptides') }}">Measurements</a></li>
+                                <li><a href="{{ url('viruses') }}">Results</a></li>
+                            </ul>
+                    </li>
 
                     <li class="dropdown active">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <a  class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-certificate" aria-hidden="true"></i> Ligands <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ url('antibodies') }}">Antibodies</a></li>
@@ -174,7 +180,7 @@
                                 class="caret"></span> </a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="{{ url('my_index') }}"> <i class="fa fa-user fa-fw" aria-hidden="true"></i> My
-                                Experiments </a></li>
+                                Studies </a></li>
                             <li><a href="{{ url('change_password') }}"> <i class="fa fa-key"></i> Change Password </a>
                             </li>
                             <li><a href="{{ url('logout') }}?next={{ request.path }}"> <i

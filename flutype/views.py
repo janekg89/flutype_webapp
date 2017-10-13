@@ -14,7 +14,7 @@ from .forms import PeptideForm, VirusForm, AntibodyForm, AntibodyBatchForm, \
     PeptideBatchForm, VirusBatchForm, ProcessStepForm, ComplexBatchForm, ComplexForm
 
 from .models import RawSpotCollection, SpotCollection, Process, PeptideBatch, \
-    Peptide, VirusBatch, Virus, AntibodyBatch, Antibody, Step, ProcessStep, Complex, ComplexBatch
+    Peptide, VirusBatch, Virus, AntibodyBatch, Antibody, Step, ProcessStep, Complex, ComplexBatch, Study
 from django.forms import formset_factory, inlineformset_factory
 from django.shortcuts import get_object_or_404, render, redirect
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -74,7 +74,23 @@ def test_view(request):
 
 @login_required
 def index_view(request):
-    collections = RawSpotCollection.objects.all()
+    studies = Study.objects.all()
+
+    context = {
+        'type': 'all',
+        'studies': studies,
+    }
+    return render(request,
+                  'flutype/index.html', context)
+
+@login_required
+def study_view(request, pk):
+    """ Renders detailed RawSpotCollection View. """
+
+    study = get_object_or_404(Study, id=pk)
+
+
+    collections = RawSpotCollection.objects.filter(study=study)
 
     context = {
         'type': 'all',
