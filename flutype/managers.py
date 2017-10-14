@@ -154,8 +154,8 @@ class ProcessManager(models.Manager):
 
         intensity_path = kwargs["steps_path"]
         steps = read_tsv_table(intensity_path)
-        this_process, created = super(ProcessManager, self).get_or_create(sid=unique_ordering(steps),
-                                                                          unique_ordering=unique_ordering(steps))
+        sid= unique_ordering(steps)
+        this_process, created = super(ProcessManager, self).get_or_create(sid=sid)
         steps["start"]=steps["start"].str.replace('.', '-')
         for _ , step in steps.iterrows():
             Step= apps.get_model("flutype","Step")

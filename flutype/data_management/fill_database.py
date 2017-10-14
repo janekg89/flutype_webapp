@@ -19,7 +19,7 @@ django.setup()
 
 ###########################################################
 from flutype.helper import  fill_multiple_models_from_dict
-from flutype.data_management.master import LIGAND_BATCHES, LIGANDS, STEPS, MASTERPATH,Master
+from flutype.data_management.master import LIGAND_BATCHES, LIGANDS, STEPS, MASTERPATH,Master, BASEPATH
 
 
 
@@ -62,6 +62,8 @@ class DatabaseDJ(object):
 
 
 if __name__ == "__main__":
+    MASTERPATH = os.path.join(BASEPATH, "master_test")
+
     ma = Master(MASTERPATH)
     DatabaseDJ(ma).update_db()
 

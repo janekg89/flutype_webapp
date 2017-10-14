@@ -2,16 +2,18 @@ import os
 
 from flutype.data_management.master import Master, BASEPATH
 from flutype.data_management.fill_database import DatabaseDJ
-from django.test import TestCase
+from django.test import TransactionTestCase
 from flutype.data_management.fill_users import create_users, user_defs
 from django.apps import apps
 from flutype.helper import get_unique_galfile, read_gal_file
 import pandas as pd
-MASTERPATH = os.path.join(BASEPATH, "master_new")
+from django.db import transaction
+MASTERPATH = os.path.join(BASEPATH, "master_test")
 
 
 
-class DatabaseDJTestCase(TestCase):
+class DatabaseDJTestCase(TransactionTestCase):
+
     def setUp(self):
         create_users(user_defs=user_defs)
         self.ma = Master(MASTERPATH)
@@ -72,13 +74,13 @@ class DatabaseDJTestCase(TestCase):
         ligand_batches = self.ma.read_ligand_batches()
         self.db.update_ligands_or_batches(ligand_batches)
 
-
         steps = self.ma.read_steps()
         self.db.update_steps(steps)
 
-        studies= self.ma.read_studies()
-        path_gal_lig = studies["170929-tutorial"]["measurements"]["170929-tutorial-microwell-1"]["results"]["final"]["intensities"]
+        studies = self.ma.read_studies()
         self.db.update_studies(studies)
+
+
 
         Study = apps.get_model("flutype", "Study")
         RawSpotCollection = apps.get_model("flutype", "RawSpotCollection")
@@ -92,38 +94,8 @@ class DatabaseDJTestCase(TestCase):
         self.assertEqual(raw_spot_collections.count(), 3)
         self.assertEqual(spot_collections.count(), 4)
 
-        df1 = read_gal_file(path_gal_lig)
-        GalFile = apps.get_model("flutype", model_name="GalFile")
-        galfile = GalFile.objects.get(sid="intensity_001")
-        df2 = read_gal_file(galfile.file.path)
-        print(df1)
-        print(df2)
-
-    def test_get_unique(self):
 
 
-        studies = self.ma.read_studies()
-        path_gal_lig = studies["170929-tutorial"]["measurements"]["170929-tutorial-microwell-1"]["results"]["final"]["intensities"]
-        df1 = read_gal_file(path_gal_lig)
-        GalFile = apps.get_model("flutype", model_name="GalFile")
-        galfile = GalFile.objects.get(sid="intensity_001")
-        df2 = read_gal_file(galfile.file.path)
-        print(df1)
-        print(df2)
-
-    def test_ge(self):
-
-
-        gal1= read_gal_file("/home/janekg89/Develop/Pycharm_Projects/flutype_webapp/media/gal_file/intensity_001.txt")
-
-        studies = self.ma.read_studies()
-        path_gal_lig = studies["170929-tutorial"]["measurements"]["170929-tutorial-microwell-1"]["results"]["final"][
-            "intensities"]
-        gal3 = read_gal_file(path_gal_lig)
-        #print(gal3.equals(gal1))
-        #print(gal3.equals(gal1))
-        print(gal1.iloc[0][2])
-        print(gal3.iloc[0][2])
 
 
 
