@@ -1,5 +1,6 @@
 sid	method	temperature	comment	duration
 I01	Im KS nach Abdeckung mit Klebefolie			
+I02	Coating_RKI	22	Coating in room temperature, 50 muliter	
 I03	1:1000 Antibody H1N1 Goat Serotec IAV	37	elisa: incubation of  antibody 50 muliter	
 I04	1:1000 Antibody H1N1 Maus Abcam IAV	37	elisa: incubation of  antibody 50 muliter	
 I05	1:1000 Antibody GA2B Maus Serotec M1	37	elisa: incubation of  antibody 50 muliter	
