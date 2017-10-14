@@ -32,7 +32,7 @@ class MasterTestCase(TestCase):
         self.assertEqual(st.measurement_sids, {'170929-tutorial-elisa-1',
                                                '170929-tutorial-microwell-1',
                                                '170929-tutorial-microarray-1'})
-        self.assertEqual(set(st.meta.keys()),{'task', 'result'})
+        self.assertEqual(set(st.meta.keys()),{'task', 'result','hidden','status'})
         self.assertEqual(set(st.read_measurements().keys()),{'170929-tutorial-elisa-1',
                                                              '170929-tutorial-microwell-1',
                                                              '170929-tutorial-microarray-1'})
@@ -43,7 +43,7 @@ class MasterTestCase(TestCase):
     def test_measurement_init(self):
         path_study = os.path.join(self.ma.path_study,next(iter(self.ma.study_sids)))
         st = Study(path_study)
-        path_measurement = os.path.join(st.path_measurements,next(iter(st.measurement_sids)))
+        path_measurement = os.path.join(st.path_measurements,"170929-tutorial-elisa-1")
         meas = Measurement(path_measurement)
         self.assertEqual(meas.sid,"170929-tutorial-elisa-1")
         self.assertEqual(meas.Study.sid,st.sid)
@@ -52,7 +52,8 @@ class MasterTestCase(TestCase):
                                                 'manufacturer',
                                                 'hidden',
                                                 'comment',
-                                                'functionalization'
+                                                'functionalization',
+                                                'status'
                                                 })
         self.assertEqual(meas.raw_docs_fnames,set([]))
         self.assertEqual(next(iter(meas.read_results().keys())), "raw")
