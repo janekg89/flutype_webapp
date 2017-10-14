@@ -62,8 +62,7 @@ class StudyManager(models.Manager):
     def get_or_create(self, *args, **kwargs):
         if "meta" in kwargs:
             print("*** Creating Study <{}>***".format(kwargs["meta"]["sid"]))
-            this_study, created_s = super(StudyManager, self).get_or_create(*args,**kwargs)
-
+            this_study, created_s = super(StudyManager, self).get_or_create(*args, **kwargs["meta"])
 
         if "raw_docs_fpaths" in kwargs:
             for fpath in kwargs["raw_docs_fpaths"]:

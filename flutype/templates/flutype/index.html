@@ -41,10 +41,8 @@
                             <td> {{s.modified_date.strftime('%Y.%m.%d') }}</td>
                             <!-- user -->
                             <td>
-                                    {% for m in s.rawspotcollection_set.all() %}
-                                        {% for user in m.process.users() %}
+                                    {% for user in s.users() %}
                                             {{ user.first_name }} {{ user.last_name }}
-                                        {% endfor %}
                                     {% endfor %}
                             </td>
 

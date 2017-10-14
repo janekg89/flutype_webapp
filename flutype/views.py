@@ -29,7 +29,7 @@ import json
 
 @login_required
 def index_view(request):
-    studies = Study.objects.all()
+    studies = Study.objects.filter(hidden=False)
 
     context = {
         'type': 'all',

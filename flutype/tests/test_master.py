@@ -6,7 +6,7 @@ from django.test import TestCase
 class MasterTestCase(TestCase):
 
     def setUp(self):
-        self.path_master_test = os.path.join(BASEPATH,"master_new/")
+        self.path_master_test = os.path.join(BASEPATH,"master_test/")
         self.ma = Master(self.path_master_test)
 
     def test_master_init(self):
@@ -16,9 +16,9 @@ class MasterTestCase(TestCase):
         self.assertEqual(set(self.ma.read_steps().keys()), set(self.ma.steps))
         self.assertEqual(set(self.ma.read_ligands().keys()), set(self.ma.ligands))
         ################################################################################################################
-        ligand_batches = {"buffer_batch"}
+        ligand_batches = {"bufferBatch", "complexBatch"}
         for ligand in self.ma.ligands:
-            ligand_batches.add("{}_batch".format(ligand))
+            ligand_batches.add("{}Batch".format(ligand))
         self.assertEqual(set(self.ma.read_ligand_batches().keys()),ligand_batches)
         self.assertEqual(set(self.ma.read_studies().keys()),{'170929-tutorial'})
 
@@ -28,7 +28,7 @@ class MasterTestCase(TestCase):
         st = Study(path_study)
         self.assertEqual(st.sid,"170929-tutorial")
         self.assertEqual(st.Master.study_sids,{'170929-tutorial'})
-        self.assertEqual(st.raw_docs_fnames,{'tree.tar.gz'})
+        self.assertEqual(st.raw_docs_fnames,{'tree.tar.gz','test_file_1.txt'})
         self.assertEqual(st.measurement_sids, {'170929-tutorial-elisa-1',
                                                '170929-tutorial-microwell-1',
                                                '170929-tutorial-microarray-1'})
@@ -49,23 +49,29 @@ class MasterTestCase(TestCase):
         self.assertEqual(meas.Study.sid,st.sid)
         self.assertEqual(set(meas.meta.keys()),{'measurement_type',
                                                 'batch_sid',
-                                                'user',
-                                                'surface_substance',
-                                                'manufacturer'})
+                                                'manufacturer',
+                                                'hidden',
+                                                'comment',
+                                                'functionalization'
+                                                })
         self.assertEqual(meas.raw_docs_fnames,set([]))
         self.assertEqual(next(iter(meas.read_results().keys())), "raw")
-        self.assertEqual(set(meas.read().keys()),{"meta","lig_mob","lig_fix","steps","raw_docs","results"})
+        self.assertEqual(set(meas.read().keys()),{"meta","lig_mob_path","lig_fix_path","steps_path","raw_docs_fpaths","results"})
 
 
     def test_measurement_results_init(self):
         path_study = os.path.join(self.ma.path_study,next(iter(self.ma.study_sids)))
         st = Study(path_study)
-        path_measurement = os.path.join(st.path_measurements, next(iter(st.measurement_sids)))
+        path_measurement = os.path.join(st.path_measurements,"170929-tutorial-elisa-1")
         meas = Measurement(path_measurement)
         path_measurement_results = os.path.join(meas.path_results,next(iter(meas.results_sids)))
         mea_result = MeasurementResult(path_measurement_results)
         self.assertEqual(mea_result.sid,"raw")
-        self.assertEqual(set(mea_result.read().keys()),{'comment', 'intensity', 'processing_type'})
+        self.assertEqual(set(mea_result.read().keys()),{"raw_docs_fpaths",'intensities', 'meta'})
+
+    def test_read_all(self):
+        master_new = os.path.join(BASEPATH,"master_new/")
+
 
 
 
