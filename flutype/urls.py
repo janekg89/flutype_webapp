@@ -4,9 +4,13 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index_view, name='index'),
-    url(r'^study/(?P<pk>[0-9]+)/$', views.index_view, name='study'),
+    url(r'^mystudies/$', views.my_index_view, name='my_studies'),
 
-    url(r'^myexperiments/$', views.my_index_view, name='my_index'),
+    url(r'^study/(?P<pk>[0-9]+)/$', views.study_view, name='study'),
+    url(r'^measurements/$', views.measurements_view, name='measurements'),
+    url(r'^mymeasurements/$', views.my_measurements_view, name='my_measurements'),
+
+
     url(r'^users/$', views.users_view, name='users'),
     url(r'^about/$', views.about_en_view, name='about'),
     url(r'^about_de/$', views.about_de_view, name='about_de'),
@@ -25,9 +29,6 @@ urlpatterns = [
     url(r'^steps/delete/(?P<pk>[0-9]+)/$', views.step_delete, name='step_delete'),
 
     url(r'^processes/$', views.processes_view, name='processes'),
-    url(r'^processes/new/$', views.process_new, name='process_new'),
-    url(r'^processes/edit/(?P<pk>[0-9]+)/$', views.process_edit, name='process_edit'),
-    url(r'^processes/delete/(?P<pk>[0-9]+)/$', views.process_delete, name='process_delete'),
 
     url(r'^process/(?P<pk>[0-9]+)/$', views.process_view, name='processview'),
 

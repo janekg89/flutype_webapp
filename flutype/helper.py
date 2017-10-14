@@ -14,6 +14,11 @@ import io
 
 CHAR_MAX_LENGTH = 50
 
+def empty_list(max):
+    list = []
+    for n in range(max):
+        list.append('')
+    return list
 
 def generate_tree(path):
     path_templates = os.path.join(path, "../../../", "templates/flutype/")
