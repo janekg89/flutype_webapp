@@ -1,7 +1,0 @@
-	sid	method	temperature	comment	substance	duration
-0	no	no				
-1	W001	100 mu l/well			 NaHCO3	
-2	W002	100 mu l/well			 PBST	
-3	W003	H2O Leitung und Becherglas 20x Konjugate 90 min schuetteln				
-4	W004	100 mu l/well			 H2O	
-5	W005	300 mu l/well			PBST	

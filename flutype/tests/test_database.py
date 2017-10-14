@@ -1,7 +1,7 @@
 import os
 
 from flutype.data_management.master import Master, BASEPATH
-from flutype.data_management.database import DatabaseDJ
+from flutype.data_management.fill_database import DatabaseDJ
 from django.test import TestCase
 from flutype.data_management.fill_users import create_users, user_defs
 from django.apps import apps

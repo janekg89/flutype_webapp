@@ -1,4 +1,0 @@
-sid	raw
-comment	results from a  elisa intensity reader without any post processing
-processing_type	Elisa Intensity Reader 1.23
-intensity_file	final_intensity.tsv

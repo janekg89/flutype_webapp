@@ -11,6 +11,7 @@ import datetime
 import re
 import tempfile
 import io
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 CHAR_MAX_LENGTH = 50
 
@@ -21,7 +22,7 @@ def empty_list(max):
     return list
 
 def generate_tree(path):
-    path_templates = os.path.join(path, "../../../", "templates/flutype/")
+    path_templates = os.path.join(BASE_DIR, "flutype/templates/flutype/")
     path_file = os.path.join(path_templates, "tree.html")
     #################
     os.system("tree {} -oH {} . --nolinks".format(path,path_file))
