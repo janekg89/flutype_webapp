@@ -21,6 +21,7 @@ from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.http import HttpResponseRedirect
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
 from django.db.models import Max
@@ -38,9 +39,10 @@ def index_view(request):
     return render(request,
                   'flutype/index.html', context)
 
+
 @login_required
 def my_index_view(request):
-    studies = Study.objects.filter(rawspotcollection__processstep__user=request.user).distinct()
+    studies = Study.objects.filter(rawspotcollection__processstep__user=request.user, hidden=False).distinct()
     context = {
         'type': 'my',
         'studies': studies,
@@ -76,14 +78,40 @@ def study_view(request, pk):
         return render(request,
                       'flutype/study.html', context)
 
+@login_required
+def tutorial_db_view(request):
+    """ Renders detailed RawSpotCollection View. """
 
+    study = get_object_or_404(Study, sid="170929-tutorial")
+    if request.method == 'POST':
+        form = StudyForm(request.POST,  instance=study)
+        if form.is_valid():
+            form.save()
+        return redirect(request.META['HTTP_REFERER'])
+
+    else:
+
+
+
+        collections = study.rawspotcollection_set.all()
+        form = StudyForm(instance=study)
+
+
+        context = {
+            'type': 'all',
+            'collections': collections,
+            'study':study,
+            'form':form
+        }
+        return render(request,
+                      'flutype/study.html', context)
 
 
 
 
 @login_required
 def measurements_view(request):
-    collections = RawSpotCollection.objects.all()
+    collections = RawSpotCollection.objects.filter(hidden=False)
     context = {
         'type': 'all',
         'collections': collections,
@@ -95,7 +123,7 @@ def measurements_view(request):
 
 @login_required
 def my_measurements_view(request):
-    collections = RawSpotCollection.objects.filter(processstep__user=request.user).distinct()
+    collections = RawSpotCollection.objects.filter(processstep__user=request.user, hidden=False).distinct()
     context = {
         'type': 'my',
         'collections': collections,
@@ -234,10 +262,8 @@ def database_scheme_de_view(request):
 
 @login_required
 def tutorial_en_view(request):
-    path_file = os.path.dirname(__file__)
-    path_tutorial = os.path.join(path_file,"static/flutype/tutorial")
+    path_tutorial = os.path.join(BASE_DIR,"master_test/studies")
     generate_tree(path_tutorial)
-    print(tar_tree(path_tutorial))
 
     return render(request, "flutype/tutorial.html", {"language": "en"})
 

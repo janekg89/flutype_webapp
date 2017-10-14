@@ -20,7 +20,7 @@ from flutype.helper import read_tsv_diconary , read_tsv_table
 STEPS = {"blocking","drying","incubating","incubatingAnalyt","quenching","scanning","spotting","washing"}
 LIGANDS = {"antibody","peptide","virus"}
 LIGAND_BATCHES =  {"antibodyBatch","peptideBatch","virusBatch","complexBatch","bufferBatch"}
-MASTERPATH = os.path.join(BASEPATH, "master_new")
+MASTERPATH = os.path.join(BASEPATH, "master")
 
 
 class BaseAll(object):

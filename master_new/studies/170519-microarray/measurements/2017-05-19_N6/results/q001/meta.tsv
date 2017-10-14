@@ -1,3 +1,0 @@
-comment	A spot detecting script has located the spots in the image.The spots are centered in a larger square.The intesity values are calculated as the total intensity over that square. The image is not preprocessed.
-processing_type	0.1 script for spot detection and quantification
-intensity_file	intensity.tsv
