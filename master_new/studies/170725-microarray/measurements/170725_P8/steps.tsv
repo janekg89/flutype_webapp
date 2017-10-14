@@ -1,0 +1,9 @@
+step	index	user	start	comment	image	intensities
+S03	0					
+SC001	1			Wavelength: 532 Intensity: 500 Gain:50	170724_P8_50_500_532.jpg	
+W004	2					
+SC001	3			Wavelength: 532 Intensity: 500 Gain:50	170724_P8_50_500_532_gewaschenH2O.jpg	
+I01	4					
+W004	5					
+SC001	6			Wavelength: 635 Intensity: 500 Gain:80	P8_170726_500_80_635_nach inkubation_gewaschen.jpg	
+SC001	7			Wavelength: 635 Intensity: 500 Gain:50	P8_170726_500_50_635_nach inkubation_gewaschen.jpg	

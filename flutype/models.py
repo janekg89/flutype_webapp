@@ -300,6 +300,10 @@ class Study(Sidable, Timestampable, Statusable, FileAttachable, Hidable, models.
     result = models.TextField(blank=True, null=True)
     objects = StudyManager()
 
+    def users(self):
+        user_ids = self.rawspotcollection_set.values_list("processstep__user", flat="True").distinct()
+        return User.objects.filter(id__in=user_ids)
+
 class Measurement(Sidable, Commentable, Timestampable, Statusable, FileAttachable, Hidable, models.Model):
     """
     """

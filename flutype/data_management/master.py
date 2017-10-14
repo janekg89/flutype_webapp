@@ -206,6 +206,7 @@ class MeasurementResult(Base):
 
 
 
+
     def read(self):
         dic_results = {}
         del self.meta["intensity_file"]
