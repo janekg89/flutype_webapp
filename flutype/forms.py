@@ -5,7 +5,8 @@ from django.contrib import admin
 
 from .models import Peptide, PeptideBatch, Virus, VirusBatch, Antibody, AntibodyBatch, Complex, \
     ProcessStep, Step, Spotting, Washing, Drying, Quenching, Blocking, Scanning, Incubating, \
-    Process, GalFile, Measurement, RawSpotCollection, RawSpot,SpotCollection, Spot, ComplexBatch, Study
+    Process, GalFile, Measurement, RawSpotCollection, RawSpot,SpotCollection, Spot, ComplexBatch, Study, \
+    IncubatingAnalyt
 
 class OrderedModelMultipleChoiceField(forms.ModelMultipleChoiceField):
     def clean(self, value):
@@ -118,6 +119,16 @@ class BlockingForm(forms.ModelForm):
 class IncubatingForm(forms.ModelForm):
     class Meta:
         model = Incubating
+        fields = ['sid', 'method', 'temperature', 'comment']
+        labels ={
+            'temperature':'Temperature',
+        }
+        help_texts = {
+            'temperature': 'In Celsius.',
+        }
+class IncubatingAnalytForm(forms.ModelForm):
+    class Meta:
+        model = IncubatingAnalyt
         fields = ['sid', 'method', 'temperature', 'comment']
         labels ={
             'temperature':'Temperature',
