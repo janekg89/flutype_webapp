@@ -74,6 +74,8 @@ def read_tsv_diconary(fpath):
                 value = True
             if value == "":
                 value = None
+            if value =="FALSE":
+                value = False
             d[key] = value
 
     return d
@@ -94,6 +96,7 @@ def get_or_create_raw_spots(**kwargs):
     spots["lig_mob_batch"]= lig_mob["Name"].values
     spots["raw_spot_collection"]=kwargs["raw_spot_collection"]
     for k, spot in spots.iterrows():
+        #print(spot["lig_fix_batch"])
         raw_spot, created = RawSpot.objects.get_or_create(**spot)
         raw_spots.append(raw_spot)
     return raw_spots, created

@@ -7,9 +7,9 @@ from .helper import OverwriteStorage, CHAR_MAX_LENGTH
 from django.apps import apps
 
 class Status(DjangoChoices):
-    PLANNING = ChoiceItem("planning")
-    INPROGRESS = ChoiceItem("in progress")
-    FINISHED = ChoiceItem("finished")
+    planning = ChoiceItem("planning")
+    in_progress = ChoiceItem("in progress")
+    finished = ChoiceItem("finished")
 
 
 class Statusable(models.Model):
