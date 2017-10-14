@@ -7,6 +7,8 @@ urlpatterns = [
     url(r'^mystudies/$', views.my_index_view, name='my_studies'),
 
     url(r'^study/(?P<pk>[0-9]+)/$', views.study_view, name='study'),
+    url(r'^tutorial_db/$', views.tutorial_db_view, name='tutorial_db'),
+
     url(r'^measurements/$', views.measurements_view, name='measurements'),
     url(r'^mymeasurements/$', views.my_measurements_view, name='my_measurements'),
 
