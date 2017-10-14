@@ -56,11 +56,11 @@
             <ul class="nav navbar-nav">
                 {% if request.user.is_authenticated %}<li class="dropdown active">
                         <a class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-certificate" aria-hidden="true"></i> Experiments <b class="caret"></b></a>
+                            <i class="fa fa-eyedropper" aria-hidden="true"></i>Experiments <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ url('index') }}">Studies</a></li>
-                                <li><a href="{{ url('peptides') }}">Measurements</a></li>
-                                <li><a href="{{ url('viruses') }}">Results</a></li>
+                                <li><a href="{{ url('measurements') }}">Measurements</a></li>
+
                             </ul>
                     </li>
 
@@ -75,7 +75,7 @@
                             <li><a href="{{ url('complexes') }}">Complex</a></li>
                             <li class="divider"></li>
                             <li class="dropdown-submenu">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <a  class="dropdown-toggle" data-toggle="dropdown">
                                     <i class="fa fa-anchor fa-fw"> </i> Fixed</a>
                                 <ul class="dropdown-menu">
                                     <li><a href="{{ url('antibodies_fixed') }}">Antibodies</a></li>
@@ -86,7 +86,7 @@
                                 </ul>
                             </li>
                              <li class="dropdown-submenu">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown">
                                     <i class="fa fa-tint fa-fw"></i> Analyt</a>
                                  <ul class="dropdown-menu">
                                     <li><a href="{{ url('antibodies_mobile') }}">Antibodies</a></li>
@@ -100,7 +100,7 @@
                     </li>
 
                     <li class="dropdown active">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-flask" aria-hidden="true"></i>Batches <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li><a href="{{ url('antibodybatches') }}">Antibodies</a></li>
@@ -110,7 +110,7 @@
                         <li><a href="{{ url('complexbatches') }}">Complex</a></li>
                         <li class="divider"></li>
                         <li class="dropdown-submenu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown">
                                  <i class="fa fa-anchor fa-fw"></i>Fixed </a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ url('antibodybatches_fixed') }}">Antibodies</a></li>
@@ -121,7 +121,7 @@
                             </ul>
                         </li>
                          <li class="dropdown-submenu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-tint fa-fw"></i> Analyt</a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ url('antibodybatches_mobile') }}">Antibodies</a></li>
@@ -152,8 +152,6 @@
                         <a data-toggle="dropdown" role="button" aria-expanded="false"> <i class="fa fa-question fa-fw"
                         ></i> How <span class="caret"></span> </a>
                         <ul class="dropdown-menu" role="menu">
-                             <li><a href="{{ url('database_scheme') }}">Database Schema <span class="sr-only">(current)
-                             </span></a></li>
                             <li><a href="{{ url('tutorial') }}">Tutorial <span class="sr-only">(current)
                              </span></a></li>
 
@@ -179,8 +177,12 @@
                                 class="fa fa-user fa-fw"></i> {{ request.user.get_username() }} <span
                                 class="caret"></span> </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="{{ url('my_index') }}"> <i class="fa fa-user fa-fw" aria-hidden="true"></i> My
+                            <li><a href="{{ url('my_studies') }}"> <i class="fa fa-user fa-fw" aria-hidden="true"></i> My
                                 Studies </a></li>
+                            <li><a href="{{ url('my_measurements') }}"> <i class="fa fa-user fa-fw" aria-hidden="true"></i> My
+                                Measurements </a></li>
+                            <li class="divider"></li>
+
                             <li><a href="{{ url('change_password') }}"> <i class="fa fa-key"></i> Change Password </a>
                             </li>
                             <li><a href="{{ url('logout') }}?next={{ request.path }}"> <i

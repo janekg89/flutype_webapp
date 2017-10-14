@@ -308,7 +308,7 @@ class Measurement(Sidable, Commentable, Timestampable, Statusable, FileAttachabl
     functionalization = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Substance.choices)
     manufacturer = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Manufacturer.choices)
     process = models.ForeignKey("Process", blank=True, null=True)
-    study = models.ForeignKey(Study, blank=True, null=True)
+    studies = models.ManyToManyField(Study, blank=True)
     objects = MeasurementManager()
 
 
