@@ -5,28 +5,34 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.by import By
 from flutype_webapp.settings import DEFAULT_USER_PASSWORD
-from django.test import LiveServerTestCase
+from django.test import LiveServerTestCase, TransactionTestCase
 from selenium import webdriver
 from flutype.data_management.fill_users import create_users, user_defs
-from flutype.data_management.fill_database import fill_database, path_master
+from flutype.data_management.fill_database import DatabaseDJ
+from flutype.data_management.master import Master, BASEPATH
+import os
+
+
 
 from flutype.models import  SpotCollection
 from django.test import tag
 
 
+@tag('local')
 class SeleniumTestCase(LiveServerTestCase):
+    fixtures = ["tutorial.json"]
     def setUp(self):
         self.driver = webdriver.PhantomJS(service_args=['--ignore-ssl-errors=true', '--ssl-protocol=any',
                                                         '--web-security=false'])
         self.driver.set_window_size(1024, 768)
         create_users(user_defs=user_defs)
-        fill_database(path_master=path_master, collection_ids=[
-            "2017-05-19_E5"
-        ])
+
+
+
 
     def tearDown(self):
         self.driver.quit()
-
+    @tag('local')
     def login(self, expected_url):
         self.driver.get(expected_url)
         self.driver.find_element_by_id('id_username').send_keys("hmemczak")
