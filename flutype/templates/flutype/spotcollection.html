@@ -20,25 +20,24 @@
                 {% if type == "quantified" %}
                     <a class = "btn btn-default" href="{{ url('rawspotcollectionview', args=[collection.pk]) }}">
                         <i class="fa fa-arrow-up" aria-hidden="true"></i>
-                            <b>  back to Raw Spot Collection </b>
+                            <b>  back to Measurement: {{collection.sid}}  </b>
                     </a>
+                <h1>Result: {{ q_collection.sid }}</h1>
+
+                {% elif type == "raw" %}
+                <h1>Measurement: {{ collection.sid }} </h1>
                 {% endif %}
 
-                {% if type == "raw" %}
-                    <h1>Raw: {{ collection.sid }} </h1>
-                {% else %}
-                    <h1>Quantified: {{ q_collection.sid }}</h1>
-                {% endif %}
             </div>
             <!-- Collection/QCollection Info -->
             <div class="row">
                 {% if type == "raw" %}
-                    <h2>Quantified Collections</h2>
+                    <h2>Results</h2>
                     {% if collection.is_spot_collection() %}
                         <p>
                             {% for sc in collection.spotcollection_set.all() %}
                                 <a href="{{ url('qspotcollectionview', args=[sc.id]) }}">
-                                    <b>QuantifiedCollection:{{ sc.sid }}</b></a>
+                                    <b>{{ sc.sid }}</b></a>
                                 <br/>
                             {% endfor %}
                         </p>
@@ -58,60 +57,65 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% if collection.experiment_type %}
                         <tr>
-                            <td><b>Experiment Type </b></td>
-                            <td>{{ collection.experiment_type }}</td>
+                            <th>Measurement Type </th>
+                            <td>{{ collection.measurement_type }}</td>
                         </tr>
-                    {% endif %}
-                    {% if collection.batch %}
                         <tr>
-                            <td><b>RawSpotCollection Batch</b></td>
-                            <td>{{ collection.batch }}</td>
+                            <th>Batch Sid</th>
+                            <td>{{ collection.batch_sid}}</td>
                         </tr>
-                    {% endif %}
-                    {% if collection.functionalization %}
                         <tr>
-                            <td><b>Functionalization</b></td>
+                            <th>Functionalization</th>
                             <td>{{ collection.functionalization }}</td>
                         </tr>
-                    {% endif %}
-                    {% if collection.manufacturer %}
                         <tr>
-                            <td><b>Manufacturer</b></td>
+                            <th>Manufacturer</th>
                             <td>{{ collection.manufacturer }}</td>
                         </tr>
-                    {% endif %}
                     {% if type == 'raw' %}
-                        {% if collection.comment %}
                             <tr>
-                                <td><b>Comment</b></td>
+                                <th>Comment</th>
                                 <td>{{ collection.comment }}</td>
                             </tr>
-                        {% endif %}
-                    {% elif type == 'quantified' %}
-                        {% if q_collection.image2numeric_version %}
                             <tr>
-                                <td><b>Image2Numeric Version</b></td>
-                                <td>{{ q_collection.image2numeric_version }}</td>
-                            </tr>
-                        {% endif %}
+                                <th>Status</th>
+                                <td>
 
-                        {% if q_collection.processing_type %}
+                                <form method="post" class="post-form">
+                                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                                    {{ form.status }}
+                                   <button class="btn btn-default">Save</button>
+                                </form>
+                            </td>
+
+                            </tr>
                             <tr>
-                                <td><b>Processing Type</b></td>
+                                <th>Raw Docs</th>
+                                <td> {%for raw_doc in collection.files.all() %}
+                                    <a href="{{raw_doc.url}}">{{raw_doc.sid}}</a>
+                                {%endfor%}
+                                </td>
+                            </tr>
+                    {% elif type == 'quantified' %}
+
+                            <tr>
+                                <th>Processing Type</th>
                                 <td>{{ q_collection.processing_type }}</td>
                             </tr>
-                        {% endif %}
-
-                        {% if q_collection.comment %}
                             <tr>
-                                <td><b>Comment</b></td>
+                                <th>Raw Docs</th>
+                                <td> {%for raw_doc in q_collection.files.all() %}
+                                    <a href="{{raw_doc.url}}">{{raw_doc.sid}}</a>
+                                    {%else%} - {%endfor%}
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <th>Comment</th>
                                 <td>{{ q_collection.comment }}</td>
                             </tr>
                         {% endif %}
-
-                    {% endif %}
 
 
                     </tbody>
@@ -130,29 +134,11 @@
         </div>
         <div class="col-lg-1"></div>
         <div class="col-lg-9">
-            <!-- Buttons -->
-            <div class="row">
-                <div class="btn-group  pull-right">
-                    <button class="btn dropdown-toggle btn-info glyphicon glyphicon-triangle-bottom"
-                            data-toggle="dropdown"> Update
-                    </button>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-                        <li><a tabindex="-1" href="#">Update Experiment Information</a></li>
-                        <li><a tabindex="-1" href="#">Update Process Information </a></li>
-                        <li class="divider"></li>
-                        <li><a tabindex="-1" href="#">Update Fixed Ligand Gal File </a></li>
-                        <li><a tabindex="-1" href="#">Update Mobile Ligand Gal File </a></li>
-                        <li class="divider"></li>
-                        <li><a tabindex="-1" href="#">Add Quantified Collection </a></li>
-
-                    </ul>
-                </div>
-            </div>
 
             <!-- Process Information -->
             <div class="row">
                 {% with c = collection%}
-                    <h2>Process: {{ c.process.sid }}</h2>
+                    <h2>Process</h2>
                     {% if c.process.is_step_in_process() %}
                         <table id="processes" class="cell-border">
                             {% with prosteps = c.processstep_set.all() %}
@@ -166,9 +152,10 @@
                                         <th>Duration</th>
                                         <th>User</th>
                                         <th>Start</th>
-                                        <th>Finish</th>
                                         <th>Comment</th>
                                         <th>Image</th>
+                                        <th>Intensity</th>
+
                                     </tr>
                                  </thead>
 
@@ -208,29 +195,29 @@
                                             <td> {{ p.sid }}</td>
                                             <td> {{ p.method }}</td>
                                             <td>
-                                                {% if  p.substance %}{{ p.substance }}{% endif %}
+                                                {% if p.substance %}{{ p.substance }} {%else%} - {%endif%}
                                             </td>
                                             <td>
-                                                {% if  p.duration %}{{ p.duration }}{% endif %}
+                                               {% if p.duration %} {{ p.duration }} {%else%} - {%endif%}
                                             </td>
                                             <td>
-                                                {% if  prostep.user %}{{ prostep.user }}{% endif %}
+                                                {{ prostep.user }}
                                             </td>
                                             <td>
-                                                {% if  prostep.start %}{{ prostep.start }}{% endif %}
+                                                {{ prostep.start }}
+                                            </td>
+
+                                            <td>
+                                              {{ prostep.comment }}
                                             </td>
                                             <td>
-                                                {% if  prostep.finish %}{{ prostep.finish }}{% endif %}
+                                                 {% if prostep.image %}  <a href="{{ url('imageviewprocess', args=[prostep.id]) }}" target="_blank" title="{{ prostep.image.name}}">
+                                                    <img src="{{ prostep.image_90.url }}"> </a> {%else%} - {%endif%}
+
                                             </td>
                                             <td>
-                                                {% if  prostep.comment %}{{ prostep.comment }}{% endif %}
-                                            </td>
-                                            <td>
-                                            {% if  prostep.image %}
-                                             <a href={{ url('imageviewprocess', args=[prostep.id]) }} target="_blank" title="{{ prostep.image.name}}">
-                                                <img src={{ prostep.image_90.url }}>
-                                             </a>
-                                            {% endif %}
+                                                {% if prostep.intensities %} <a href="{{ prostep.intensities.file.url }}" target="_blank" title="{{ prostep.image.name}}">
+                                                {{prostep.intensities}}</a> {% else%} - {%endif%}
                                             </td>
                                         {% endwith %}
                                     </tr>
@@ -245,9 +232,8 @@
             <div class="row">
                 <!-- Fixed Ligands -->
                 <div class="col-lg-6 img-rounded img-thumbnail">
-                    <h2>Fixed Ligands</h2>
                     {% if collection.peptides1 %}
-                        <h3>Peptides</h3>
+                        <h3>Fixed Peptides</h3>
                         <table id="fixed_peptides" class="table table-striped">
                             <thead>
                             <tr>
@@ -276,7 +262,7 @@
                         </table>
                     {% endif %}
                     {% if collection.viruses1 %}
-                        <h3>Viruses</h3>
+                        <h3>Fixed Viruses</h3>
                         <table id="fixed_viruses" class="table table-striped">
                             <thead>
                             <tr>
@@ -312,7 +298,7 @@
                         </table>
                     {% endif %}
                     {% if collection.antibodies1 %}
-                        <h3>Antibodies</h3>
+                        <h3>Fixed Antibodies</h3>
                         <table id="fixed_antibodies" class="table table-striped">
                             <thead>
                             <tr>
@@ -340,9 +326,8 @@
                 </div>
                 <!-- Mobile Ligands -->
                 <div class="col-lg-6 img-rounded img-thumbnail">
-                    <h2>Mobile Ligands</h2>
                     {% if collection.peptides2 %}
-                        <h3>Peptides</h3>
+                        <h3>Analyt: Peptides</h3>
                         <table id="mobile_peptides" class="table table-striped">
                             <thead>
                             <tr>
@@ -371,7 +356,7 @@
                         </table>
                     {% endif %}
                     {% if collection.viruses2 %}
-                        <h3>Viruses</h3>
+                        <h3>Analyt: Viruses</h3>
                         <table id="mobile_viruses" class="table table-striped">
                             <thead>
                             <tr>
@@ -409,7 +394,7 @@
                     {% endif %}
 
                     {% if collection.antibodies2 %}
-                        <h3>Antibodies</h3>
+                        <h3> Analyt: Antibodies</h3>
                         <table id="mobile_antibodies" class="table table-striped">
                             <thead>
                             <tr>

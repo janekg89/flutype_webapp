@@ -62,7 +62,8 @@ class StudyManager(models.Manager):
     def get_or_create(self, *args, **kwargs):
         if "meta" in kwargs:
             print("*** Creating Study <{}>***".format(kwargs["meta"]["sid"]))
-            this_study, created_s = super(StudyManager, self).get_or_create(*args, **kwargs["meta"])
+            this_study, created_s = super(StudyManager, self).get_or_create(*args,**kwargs)
+
 
         if "raw_docs_fpaths" in kwargs:
             for fpath in kwargs["raw_docs_fpaths"]:
@@ -74,7 +75,7 @@ class StudyManager(models.Manager):
         if "measurements" in kwargs:
             for measurement in kwargs["measurements"]:
                 measurement_dic = kwargs["measurements"][measurement]
-                measurement_dic["meta"]["study"] = this_study
+                measurement_dic["study"] = this_study
                 RawSpotCollection = apps.get_model("flutype", model_name="RawSpotCollection")
                 _, _ = RawSpotCollection.objects.get_or_create(**measurement_dic)
 
@@ -99,6 +100,7 @@ class MeasurementManager(models.Manager):
         if "meta" in kwargs:
             print("*** Creating Measurement <{}>***".format(kwargs["meta"]["sid"]))
             this_measurement, created = super(MeasurementManager, self).get_or_create(*args, **kwargs["meta"])
+            this_measurement.studies.add(kwargs["study"])
 
         if "raw_docs_fpaths" in kwargs:
             for fpath in kwargs["raw_docs_fpaths"]:
