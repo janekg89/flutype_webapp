@@ -14,7 +14,7 @@ import sys
 import io
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-CHAR_MAX_LENGTH = 50
+CHAR_MAX_LENGTH = 100
 
 def empty_list(max):
     list = []
