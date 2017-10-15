@@ -225,6 +225,7 @@ def get_ligand_or_none(ligand):
     if ligand is None:
             ligand = None
     else:
+
         ligand = Ligand.objects.get(sid=ligand)
 
     return ligand
