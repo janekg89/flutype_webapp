@@ -9,6 +9,9 @@ jinja2
 selenium==2.53.6
 matplotlib
 plotly
+pathlib
+willow
+
 
 django>=1.11.4
 django-pandas

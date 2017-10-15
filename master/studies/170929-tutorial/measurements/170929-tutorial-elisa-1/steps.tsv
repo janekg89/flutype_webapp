@@ -1,0 +1,14 @@
+step	index	user	start	image	intensities	comment
+IA01	0	ssaenger	2017.09.27 09:30			
+B01	1	ssaenger	2017.09.27 10:30			
+I01	2	ssaenger	2017.09.27 10:30			
+W01	3	ssaenger	2017.09.27 11:30			
+W01	4	ssaenger	2017.09.27 11:35			
+W01	5	ssaenger	2017.09.27 11:40			
+I03	6	ssaenger	2017.09.27 11:45
+W01	7	ssaenger	2017.09.27 12:45			
+W01	8	ssaenger	2017.09.27 12:50			
+W01	9	ssaenger	2017.09.27 12:55			
+I03	10	ssaenger	2017.09.27 13:00			
+I04	11	ssaenger	2017.09.27 13:10			
+SC01	12	ssaenger	2017.09.27 14:00		intensity_final.tsv	
