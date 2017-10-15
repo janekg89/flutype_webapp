@@ -9,7 +9,6 @@ from django.test import tag
 
 MASTERPATH = os.path.join(BASEPATH, "master_test")
 
-@tag('local')
 class DatabaseDJTestCase(TransactionTestCase):
 
     def setUp(self):

@@ -6,7 +6,6 @@ from flutype.data_management.master import Master,Study, Measurement,Measurement
 
 MASTERPATH = os.path.join(BASEPATH, "master_test")
 
-@tag('local')
 class MasterTestCase(TransactionTestCase):
 
     def setUp(self):
@@ -58,9 +57,8 @@ class MasterTestCase(TransactionTestCase):
                                                 'functionalization',
                                                 'status'
                                                 })
-        self.assertEqual(meas.raw_docs_fnames,set([]))
         self.assertEqual(next(iter(meas.read_results().keys())), "raw")
-        self.assertEqual(set(meas.read().keys()),{"meta","lig_mob_path","lig_fix_path","steps_path","raw_docs_fpaths","results"})
+        self.assertEqual(set(meas.read().keys()),{"meta","lig_mob_path","lig_fix_path","steps_path","results"})
 
 
     def test_measurement_results_init(self):
@@ -71,7 +69,7 @@ class MasterTestCase(TransactionTestCase):
         path_measurement_results = os.path.join(meas.path_results,next(iter(meas.results_sids)))
         mea_result = MeasurementResult(path_measurement_results)
         self.assertEqual(mea_result.sid,"raw")
-        self.assertEqual(set(mea_result.read().keys()),{"raw_docs_fpaths",'intensities', 'meta'})
+        self.assertEqual(set(mea_result.read().keys()),{'intensities', 'meta'})
 
 
 
