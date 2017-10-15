@@ -1,11 +1,12 @@
 import os
-from django.test import TestCase
 from django.test import TransactionTestCase
+from django.test import tag
 
 from flutype.data_management.master import Master,Study, Measurement,MeasurementResult, BASEPATH
 
 MASTERPATH = os.path.join(BASEPATH, "master_test")
 
+@tag('local')
 class MasterTestCase(TransactionTestCase):
 
     def setUp(self):

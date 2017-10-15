@@ -5,11 +5,8 @@ from flutype.data_management.fill_database import DatabaseDJ
 from django.test import TransactionTestCase
 from flutype.data_management.fill_users import create_users, user_defs
 from django.apps import apps
-from flutype.helper import get_unique_galfile, read_gal_file
-import pandas as pd
-from django.db import transaction
-MASTERPATH = os.path.join(BASEPATH, "master_test")
 
+MASTERPATH = os.path.join(BASEPATH, "master_test")
 
 
 class DatabaseDJTestCase(TransactionTestCase):
