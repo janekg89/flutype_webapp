@@ -20,9 +20,9 @@ django.setup()
 ###########################################################
 from flutype.helper import  fill_multiple_models_from_dict
 from flutype.data_management.master import LIGAND_BATCHES, LIGANDS, STEPS, MASTERPATH,Master, BASEPATH
+from django.test import tag
 
-
-
+@tag('local')
 class DatabaseDJ(object):
 
     def __init__(self,Master):
