@@ -281,6 +281,8 @@ class Spotting(Step):
 
 class Incubating(Step):
     duration = models.DurationField(null=True, blank=True)
+    substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
+
     objects =  StepManager()
 
 

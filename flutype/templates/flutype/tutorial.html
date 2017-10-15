@@ -35,37 +35,41 @@
                         directory can finally be used to upload the measurements. While creating such a directory,
                         it is important to check if all ligands, ligand batches and process steps are already in the
                         database. This tutorial shows the workflow. The biggest unit in the database is a
-                        study. It refers to a collection of measurements, which were measured collectively  for a
+                        study. It refers to a collection of measurements, which were measured collectively for a
                         reason. In this tutorial, I will show  an example of how to upload a study. This particular study aims to
                         show how to prepare the data to upload it into the database. Hence, it is reasonable to upload a
                         study containing three different measurements. The directory with the study is zipped and can be
                         downloaded <a href="{{ static('flutype/170929-tutorial.tar.gz') }}"> here </a>.
                         The related directory tree can be seen <a href="{{ url("tutorial_tree")}}"> here</a>.
+                        You can also check on <a href="{{ url("tutorial_db")}}"> this side </a> and click your self
+                        through the measurements and results to see how the study finally looks like in the browser.
                         Now, I will give you a step by step tutorial. Let's start.
                     </p>
                     <h2> 1. Study </h2>
                     <p >
-                    A study is build up off three blocks: metadata, measurements, and raw docs.
-                    Let's start with the metadata.
-                    The metadata of a study contains an identification string (sid), task and result. For the sid, I
-                    recommend to find a convention for the naming of the studies to not get name conflicts.
-                    Since our study is a tutorial, I name my study: "170929-tutorial".
-                    The task and the result are described by  accordingly named fields in "meta.tsv" in the main
-                    directory of the study. Anytime some content is describted you can check in the
+                        The name of the folder in
+                        the directory will be displayed in the database as the sid (identifaiction string) of a study. I
+                        recommend to find a convention for the naming of the studies to not get name conflicts.
+                        Since our study is a tutorial, I name my study: "170929-tutorial".
+                        A study is build up off three blocks: metadata, measurements, and raw docs.
+                        Let's start with the metadata. The meta data is the only obligatory information of a study if
+                        you want you can only add a study without any measurements or raw docs by adding a "meta.tsv" into
+                        a directory with the name of the study and your are done. Metadata of a study contains a task, result and status.
+                        Task, result and status are described by accordingly named fields in "meta.tsv" in the main
+                        directory of the study. Anytime I talk about the content and about what has to to placed where in the
+                        directory of the study you can go and check the
                     <a href="{{ static('flutype/170929-tutorial.tar.gz') }}"> zip </a>
                     or <a href="{{ url("tutorial_tree")}}"> directory tree</a> what I am talking about. Don't worry if
-                    you do not have results of a study while writing the metadata. They can be updated afterwards.
+                    you do not have results of a study while writing the metadata. They can be updated afterwards. Actually all of the meta fields are optional.
                     Results related documents can be uploaded into the folder "raw_docs". The raw docs folder will be
-                    explained later. Now back to the metadata of our example.
+                    explained later. Now back to the metadata of our example. The status can be choosen from three options:
+                        "planned", "in progress" and "finished".
 
                     The following table shows the metadata of my study. This table is saved as "meta.tsv" in the main
                     directory of the study. I have not yet defined a result of my task ;).</p>
 
                     <table class="table table-striped">
-                        <tr>
-                            <th> sid </th>
-                            <td> 170929-tutorial</td>
-                        </tr>
+
                         <tr>
                             <th> task </th>
                             <td> The task of the study is to demonstrate how a study can be uploaded into the database.
@@ -77,6 +81,10 @@
                             <th> result </th>
                             <td> </td>
                         </tr>
+                        <tr>
+                            <th> status </th>
+                            <td> in progress</td>
+                        </tr>
                     </table>
                     Alright, we have defined a study. Most importantly, we can add measurements to our study.
                     This is going to be covered in the next section. But further, it is possible to upload any
@@ -86,15 +94,14 @@
                     of the study to the raw docs. Now, let's go ahead and add some measurements to the study.
 
                     <h2> 2. Elisa Measurement </h2>
-                    For any measurement, the same five pieces of information have to be given: metadata, ligands, process,
-                    results, and raw_docs. We start with an elisa measurement without any peptides involved.
+                    For the purpose of adding measurements to a study, one has to create the folder "measurements" in the main folder
+                    of the study and then add the folders, named accordingly to the measurements, into the measurements folder.
+                    For any measurement, the same five pieces of information are important: metadata, ligands, process,
+                    results, and raw_docs,  results and raw_docs are optional. We start with an elisa measurement without any peptides involved.
                     Let's begin with the most general measurement related information, the metadata.
                     <h3> 2.1 Elisa Meta</h3>
                     <table class="table table-striped">
-                        <tr>
-                            <th> sid </th>
-                            <td> 170929-tutorial-elisa-1</td>
-                        </tr>
+
                         <tr>
                             <th>batch_sid</th>
                             <td> 12345689</td>
@@ -104,24 +111,17 @@
                             <td> elisa </td>
                         </tr>
                         <tr>
-                            <th> user </th>
-                            <td> ssanger </td>
-                        </tr>
-                        <tr>
-                            <th> surface_substance </th>
+                            <th> functionalization </th>
                             <td> No </td>
                         </tr>
                         <tr>
                             <th>manufacturer</th>
                             <td> Thermo F96 Maxisorp </td>
                         </tr>
-                    </table>
-                    Alright, let's go quickly through the table. The sid is a unique id of this measurement.
-                    Again, make sure there is no name conflict with existing sids.<b> Any sid introduced in the following
-                    has to be unique!</b> The batch sid refers to the batch of the microwell plate. The measurement type
+
+                    </table> The batch sid refers to the batch of the microwell plate. The measurement type
                     has to be chosen from  three choices: elisa, microarray and microwell. Both, microarray and microwell
-                    refer to fluoresence measurements. The user can be chosen from the <a href="{{ url('users') }}">
-                    users list </a>. The surface substance refers to the functionalization
+                    refer to fluoresence measurements.  The functionalization refers to the surface substance
                     of the microwell plate. In this measurement no ligands were bound to the surface of the microwell
                     plate.  Therefore, also no fuctionalization was necessary. We enter a "No", which is different to an
                     empty space. An empty space refers to an unknown value
@@ -248,7 +248,7 @@
                     <table class="table table-striped">
                         <caption>Buffer Batches</caption>
                     <thead><tr><th>sid</th><th>buffer</th><th>ph</th><th>produced_by</th><th>production_date</th><th>comment</th></tr></thead><tbody>
-                     <tr><td>Buffer-001</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>ssandra</td><td>19.7.2017</td><td></td></tr>
+                     <tr><td>Buffer001</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>ssandra</td><td>19.7.2017</td><td></td></tr>
                     </tbody></table>
 
                     For the buffer batch no ligands have to be provided.
@@ -267,7 +267,7 @@
                      <tr><th>E</th><td>Call_RKI_1</td><td>Call_RKI_0.5</td><td>Call_RKI_0.25</td><td>Call_RKI_0.125</td><td>Call_RKI_0.0625</td><td>Call_RKI_0.03125</td><td>Call_RKI_0.015625</td><td>Call_RKI_0.0078125</td><td>Call_RKI_0.00390625</td><td>Call_RKI_0.001953125</td><td>Call_RKI_0.0009765625</td><td>Call_RKI_0.00048828125</td></tr>
                      <tr><th>F</th><td>Call_RKI_1</td><td>Call_RKI_0.5</td><td>Call_RKI_0.25</td><td>Call_RKI_0.125</td><td>Call_RKI_0.0625</td><td>Call_RKI_0.03125</td><td>Call_RKI_0.015625</td><td>Call_RKI_0.0078125</td><td>Call_RKI_0.00390625</td><td>Call_RKI_0.001953125</td><td>Call_RKI_0.0009765625</td><td>Call_RKI_0.00048828125</td></tr>
                      <tr><th>G</th><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
-                     <tr><th>H</th><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td><td>Buffer-001</td></tr>
+                     <tr><th>H</th><td>Buffer001</td><td>Buffer001</td><td>Buffer001</td><td>Buffer001</td><td>Buffer001</td><td>Buffer001</td><td>Buffer001</td><td>Buffer001</td><td>Buffer001</td><td>Buffer001</td><td>Buffer001</td><td>Buffer001</td></tr>
                     </tbody></table>
                     This information is saved as "lig_mob.txt" in the main directory of the measurement.
                     Eventually, we completed all relevant ligand related data for our elisa experiment.
@@ -431,7 +431,7 @@
 
                                 <tr>
                                     <th> <i class="fa fa-tint" aria-hidden="true"></i> Incubating </th>
-                                    <td> I01 </td>
+                                    <td> I03 </td>
                                     <td> Air displacement pipette  50 micro liter</td>
                                     <td> 37 °C </td>
                                     <td>  </td>
@@ -450,7 +450,7 @@
 
                                 <tr>
                                     <th> <i class="fa fa-tint" aria-hidden="true"></i> Incubating </th>
-                                    <td> I03 </td>
+                                    <td> I016 </td>
                                     <td> Air displacement pipette 50 micro liter </td>
                                     <td> </td>
                                     <td> Substrate Incubation </td>
@@ -460,7 +460,7 @@
 
                                 <tr>
                                     <th> <i class="fa fa-tint" aria-hidden="true"></i> Incubating </th>
-                                    <td> I04 </td>
+                                    <td> I017 </td>
                                     <td> Air displacement pipette 50 micro liter </td>
                                     <td>  </td>
                                     <td> Stopping Substance Incubation </td>
@@ -498,7 +498,7 @@
                         <td>IA01</td>
                         <td>0</td>
                         <td>ssaenger</td>
-                        <td>2017.09.27, 09:30 </td>
+                        <td>2017.09.27 09:30 </td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -507,16 +507,16 @@
                         <td>B01</td>
                         <td>1</td>
                         <td>ssaenger</td>
-                        <td>2017.09.27, 10:30 </td>
+                        <td>2017.09.27 10:30 </td>
                         <td></td>
                         <td></td>
                         <td></td>
                       </tr>
                       <tr>
-                        <td>I01</td>
+                        <td>I03</td>
                         <td>2</td>
                         <td>ssaenger</td>
-                        <td>2017.09.27, 10:30</td>
+                        <td>2017.09.27 10:30</td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -525,7 +525,7 @@
                         <td>W01</td>
                         <td>3</td>
                         <td>ssaenger</td>
-                        <td>2017.09.27, 11:30</td>
+                        <td>2017.09.27 11:30</td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -534,7 +534,7 @@
                         <td>W01</td>
                         <td>4</td>
                         <td>ssaenger</td>
-                        <td>2017.09.27, 11:35</td>
+                        <td>2017.09.27 11:35</td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -543,7 +543,7 @@
                         <td>W01</td>
                         <td>5</td>
                         <td>ssaenger</td>
-                        <td>2017.09.27, 11:40</td>
+                        <td>2017.09.27 11:40</td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -552,7 +552,7 @@
                         <td>I02</td>
                         <td>6</td>
                         <td>ssaenger</td>
-                        <td>2017.09.27, 11:45</td>
+                        <td>2017.09.27 11:45</td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -561,7 +561,7 @@
                         <td>W01</td>
                         <td>7</td>
                         <td>ssaenger</td>
-                        <td>2017.09.27, 12:45</td>
+                        <td>2017.09.27 12:45</td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -570,7 +570,7 @@
                         <td>W01</td>
                         <td>8</td>
                         <td>ssaenger</td>
-                        <td>2017.09.27, 12:50</td>
+                        <td>2017.09.27 12:50</td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -579,25 +579,25 @@
                         <td>W01</td>
                         <td>9</td>
                         <td>ssaenger</td>
-                        <td>2017.09.27, 12:55</td>
+                        <td>2017.09.27 12:55</td>
                         <td></td>
                         <td></td>
                         <td></td>
                       </tr>
                       <tr>
-                        <td>I03</td>
+                        <td>I016</td>
                         <td>10</td>
                         <td>ssaenger</td>
-                        <td>2017.09.27, 13:00</td>
+                        <td>2017.09.27 13:00</td>
                         <td></td>
                         <td></td>
                         <td></td>
                       </tr>
                       <tr>
-                        <td>I04</td>
+                        <td>I017</td>
                         <td>11</td>
                         <td>ssaenger</td>
-                        <td>2017.09.27, 13:10</td>
+                        <td>2017.09.27 13:10</td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -606,7 +606,7 @@
                         <td>SC01</td>
                         <td>12</td>
                         <td>ssaenger</td>
-                        <td>2017.09.27, 14:00</td>
+                        <td>2017.09.27 14:00</td>
                         <td></td>
                         <td>intensity_final.tsv</td>
                         <td></td>
@@ -638,14 +638,13 @@
                     or to do even more sophisticated post-processing on the measured intensities and to show the output
                     in as results. This concept makes it possible to do just that independently from the measured
                     intensities.
+                    Again, the "sid" of the measurements results are defined by the folder name. This time the folder has to placed into
+                    the folder "results". We decided to call the result "raw".
                     A results folder contains,besides the intensities, also some metadata related to the result.
                     The following table shows the "meta.tsv" saved in our results folder.
 
                     <table class="table table-striped">
-                        <tr>
-                            <th>sid</th>
-                            <th>raw</th>
-                        </tr>
+
                         <tr>
                             <td>comment</td>
                             <td>results from an elisa intensity reader without any post processing</td>
@@ -661,11 +660,6 @@
                     </table>
 
 
-
-                    When you look into the directory tree, you may notice that the folder names correspond the sids of
-                    the studies, measurement and measurement results. Nevertheless, the sid is always
-                    taken from the metadata.
-
                     <h3>2.5 Elisa Raw Docs</h3>
                     Just like studies, also measurements can contain additional files (scientific papers, power
                     point presentations,
@@ -679,16 +673,14 @@
                     process steps already defined during the elisa measurement.
                     We are not going as much into detail with every step like in the elisa measurement. If anything is
                     unclear check the procedure during the elisa and microarray measurement. This may already help.
-                    As a reminder,for any measurement these these five data blocks have to be collected:
+                    As a reminder,for any measurement these five data blocks have to be collected:
                     meta, ligands, process, results, and raw_docs.
+                    The "sid" and thus the folder name of the microwell measurement has been choosen as "170929-tutorial-microwell-1".
                     Just like fot the elisa measurement, we start again with the metadata.
 
                     <h3>3.1 Microwell Meta</h3>
                     <table class="table table-striped">
-                        <tr>
-                            <th> sid </th>
-                            <td> 170929-tutorial-microwell-1</td>
-                        </tr>
+
                         <tr>
                             <th>batch_sid</th>
                             <td> 161118</td>
@@ -698,11 +690,7 @@
                             <td> microwell </td>
                         </tr>
                         <tr>
-                            <th> user </th>
-                            <td> hmemczak </td>
-                        </tr>
-                        <tr>
-                            <th> surface_substance </th>
+                            <th> functionalization </th>
                             <td> 3D-NHS </td>
                         </tr>
                         <tr>
@@ -905,7 +893,7 @@
                     <table class="table table-striped">
                         <caption>Buffer Batches</caption>
                     <thead><tr><th>sid</th><th>buffer</th><th>ph</th><th>produced_by</th><th>production_date</th><th>comment</th></tr></thead><tbody>
-                     <tr><td>Buffer-001</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>ssandra</td><td>19.7.2017</td><td></td></tr>
+                     <tr><td>Buffer001</td><td>100mM NaHCO3/Na2CO3 </td><td>9.6</td><td>ssandra</td><td>19.7.2017</td><td></td></tr>
                     </tbody></table>
                     The field "ligand" again takes the sids from the predefined peptides. As you can see, many fields are
                     left empty, this is due to lack of knowledge. Let's continue
@@ -1113,7 +1101,7 @@
                         <td>SP01</td>
                         <td>0</td>
                         <td>hmemczak</td>
-                        <td>2017.09.27, 09:00 </td>
+                        <td>2017.09.27 09:00 </td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -1122,7 +1110,7 @@
                         <td>W01</td>
                         <td>1</td>
                         <td>hmemczak</td>
-                        <td>2017.09.27, 10:00 </td>
+                        <td>2017.09.27 10:00 </td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -1131,7 +1119,7 @@
                         <td>W01</td>
                         <td>2</td>
                         <td>hmemczak</td>
-                        <td>2017.09.27, 10:10</td>
+                        <td>2017.09.27 10:10</td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -1140,7 +1128,7 @@
                         <td>D01</td>
                         <td>3</td>
                         <td>hmemczak</td>
-                        <td>2017.09.27, 10:15</td>
+                        <td>2017.09.27 10:15</td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -1150,7 +1138,7 @@
                         <td>B01</td>
                         <td>6</td>
                         <td>hmemczak</td>
-                        <td>2017.09.27, 10:20</td>
+                        <td>2017.09.27 10:20</td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -1161,7 +1149,7 @@
                         <td>SC02</td>
                         <td>7</td>
                         <td>hmemczak</td>
-                        <td>2017.09.27, 12:00</td>
+                        <td>2017.09.27 12:00</td>
                         <td></td>
                         <td>first_intensity.tsv</td>
                         <td></td>
@@ -1170,7 +1158,7 @@
                         <td>IA01</td>
                         <td>8</td>
                         <td>hmemczak</td>
-                        <td>2017.09.27, 13:00</td>
+                        <td>2017.09.27 13:00</td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -1179,7 +1167,7 @@
                         <td>W01</td>
                         <td>9</td>
                         <td>hmemczak</td>
-                        <td>2017.09.27, 14:30</td>
+                        <td>2017.09.27 14:30</td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -1188,7 +1176,7 @@
                         <td>D01</td>
                         <td>10</td>
                         <td>hmemczak</td>
-                        <td>2017.09.27, 14:40</td>
+                        <td>2017.09.27 14:40</td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -1198,7 +1186,7 @@
                         <td>SC02</td>
                         <td>11</td>
                         <td>hmemczak</td>
-                        <td>2017.09.27, 15:00</td>
+                        <td>2017.09.27 15:00</td>
                         <td></td>
                         <td>intensity_final.tsv</td>
                         <td></td>
@@ -1213,18 +1201,15 @@
                     Have a look into the directory "170929-tutorial-microwell-1/results/" in the
                     <a href="{{ url("tutorial_tree")}}"> directory tree </a>. Any directory in the results directory
                     should have a "intensities.tsv" and a "meta.tsv". the intensities file contain gal file like intensities.
-                    The meta file contains a "sid", "comment", "processing type" and "intensity_file" name.
+                    The meta file contains a , "comment", "processing type" and "intensity_file" name.
                     The processing type names the method how the intensities were generated
                     (e. g. Florescence Reader, Genepix, Image2Numeric0.1, ...).
                     The comments can be used to described more in detail how the intensity values have been obtained.
                     Next, the content of "meta.tsv of the background subtraction result is shown. The other once can be
-                    find obviously in the
+                    found obviously in the
                     <a href="{{ static('flutype/170929-tutorial.tar.gz') }}"> zipped folder </a>.
                     <table class="table table-striped">
-                        <tr>
-                            <th> sid </th>
-                            <td>sub_back</td>
-                        </tr>
+
                         <tr>
                             <th> comment</th>
                             <td> subtracted the intensities of the first scanning from the second scanning.</td>
@@ -1237,7 +1222,7 @@
 
                         <tr>
                             <th> intensity_file </th>
-                            <td> final_sub.tsv</td>
+                            <td> intensity_sub.tsv</td>
                         </tr>
 
 
@@ -1251,14 +1236,11 @@
                     <h2> Microarray Measurement</h2>
                     The microarray measurement will focus on incooperating multiple images in one measurement.
                     For any measurement, the same five steps have to be performed: meta, ligands, process, results, and
-                    raw_docs. So let's start again with the meta.
+                    raw_docs. We decided to name the measurement: "170929-tutorial-microarray-1".  So let's start again with the meta.
 
                     <h3> 4.1 Microarray Meta</h3>
                     <table class="table table-striped">
-                        <tr>
-                            <th> sid </th>
-                            <td> 170929-tutorial-microarray-1</td>
-                        </tr>
+
                         <tr>
                             <th>batch_sid</th>
                             <td> ABC123_321</td>
@@ -1267,12 +1249,9 @@
                             <th> measurement_type </th>
                             <td> microarray </td>
                         </tr>
+
                         <tr>
-                            <th> user </th>
-                            <td> mhovestaedt </td>
-                        </tr>
-                        <tr>
-                            <th> surface_substance </th>
+                            <th> functionalization </th>
                             <td> 3D-NHS </td>
                         </tr>
                         <tr>
@@ -1349,7 +1328,7 @@
 
                                  <tr>
                                     <th> <i class="fa fa-tint" aria-hidden="true"></i> Incubating-Analyt </th>
-                                    <td> IA02 </td>
+                                    <td> IA03 </td>
                                     <td> Air displacement pipette, covered In  fridge </td>
                                     <td> 5 °C </td>
                                     <td> </td>
@@ -1421,7 +1400,7 @@
                         <td>Wavelength: 635 Intensity: 600 Gain:100</td>
                       </tr>
                       <tr>
-                        <td><i class="fa fa-tint" aria-hidden="true"></i> IA02</td>
+                        <td><i class="fa fa-tint" aria-hidden="true"></i> IA03</td>
                         <td>5</td>
                         <td>mhovestaedt</td>
                         <td></td>
