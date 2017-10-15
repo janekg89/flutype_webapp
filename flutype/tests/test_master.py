@@ -6,7 +6,7 @@ from django.test import TestCase
 class MasterTestCase(TestCase):
 
     def setUp(self):
-        self.path_master_test = os.path.join(BASEPATH,"master_test/")
+        self.path_master_test = os.path.join(BASEPATH,"master_test")
         self.ma = Master(self.path_master_test)
 
     def test_master_init(self):
