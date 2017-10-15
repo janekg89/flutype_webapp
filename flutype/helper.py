@@ -10,6 +10,7 @@ import numpy as np
 import datetime
 import re
 import tempfile
+import sys
 import io
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -170,8 +171,12 @@ def read_gal_file(fpath):
     return this_gal
 
 def read_gal_file_to_temporaray_file(fpath):
-    #f = tempfile.TemporaryFile()
-    f= io.StringIO()
+    # prints whether python is version 3 or not
+    python_version = sys.version_info.major
+    if python_version == 3:
+        f = io.StringIO()
+    else:
+        f = tempfile.TemporaryFile()
 
     gal_file = read_gal_file(fpath)
     gal_file.to_csv(f, sep=str('\t'), index="True", encoding='utf-8')
@@ -220,6 +225,7 @@ def get_ligand_or_none(ligand):
     if ligand is None:
             ligand = None
     else:
+
         ligand = Ligand.objects.get(sid=ligand)
 
     return ligand

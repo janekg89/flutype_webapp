@@ -105,8 +105,12 @@ class Base(BaseAll):
         self.meta = read_tsv_diconary(self.path_meta)
         self.sid = os.path.basename(os.path.abspath(self.path))
         self.path_raw_docs = os.path.join(self.path, "raw_docs")
-        self.raw_docs_fnames = set(next(os.walk(self.path_raw_docs))[2])
-        self.raw_docs_fpaths = set(self.get_raw_docs_fpaths())
+        try:
+            self.raw_docs_fnames = set(next(os.walk(self.path_raw_docs))[2])
+            self.raw_docs_fpaths = set(self.get_raw_docs_fpaths())
+
+        except:
+            pass
 
     def get_raw_docs_fpaths(self):
         docs = []
@@ -126,25 +130,35 @@ class Study(Base):
         Base.__init__(self,path)
         self.Master = Master(os.path.join(self.path, "../.."))
         self.path_measurements = os.path.join(self.path, "measurements")
-        self.measurement_sids = set(next(os.walk(self.path_measurements))[1])
+        try:
+            self.measurement_sids = set(next(os.walk(self.path_measurements))[1])
+            self.is_measurements = True
+
+        except:
+            self.is_measurements = False
+
 
 
 
 
     def read(self):
         dic_study = {"meta":self.get_meta(),
-                     "raw_docs_fpaths": self.raw_docs_fpaths,
                      "measurements":self.read_measurements(),
                      }
+        try:
+            dic_study["raw_docs_fpaths"]=self.raw_docs_fpaths
+        except:
+            pass
         return dic_study
 
 
 
     def read_measurements(self):
         dic_measurements = {}
-        for measurement in self.measurement_sids:
-            path_measurement = os.path.join(self.path_measurements,measurement)
-            dic_measurements[measurement] = Measurement(path_measurement).read()
+        if  self.is_measurements:
+            for measurement in self.measurement_sids:
+                path_measurement = os.path.join(self.path_measurements,measurement)
+                dic_measurements[measurement] = Measurement(path_measurement).read()
 
         return dic_measurements
 
@@ -164,9 +178,11 @@ class Measurement(Base):
         self.path_mob_lig = os.path.join(self.path, "lig_mob.txt")
         self.path_fix_lig = os.path.join(self.path, "lig_fix.txt")
         self.path_steps = os.path.join(self.path, "steps.tsv")
-
-        self.path_results = os.path.join(self.path,"results")
-        self.results_sids = set(next(os.walk(self.path_results))[1])
+        try:
+            self.path_results = os.path.join(self.path,"results")
+            self.results_sids = set(next(os.walk(self.path_results))[1])
+        except:
+            pass
 
 
     def read(self):
@@ -174,9 +190,16 @@ class Measurement(Base):
                            "lig_mob_path":self.path_mob_lig,
                            "lig_fix_path":self.path_fix_lig,
                            "steps_path":self.path_steps,
-                           "raw_docs_fpaths":self.get_raw_docs_fpaths(),
-                           "results":self.read_results()
                            }
+        try:
+            dic_measurement["raw_docs_fpaths"]=self.raw_docs_fpaths
+        except:
+            pass
+        try:
+            dic_measurement["results"] = self.read_results()
+        except:
+            pass
+
         return dic_measurement
 
 
@@ -216,7 +239,10 @@ class MeasurementResult(Base):
 
         dic_results["meta"] =self.get_meta()
         dic_results["intensities"]= self.path_intensity
-        dic_results["raw_docs_fpaths"]= self.raw_docs_fpaths
+        try:
+            dic_results["raw_docs_fpaths"]= self.raw_docs_fpaths
+        except:
+            pass
 
 
 
