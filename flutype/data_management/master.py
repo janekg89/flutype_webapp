@@ -130,7 +130,12 @@ class Study(Base):
         Base.__init__(self,path)
         self.Master = Master(os.path.join(self.path, "../.."))
         self.path_measurements = os.path.join(self.path, "measurements")
-        self.measurement_sids = set(next(os.walk(self.path_measurements))[1])
+        try:
+            self.measurement_sids = set(next(os.walk(self.path_measurements))[1])
+            self.is_measurements = True
+
+        except:
+            self.is_measurements = False
 
 
 
@@ -150,9 +155,10 @@ class Study(Base):
 
     def read_measurements(self):
         dic_measurements = {}
-        for measurement in self.measurement_sids:
-            path_measurement = os.path.join(self.path_measurements,measurement)
-            dic_measurements[measurement] = Measurement(path_measurement).read()
+        if  self.is_measurements:
+            for measurement in self.measurement_sids:
+                path_measurement = os.path.join(self.path_measurements,measurement)
+                dic_measurements[measurement] = Measurement(path_measurement).read()
 
         return dic_measurements
 

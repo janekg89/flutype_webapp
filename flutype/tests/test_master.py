@@ -30,7 +30,7 @@ class MasterTestCase(TransactionTestCase):
         st = Study(path_study)
         self.assertEqual(st.sid,"170929-tutorial")
         self.assertEqual(st.Master.study_sids,{'170929-tutorial'})
-        self.assertEqual(st.raw_docs_fnames,{'tree.tar.gz','test_file_1.txt'})
+        self.assertEqual(st.raw_docs_fnames,{'170929-tutorial.tar.gz','test_file_1.txt'})
         self.assertEqual(st.measurement_sids, {'170929-tutorial-elisa-1',
                                                '170929-tutorial-microwell-1',
                                                '170929-tutorial-microarray-1'})

@@ -49,13 +49,13 @@ class DatabaseDJTestCase(TransactionTestCase):
 
         steps = self.ma.read_steps()
         self.db.update_steps(steps)
-        steps_count = {"Incubating":15,
-                       "Blocking":1,
-                       "Drying":1,
-                       "IncubatingAnalyt":1,
+        steps_count = {"Incubating":17,
+                       "Blocking":2,
+                       "Drying":2,
+                       "IncubatingAnalyt":3,
                        "Quenching":2,
-                       "Scanning":3,
-                       "Spotting":5,
+                       "Scanning":4,
+                       "Spotting":6,
                        "Washing":7}
         for step in steps_count:
             Step = apps.get_model("flutype", step)
