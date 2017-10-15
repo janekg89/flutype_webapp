@@ -1,13 +1,15 @@
 import os
+from django.test import TestCase
+from django.test import TransactionTestCase
 
 from flutype.data_management.master import Master,Study, Measurement,MeasurementResult, BASEPATH
 
-from django.test import TestCase
-class MasterTestCase(TestCase):
+MASTERPATH = os.path.join(BASEPATH, "master_test")
+
+class MasterTestCase(TransactionTestCase):
 
     def setUp(self):
-        self.path_master_test = os.path.join(BASEPATH,"master_test")
-        self.ma = Master(self.path_master_test)
+        self.ma = Master(MASTERPATH)
 
     def test_master_init(self):
         #all studies
@@ -70,8 +72,6 @@ class MasterTestCase(TestCase):
         self.assertEqual(mea_result.sid,"raw")
         self.assertEqual(set(mea_result.read().keys()),{"raw_docs_fpaths",'intensities', 'meta'})
 
-    def test_read_all(self):
-        master_new = os.path.join(BASEPATH,"master_new/")
 
 
 
