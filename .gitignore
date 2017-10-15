@@ -9,6 +9,9 @@ flutype_webapp/__pycache__/
 flutype_webapp/migrations/__pycache__/
 media/CACHE/
 
+# not tracking media 
+media
+
 # deploy settings and static data
 flutype_webapp/deploy_settings.py
 dbdata/
