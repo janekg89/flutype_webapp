@@ -5,10 +5,11 @@ from flutype.data_management.fill_database import DatabaseDJ
 from django.test import TransactionTestCase
 from flutype.data_management.fill_users import create_users, user_defs
 from django.apps import apps
+from django.test import tag
 
 MASTERPATH = os.path.join(BASEPATH, "master_test")
 
-
+@tag('local')
 class DatabaseDJTestCase(TransactionTestCase):
 
     def setUp(self):
@@ -60,6 +61,7 @@ class DatabaseDJTestCase(TransactionTestCase):
         for step in steps_count:
             Step = apps.get_model("flutype", step)
             self.assertEqual(Step.objects.all().count(), steps_count[step])
+
 
     def test_update_study(self):
         ligands = self.ma.read_ligands()
