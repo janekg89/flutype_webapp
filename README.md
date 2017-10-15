@@ -36,6 +36,17 @@ sudo tar xvjf phantomjs-2.1.1-linux-x86_64.tar.bz2 -C /usr/local/share/
 sudo ln -s /usr/local/share/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/
 phantomjs --version
 ```
+
+## Recreating database
+```
+cd flutype_webapp
+python manage.py flush
+python flutype/data_management/fill_users.py
+python flutype/data_management/fill_database.py
+
+```
+
+
 ## Coverage
 
 Coverage of Test are run via

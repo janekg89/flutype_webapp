@@ -6,39 +6,23 @@ Django models for the flutype webapp.
 from __future__ import absolute_import, print_function, unicode_literals
 
 import os
-import pandas as pd
-
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.contrib.auth.models import User as DUser
 from djchoices import DjangoChoices, ChoiceItem
 from django.core.files.storage import FileSystemStorage
-
 from django_pandas.io import read_frame
 from flutype_webapp.settings import MEDIA_ROOT
-
 fs = FileSystemStorage(location=MEDIA_ROOT)
-
-from django.conf import settings
-from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.contrib.auth.models import User
+from .behaviours import Statusable, Timestampable, Sidable, Userable, Commentable, FileAttachable, Hidable, Hashable
 from model_utils.managers import InheritanceManager
 from polymorphic.models import PolymorphicModel
 from imagekit.models import ImageSpecField
-from imagekit.processors import Transpose, ResizeToFit
+from imagekit.processors import Transpose, ResizeToFit, Adjust
+from .helper import OverwriteStorage, CHAR_MAX_LENGTH
+from .managers import LigandBatchManager,ComplexManager, StepManager,StudyManager, MeasurementManager , GalFileManager, \
+    ProcessManager , SpotcollectionManager,RawSpotManager, RawDocManager
 
-
-CHAR_MAX_LENGTH = 50
-
-class OverwriteStorage(FileSystemStorage):
-    """
-    Overwrite storage overwrites existing names by deleting the resources.
-    ! Use with care. This deletes files from the media folder !
-    """
-    def get_available_name(self, name, **kwargs):
-        if self.exists(name):
-            os.remove(os.path.join(settings.MEDIA_ROOT, name))
-        return name
 
 #############################################################
 # Helper models, i.e., choices
@@ -52,15 +36,15 @@ class Buffer(DjangoChoices):
     pbst = ChoiceItem("PBST")
     natriumhydrogencarbonat = ChoiceItem("Natriumhydrogencarbonat")
 
-
 class Substance(DjangoChoices):
     """
     substance model
     """
-    nhs_3d=ChoiceItem("3D-NHS")
+    nhs_3d = ChoiceItem("3D-NHS")
+    no = ChoiceItem("No")
+    epoxy_3d = ChoiceItem("3D-Epoxy")
 
-
-class ExperimentType(DjangoChoices):
+class MeasurementType(DjangoChoices):
     """
     holder type model
     """
@@ -68,16 +52,24 @@ class ExperimentType(DjangoChoices):
     microwell = ChoiceItem("microwell")
     elisa = ChoiceItem("elisa")
 
+class GalType(DjangoChoices):
+    """
+    holder type model
+    """
+    std = ChoiceItem("std")
+    intensity = ChoiceItem("intensity")
+    ligand_batch = ChoiceItem("ligand_batch")
+
 
 class Manufacturer(DjangoChoices):
     """
     manufacturer model
     """
-    polyan= ChoiceItem("PolyAn")
+    polyan = ChoiceItem("PolyAn")
 
 
 class ProcessingType(DjangoChoices):
-    substract_buffer= ChoiceItem("sub_buf")
+    substract_buffer = ChoiceItem("sub_buf")
 
 
 ########################################
@@ -85,13 +77,17 @@ class ProcessingType(DjangoChoices):
 ########################################
 
 class Ligand(PolymorphicModel):
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
+
+
     """
     Generic ligand.
     This can be for instance a peptide, virus or antibody.
     """
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH, null=True)
-    comment = models.TextField(blank=True, null=True)
 
+    def __str__(self):
+        return self.sid
 
 class Peptide(Ligand):
     """
@@ -110,28 +106,33 @@ class Virus(Ligand):
     """
     tax_id = models.CharField(max_length=CHAR_MAX_LENGTH, null=True)
     link_db = models.URLField(blank=True, null=True)
-    # fludb_id
     subtype = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     isolation_country = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     collection_date = models.CharField(max_length=10, blank=True, null=True)
     strain = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
 
-
 class Antibody(Ligand):
     target = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
-    # FIXME: monoclonal/polyclonal
     link_db = models.URLField(blank=True, null=True)
 
+class Complex(Ligand):
+    complex_ligands = models.ManyToManyField(Ligand, related_name="complex_ligands")
+    objects = ComplexManager()
 
-# TODO: complex
 
+    @property
+    def ligands_str(self):
+        ligands = self.complex_ligands.values_list('sid', flat=True)
+        print(ligands)
+        vals = '-'.join(ligands)
+        return vals
 
 ########################################
 # Batch
 ########################################
 
-class Batch(models.Model):
+class Batch(Sidable,Commentable,models.Model):
     """
     Batch model as abstract class not stored in database.
     The various ligand batches inherit from this class.
@@ -140,22 +141,25 @@ class Batch(models.Model):
                 This also handles the flurofix (fluorescent peptides)
 
     """
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     labeling = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
 
     concentration = models.FloatField(validators=[MinValueValidator(0)],
                                       blank=True, null=True)
-    buffer = models.CharField(max_length=CHAR_MAX_LENGTH,choices=Buffer.choices, blank=True, null=True)
+    buffer = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Buffer.choices, blank=True, null=True)
     ph = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(14)],
                            blank=True, null=True)
     purity = models.FloatField(validators=[MinValueValidator(0)],
                                blank=True, null=True)
     produced_by = models.ForeignKey(User, blank=True, null=True)
     production_date = models.DateField(blank=True, null=True)
-    comment = models.TextField(blank=True, null=True)
+
+
 
     class Meta:
         abstract = True
+
+    def __str__(self):
+        return self.sid
 
 
 class LigandBatch(Batch):
@@ -166,7 +170,8 @@ class LigandBatch(Batch):
         mobile: is the ligand immobilized on surface, or in solution (other options ?)
     """
     ligand = models.ForeignKey(Ligand, blank=True, null=True)
-    mobile = models.NullBooleanField(blank=True, null=True)
+    objects = LigandBatchManager()
+
 
 
 class VirusBatch(LigandBatch):
@@ -174,22 +179,51 @@ class VirusBatch(LigandBatch):
     Virus batch model
     """
 
-    passage_history = models.CharField(max_length=CHAR_MAX_LENGTH, blank= True ,null=True)
+    passage_history = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     active = models.NullBooleanField(blank=True, null=True)
-
+    objects = LigandBatchManager()
 
 
 class PeptideBatch(LigandBatch):
     """
     peptide batch model
     """
+    objects = LigandBatchManager()
+
 
 
 class AntibodyBatch(LigandBatch):
     """
     peptide batch model
     """
-    pass
+    objects = LigandBatchManager()
+
+
+class ComplexBatch(LigandBatch):
+    """
+    a complex composed of ligands model
+    """
+
+    objects = LigandBatchManager()
+
+
+class BufferBatch(LigandBatch):
+
+    objects = LigandBatchManager()
+
+
+
+########################################
+# Gal files
+########################################
+class GalFile(Sidable,models.Model):
+    type = models.CharField(max_length=CHAR_MAX_LENGTH, choices=GalType.choices)
+    file = models.FileField(upload_to="gal_file", null=True, blank=True, storage=OverwriteStorage())
+    objects = GalFileManager()
+
+    def __str__(self):
+        return self.sid
+
 
 ########################################
 # Process & Treatment
@@ -197,18 +231,15 @@ class AntibodyBatch(LigandBatch):
 # The steps in the process.
 
 
-class Step(models.Model):
-    """
-    Steps in the process.
+
+class Step(Sidable,Commentable,models.Model):
+    """ Steps in the process.
 
         index: number of steps which gives the order
     """
     objects = InheritanceManager()
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH,null=True, blank=True)
     method = models.CharField(max_length=300, null=True, blank=True)
     temperature = models.CharField(max_length=300, null=True, blank=True)
-    comment = models.TextField(blank=True, null=True)
-
 
     @property
     def get_step_type(self):
@@ -216,80 +247,97 @@ class Step(models.Model):
         subclass_object = Step.objects.get_subclass(id=self.id)
         return subclass_object
 
+    def __str__(self):
+        return self.sid
+
+
+
 
 class Washing(Step):
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
-
+    objects =  StepManager()
 
 class Blocking(Step):
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
+    objects =  StepManager()
 
 
 class Scanning(Step):
-    pass
+    objects =  StepManager()
 
 
 class Drying(Step):
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     duration = models.DurationField(null=True, blank=True)
+    objects =  StepManager()
 
 
 class Spotting(Step):
     """ Spotting method and media related to spotting. """
-    pass
+    objects =  StepManager()
 
 
 class Incubating(Step):
     duration = models.DurationField(null=True, blank=True)
+    objects =  StepManager()
+
+
+class IncubatingAnalyt(Step):
+    duration = models.DurationField(null=True, blank=True)
+    objects =  StepManager()
 
 
 class Quenching(Step):
     duration = models.DurationField(null=True, blank=True)
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
+    objects =  StepManager()
 
 
-########################################
-# Gal files
-########################################
-class GalFile(models.Model):
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
-    file = models.FileField(upload_to="gal_file", null=True, blank=True, storage=OverwriteStorage())
+class Study(Sidable, Timestampable, Statusable, FileAttachable, Hidable, models.Model):
+    task = models.TextField(blank=True, null=True)
+    result = models.TextField(blank=True, null=True)
+    objects = StudyManager()
 
-# class GalVirus(models.Model):
-#    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
-#    file = models.FileField(upload_to="gal_vir", null=True, blank=True, storage=OverwriteStorage())
+    def users(self):
+        user_ids = self.rawspotcollection_set.values_list("processstep__user", flat="True").distinct()
+        return User.objects.filter(id__in=user_ids)
 
-
-# probably measurement ?
-class Experiment(models.Model):
+class Measurement(Sidable, Commentable, Timestampable, Statusable, FileAttachable, Hidable, models.Model):
     """
-    FIXME: an experiment can have multiple image/data files
     """
-
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
-    experiment_type = models.CharField(max_length=CHAR_MAX_LENGTH, choices=ExperimentType.choices)
-    batch = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
+    measurement_type = models.CharField(max_length=CHAR_MAX_LENGTH, choices=MeasurementType.choices)
+    batch_sid = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     functionalization = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Substance.choices)
     manufacturer = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Manufacturer.choices)
     process = models.ForeignKey("Process", blank=True, null=True)
-    comment = models.TextField(null=True, blank=True)
+    studies = models.ManyToManyField(Study, blank=True)
+    objects = MeasurementManager()
 
 
-class Process(models.Model):
+
+    def __str__(self):
+        return self.sid
+
+    class Meta:
+        abstract = True
+
+
+
+
+class Process(Sidable,models.Model):
     """ A process is a collection of process steps.
     Every step has an index.
 
     """
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH, unique=True)
     steps = models.ManyToManyField(Step, through='ProcessStep')
     unique_ordering = models.CharField(max_length=CHAR_MAX_LENGTH)
+    objects = ProcessManager()
 
     def users(self):
         user_ids = self.processstep_set.values_list("user", flat="True").distinct()
         return User.objects.filter(id__in=user_ids)
-
 
     def is_step_in_process(self):
         result = True
@@ -298,63 +346,46 @@ class Process(models.Model):
         return result
 
     @property
-    def get_unique_ordering(self):
-        """ Creates DataFrame from given steps.
-        :return:
-        """
-        data = read_frame(self.processstep_set.all(), fieldnames=["step__sid", "index"])
-        data.sort_values(["index","step__sid"], ascending =[1,0])
-        order_steps = data["step__sid"]
-        vals = '-'.join(order_steps)
-        return vals
+    def get_unique_ordering2(self):
+        # FIXME: does this work ?
+        ordered_step_ids = self.processstep_set.order_by('index').values_list('step__sid', flat=True)
+        return  '-'.join(ordered_step_ids)
 
+    # FIXME: function for creating the sid belongs here, not in the import
 
-    # TODO: overwrite the save method on model to add uniqueness constraint
-    def save(self, *args, **kwargs):
-        self.unique_ordering = self.get_unique_ordering
-        super(Process,self).save(*args,**kwargs)
+    @property
+    def name(self):
+        ordered_step_methods = self.processstep_set.order_by('index').values_list('step__method', flat=True)
+        # FIXME: filter necessary
+        values = [item for item in ordered_step_methods if item is not None]
+        return '; '.join(values)
 
     def __str__(self):
-        return self.unique_ordering
+        return self.sid
+
+class RawDoc(Sidable, Hashable,  models.Model):
+    file = models.FileField(upload_to="raw_docs", storage=OverwriteStorage())
+    objects = RawDocManager()
 
 
-
-
-class ProcessStep(models.Model):
-    """ Single step in an actual process.
-        Connecting the Steps to the process, creating an order of the steps.
-
-        index: position of step in the process.
-
+class RawSpotCollection(Measurement):
     """
-    process = models.ForeignKey(Process)
-    step = models.ForeignKey(Step)
-    index = models.IntegerField(blank=True, null=True)
-    user = models.ForeignKey(User, null=True, blank=True)
-    start = models.DateTimeField(null=True, blank=True)
-    finish = models.DateTimeField(null=True, blank=True)
-    comment = models.TextField(null=True, blank=True)
-    # FIXME: property all users involved in the process, i.e.
-    # everybody involved in any step in the process
-
-    class Meta:
-        unique_together = ('process', 'step', 'index')
-        ordering = ['index', ]
-
-
-class RawSpotCollection(Experiment):
+    A collection of raw spots: Information for a Collection of Spots collected at once for one microarray,
+    one microwellplate
     """
-    A collection of raw spots: Information for a Collection of Spots collected at once for one microarray, one microwellplate
-    """
-    image = models.ImageField(upload_to="image", null=True, blank=True, storage=OverwriteStorage())
-    image_90 =  ImageSpecField(source='image',
-                               processors=[Transpose(Transpose.ROTATE_90),ResizeToFit(350,100)],
-                               )
-    gal_file1 = models.ForeignKey(GalFile, null=True, blank=True, related_name='gal_file1')
-    gal_file2 = models.ForeignKey(GalFile, null=True, blank=True, related_name='gal_file2')
+    lig_fix = models.ForeignKey(GalFile, null=True, blank=True, related_name='lig_fix')
+    lig_mob = models.ForeignKey(GalFile, null=True, blank=True, related_name='lig_mob')
 
     ligands1 = models.ManyToManyField(Ligand, related_name="ligands1")
     ligands2 = models.ManyToManyField(Ligand, related_name="ligands2")
+
+    @property
+    def is_picture_in_rsc(self):
+        result = False
+        for processstep in self.processstep_set.all():
+            if processstep.image:
+                result = True
+        return result
 
     @property
     def viruses1(self):
@@ -380,7 +411,6 @@ class RawSpotCollection(Experiment):
     def peptides2(self):
         return self.ligands2.instance_of(Peptide)
 
-
     def is_spot_collection(self):
         result = True
         if self.spotcollection_set.all().count() == 0:
@@ -388,32 +418,72 @@ class RawSpotCollection(Experiment):
         return result
 
     def pivot_ligand1(self):
-        data = read_frame(self.rawspot_set.all(), fieldnames=["row","column","ligand1__ligand__sid"])
-        lig1 = data.pivot(index="row", columns="column", values="ligand1__ligand__sid")
+        data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "lig_fix_batch__ligand__sid"])
+        lig1 = data.pivot(index="row", columns="column", values="lig_fix_batch__ligand__sid")
         lig1.fillna(value="", inplace=True)
         return lig1
 
     def pivot_ligand2(self):
         try:
-            data = read_frame(self.rawspot_set.all(), fieldnames=["row","column","ligand2__ligand__virus__subtype"])
-            lig2 = data.pivot(index="row", columns="column", values="ligand2__ligand__virus__subtype")
+            data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "lig_mob_batch__ligand__virus__subtype"])
+            lig2 = data.pivot(index="row", columns="column", values="lig_mob_batch__ligand__virus__subtype")
         except:
-            data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "ligand2__ligand__sid"])
-            lig2 = data.pivot(index="row", columns="column", values="ligand2__ligand__sid")
+            data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "lig_mob_batch__ligand__sid"])
+            lig2 = data.pivot(index="row", columns="column", values="lig_mob_batch__ligand__sid")
         lig2.fillna(value="", inplace=True)
         return lig2
 
     def pivot_concentration1(self):
-        data = read_frame(self.rawspot_set.all(), fieldnames=["row","column","ligand1__concentration"])
-        concentration = data.pivot(index="row", columns="column", values="ligand1__concentration")
+        data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "lig_fix_batch__concentration"])
+        concentration = data.pivot(index="row", columns="column", values="lig_fix_batch__concentration")
         concentration.fillna(value="", inplace=True)
         return concentration
 
     def pivot_concentration2(self):
-        data = read_frame(self.rawspot_set.all(), fieldnames=["row","column","ligand2__concentration"])
-        concentration = data.pivot(index="row", columns="column", values="ligand2__concentration")
+        data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "lig_mob_batch__concentration"])
+        concentration = data.pivot(index="row", columns="column", values="lig_mob_batch__concentration")
         concentration.fillna(value="", inplace=True)
         return concentration
+
+
+
+
+
+
+class ProcessStep(Userable, Commentable, Hashable, models.Model):
+    """ Single step in an actual process.
+        Connecting the Steps to the process, creating an order of the steps.
+
+        index: position of step in the process.
+
+    """
+    process = models.ForeignKey(Process)
+    step = models.ForeignKey(Step)
+    raw_spot_collection =  models.ForeignKey(RawSpotCollection)
+
+    index = models.IntegerField(blank=True, null=True)
+    start = models.DateTimeField(null=True, blank=True)
+    image = models.ImageField(upload_to="image", null=True, blank=True, storage=OverwriteStorage())
+    image_contrast = ImageSpecField(source='image',
+                                    processors=[Adjust(contrast=124, brightness=126)]
+                                    )
+    image_90 = ImageSpecField(source='image',
+                              processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(700, 200)],
+                              )
+    image_90_big = ImageSpecField(source='image',
+                              processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(2800, 880)],
+                              )
+
+    intensities = models.ForeignKey(GalFile, null=True, blank=True)
+
+
+
+    class Meta:
+        ordering = ['index']
+        unique_together = ["raw_spot_collection", "process","step","index"]
+
+    def __str__(self):
+        return str(self.process.sid + "-" + self.step.sid + "-" + str(self.index))
 
 
 class RawSpot(models.Model):
@@ -421,46 +491,67 @@ class RawSpot(models.Model):
     spot model
     """
     raw_spot_collection = models.ForeignKey(RawSpotCollection)
-    ligand1 = models.ForeignKey(LigandBatch, related_name="ligand1",null=True, blank=True)
-    ligand2 = models.ForeignKey(LigandBatch, related_name="ligand2",null=True, blank=True)
+    lig_fix_batch = models.ForeignKey(LigandBatch, related_name="lig_fix_batch", null=True, blank=True)
+    lig_mob_batch= models.ForeignKey(LigandBatch, related_name="lig_mob_batch", null=True, blank=True)
     column = models.IntegerField()
     row = models.IntegerField()
+    objects = RawSpotManager()
+
 
     class Meta:
         unique_together = ('column', 'row', 'raw_spot_collection')
+
+    # todo rename ligand1 and 2 to ligandbatch1 and 2
+
+    def __str__(self):
+        return str("column:"+str(self.column)+"-"+"row:"+str(self.row))
+
 
 
 #####################################
 # Quantified interaction strength
 #####################################
 
-class SpotCollection(models.Model):
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH)
+class SpotCollection(Sidable, Commentable, FileAttachable, models.Model):
     raw_spot_collection = models.ForeignKey(RawSpotCollection)
-    image2numeric_version = models.FloatField(default=0.1)
+    std_gal = models.ForeignKey(GalFile,null=True, blank=True,related_name="std_gal")
+    int_gal = models.ForeignKey(GalFile,null=True, blank=True,related_name="int_gal")
+
     processing_type = models.CharField(max_length=CHAR_MAX_LENGTH,
                                        choices=ProcessingType.choices,
                                        blank=True,
                                        null=True)
-    comment = models.TextField(default="A spot detecting script has located the spots in the image."
-                                      "The spots are centered in a larger square."
-                                      "The Intesity values are calculated as the total intensity over that square. "
-                                      "The image is not preprocessed.")
+    objects = SpotcollectionManager()
 
-# perhaps name Interaction
+    def __str__(self):
+        return str(self.raw_spot_collection.sid+"+"+self.sid)
+
+    def pivot_intensity(self):
+        data = read_frame(self.spot_set.all(), fieldnames=["raw_spot__row", "raw_spot__column", "intensity"])
+        intensity = data.pivot(index="raw_spot__row", columns="raw_spot__column", values="intensity")
+        intensity.fillna(value="", inplace=True)
+        return intensity
+
+    def pivot_std(self):
+        data = read_frame(self.spot_set.all(), fieldnames=["raw_spot__row", "raw_spot__column", "std"])
+        std = data.pivot(index="raw_spot__row", columns="raw_spot__column", values="std")
+        std.fillna(value="", inplace=True)
+        return std
+
+
 class Spot(models.Model):
     """
     spot model
     """
     raw_spot = models.ForeignKey(RawSpot)
-
     ############in results#########################
     intensity = models.FloatField(null=True, blank=True)
     std = models.FloatField(null=True, blank=True)
     spot_collection = models.ForeignKey(SpotCollection)
-    #TODO: add Coordinates on image
+
+    class Meta:
+        unique_together = ('raw_spot', 'spot_collection')
 
 
-
-
-
+    def __str__(self):
+        return str("column:"+str(self.raw_spot.column)+"-"+"row:"+str(self.raw_spot.row)+"-"+"intensity:"+str(self.intensity))

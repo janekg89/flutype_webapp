@@ -5,22 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Flutype Web Database">
     <meta name="author" content="Janek and Matthias Koenig">
-    <link rel="icon" href="{{ static('flutype/images/flutype.ico') }}">
+    <link rel="icon" href="{{static('flutype/images/flutype.ico')}}">
     <title>FluType</title>
 
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="{{ static('flutype/css/bootstrap.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ static('flutype/js/datatables.min.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ static('winmarkltd-BootstrapFormHelpers-d4201db/dist/css/bootstrap-formhelpers.min.css') }}"/>
+    <link rel="stylesheet" type="text/css"
+          href="{{ static('winmarkltd-BootstrapFormHelpers-d4201db/dist/css/bootstrap-formhelpers.min.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ static('flutype/font-awesome-4.7.0/css/font-awesome.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ static('flutype/css/custom.css') }}"/>
 
     <!-- JS -->
+
     <script type="text/javascript" src="{{ static('flutype/js/jquery-3.2.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ static('flutype/js/tether-1.4.0.min.js') }}"></script>
     <script type="text/javascript" src="{{ static('flutype/js/bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ static('flutype/js/datatables-1.10.15.min.js') }}"></script>
-    <script type="text/javascript" src="{{ static('winmarkltd-BootstrapFormHelpers-d4201db/dist/js/bootstrap-formhelpers.min.js') }}"></script>
+    <script type="text/javascript" src="{{ static('flutype/js/jquery.formset.js') }}"></script>
+
+
+
+    <script type="text/javascript"
+            src="{{ static('winmarkltd-BootstrapFormHelpers-d4201db/dist/js/bootstrap-formhelpers.min.js') }}"></script>
+        <link rel="stylesheet" type="text/css" href="{{ static('flutype/css/custom.css') }}"/>
+
 
     <!-- HEAD -->
     {% block head %}{% endblock %}
@@ -28,8 +36,7 @@
 
 </head>
 <body>
-
-<nav class="navbar navbar-default navbar-inverse">
+<nav id = "main-navbar" class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -40,71 +47,156 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="nav navbar-nav" href="{{ url('index') }}">
-                <img style="width:50px" src="{{ static('flutype/images/flutype-logo.png') }}"></a>
+            <a class="nav navbar-nav" href="{{ url('index')}}">
+                <img style="width:50px" src="{{static('flutype/images/flutype-logo.png')}}"></a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                {% if request.user.is_authenticated %}
-                    <li class="active"><a href="{{ url('index') }}"><i class="fa fa-building fa-fw"></i> Experiments <span class="sr-only">(current)</span></a></li>
-                    <li class="dropdown active" >
-                        <a data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-anchor fa-fw" ></i>  Fixed Ligands  <span class="caret"></span> </a>
+                {% if request.user.is_authenticated %}<li class="dropdown active">
+                        <a class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-eyedropper" aria-hidden="true"></i>Experiments <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url('index') }}">Studies</a></li>
+                                <li><a href="{{ url('measurements') }}">Measurements</a></li>
+
+                            </ul>
+                    </li>
+
+                    <li class="dropdown active">
+                        <a  class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-certificate" aria-hidden="true"></i> Ligands <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url('antibodies') }}">Antibodies</a></li>
+                            <li><a href="{{ url('peptides') }}">Peptides</a></li>
+                            <li><a href="{{ url('viruses') }}">Virus</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{{ url('complexes') }}">Complex</a></li>
+                            <li class="divider"></li>
+                            <li class="dropdown-submenu">
+                                <a  class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-anchor fa-fw"> </i> Fixed</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ url('antibodies_fixed') }}">Antibodies</a></li>
+                                    <li><a href="{{ url('peptides_fixed') }}">Peptides</a></li>
+                                    <li><a href="{{ url('viruses_fixed') }}">Virus</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="{{ url('complexes_fixed') }}">Complex</a></li>
+                                </ul>
+                            </li>
+                             <li class="dropdown-submenu">
+                                <a class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-tint fa-fw"></i> Analyt</a>
+                                 <ul class="dropdown-menu">
+                                    <li><a href="{{ url('antibodies_mobile') }}">Antibodies</a></li>
+                                    <li><a href="{{ url('peptides_mobile') }}">Peptides</a></li>
+                                    <li><a href="{{ url('viruses_mobile') }}">Virus</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="{{ url('complexes_mobile') }}">Complex</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown active">
+                    <a class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-flask" aria-hidden="true"></i>Batches <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url('antibodybatches') }}">Antibodies</a></li>
+                        <li><a href="{{ url('peptidebatches') }}">Peptides</a></li>
+                        <li><a href="{{ url('virusbatches') }}">Virus</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{{ url('complexbatches') }}">Complex</a></li>
+                        <li class="divider"></li>
+                        <li class="dropdown-submenu">
+                            <a class="dropdown-toggle" data-toggle="dropdown">
+                                 <i class="fa fa-anchor fa-fw"></i>Fixed </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url('antibodybatches_fixed') }}">Antibodies</a></li>
+                                <li><a href="{{ url('peptidebatches_fixed') }}">Peptides</a></li>
+                                <li><a href="{{ url('virusbatches_fixed') }}">Virus</a></li>
+                                <li class="divider"></li>
+                                <li><a href="{{ url('complexbatches_fixed') }}" >Complex</a></li>
+                            </ul>
+                        </li>
+                         <li class="dropdown-submenu">
+                            <a class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-tint fa-fw"></i> Analyt</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url('antibodybatches_mobile') }}">Antibodies</a></li>
+                                <li><a href="{{ url('peptidebatches_mobile') }}">Peptides</a></li>
+                                <li><a href="{{ url('virusbatches_mobile') }}">Virus</a></li>
+                                <li class="divider"></li>
+                                <li><a href="{{ url('complexbatches_mobile') }}" >Complex</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+
+                    <li class="dropdown active">
+                        <a data-toggle="dropdown" role="button" aria-expanded="false"> <i class="fa fa-magic"
+                                                                                          aria-hidden="true"></i>
+                            Process <span class="caret"></span> </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li> <a href="{{ url('peptidebatches_fixed')}}">Peptide Batches <span class="sr-only">(current)</span></a></li>
-                            <li> <a href="{{ url('peptides_fixed')}}">Peptides <span class="sr-only">(current)</span></a></li>
-                            <li> <a href="{{ url('virusbatches_fixed')}}">Virus Batches <span class="sr-only">(current)</span></a></li>
-                            <li> <a href="{{ url('viruses_fixed')}}">Viruses <span class="sr-only">(current)</span></a></li>
-                            <li> <a href="{{ url('antibodybatches_fixed')}}">Antibody Batches <span class="sr-only">(current)</span></a></li>
-                            <li> <a href="{{ url('antibodies_fixed')}}">Antibodies <span class="sr-only">(current)</span></a></li>
+                            <li><a href={{ url('processes') }}> Processes <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li><a href={{ url('steps') }}> Process Steps <span class="sr-only">(current)</span></a>
+                            </li>
 
 
                         </ul>
                     </li>
-                    <li class="dropdown active" >
-                        <a data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-tint fa-fw" ></i>  Mobile Ligands  <span class="caret"></span> </a>
+
+                    <li class="dropdown active">
+                        <a data-toggle="dropdown" role="button" aria-expanded="false"> <i class="fa fa-question fa-fw"
+                        ></i> How <span class="caret"></span> </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li> <a href="{{ url('peptidebatches_mobile')}}">Peptide Batches <span class="sr-only">(current)</span></a></li>
-                            <li> <a href="{{ url('peptides_mobile')}}">Peptides <span class="sr-only">(current)</span></a></li>
-                            <li> <a href="{{ url('virusbatches_mobile')}}">Virus Batches <span class="sr-only">(current)</span></a></li>
-                            <li> <a href="{{ url('viruses_mobile')}}">Viruses <span class="sr-only">(current)</span></a></li>
-                            <li> <a href="{{ url('antibodybatches_mobile')}}">Antibody Batches <span class="sr-only">(current)</span></a></li>
-                            <li> <a href="{{ url('antibodies_mobile')}}">Antibodies <span class="sr-only">(current)</span></a></li>
+                            <li><a href="{{ url('tutorial') }}">Tutorial <span class="sr-only">(current)
+                             </span></a></li>
+
 
 
                         </ul>
                     </li>
-                    <li class="dropdown active" >
-                        <a data-toggle="dropdown" role="button" aria-expanded="false"> <i class="fa fa-magic" aria-hidden="true"></i> Process  <span class="caret"></span> </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href={{ url('processes')}}> Processes <span class="sr-only">(current)</span></a> </li>
-                            <li><a href={{ url('steps')}}> Process Steps <span class="sr-only">(current)</span></a> </li>
 
-
-                        </ul>
-                    </li>
-                    <li class="active"><a href="{{ url('users') }}"> <i class="fa fa-group fa-fw"></i> Users <span class="sr-only">(current)</span></a></li>
+                    <li class="active"><a href="{{ url('users') }}"> <i class="fa fa-group fa-fw"></i> Users <span
+                            class="sr-only">(current)</span></a></li>
 
                 {% endif %}
-                <li class="active"><a href="{{ url('about') }}"><i class="fa fa-info fa-fw"></i> About <span class="sr-only">(current)</span></a></li>
+                <li class="active"><a href="{{ url('about') }}"><i class="fa fa-info fa-fw"></i> About <span
+                        class="sr-only">(current)</span></a></li>
+
+
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
                 {% if request.user.is_authenticated %}
-                    <li class="dropdown active" >
-                        <a data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user fa-fw" ></i> {{ request.user.get_username() }}  <span class="caret"></span> </a>
+                    <li class="dropdown active">
+                        <a data-toggle="dropdown" role="button" aria-expanded="false"><i
+                                class="fa fa-user fa-fw"></i> {{ request.user.get_username() }} <span
+                                class="caret"></span> </a>
                         <ul class="dropdown-menu" role="menu">
-                        <li> <a href="{{ url('my_index')}}"> <i class="fa fa-user fa-fw" aria-hidden="true"></i> My Experiments </a> </li>
-						<li> <a href="{{ url('change_password')}}"> <i  class="fa fa-key"></i> Change Password </a> </li>
-						<li> <a href="{{ url('logout') }}?next={{ request.path }}"> <i class="fa fa-sign-out fa-fw"> </i> Logout</a> </li>
-					    </ul>
+                            <li><a href="{{ url('my_studies') }}"> <i class="fa fa-user fa-fw" aria-hidden="true"></i> My
+                                Studies </a></li>
+                            <li><a href="{{ url('my_measurements') }}"> <i class="fa fa-user fa-fw" aria-hidden="true"></i> My
+                                Measurements </a></li>
+                            <li class="divider"></li>
+
+                            <li><a href="{{ url('change_password') }}"> <i class="fa fa-key"></i> Change Password </a>
+                            </li>
+                            <li><a href="{{ url('logout') }}?next={{ request.path }}"> <i
+                                    class="fa fa-sign-out fa-fw"> </i> Logout</a></li>
+                        </ul>
                     </li>
                 {% else %}
-                    <li class="active"><a href="{{ url('login') }}?next={{ request.path }}"><i class="fa fa-sign-in fa-fw"></i> Login</a></li>
+                    <li class="active"><a href="{{ url('login') }}?next={{ request.path }}"><i
+                            class="fa fa-sign-in fa-fw"></i> Login</a></li>
                 {% endif %}
-                <li class="active"> <a href="http://cloud.flutype.de/owncloud"><i class="fa fa-cloud fa-fw"></i> Cloud</a>
-                <li class="active"> <a href="https://github.com/janekg89/flutype_webapp"><i class="fa fa-github fa-fw"></i> Github</a>
+                <li class="active"><a href="http://cloud.flutype.de/owncloud"><i class="fa fa-cloud fa-fw"></i>
+                    Cloud</a>
+                <li class="active"><a href="https://github.com/janekg89/flutype_webapp"><i
+                        class="fa fa-github fa-fw"></i> Github</a>
 
             </ul>
         </div><!-- /.navbar-collapse -->
@@ -133,6 +225,16 @@
     <!-- /#page-wrapper -->
 </div>
 <!-- /#wrapper -->
+<script>
+ $(window).resize(function () {
+   $('body').css('padding-top', parseInt($('#main-navbar').css("height"))+10);
+});
+
+$(window).load(function () {
+   $('body').css('padding-top', parseInt($('#main-navbar').css("height"))+10);
+});
+
+</script>
 
 {% block javascript %}{% endblock %}
 </body>
