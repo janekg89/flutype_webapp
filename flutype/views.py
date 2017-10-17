@@ -29,6 +29,29 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 from django.db.models import Max
 import json
 
+@login_required
+def grid_view(request,pk):
+    study = get_object_or_404(Study, id=pk)
+    if request.method == 'POST':
+        form = StudyForm(request.POST, instance=study)
+        if form.is_valid():
+            form.save()
+        return redirect(request.META['HTTP_REFERER'])
+
+    else:
+
+        collections = study.rawspotcollection_set.all()
+        form = StudyForm(instance=study)
+
+        context = {
+            'type': 'all',
+            'collections': collections,
+            'study': study,
+            'form': form
+        }
+
+    return render(request,
+                  'flutype/new_grid.html',context)
 
 @login_required
 def index_view(request):
