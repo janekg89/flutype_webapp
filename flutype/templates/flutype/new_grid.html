@@ -2,17 +2,27 @@
 {% block content %}
     <!-- Main Content -->
     <div class="container">
-    <div class="o-switch btn-group no-outline toggle" data-toggle="buttons" role="group">
-      <label class="btn btn-secondary active" id="option1">
-        <input type="radio" name="options2" id="option21" autocomplete="off" class="active"> planned
-      </label>
-      <label class="btn btn-secondary" id="option2">
-        <input type="radio" name="options2" id="option22" autocomplete="off" class="active"> in progress
-      </label>
-      <label class="btn btn-secondary" id="option3">
-        <input type="radio" name="options2" id="option33" autocomplete="off" class="active"> finished
-      </label>
+    <div class toggle>
+
+            <div class="o-switch btn-group no-outline" data-toggle="buttons" role="group" >
+            <form method="post" class="post-form" id="button">
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+              <label class="btn btn-secondary
+                {% if study.status == "planning" %} active checked {% endif %}"  id="option1">
+                <input type="radio" name="status" value="planning"  id="option21" autocomplete="off" > planning
+              </label>
+              <label class="btn btn-secondary{% if study.status == "in progress" %} active checked {% endif %}" id="option2">
+                <input type="radio" name="status" value="in progress" id="option22" autocomplete="off" > in progress
+              </label>
+              <label class="btn btn-secondary{% if study.status == "finished" %} active checked {% endif %}" id="option3">
+                <input type="radio" name="status"  value="finished" id="option33" autocomplete="off" > finished
+              </label>
+                 </form>
+                </div>
+
     </div>
+
+
       <div class="a">
           <h1> {{ study.sid }}</h1>
 
@@ -58,7 +68,14 @@
                     </tbody>
                 </table>
       </div>
-      <div class="box b">B</div>
+      <div class="b">
+            <form class="dropzone" action="{{ url('upload_file', args=[study.id]) }}" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            </form>
+        <button id="submit-all">
+            Submit all files
+        </button>      </div>
+
       <div class="c">
           <nav id="navbar-2" class="navbar navbar-inverse">
               <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
@@ -160,4 +177,49 @@
           {% endif %}
       </div>
     </div>
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript">
+            Dropzone.options.myDropzone = {
+
+                // Prevents Dropzone from uploading dropped files immediately
+                autoProcessQueue : false,
+
+                init : function() {
+                    var submitButton = document.querySelector("#submit-all")
+                    myDropzone = this;
+
+                    submitButton.addEventListener("click", function() {
+                        myDropzone.processQueue();
+                        // Tell Dropzone to process all queued files.
+                    });
+
+                    // You might want to show the submit button only when
+                    // files are dropped here:
+                    this.on("addedfile", function() {
+                        // Show submit button here and/or inform user to click it.
+                    });
+
+                }
+            };
+        </script>
+    <script type='text/javascript'>
+ </script>
+    <script type='text/javascript'>
+
+
+         var form = document.getElementById("button");
+         document.getElementById("button").addEventListener("click", function () {
+
+
+
+            form.submit();
+            });
+
+
+    </script>
+    <script>
+    console.log("Hi")
+    </script>
+
 {% endblock %}
