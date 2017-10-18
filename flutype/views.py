@@ -11,10 +11,10 @@ from .helper import generate_tree, tar_tree, empty_list
 from .forms import PeptideForm, VirusForm, AntibodyForm, AntibodyBatchForm, \
     PeptideBatchForm, VirusBatchForm, ProcessStepForm, ComplexBatchForm, ComplexForm, StudyForm, MeasurementForm, \
     WashingForm,DryingForm,SpottingForm, QuenchingForm,BlockingForm,IncubatingForm, \
-    ScanningForm, IncubatingAnalytForm
-
+    ScanningForm, IncubatingAnalytForm, RawDocForm
 from .models import RawSpotCollection, SpotCollection, Process, PeptideBatch, \
-    Peptide, VirusBatch, Virus, AntibodyBatch, Antibody, Step, ProcessStep, Complex, ComplexBatch, Study
+    Peptide, VirusBatch, Virus, AntibodyBatch, Antibody, Step, ProcessStep, Complex, ComplexBatch, Study, \
+    RawDoc
 from django.forms import formset_factory, inlineformset_factory
 from django.shortcuts import get_object_or_404, render, redirect
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -24,30 +24,54 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.http import HttpResponseRedirect
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+from django.core.urlresolvers import reverse
 
 
 from django.db.models import Max
 import json
 
 @login_required
+def upload_file(request,pk):
+    if request.method == 'POST':
+        study = get_object_or_404(Study, id=pk)
+        form = RawDocForm(request.POST, request.FILES)
+        if form.is_valid():
+            new_file = RawDoc(file=form.cleaned_data['file'],
+                              sid=request.FILES['file'].name)
+            new_file.save()
+
+            study.files.add(new_file)
+            return redirect(request.META['HTTP_REFERER'])
+
+
+
+@login_required
 def grid_view(request,pk):
     study = get_object_or_404(Study, id=pk)
     if request.method == 'POST':
-        form = StudyForm(request.POST, instance=study)
-        if form.is_valid():
-            form.save()
+        status = request.POST.get("status")
+        study.status = status
+        study.save()
+        for key in request.POST:
+            print(key)
+            value = request.POST[key]
+            print(value)
+
+
         return redirect(request.META['HTTP_REFERER'])
 
     else:
 
         collections = study.rawspotcollection_set.all()
         form = StudyForm(instance=study)
+        form_rawdoc = RawDocForm()
 
         context = {
             'type': 'all',
             'collections': collections,
             'study': study,
-            'form': form
+            'form': form,
+            'form_rawdoc': form_rawdoc
         }
 
     return render(request,
@@ -983,3 +1007,4 @@ def test_view(request):
     }
     return render(request,
                   'flutype/test.html', context)
+
