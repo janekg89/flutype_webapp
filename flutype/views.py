@@ -44,9 +44,36 @@ def upload_file(request,pk):
             return redirect(request.META['HTTP_REFERER'])
 
 
+@login_required
+def study_view(request,pk):
+    study = get_object_or_404(Study, id=pk)
+    if request.method == 'POST':
+        status = request.POST.get("status")
+        study.status = status
+        study.save()
+
+        return redirect(request.META['HTTP_REFERER'])
+
+    else:
+
+        collections = study.rawspotcollection_set.all()
+        form = StudyForm(instance=study)
+        form_rawdoc = RawDocForm()
+
+        context = {
+            'collections': collections,
+            'study': study,
+            'form': form,
+            'form_rawdoc': form_rawdoc,
+            'type': "measurement",
+
+        }
+
+    return render(request,
+                  'flutype/study.html', context)
 
 @login_required
-def grid_view(request,pk):
+def study_ligands_view(request,pk):
     study = get_object_or_404(Study, id=pk)
     if request.method == 'POST':
         status = request.POST.get("status")
@@ -63,19 +90,44 @@ def grid_view(request,pk):
     else:
 
         collections = study.rawspotcollection_set.all()
+        viruses1 = Virus.objects.filter(ligands1__studies=study)
+        viruses2 = Virus.objects.filter(ligands2__studies=study)
+
+        peptides1 = Peptide.objects.filter(ligands1__studies=study)
+        peptides2 = Peptide.objects.filter(ligands2__studies=study)
+
+        antibodies1 = Antibody.objects.filter(ligands1__studies=study)
+        antibodies2 = Antibody.objects.filter(ligands2__studies=study)
+
+        complexes1 = Complex.objects.filter(ligands1__studies=study)
+        complexes2 = Complex.objects.filter(ligands2__studies=study)
+
+        #viruses1 = Virus.objects.filter(ligands1__studies =
+
         form = StudyForm(instance=study)
         form_rawdoc = RawDocForm()
 
         context = {
-            'type': 'all',
             'collections': collections,
             'study': study,
             'form': form,
-            'form_rawdoc': form_rawdoc
+            'form_rawdoc': form_rawdoc,
+            'type': "ligands",
+            'viruses1': viruses1,
+            'viruses2': viruses2,
+            'peptides1': peptides1,
+            'peptides2': peptides2,
+            'antibodies1': antibodies1,
+            'antibodies2': antibodies2,
+            'complexes1': complexes1,
+            'complexes2': complexes2,
+
+
         }
 
     return render(request,
-                  'flutype/new_grid.html',context)
+                  'flutype/study.html', context)
+
 
 @login_required
 def index_view(request):
@@ -99,61 +151,13 @@ def my_index_view(request):
     return render(request,
                   'flutype/index.html', context)
 
-@login_required
-def study_view(request, pk):
-    """ Renders detailed RawSpotCollection View. """
-
-    study = get_object_or_404(Study, id=pk)
-    if request.method == 'POST':
-        form = StudyForm(request.POST,  instance=study)
-        if form.is_valid():
-            form.save()
-        return redirect(request.META['HTTP_REFERER'])
-
-    else:
-
-
-
-        collections = study.rawspotcollection_set.all()
-        form = StudyForm(instance=study)
-
-
-        context = {
-            'type': 'all',
-            'collections': collections,
-            'study':study,
-            'form':form
-        }
-        return render(request,
-                      'flutype/study.html', context)
 
 @login_required
 def tutorial_db_view(request):
     """ Renders detailed RawSpotCollection View. """
-
     study = get_object_or_404(Study, sid="170929-tutorial")
-    if request.method == 'POST':
-        form = StudyForm(request.POST,  instance=study)
-        if form.is_valid():
-            form.save()
-        return redirect(request.META['HTTP_REFERER'])
+    return study_view(request, study.id)
 
-    else:
-
-
-
-        collections = study.rawspotcollection_set.all()
-        form = StudyForm(instance=study)
-
-
-        context = {
-            'type': 'all',
-            'collections': collections,
-            'study':study,
-            'form':form
-        }
-        return render(request,
-                      'flutype/study.html', context)
 
 
 

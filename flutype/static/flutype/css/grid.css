@@ -35,12 +35,14 @@ body {
 
     .a {
         grid-area: header1;
-        justify-self: end;
-        align-self: start;
+        justify-self: stretch;
+        align-self: end;
     }
 
     .b {
-      grid-area: filebox;
+            grid-area: filebox;
+          align-self: start;
+
     }
 
     .c {
@@ -59,5 +61,27 @@ label#option2.active {
 }
 
 label#option1.active {
+    background-color: #ff4444
+}
+
+.radio-toolbar input[type="radio"] {
+  display: none;
+}
+input[type="radio"]:checked+label { font-weight: bold; }
+
+dropzone {
+    background-color: #ff4444
+
+}
+
+input#finished.active {
+    background-color: #00C851;
+}
+
+input#progress.active {
+    background-color: #ffbb33
+}
+
+input#planning.active {
     background-color: #ff4444
 }
