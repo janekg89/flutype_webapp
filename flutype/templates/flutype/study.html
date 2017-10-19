@@ -23,8 +23,10 @@
          <input id="finished" class="btn btn-default {% if study.status == "finished" %} active  {% endif %}"  type="submit" value="finished" >
      </form>
     </div>
+    <div class="title">
+        <h1 style="font-family: butlermedium;font-size: 300%; "> {{ study.sid }}</h1>
+    </div>
       <div class="a">
-          <h1> {{ study.sid }}</h1>
 
           <table id="study" class="table table-striped">
                     <thead>
@@ -46,10 +48,8 @@
                     </tbody>
                 </table>
       </div>
-      <div class="b" style="overflow-y:auto;">
-
-
-
+      <div class="filebox" >
+        <div class="box" style="overflow-y:auto;">
 
 
 
@@ -76,10 +76,13 @@
 
               </tbody>
 
-          </table>
+
+              </table>
+            </div>
             <form id ="dropzone" class="dropzone" action="{{ url('upload_file', args=[study.id])}}" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
             </form>
+
 
       </div>
       <div class="c">

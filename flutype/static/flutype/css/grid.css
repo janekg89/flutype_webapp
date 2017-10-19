@@ -13,36 +13,37 @@ body {
         color: #000000;
         grid-template-areas:
         ". . . ."
-        ". header1 filebox ."
+        ". meta_data filebox ."
         ". . . ."
         ". navbar2 navbar2 ."
         ". table table ." ;
     }
 
     .box {
-        background-color: #444;
-        color: #fff;
-        border-radius: 5px;
-        padding: 20px;
-        font-size: 150%;
+         max-height: 120px;
 
     }
     .toggle{
-
         justify-self: end;
-        grid-area: header1;
+        grid-area: meta_data;
     }
 
     .a {
-        grid-area: header1;
+        grid-area: meta_data;
         justify-self: stretch;
         align-self: end;
+
     }
 
-    .b {
+    .filebox {
             grid-area: filebox;
           align-self: start;
 
+    }
+
+    .title {
+        grid-area: meta_data;
+        align-self: start;
     }
 
     .c {
