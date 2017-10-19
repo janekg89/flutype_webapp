@@ -5,10 +5,11 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index_view, name='index'),
     url(r'^mystudies/$', views.my_index_view, name='my_studies'),
-    url(r'^grid/(?P<pk>[0-9]+)/$', views.grid_view, name='grid'),
     url(r'^uploadfile/(?P<pk>[0-9]+)/$', views.upload_file, name='upload_file'),
 
     url(r'^study/(?P<pk>[0-9]+)/$', views.study_view, name='study'),
+    url(r'^study_ligands/(?P<pk>[0-9]+)/$', views.study_ligands_view, name='study_ligands'),
+
     url(r'^tutorial_db/$', views.tutorial_db_view, name='tutorial_db'),
 
     url(r'^measurements/$', views.measurements_view, name='measurements'),
