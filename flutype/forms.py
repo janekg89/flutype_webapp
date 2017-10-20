@@ -6,7 +6,8 @@ from django.contrib import admin
 from .models import Peptide, PeptideBatch, Virus, VirusBatch, Antibody, AntibodyBatch, Complex, \
     ProcessStep, Step, Spotting, Washing, Drying, Quenching, Blocking, Scanning, Incubating, \
     Process, GalFile, Measurement, RawSpotCollection, RawSpot,SpotCollection, Spot, ComplexBatch, Study, \
-    IncubatingAnalyt
+    IncubatingAnalyt, RawDoc
+from .behaviours import Status
 
 class OrderedModelMultipleChoiceField(forms.ModelMultipleChoiceField):
     def clean(self, value):
@@ -16,10 +17,18 @@ class OrderedModelMultipleChoiceField(forms.ModelMultipleChoiceField):
             select={'ordering': 'CASE %s END' % clauses},
             order_by=('ordering',)
         )
+
+class RawDocForm(forms.ModelForm):
+    class Meta:
+        model = RawDoc
+        fields =  '__all__'
+
 class StudyForm(forms.ModelForm):
     class Meta:
         model = Study
-        fields = ['status']
+        fields = '__all__'
+
+
 class MeasurementForm(forms.ModelForm):
     class Meta:
         model = Measurement

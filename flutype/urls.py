@@ -5,13 +5,23 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index_view, name='index'),
     url(r'^mystudies/$', views.my_index_view, name='my_studies'),
+    url(r'^uploadfile_study/(?P<pk>[0-9]+)/$', views.upload_file_study, name='upload_file_study'),
 
     url(r'^study/(?P<pk>[0-9]+)/$', views.study_view, name='study'),
+    url(r'^study_ligands/(?P<pk>[0-9]+)/$', views.study_ligands_view, name='study_ligands'),
+
     url(r'^tutorial_db/$', views.tutorial_db_view, name='tutorial_db'),
 
     url(r'^measurements/$', views.measurements_view, name='measurements'),
     url(r'^mymeasurements/$', views.my_measurements_view, name='my_measurements'),
 
+    url(r'^measurement/(?P<pk>[0-9]+)/$',views.measurement_view, name='rawspotcollectionview'),
+    url(r'^measurement_ligands/(?P<pk>[0-9]+)/$', views.measurement_ligands_view, name='measurement_ligands'),
+    url(r'^qspotcollection/(?P<pk>[0-9]+)/$', views.measurement_result_view, name='qspotcollectionview'),
+    url(r'^measurement_result/(?P<pk>[0-9]+)/data$', views.barplot_data_view, name='barplot_plotly1'),
+    url(r'^measurement_result/(?P<pk>[0-9]+)/barplot_p$', views.highcharts_view, name='heatmap_highchart1'),
+
+    url(r'^uploadfile_measurement/(?P<pk>[0-9]+)/$', views.upload_file_measurement, name='upload_file_measurement'),
 
     url(r'^users/$', views.users_view, name='users'),
     url(r'^about/$', views.about_en_view, name='about'),
@@ -105,8 +115,8 @@ urlpatterns = [
     url(r'^password/$', views.change_password_view, name='change_password'),
 
     # renders spot collections
-    url(r'^rawspotcollection/(?P<pk>[0-9]+)/$', views.raw_spot_collection, name='rawspotcollectionview'),
-    url(r'^qspotcollection/(?P<pk>[0-9]+)/$', views.quantified_spot_collection, name='qspotcollectionview'),
+    #url(r'^rawspotcollection/(?P<pk>[0-9]+)/$', views.raw_spot_collection, name='rawspotcollectionview'),
+    #url(r'^qspotcollection/(?P<pk>[0-9]+)/$', views.quantified_spot_collection, name='qspotcollectionview1'),
 
     # render heatmap image
     url(r'^qspotcollection/(?P<pk>[0-9]+)/data$', views.barplot_data_view, name='barplot_plotly'),
