@@ -11,10 +11,10 @@ from .helper import generate_tree, tar_tree, empty_list
 from .forms import PeptideForm, VirusForm, AntibodyForm, AntibodyBatchForm, \
     PeptideBatchForm, VirusBatchForm, ProcessStepForm, ComplexBatchForm, ComplexForm, StudyForm, MeasurementForm, \
     WashingForm,DryingForm,SpottingForm, QuenchingForm,BlockingForm,IncubatingForm, \
-    ScanningForm, IncubatingAnalytForm
-
+    ScanningForm, IncubatingAnalytForm, RawDocForm
 from .models import RawSpotCollection, SpotCollection, Process, PeptideBatch, \
-    Peptide, VirusBatch, Virus, AntibodyBatch, Antibody, Step, ProcessStep, Complex, ComplexBatch, Study
+    Peptide, VirusBatch, Virus, AntibodyBatch, Antibody, Step, ProcessStep, Complex, ComplexBatch, Study, \
+    RawDoc
 from django.forms import formset_factory, inlineformset_factory
 from django.shortcuts import get_object_or_404, render, redirect
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -24,10 +24,121 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.http import HttpResponseRedirect
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+from django.core.urlresolvers import reverse
 
 
 from django.db.models import Max
 import json
+
+@login_required
+def upload_file_study(request,pk):
+    if request.method == 'POST':
+        study = get_object_or_404(Study, id=pk)
+        form = RawDocForm(request.POST, request.FILES)
+        if form.is_valid():
+            new_file = RawDoc(file=form.cleaned_data['file'],
+                              sid=request.FILES['file'].name)
+            new_file.save()
+
+            study.files.add(new_file)
+            return redirect(request.META['HTTP_REFERER'])
+
+@login_required
+def upload_file_measurement(request,pk):
+    if request.method == 'POST':
+        raw_spot_collection = get_object_or_404(RawSpotCollection, id=pk)
+        form = RawDocForm(request.POST, request.FILES)
+        if form.is_valid():
+            new_file = RawDoc(file=form.cleaned_data['file'],
+                              sid=request.FILES['file'].name)
+            new_file.save()
+
+            raw_spot_collection.files.add(new_file)
+            return redirect(request.META['HTTP_REFERER'])
+
+@login_required
+def study_view(request,pk):
+    study = get_object_or_404(Study, id=pk)
+    if request.method == 'POST':
+        status = request.POST.get("status")
+        study.status = status
+        study.save()
+
+        return redirect(request.META['HTTP_REFERER'])
+
+    else:
+
+        collections = study.rawspotcollection_set.all()
+        form = StudyForm(instance=study)
+        form_rawdoc = RawDocForm()
+
+        context = {
+            'collections': collections,
+            'study': study,
+            'form': form,
+            'form_rawdoc': form_rawdoc,
+            'type': "measurement",
+
+        }
+
+    return render(request,
+                  'flutype/study.html', context)
+
+@login_required
+def study_ligands_view(request,pk):
+    study = get_object_or_404(Study, id=pk)
+    if request.method == 'POST':
+        status = request.POST.get("status")
+        study.status = status
+        study.save()
+        for key in request.POST:
+            print(key)
+            value = request.POST[key]
+            print(value)
+
+
+        return redirect(request.META['HTTP_REFERER'])
+
+    else:
+
+        collections = study.rawspotcollection_set.all()
+        viruses1 = Virus.objects.filter(ligands1__studies=study)
+        viruses2 = Virus.objects.filter(ligands2__studies=study)
+
+        peptides1 = Peptide.objects.filter(ligands1__studies=study)
+        peptides2 = Peptide.objects.filter(ligands2__studies=study)
+
+        antibodies1 = Antibody.objects.filter(ligands1__studies=study)
+        antibodies2 = Antibody.objects.filter(ligands2__studies=study)
+
+        complexes1 = Complex.objects.filter(ligands1__studies=study)
+        complexes2 = Complex.objects.filter(ligands2__studies=study)
+
+        #viruses1 = Virus.objects.filter(ligands1__studies =
+
+        form = StudyForm(instance=study)
+        form_rawdoc = RawDocForm()
+
+        context = {
+            'collections': collections,
+            'study': study,
+            'form': form,
+            'form_rawdoc': form_rawdoc,
+            'type': "ligands",
+            'viruses1': viruses1,
+            'viruses2': viruses2,
+            'peptides1': peptides1,
+            'peptides2': peptides2,
+            'antibodies1': antibodies1,
+            'antibodies2': antibodies2,
+            'complexes1': complexes1,
+            'complexes2': complexes2,
+
+
+        }
+
+    return render(request,
+                  'flutype/study.html', context)
 
 
 @login_required
@@ -53,60 +164,106 @@ def my_index_view(request):
                   'flutype/index.html', context)
 
 @login_required
-def study_view(request, pk):
+def measurement_view(request, pk):
     """ Renders detailed RawSpotCollection View. """
 
-    study = get_object_or_404(Study, id=pk)
+    collection = get_object_or_404(RawSpotCollection, id=pk)
+
     if request.method == 'POST':
-        form = StudyForm(request.POST,  instance=study)
-        if form.is_valid():
-            form.save()
+        status = request.POST.get("status")
+        collection.status = status
+        collection.save()
+
         return redirect(request.META['HTTP_REFERER'])
 
     else:
 
-
-
-        collections = study.rawspotcollection_set.all()
-        form = StudyForm(instance=study)
-
-
+        form = MeasurementForm(instance=collection)
         context = {
-            'type': 'all',
-            'collections': collections,
-            'study':study,
+
+            'type': 'process',
+            'collection': collection,
             'form':form
         }
         return render(request,
-                      'flutype/study.html', context)
+                      'flutype/measurement.html', context)
+@login_required
+def measurement_ligands_view(request, pk):
+    """ Renders detailed RawSpotCollection View. """
+
+    collection = get_object_or_404(RawSpotCollection, id=pk)
+
+    if request.method == 'POST':
+        status = request.POST.get("status")
+        collection.status = status
+        collection.save()
+
+        return redirect(request.META['HTTP_REFERER'])
+
+    else:
+        form = MeasurementForm(instance=collection)
+        context = {
+            'type': 'ligands',
+            'collection': collection,
+            'form':form
+        }
+        return render(request,
+                      'flutype/measurement.html', context)
+
+@login_required
+def measurement_result_view(request, pk):
+    """ Renders detailed RawSpotCollection View. """
+
+    sc = get_object_or_404(SpotCollection, id=pk)
+    collection = sc.raw_spot_collection
+
+
+    if request.method == 'POST':
+        status = request.POST.get("status")
+        collection.status = status
+        collection.save()
+
+        return redirect(request.META['HTTP_REFERER'])
+
+    else:
+
+        spots = sc.spot_set.all()
+        row_max = spots.aggregate(Max('raw_spot__row'))
+        column_max = spots.aggregate(Max('raw_spot__column'))
+        row_list = empty_list(row_max["raw_spot__row__max"])
+        column_list = empty_list(column_max["raw_spot__column__max"])
+        data = []
+        for spot in spots:
+            data.append([spot.raw_spot.column - 1, spot.raw_spot.row - 1, spot.intensity])
+            ##################################################################################
+
+        form = MeasurementForm(instance=collection)
+
+        context = {
+            'lig1': json.dumps(collection.pivot_ligand1().values.tolist()),
+            'lig2': json.dumps(collection.pivot_ligand2().values.tolist()),
+            'con1': json.dumps(collection.pivot_concentration1().values.tolist()),
+            'con2': json.dumps(collection.pivot_concentration2().values.tolist()),
+            'type': 'quantified',
+            'collection': collection,
+            'q_collection': sc,
+            'data': json.dumps(data),
+            'row_list': json.dumps(row_list),
+            'column_list': json.dumps(column_list),
+            'form': form,
+
+
+        }
+        return render(request,
+                      'flutype/measurement.html', context)
+
 
 @login_required
 def tutorial_db_view(request):
     """ Renders detailed RawSpotCollection View. """
-
     study = get_object_or_404(Study, sid="170929-tutorial")
-    if request.method == 'POST':
-        form = StudyForm(request.POST,  instance=study)
-        if form.is_valid():
-            form.save()
-        return redirect(request.META['HTTP_REFERER'])
+    return study_view(request, study.id)
 
-    else:
-
-
-
-        collections = study.rawspotcollection_set.all()
-        form = StudyForm(instance=study)
-
-
-        context = {
-            'type': 'all',
-            'collections': collections,
-            'study':study,
-            'form':form
-        }
-        return render(request,
-                      'flutype/study.html', context)
 
 
 
@@ -158,6 +315,7 @@ def raw_spot_collection(request, pk):
         data = []
         for spot in spots:
             data.append([spot.column - 1, spot.row - 1, 0])
+
         context = {
             'lig1': json.dumps(collection.pivot_ligand1().values.tolist()),
             'lig2': json.dumps(collection.pivot_ligand2().values.tolist()),
@@ -195,10 +353,10 @@ def quantified_spot_collection(request, pk):
 
     ################################
     context = {
-        'lig1': json.dumps(sc.raw_spot_collection.pivot_ligand1().values.tolist()),
-        'lig2': json.dumps(sc.raw_spot_collection.pivot_ligand2().values.tolist()),
-        'con1': json.dumps(sc.raw_spot_collection.pivot_concentration1().values.tolist()),
-        'con2': json.dumps(sc.raw_spot_collection.pivot_concentration2().values.tolist()),
+        'lig1': json.dumps(collection.pivot_ligand1().values.tolist()),
+        'lig2': json.dumps(collection.pivot_ligand2().values.tolist()),
+        'con1': json.dumps(collection.pivot_concentration1().values.tolist()),
+        'con2': json.dumps(collection.pivot_concentration2().values.tolist()),
         'type': 'quantified',
         'collection': collection,
         'q_collection': sc,
@@ -960,3 +1118,4 @@ def test_view(request):
     }
     return render(request,
                   'flutype/test.html', context)
+
