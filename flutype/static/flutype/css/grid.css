@@ -1,0 +1,113 @@
+
+body {
+  margin: 40px;
+}
+
+.container {
+        display: grid;
+        grid-gap: 20px;
+        width: 100%;
+        grid-template-columns: 10% auto auto 20% 10%;
+        grid-template-rows: 100px auto auto 10px 60px auto auto;
+        background-color: #fff;
+        color: #000000;
+        grid-template-areas:
+        ". . . . ."
+        ". title1 toggle filebox ."
+        ". meta_data meta_data filebox ."
+        ". . . . ."
+        ". navbar2 navbar2 navbar2 ."
+        ". tables2 tables2 tables2 ."
+        ". table table heat ." ;
+    }
+
+    .box {
+         max-height: 120px;
+    }
+
+    .heat {
+        grid-area: heat;
+         align-self: stretch;
+    }
+
+    .toggle{
+        justify-self: end;
+        grid-area: toggle;
+    }
+
+    .a {
+        grid-area: meta_data;
+        justify-self: stretch;
+        align-self: end;
+    }
+
+    .filebox {
+        align-self: end;
+        grid-area: filebox;
+    }
+
+
+
+    .title1 {
+        grid-area: title1;
+        align-self: start;
+        justify-self: start;
+    }
+
+
+
+    .c {
+       grid-area:navbar2;
+    }
+
+    .d{display:block;
+       grid-area:table;
+    }
+
+
+    .tables1{
+        grid-row: 7;
+        grid-column-start: 2;
+        grid-column-end: 5;
+
+
+    }
+
+    .tables2{
+        justify-self: stretch;
+        grid-area:tables2;
+
+    }
+
+label#option3.active {
+    background-color: #00C851;
+}
+label#option2.active {
+    background-color: #ffbb33
+}
+
+label#option1.active {
+    background-color: #ff4444
+}
+
+.radio-toolbar input[type="radio"] {
+  display: none;
+}
+input[type="radio"]:checked+label { font-weight: bold; }
+
+dropzone {
+    background-color: #ff4444
+
+}
+
+input#finished.active {
+    background-color: #00C851;
+}
+
+input#progress.active {
+    background-color: #ffbb33
+}
+
+input#planning.active {
+    background-color: #ff4444
+}

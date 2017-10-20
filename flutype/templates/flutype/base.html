@@ -5,29 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Flutype Web Database">
     <meta name="author" content="Janek and Matthias Koenig">
-    <link rel="icon" href="{{static('flutype/images/flutype.ico')}}">
+    <link rel="icon" href="{{static('flutype/images/flutype.ico')}}"/>
     <title>FluType</title>
 
     <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/dropzone.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/dropzone.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/Butler_Stencil_Webfont/stylesheet.css') }}"/>
+
+    <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/basic.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/basic.min.css') }}"/>
+
+
     <link rel="stylesheet" type="text/css" href="{{ static('flutype/css/bootstrap.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ static('flutype/js/datatables.min.css') }}"/>
     <link rel="stylesheet" type="text/css"
           href="{{ static('winmarkltd-BootstrapFormHelpers-d4201db/dist/css/bootstrap-formhelpers.min.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ static('flutype/font-awesome-4.7.0/css/font-awesome.min.css') }}">
-
-    <!-- JS -->
+    <link rel="stylesheet" type="text/css" href="{{ static('flutype/font-awesome-4.7.0/css/font-awesome.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ static('flutype/css/grid.css') }}"/>
 
     <script type="text/javascript" src="{{ static('flutype/js/jquery-3.2.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ static('flutype/js/tether-1.4.0.min.js') }}"></script>
     <script type="text/javascript" src="{{ static('flutype/js/bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ static('flutype/js/datatables-1.10.15.min.js') }}"></script>
     <script type="text/javascript" src="{{ static('flutype/js/jquery.formset.js') }}"></script>
+    <script type="text/javascript" src="{{ static('flutype/js/dropzone.js')}}"></script>
+
 
 
 
     <script type="text/javascript"
             src="{{ static('winmarkltd-BootstrapFormHelpers-d4201db/dist/js/bootstrap-formhelpers.min.js') }}"></script>
-        <link rel="stylesheet" type="text/css" href="{{ static('flutype/css/custom.css') }}"/>
 
 
     <!-- HEAD -->
@@ -143,26 +151,23 @@
                             </li>
                             <li><a href={{ url('steps') }}> Process Steps <span class="sr-only">(current)</span></a>
                             </li>
-
-
-                        </ul>
-                    </li>
-
-                    <li class="dropdown active">
-                        <a data-toggle="dropdown" role="button" aria-expanded="false"> <i class="fa fa-question fa-fw"
-                        ></i> How <span class="caret"></span> </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="{{ url('tutorial') }}">Tutorial <span class="sr-only">(current)
-                                 <li><a <a href="{{ url("tutorial_db")}}">Tutorial Data <span class="sr-only">(current)
-                             </span></a></li>
-
-
-
                         </ul>
                     </li>
 
                     <li class="active"><a href="{{ url('users') }}"> <i class="fa fa-group fa-fw"></i> Users <span
                             class="sr-only">(current)</span></a></li>
+
+                    <li class="dropdown active">
+                        <a data-toggle="dropdown" role="button" aria-expanded="false"> <i class="fa fa-question fa-fw">
+
+                        </i> Help <span class="caret"></span> </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="{{ url('tutorial') }}" title="Tutorial on how to upload data">Tutorial <span class="sr-only">(current)
+                                 <li> <a href="{{ url("tutorial_db")}}" title="Tutorial dataset in the database">Tutorial Data <span class="sr-only">(current)
+                             </span></a></li>
+                        </ul>
+                    </li>
+
 
                 {% endif %}
                 <li class="active"><a href="{{ url('about') }}"><i class="fa fa-info fa-fw"></i> About <span
