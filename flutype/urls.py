@@ -17,6 +17,10 @@ urlpatterns = [
 
     url(r'^measurement/(?P<pk>[0-9]+)/$',views.measurement_view, name='rawspotcollectionview'),
     url(r'^measurement_ligands/(?P<pk>[0-9]+)/$', views.measurement_ligands_view, name='measurement_ligands'),
+    url(r'^qspotcollection/(?P<pk>[0-9]+)/$', views.measurement_result_view, name='qspotcollectionview'),
+    url(r'^measurement_result/(?P<pk>[0-9]+)/data$', views.barplot_data_view, name='barplot_plotly1'),
+    url(r'^measurement_result/(?P<pk>[0-9]+)/barplot_p$', views.highcharts_view, name='heatmap_highchart1'),
+
     url(r'^uploadfile_measurement/(?P<pk>[0-9]+)/$', views.upload_file_measurement, name='upload_file_measurement'),
 
     url(r'^users/$', views.users_view, name='users'),
@@ -112,7 +116,7 @@ urlpatterns = [
 
     # renders spot collections
     #url(r'^rawspotcollection/(?P<pk>[0-9]+)/$', views.raw_spot_collection, name='rawspotcollectionview'),
-    url(r'^qspotcollection/(?P<pk>[0-9]+)/$', views.quantified_spot_collection, name='qspotcollectionview'),
+    #url(r'^qspotcollection/(?P<pk>[0-9]+)/$', views.quantified_spot_collection, name='qspotcollectionview1'),
 
     # render heatmap image
     url(r'^qspotcollection/(?P<pk>[0-9]+)/data$', views.barplot_data_view, name='barplot_plotly'),
