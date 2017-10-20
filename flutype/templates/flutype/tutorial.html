@@ -97,9 +97,9 @@
 
             <p>
             The specific directory structure for this example <code>study</code> is provided in the following supplementary
-            file: <a href="{{ static('flutype/170929-tutorial.tar.gz') }}"> flutype-tutorial.zip </a>. The example study
-                was uploaded in the FluTypeDB an is available <a href="{{ url("tutorial_db")}}"> here </a>.
-                The directory tree of the study can be seen <a href="{{ url("tutorial_tree")}}"> here</a>.
+                file: <a href="{{ static('flutype/170929-tutorial.tar.gz') }}"><span class="label label-danger">flutype-tutorial.zip</span></a>. The example study
+                was uploaded in the FluTypeDB an is available <a href="{{ url("tutorial_db")}}"><span class="label label-danger">here</span></a>.
+                The directory tree of the study can be seen <a href="{{ url("tutorial_tree")}}"><span class="label label-danger">here</span></a>.
             </p>
 
             <p>
@@ -116,28 +116,29 @@
             <p>
                 The name of the top directory of the tutorial <code>study</code> which we upload is used as a unique
                 identifier <code>sid</code> (identification string) in the FluTypeDB for the study.
-                This must be a unique identifer which is not yet used for another study in the database.
-                In the tutorial the top directory name, and hence <code>sid</code>, is "<b>170929-tutorial</b>".
+                This must be a unique identifier which is not yet used for another study in the database.
+                In the tutorial the top directory name, and hence <code>sid</code>, is <span class="label label-success">170929-tutorial</span>.
             </p>
             <p>
                 A study consists off three main building blocks:
                 <ul>
-                    <li><b>metadata</b></li>
-                    <li><b>measurements</b></li>
-                    <li><b>raw docs</b>, i.e., additional documents and data files to upload</li>
+                    <li><span class="label label-success">meta.tsv</span></li>
+                    <li><span class="label label-success">measurements</span></li>
+                    <li><span class="label label-success">raw_docs</span>, i.e., additional documents and data files to upload</li>
                 </ul>
             </p>
             <p>
-                The <b>metadata</b> is the obligatory information of a study which describes the key features:
+                The <code>metadata</code> defined in the <span class="label label-success">meta.tsv</span> file in the root
+                of the study folder is the obligatory information of a study which describes the key features:
                 what was the reason for the study and what should be answered (task), what are the results (result), and
-                what is the status of the study (status). This information is defined in the "meta.tsv" file in the root
-                of the study folder
+                what is the status of the study (status).
 
                 <code>metadata</code> fields are hereby:
                 <ul>
-                    <li><b>task</b>: text (what is the question)</li>
-                    <li><b>results</b></li>
-                    <li><b>status</b>: one of the options: "planned", "in progress" and "finished"</li>
+                    <li><span class="label label-info">task</span>: text (what is the question)</li>
+                    <li><span class="label label-info">results</span></li>
+            <li><span class="label label-info">status</span>: one of the options: <span class="label label-default">planned</span>,
+                <span class="label label-default">in progress</span> and <span class="label label-default">finished</span></li>
                 </ul>
 
                 <code>Studies</code> do not have to contain any measurements. One can add a study without any measurements
@@ -147,10 +148,10 @@
             <p>
                 Anytime we describe the content of the experimental data directory and which files have to to placed
                 in which locations, have a look at the tutorial example directory where this is demonstrated
-                <a href="{{ static('flutype/170929-tutorial.tar.gz') }}"> flutype-tutorial.zip </a> and the corresponding
-                directory tree at <a href="{{ url("tutorial_tree")}}"> directory tree</a>.
+                <a href="{{ static('flutype/170929-tutorial.tar.gz') }}"><span class="label label-danger">flutype-tutorial.zip</span></a> and the corresponding
+                directory tree at <a href="{{ url("tutorial_tree")}}"><span class="label label-danger">directory tree</span></a>.
             </p>
-                The following table shows the metadata of my study. This table is saved as "meta.tsv" in the main
+            The following table shows the metadata of my study. This table is saved as <span class="label label-success">meta.tsv</span> in the main
                 directory of the study. There is not yet any result defined.
             <table class="table table-striped">
                 <tr>
@@ -173,7 +174,8 @@
             </table>
             </p>
             <p>
-                <code>Measurements</code> and documents can be uploaded for a study at any time, so it is
+                <code>Measurements</code> are defined in the <span class="label label-success">measurements</span> folder
+                and can be uploaded for a study at any time, so it is
                 completely legit to upload an empty study at the beginning and fill this step by step with the
                 experimental <code>measurements</code>. At this point we have defined an empty study.
                 How to add <code>measurements</code>, i.e., either ELISA, microarray or microwell measurements to
@@ -181,9 +183,9 @@
             </p>
             <p>
                 In addition to <code>measurements</code> for a <code>study</code> it is also possible to
-                upload documents related or important for the study by providing them in the "raw_docs" folder.
-                this can be for instance experimental protocolls, analysis, raw data files, ... . All
-                documents of relevance for a study should be uploaded via the "raw_docs" folder.
+                upload documents related or important for the study by providing them in <span class="label label-success">raw_docs</span> folder.
+                These can be for instance experimental protocols, analysis, raw data files, etc. All
+                documents of relevance for a study should be uploaded.
             </p>
 
             <h2> 2. Elisa Measurement </h2>
