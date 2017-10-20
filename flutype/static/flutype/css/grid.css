@@ -5,53 +5,55 @@ body {
 
 .container {
         display: grid;
-        grid-gap: 10px;
+        grid-gap: 20px;
         width: 100%;
-        grid-template-columns: 10% 60% 20% 10%;
-        grid-template-rows: 10px auto 10px 60px auto;
+        grid-template-columns: 10% auto auto 20% 10%;
+        grid-template-rows: 100px auto auto 10px 60px auto;
         background-color: #fff;
         color: #000000;
         grid-template-areas:
-        ". . . ."
-        ". meta_data filebox ."
-        ". . . ."
-        ". navbar2 navbar2 ."
-        ". table table ." ;
+        ". . . . ."
+        ". title1 toggle filebox ."
+        ". meta_data meta_data filebox ."
+        ". . . . ."
+        ". navbar2 navbar2 navbar2 ."
+        ". table table table ." ;
     }
 
     .box {
          max-height: 120px;
-
     }
+
     .toggle{
         justify-self: end;
-        grid-area: meta_data;
+        grid-area: toggle;
     }
 
     .a {
         grid-area: meta_data;
         justify-self: stretch;
         align-self: end;
-
     }
 
     .filebox {
-            grid-area: filebox;
-          align-self: start;
-
+        align-self: end;
+        grid-area: filebox;
     }
 
-    .title {
-        grid-area: meta_data;
+
+
+    .title1 {
+        grid-area: title1;
         align-self: start;
+        justify-self: start;
     }
 
     .c {
        grid-area:navbar2;
     }
-    .d{display:block;
-         grid-area:table;
 
+    .d{display:block;
+       grid-area:table;
     }
 
 label#option3.active {

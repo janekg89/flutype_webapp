@@ -31,7 +31,7 @@ from django.db.models import Max
 import json
 
 @login_required
-def upload_file(request,pk):
+def upload_file_study(request,pk):
     if request.method == 'POST':
         study = get_object_or_404(Study, id=pk)
         form = RawDocForm(request.POST, request.FILES)
@@ -43,6 +43,18 @@ def upload_file(request,pk):
             study.files.add(new_file)
             return redirect(request.META['HTTP_REFERER'])
 
+@login_required
+def upload_file_measurement(request,pk):
+    if request.method == 'POST':
+        raw_spot_collection = get_object_or_404(RawSpotCollection, id=pk)
+        form = RawDocForm(request.POST, request.FILES)
+        if form.is_valid():
+            new_file = RawDoc(file=form.cleaned_data['file'],
+                              sid=request.FILES['file'].name)
+            new_file.save()
+
+            raw_spot_collection.files.add(new_file)
+            return redirect(request.META['HTTP_REFERER'])
 
 @login_required
 def study_view(request,pk):
@@ -150,6 +162,86 @@ def my_index_view(request):
     }
     return render(request,
                   'flutype/index.html', context)
+
+@login_required
+def measurement_view(request, pk):
+    """ Renders detailed RawSpotCollection View. """
+
+    collection = get_object_or_404(RawSpotCollection, id=pk)
+
+    if request.method == 'POST':
+        status = request.POST.get("status")
+        collection.status = status
+        collection.save()
+
+        return redirect(request.META['HTTP_REFERER'])
+
+    else:
+
+        form = MeasurementForm(instance=collection)
+        spots = collection.rawspot_set.all()
+        row_max = spots.aggregate(Max('row'))
+        column_max = spots.aggregate(Max('column'))
+        row_list = empty_list(row_max["row__max"])
+        column_list = empty_list(column_max["column__max"])
+
+        data = []
+        for spot in spots:
+            data.append([spot.column - 1, spot.row - 1, 0])
+        context = {
+            'lig1': json.dumps(collection.pivot_ligand1().values.tolist()),
+            'lig2': json.dumps(collection.pivot_ligand2().values.tolist()),
+            'con1': json.dumps(collection.pivot_concentration1().values.tolist()),
+            'con2': json.dumps(collection.pivot_concentration2().values.tolist()),
+            'type': 'process',
+            'collection': collection,
+            'data': json.dumps(data),
+            'row_list': json.dumps(row_list),
+            'column_list': json.dumps(column_list),
+            'form':form
+        }
+        return render(request,
+                      'flutype/measurement.html', context)
+@login_required
+def measurement_ligands_view(request, pk):
+    """ Renders detailed RawSpotCollection View. """
+
+    collection = get_object_or_404(RawSpotCollection, id=pk)
+
+    if request.method == 'POST':
+        status = request.POST.get("status")
+        collection.status = status
+        collection.save()
+
+        return redirect(request.META['HTTP_REFERER'])
+
+    else:
+
+        form = MeasurementForm(instance=collection)
+        spots = collection.rawspot_set.all()
+        row_max = spots.aggregate(Max('row'))
+        column_max = spots.aggregate(Max('column'))
+        row_list = empty_list(row_max["row__max"])
+        column_list = empty_list(column_max["column__max"])
+
+        data = []
+        for spot in spots:
+            data.append([spot.column - 1, spot.row - 1, 0])
+        context = {
+            'lig1': json.dumps(collection.pivot_ligand1().values.tolist()),
+            'lig2': json.dumps(collection.pivot_ligand2().values.tolist()),
+            'con1': json.dumps(collection.pivot_concentration1().values.tolist()),
+            'con2': json.dumps(collection.pivot_concentration2().values.tolist()),
+            'type': 'ligands',
+            'collection': collection,
+            'data': json.dumps(data),
+            'row_list': json.dumps(row_list),
+            'column_list': json.dumps(column_list),
+            'form':form
+        }
+        return render(request,
+                      'flutype/measurement.html', context)
+
 
 
 @login_required
