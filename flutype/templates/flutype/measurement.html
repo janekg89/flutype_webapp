@@ -1,4 +1,10 @@
 {% extends "flutype/base.html" %}
+{% block head %}
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/heatmap.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+{% endblock %}
 {% block content %}
     <!-- Main Content -->
     <div class="container">
@@ -113,11 +119,28 @@
                      args= [collection.id]) }}"><i class="fa fa-certificate"></i> Ligands <span
                         class="sr-only">(current)</span></a></li>
                  </ul>
+
+                {% if collection.spotcollection_set.all() %}
+                 <ul class="nav navbar-nav navbar-right">
+                      <li class="dropdown active">
+                        <a data-toggle="dropdown" role="button" aria-expanded="false"> Results </a>
+                        <ul class="dropdown-menu" role="menu">
+                            {% for result in collection.spotcollection_set.all() %}
+                                <li> <a href="{{ url('qspotcollectionview', args=[result.id]) }}">  {{ result.sid }} </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                 </ul>
+                {% endif %}
+
+
+
               </div>
           </nav>
       </div>
     {% if type == "process" %}
-        <div class="d" style="overflow-x:auto;">
+        <div class="tables1" style="overflow-x:auto;">
           {% with c = collection%}
                     {% if c.process.is_step_in_process() %}
                         <table id="processes" class="cell-border">
@@ -210,7 +233,7 @@
           {% endwith %}
         </div>
     {% elif type == "ligands" %}
-        <div class="d" style="overflow-x:auto;">
+        <div class="tables1" style="overflow-x:auto;">
             <!-- Fixed Ligands -->
             <div class="col-lg-6 img-rounded img-thumbnail">
                 {% if collection.peptides1 %}
@@ -402,10 +425,123 @@
             </div>
         </div>
     {% endif %}
+    {% if q_collection %}
+        <div class="tables2">
+             <table id="measurement" class="cell-border">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                                <th>Processing Type</th>
+                                <td>{{ q_collection.processing_type }}</td>
+                    </tr>
+                     <tr>
+                                <th>Comment</th>
+                                <td>{{ q_collection.comment }}</td>
+                     </tr>
+                    </tbody>
+            </table>
+        </div>
+        <div id="container" class="heat"></div>
+          <div class="d " style="overflow-x:auto;">
+                           <div>
+                            <div class="row" id="myDiv"
+                                 style="height: 1000px; min-width: 50px; max-width: 1500px; margin: 0 auto"></div>
+                            <div class="row" id="top" style="margin:0 auto">
+                                <button id="lin" class="btn btn-info"> lin</button>
+                                <button id="log" class="btn btn-info"> log</button>
+                            </div>
+                        </div>
+
+
+          </div>
+
+    {% endif %}
   </div>
 {% endblock %}
 
 {% block javascript %}
+    <script type="text/javascript" charset="utf-8">
+        var endpoint = './data';
+
+        $.ajax({
+            method: "GET",
+            url: endpoint,
+            success: function (data) {
+                dataPlot = data;
+                Plotly.newPlot('myDiv', Chart(dataPlot));
+            },
+            error: function (error_data) {
+                console.log("error");
+                console.log(error_data)
+            }
+        });
+
+        $('#lin').click(function () {
+            var update = {
+                "layout.yaxis.type": "lin"
+            };
+            var myDiv = document.getElementById("myDiv");
+            myDiv.layout.yaxis.type = "lin";
+
+            Plotly.restyle("myDiv", update);
+        });
+
+        $('#log').click(function () {
+            var update = {
+                "layout.yaxis.type": "log"
+            };
+            var myDiv = document.getElementById("myDiv");
+            myDiv.layout.yaxis.type = "log";
+
+            Plotly.restyle("myDiv", update);
+        });
+
+        function Chart(dataPlot) {
+            var data = [];
+            for (var i = 0; i < dataPlot.box_list.length; i++) {
+                if (dataPlot.lig1[i] == null) {
+                    var name = "Empty"
+                } else {
+                    var name = dataPlot.box_list[i].lig1 + " [" + dataPlot.box_list[i].lig1_con + "]";
+                }
+                var trace1 = {
+                    y: dataPlot.box_list[i].intensity,
+                    x: dataPlot.box_list[i].lig2,
+                    boxpoints: 'all',
+                    name: name,
+                    type: 'box',
+                    jitter: 0.5,
+                    fillcolor: 'cls',
+                    marker: {
+                        size: 3
+                    }
+                };
+                data.push(trace1);
+            }
+
+            var layout = {
+                yaxis: {
+                    type: "log",
+                    title: 'Intensity',
+                    zeroline: false
+                },
+                boxmode: 'group'
+            };
+
+            return {
+
+                data: data,
+                layout: layout
+            }
+        }
+
+    </script>
+
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
             $('#processes').DataTable({
@@ -420,6 +556,17 @@
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
             $('#collection').DataTable({
+                searching: false,
+                paging: false,
+                info: false,
+                "order": []
+            });
+        });
+    </script>
+
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#measurement').DataTable({
                 searching: false,
                 paging: false,
                 info: false,
@@ -483,5 +630,88 @@
         });
     </script>
 
+    <script type="text/javascript" charset="utf-8">
+
+        var lig1 = {{ lig1|safe}};
+        var lig2 = {{ lig2|safe}};
+        var con1 = {{ con1|safe}};
+        var con2 = {{ con2|safe}};
+
+        Highcharts.chart('container', {
+            chart: {
+                type: 'heatmap',
+                marginTop: 40,
+                marginBottom: 80,
+                plotBorderWidth: 1
+            },
+
+            xAxis: {
+
+                categories: {{column_list|safe}},
+                title: "rows",
+                type: "category"
+            },
+
+            yAxis: {
+                categories: {{row_list|safe}},
+                title: null
+            },
+
+            colorAxis: {
+                reversed: false,
+                min: 0,
+                minColor: Highcharts.getOptions().colors[7],
+                maxColor: '#FFFFFF',
+
+            },
+            legend: {
+                {%if type == "raw"%}
+                    enabled: false,
+                {% endif %}
+                align: 'right',
+                layout: 'vertical',
+                margin: 0,
+                verticalAlign: 'bottom',
+                y: -53,
+                symbolHeight: 520
+            },
+
+            title: {
+                text: ''
+            },
+
+            tooltip: {
+                useHTML: true,
+                formatter: function () {
+                    return '<small> Information </small><table id="detail_spot" class="cell-border">' +
+                        '<tr><td> Fixed Ligand: </td>        <td style="text-align: right"> <b>' +
+                        lig1[this.point.y][this.point.x] + '</b></td>    <td style="text-align: right"> ' +
+                        '[' + con1[this.point.y][this.point.x] + ']' + ' </td></tr>' +
+                        '<tr><td> Mobile Ligand:</td>     <td style="text-align: right"> <b>' +
+                        lig2[this.point.y][this.point.x] + '</b></td>    <td style="text-align: right"> ' +
+                        '[' + con2[this.point.y][this.point.x] + ']' + ' </td></tr>' +
+                        '<tr><td> Intensity:</td>     <td style="text-align: right"> <b>' +
+                        this.point.value + '</b></td>    <td style="text-align: right">  </td></tr>' +
+
+                        '</table>';
+                }
+            },
+
+            series: [{
+                animation: true,
+                name: 'Heatmap',
+                borderWidth: 1,
+                data: {{ data }},
+                dataLabels: {
+                    enable: true,
+
+                }
+            }]
+
+        });
+
+    </script>
+
 
 {% endblock %}
+

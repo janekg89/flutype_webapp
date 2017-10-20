@@ -179,25 +179,10 @@ def measurement_view(request, pk):
     else:
 
         form = MeasurementForm(instance=collection)
-        spots = collection.rawspot_set.all()
-        row_max = spots.aggregate(Max('row'))
-        column_max = spots.aggregate(Max('column'))
-        row_list = empty_list(row_max["row__max"])
-        column_list = empty_list(column_max["column__max"])
-
-        data = []
-        for spot in spots:
-            data.append([spot.column - 1, spot.row - 1, 0])
         context = {
-            'lig1': json.dumps(collection.pivot_ligand1().values.tolist()),
-            'lig2': json.dumps(collection.pivot_ligand2().values.tolist()),
-            'con1': json.dumps(collection.pivot_concentration1().values.tolist()),
-            'con2': json.dumps(collection.pivot_concentration2().values.tolist()),
+
             'type': 'process',
             'collection': collection,
-            'data': json.dumps(data),
-            'row_list': json.dumps(row_list),
-            'column_list': json.dumps(column_list),
             'form':form
         }
         return render(request,
@@ -216,32 +201,61 @@ def measurement_ligands_view(request, pk):
         return redirect(request.META['HTTP_REFERER'])
 
     else:
-
         form = MeasurementForm(instance=collection)
-        spots = collection.rawspot_set.all()
-        row_max = spots.aggregate(Max('row'))
-        column_max = spots.aggregate(Max('column'))
-        row_list = empty_list(row_max["row__max"])
-        column_list = empty_list(column_max["column__max"])
-
-        data = []
-        for spot in spots:
-            data.append([spot.column - 1, spot.row - 1, 0])
         context = {
-            'lig1': json.dumps(collection.pivot_ligand1().values.tolist()),
-            'lig2': json.dumps(collection.pivot_ligand2().values.tolist()),
-            'con1': json.dumps(collection.pivot_concentration1().values.tolist()),
-            'con2': json.dumps(collection.pivot_concentration2().values.tolist()),
             'type': 'ligands',
             'collection': collection,
-            'data': json.dumps(data),
-            'row_list': json.dumps(row_list),
-            'column_list': json.dumps(column_list),
             'form':form
         }
         return render(request,
                       'flutype/measurement.html', context)
 
+@login_required
+def measurement_result_view(request, pk):
+    """ Renders detailed RawSpotCollection View. """
+
+    sc = get_object_or_404(SpotCollection, id=pk)
+    collection = sc.raw_spot_collection
+
+
+    if request.method == 'POST':
+        status = request.POST.get("status")
+        collection.status = status
+        collection.save()
+
+        return redirect(request.META['HTTP_REFERER'])
+
+    else:
+
+        spots = sc.spot_set.all()
+        row_max = spots.aggregate(Max('raw_spot__row'))
+        column_max = spots.aggregate(Max('raw_spot__column'))
+        row_list = empty_list(row_max["raw_spot__row__max"])
+        column_list = empty_list(column_max["raw_spot__column__max"])
+        data = []
+        for spot in spots:
+            data.append([spot.raw_spot.column - 1, spot.raw_spot.row - 1, spot.intensity])
+            ##################################################################################
+
+        form = MeasurementForm(instance=collection)
+
+        context = {
+            'lig1': json.dumps(collection.pivot_ligand1().values.tolist()),
+            'lig2': json.dumps(collection.pivot_ligand2().values.tolist()),
+            'con1': json.dumps(collection.pivot_concentration1().values.tolist()),
+            'con2': json.dumps(collection.pivot_concentration2().values.tolist()),
+            'type': 'quantified',
+            'collection': collection,
+            'q_collection': sc,
+            'data': json.dumps(data),
+            'row_list': json.dumps(row_list),
+            'column_list': json.dumps(column_list),
+            'form': form,
+
+
+        }
+        return render(request,
+                      'flutype/measurement.html', context)
 
 
 @login_required
@@ -301,6 +315,7 @@ def raw_spot_collection(request, pk):
         data = []
         for spot in spots:
             data.append([spot.column - 1, spot.row - 1, 0])
+
         context = {
             'lig1': json.dumps(collection.pivot_ligand1().values.tolist()),
             'lig2': json.dumps(collection.pivot_ligand2().values.tolist()),
@@ -338,10 +353,10 @@ def quantified_spot_collection(request, pk):
 
     ################################
     context = {
-        'lig1': json.dumps(sc.raw_spot_collection.pivot_ligand1().values.tolist()),
-        'lig2': json.dumps(sc.raw_spot_collection.pivot_ligand2().values.tolist()),
-        'con1': json.dumps(sc.raw_spot_collection.pivot_concentration1().values.tolist()),
-        'con2': json.dumps(sc.raw_spot_collection.pivot_concentration2().values.tolist()),
+        'lig1': json.dumps(collection.pivot_ligand1().values.tolist()),
+        'lig2': json.dumps(collection.pivot_ligand2().values.tolist()),
+        'con1': json.dumps(collection.pivot_concentration1().values.tolist()),
+        'con2': json.dumps(collection.pivot_concentration2().values.tolist()),
         'type': 'quantified',
         'collection': collection,
         'q_collection': sc,
