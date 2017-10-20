@@ -8,7 +8,7 @@ body {
         grid-gap: 20px;
         width: 100%;
         grid-template-columns: 10% auto auto 20% 10%;
-        grid-template-rows: 100px auto auto 10px 60px auto;
+        grid-template-rows: 100px auto auto 10px 60px auto auto;
         background-color: #fff;
         color: #000000;
         grid-template-areas:
@@ -17,11 +17,17 @@ body {
         ". meta_data meta_data filebox ."
         ". . . . ."
         ". navbar2 navbar2 navbar2 ."
-        ". table table table ." ;
+        ". tables2 tables2 tables2 ."
+        ". table table heat ." ;
     }
 
     .box {
          max-height: 120px;
+    }
+
+    .heat {
+        grid-area: heat;
+         align-self: stretch;
     }
 
     .toggle{
@@ -48,12 +54,29 @@ body {
         justify-self: start;
     }
 
+
+
     .c {
        grid-area:navbar2;
     }
 
     .d{display:block;
        grid-area:table;
+    }
+
+
+    .tables1{
+        grid-row: 7;
+        grid-column-start: 2;
+        grid-column-end: 5;
+
+
+    }
+
+    .tables2{
+        justify-self: stretch;
+        grid-area:tables2;
+
     }
 
 label#option3.active {
