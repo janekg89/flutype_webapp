@@ -20,13 +20,23 @@
             <tr>
                 <td><code>ligand</code></td>
                 <td>A <code>ligand</code> is the main object used in a binding assay. <code>Ligands</code> can be peptides, viruses, or
-                antibodies. To refere to the actual solution of a ligand use the <code>batch</code> concept.</td>
+                    antibodies. To refer to the actual solution of a <code>ligand</code> use the <code>batch</code> concept.</td>
+            </tr>
+            <tr>
+                <td><code>measurement</code></td>
+                <td>A <code>measurement</code> is a single experiment, i.e., a single microwell or peptide array which was
+                    measured. Multiple <code>measurements</code> can be combined to a <code>study</code>.
             </tr>
             <tr>
                 <td><code>process</code></td>
                 <td>A <code>process</code> describes the workflow in a measurement and consists of individual
-                    <code>process steps</code>. Basically, the process describes all the individual steps taken in
+                    <code>process steps</code>. In a nutshell, the process describes all the individual steps taken in
                 an experiment and in which order.
+            </tr>
+            <tr>
+                <td><code>process step</code></td>
+                <td>A <code>process step</code> describes a single step like washing, drying, incubation, ... in the workflow of doing
+                    a measurement.
             </tr>
             <tr>
                 <td><code>study</code></td>
@@ -34,56 +44,58 @@
                     a common question. E.g., multiple Elisa experiments to determine the concentration dependence of various
                     viruses.
             </tr>
-
-
-
             </tbody>
         </table>
 
-
-
-
-        <h1>Tutorial: How to upload data?</h1>
+        <h1>Tutorial: How to upload data</h1>
         <div class="row align-left">
 
-            <p> Uploading data into the database consists of two main parts, filling in generic data reused in
+            <p>
+                Uploading data into the database consists of two main parts, filling in generic data reused in
             multiple experiments, and experiment or measurement specific data:
-
             <ul>
-            <li>The first part is the <b>creation of generic data</b> which is used in multiple experiments
-                or measurements.<br />
-                This generic data is reused, e.g., definition of <code>ligands</code> like peptides or viruses,
-                ligands batches, i.e., the actual solutions used
-                in the experiments, or experimental steps (so called process steps) which are used in multiple
-                measurements.<br />
-                The generic data can be added/modified directly in the browser via the web interface (for instance by
-                adding new peptides or viruses). A user must be logged in to add/modfiy data.
+            <li>The first part is the <b>creation of generic data</b> which is used in multiple <code>measurements</code>
+                or <code>studies</code>.<br />
+                This generic data is reused, e.g., <code>ligands</code> like peptides or viruses are only defined once,
+                same for the respective <code>batches</code> (i.e., solutions of peptides, viruses and antibodies),
+                or the experimental steps (so called <code>process steps</code>) which are used in multiple
+                <code>measurements</code> or <code>studies</code>.<br />
+                This generic data can be added/modified directly in the browser via the web interface (for instance by
+                adding new peptides or viruses). A user must be logged in to add/modfiy this data.
             </li>
             <li>
                 The second part is the upload of <b>data specific for a given measurement/experiment</b>.<br />
-                For the upload the information must hereby be provided in a specific directory structure, i.e., certain files with defined
-                names must exist.<br />
+                For the upload the information must hereby be provided in a specific directory structure,
+                i.e., certain files with defined names must exist in a given folder.<br />
 
                 When creating the files in this specific directory structure, it is important to check
-                that the ligands (peptides, viruses, antibodies, ...), the used ligand batches (solutions of the ligands)
-                and the experimental steps (process steps) already have been uploaded in the database
+                that the generic <code>ligands</code> (peptides, viruses, antibodies, ...), the used <code>batches</code> (solutions of the ligands)
+                and the experimental steps (<code>process steps</code>) have already been uploaded in the database
                 (see generic information above).
             </li>
             </ul>
-
-            This tutorial shows the workflow. The biggest unit in the database is a
-                study. It refers to a collection of measurements, which were measured collectively for a
-                reason. In this tutorial, I will show an example of how to upload a study. This particular study
-                aims to
-                show how to prepare the data to upload it into the database. Hence, it is reasonable to upload a
-                study containing three different measurements. The directory with the study is zipped and can be
-                downloaded <a href="{{ static('flutype/170929-tutorial.tar.gz') }}"> here </a>.
-                The related directory tree can be seen <a href="{{ url("tutorial_tree")}}"> here</a>.
-                You can also check on <a href="{{ url("tutorial_db")}}"> this side </a> and click your self
-                through the measurements and results to see how the study finally looks like in the browser.
-
-            In the following a step by step tutorial to upload a <code>study</code> is provided:
             </p>
+
+            <p>
+                The largest unit in the database is a so called <code>study</code> which
+            refers to a collection of <code>measurements</code>. This tutorial leads through the workflow of
+            uploading experimental data for an example <code>study</code> containing <code>measurements</code> from an
+            ELISA binding assay (microwell plate), a peptide-virus binding experiment (microwell plate), and
+                a peptide-virus binding experiment on a peptide-array.
+            </p>
+
+            <p>
+            The specific directory structure for this example <code>study</code> is provided in the following supplementary
+            file: <a href="{{ static('flutype/170929-tutorial.tar.gz') }}"> flutype-tutorial.zip </a>. The example study
+                was uploaded in the FluTypeDB an is available <a href="{{ url("tutorial_db")}}"> here </a>.
+                The directory tree of the study can be seen <a href="{{ url("tutorial_tree")}}"> here</a>.
+            </p>
+
+
+            <p>
+            In the following a step by step tutorial to upload the example <code>study</code> is provided:
+            </p>
+            
             <h2> 1. Study </h2>
             <p>
                 The name of the folder in
