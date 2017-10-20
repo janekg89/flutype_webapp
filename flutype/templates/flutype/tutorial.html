@@ -6,7 +6,7 @@
     <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
         <h1>Glossary</h1>
         In the following an overview about the main concepts is given and how they are used.
-        <table class="table">
+        <table class="table table-striped">
             <thead>
             <tr><th>term</th><th>explanation</th></tr>
             </thead>
@@ -39,11 +39,22 @@
                     a measurement.
             </tr>
             <tr>
+                <td><code>sid</code></td>
+                <td>A <code>sid</code> is an identifier to identify a resource in the FluTypeDB and the web application.
+                This is the identifier under which some resource is located and can be accessed.
+            </tr>
+            <tr>
                 <td><code>study</code></td>
                 <td>A <code>study</code> is a collection of multiple <code>measurements</code>, which were performed to answer
                     a common question. E.g., multiple Elisa experiments to determine the concentration dependence of various
                     viruses.
             </tr>
+            <tr>
+                <td><code>study metadata</code></td>
+                <td>The <code>study metadata</code> provides the general information for a study, i.e., which task
+                should be performed in the study, which results were obtained, and the progress of the task.
+            </tr>
+
             </tbody>
         </table>
 
@@ -91,64 +102,89 @@
                 The directory tree of the study can be seen <a href="{{ url("tutorial_tree")}}"> here</a>.
             </p>
 
-
             <p>
             In the following a step by step tutorial to upload the example <code>study</code> is provided:
+            <ul>
+                <li>Creating a study</li>
+                <li>Elisa measurements</li>
+                <li>Microwell measurements</li>
+                <li>Microarray measurements</li>
+            </ul>
             </p>
-            
+
             <h2> 1. Study </h2>
             <p>
-                The name of the folder in
-                the directory will be displayed in the database as the sid (identifaiction string) of a study. I
-                recommend to find a convention for the naming of the studies to not get name conflicts.
-                Since our study is a tutorial, I name my study: "170929-tutorial".
-                A study is build up off three blocks: metadata, measurements, and raw docs.
-                Let's start with the metadata. The meta data is the only obligatory information of a study if
-                you want you can only add a study without any measurements or raw docs by adding a "meta.tsv" into
-                a directory with the name of the study and your are done. Metadata of a study contains a task,
-                result and status.
-                Task, result and status are described by accordingly named fields in "meta.tsv" in the main
-                directory of the study. Anytime I talk about the content and about what has to to placed where in
-                the
-                directory of the study you can go and check the
-                <a href="{{ static('flutype/170929-tutorial.tar.gz') }}"> zip </a>
-                or <a href="{{ url("tutorial_tree")}}"> directory tree</a> what I am talking about. Don't worry if
-                you do not have results of a study while writing the metadata. They can be updated afterwards.
-                Actually all of the meta fields are optional.
-                Results related documents can be uploaded into the folder "raw_docs". The raw docs folder will be
-                explained later. Now back to the metadata of our example. The status can be choosen from three
-                options:
-                "planned", "in progress" and "finished".
+                The name of the top directory of the tutorial <code>study</code> which we upload is used as a unique
+                identifier <code>sid</code> (identification string) in the FluTypeDB for the study.
+                This must be a unique identifer which is not yet used for another study in the database.
+                In the tutorial the top directory name, and hence <code>sid</code>, is "<b>170929-tutorial</b>".
+            </p>
+            <p>
+                A study consists off three main building blocks:
+                <ul>
+                    <li><b>metadata</b></li>
+                    <li><b>measurements</b></li>
+                    <li><b>raw docs</b>, i.e., additional documents and data files to upload</li>
+                </ul>
+            </p>
+            <p>
+                The <b>metadata</b> is the obligatory information of a study which describes the key features:
+                what was the reason for the study and what should be answered (task), what are the results (result), and
+                what is the status of the study (status). This information is defined in the "meta.tsv" file in the root
+                of the study folder
 
+                <code>metadata</code> fields are hereby:
+                <ul>
+                    <li><b>task</b>: text (what is the question)</li>
+                    <li><b>results</b></li>
+                    <li><b>status</b>: one of the options: "planned", "in progress" and "finished"</li>
+                </ul>
+
+                <code>Studies</code> do not have to contain any measurements. One can add a study without any measurements
+                or raw docs by adding a "meta.tsv" into a directory with the name of the study. All of the meta fields are optional,
+                but should be filled out.
+             </p>
+            <p>
+                Anytime we describe the content of the experimental data directory and which files have to to placed
+                in which locations, have a look at the tutorial example directory where this is demonstrated
+                <a href="{{ static('flutype/170929-tutorial.tar.gz') }}"> flutype-tutorial.zip </a> and the corresponding
+                directory tree at <a href="{{ url("tutorial_tree")}}"> directory tree</a>.
+            </p>
                 The following table shows the metadata of my study. This table is saved as "meta.tsv" in the main
-                directory of the study. I have not yet defined a result of my task ;).</p>
-
+                directory of the study. There is not yet any result defined.
             <table class="table table-striped">
-
                 <tr>
-                    <th> task</th>
-                    <td> The task of the study is to demonstrate how a study can be uploaded into the database.
-                        Therefore, three different types of experiments are included into the study. The aim is to
-                        select very different kinds of experiments to get an preferably complete demonstration of
-                        what
-                        can be uploaded and how.
+                    <th>task</th>
+                    <td>This study demonstrates how an example study is be uploaded into the database.
+                        Three different types of experiments are included in the study (ELISA, microarray, microwell).
+                        The goal fo this study is to provide example experimental data for the upload in the database,
+                        and provide an overview about what kind of data can be uploaded and how the respective data
+                        should be structured.
                     </td>
                 </tr>
                 <tr>
-                    <th> result</th>
+                    <th>result</th>
                     <td></td>
                 </tr>
                 <tr>
-                    <th> status</th>
-                    <td> in progress</td>
+                    <th>status</th>
+                    <td>in progress</td>
                 </tr>
             </table>
-            Alright, we have defined a study. Most importantly, we can add measurements to our study.
-            This is going to be covered in the next section. But further, it is possible to upload any
-            additional documents related to the study. To do so, just paste them into the "raw_docs" folder of
-            the study. For this study, I add the
-            <a href="{{ static('flutype/170929-tutorial.tar.gz') }}">zipped folder </a>
-            of the study to the raw docs. Now, let's go ahead and add some measurements to the study.
+            </p>
+            <p>
+                <code>Measurements</code> and documents can be uploaded for a study at any time, so it is
+                completely legit to upload an empty study at the beginning and fill this step by step with the
+                experimental <code>measurements</code>. At this point we have defined an empty study.
+                How to add <code>measurements</code>, i.e., either ELISA, microarray or microwell measurements to
+                the defined study is described in the following sections.
+            </p>
+            <p>
+                In addition to <code>measurements</code> for a <code>study</code> it is also possible to
+                upload documents related or important for the study by providing them in the "raw_docs" folder.
+                this can be for instance experimental protocolls, analysis, raw data files, ... . All
+                documents of relevance for a study should be uploaded via the "raw_docs" folder.
+            </p>
 
             <h2> 2. Elisa Measurement </h2>
             For the purpose of adding measurements to a study, one has to create the folder "measurements" in the
