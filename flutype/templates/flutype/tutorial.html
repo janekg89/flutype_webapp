@@ -2,108 +2,132 @@
 
 {% block content %}
     <!-- Main Content -->
-<div class="row" align="left">
-    <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
-        <h1>Glossary</h1>
-        In the following an overview about the main concepts is given and how they are used.
-        <table class="table table-striped">
-            <thead>
-            <tr><th>term</th><th>explanation</th></tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td><code>batch</code></td>
-                <td>A <code>batch</code> is a solution used in a measurement or experiment. Mostly these are <code>ligand batches</code>
-                i.e, solutions of a given <code>ligand</code>, e.g., peptides, viruses, or antibodies.
-                </td>
-            </tr>
-            <tr>
-                <td><code>ligand</code></td>
-                <td>A <code>ligand</code> is the main object used in a binding assay. <code>Ligands</code> can be peptides, viruses, or
-                    antibodies. To refer to the actual solution of a <code>ligand</code> use the <code>batch</code> concept.</td>
-            </tr>
-            <tr>
-                <td><code>measurement</code></td>
-                <td>A <code>measurement</code> is a single experiment, i.e., a single microwell or peptide array which was
-                    measured. Multiple <code>measurements</code> can be combined to a <code>study</code>.
-            </tr>
-            <tr>
-                <td><code>process</code></td>
-                <td>A <code>process</code> describes the workflow in a measurement and consists of individual
-                    <code>process steps</code>. In a nutshell, the process describes all the individual steps taken in
-                an experiment and in which order.
-            </tr>
-            <tr>
-                <td><code>process step</code></td>
-                <td>A <code>process step</code> describes a single step like washing, drying, incubation, ... in the workflow of doing
-                    a measurement.
-            </tr>
-            <tr>
-                <td><code>sid</code></td>
-                <td>A <code>sid</code> is an identifier to identify a resource in the FluTypeDB and the web application.
-                This is the identifier under which some resource is located and can be accessed.
-            </tr>
-            <tr>
-                <td><code>study</code></td>
-                <td>A <code>study</code> is a collection of multiple <code>measurements</code>, which were performed to answer
-                    a common question. E.g., multiple Elisa experiments to determine the concentration dependence of various
-                    viruses.
-            </tr>
-            <tr>
-                <td><code>study metadata</code></td>
-                <td>The <code>study metadata</code> provides the general information for a study, i.e., which task
-                should be performed in the study, which results were obtained, and the progress of the task.
-            </tr>
+    <div class="row" align="left">
+        <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
 
-            </tbody>
-        </table>
+            <!--------------------------------------------------------------------------------------------------------->
+            <h1>Glossary</h1>
+            In the following an overview about the main concepts is given and how they are used.
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>term</th>
+                    <th>explanation</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><code>batch</code></td>
+                    <td>A <code>batch</code> is a solution used in a measurement or experiment. Mostly these are <code>ligand
+                        batches</code>
+                        i.e, solutions of a given <code>ligand</code>, e.g., peptides, viruses, or antibodies.
+                    </td>
+                </tr>
+                <tr>
+                    <td><code>ligand</code></td>
+                    <td>A <code>ligand</code> is the main object used in a binding assay. <code>Ligands</code> can be
+                        peptides, viruses, or
+                        antibodies. To refer to the actual solution of a <code>ligand</code> use the <code>batch</code>
+                        concept.
+                    </td>
+                </tr>
+                <tr>
+                    <td><code>measurement</code></td>
+                    <td>A <code>measurement</code> is a single experiment, i.e., a single microwell or peptide array
+                        which was
+                        measured. Multiple <code>measurements</code> can be combined to a <code>study</code>.
+                </tr>
+                <tr>
+                    <td><code>process</code></td>
+                    <td>A <code>process</code> describes the workflow in a measurement and consists of individual
+                        <code>process steps</code>. In a nutshell, the process describes all the individual steps taken
+                        in
+                        an experiment and in which order.
+                </tr>
+                <tr>
+                    <td><code>process step</code></td>
+                    <td>A <code>process step</code> describes a single step like washing, drying, incubation, ... in the
+                        workflow of doing
+                        a measurement.
+                </tr>
+                <tr>
+                    <td><code>sid</code></td>
+                    <td>A <code>sid</code> is an identifier to identify a resource in the FluTypeDB and the web
+                        application.
+                        This is the identifier under which some resource is located and can be accessed.
+                </tr>
+                <tr>
+                    <td><code>study</code></td>
+                    <td>A <code>study</code> is a collection of multiple <code>measurements</code>, which were performed
+                        to answer
+                        a common question. E.g., multiple Elisa experiments to determine the concentration dependence of
+                        various
+                        viruses.
+                </tr>
+                <tr>
+                    <td><code>study metadata</code></td>
+                    <td>The <code>study metadata</code> provides the general information for a study, i.e., which task
+                        should be performed in the study, which results were obtained, and the progress of the task.
+                </tr>
 
-        <h1>Tutorial: How to upload data</h1>
-        <div class="row align-left">
+                </tbody>
+            </table>
 
+            <!--------------------------------------------------------------------------------------------------------->
+
+            <h1>Tutorial: How to upload data</h1>
             <p>
                 Uploading data into the database consists of two main parts, filling in generic data reused in
-            multiple experiments, and experiment or measurement specific data:
+                multiple experiments, and experiment or measurement specific data:
             <ul>
-            <li>The first part is the <b>creation of generic data</b> which is used in multiple <code>measurements</code>
-                or <code>studies</code>.<br />
-                This generic data is reused, e.g., <code>ligands</code> like peptides or viruses are only defined once,
-                same for the respective <code>batches</code> (i.e., solutions of peptides, viruses and antibodies),
-                or the experimental steps (so called <code>process steps</code>) which are used in multiple
-                <code>measurements</code> or <code>studies</code>.<br />
-                This generic data can be added/modified directly in the browser via the web interface (for instance by
-                adding new peptides or viruses). A user must be logged in to add/modfiy this data.
-            </li>
-            <li>
-                The second part is the upload of <b>data specific for a given measurement/experiment</b>.<br />
-                For the upload the information must hereby be provided in a specific directory structure,
-                i.e., certain files with defined names must exist in a given folder.<br />
+                <li>The first part is the <b>creation of generic data</b> which is used in multiple
+                    <code>measurements</code>
+                    or <code>studies</code>.<br/>
+                    This generic data is reused, e.g., <code>ligands</code> like peptides or viruses are only defined
+                    once,
+                    same for the respective <code>batches</code> (i.e., solutions of peptides, viruses and antibodies),
+                    or the experimental steps (so called <code>process steps</code>) which are used in multiple
+                    <code>measurements</code> or <code>studies</code>.<br/>
+                    This generic data can be added/modified directly in the browser via the web interface (for instance
+                    by
+                    adding new peptides or viruses). A user must be logged in to add/modfiy this data.
+                </li>
+                <li>
+                    The second part is the upload of <b>data specific for a given measurement/experiment</b>.<br/>
+                    For the upload the information must hereby be provided in a specific directory structure,
+                    i.e., certain files with defined names must exist in a given folder.<br/>
 
-                When creating the files in this specific directory structure, it is important to check
-                that the generic <code>ligands</code> (peptides, viruses, antibodies, ...), the used <code>batches</code> (solutions of the ligands)
-                and the experimental steps (<code>process steps</code>) have already been uploaded in the database
-                (see generic information above).
-            </li>
+                    When creating the files in this specific directory structure, it is important to check
+                    that the generic <code>ligands</code> (peptides, viruses, antibodies, ...), the used
+                    <code>batches</code> (solutions of the ligands)
+                    and the experimental steps (<code>process steps</code>) have already been uploaded in the database
+                    (see generic information above).
+                </li>
             </ul>
             </p>
 
             <p>
                 The largest unit in the database is a so called <code>study</code> which
-            refers to a collection of <code>measurements</code>. This tutorial leads through the workflow of
-            uploading experimental data for an example <code>study</code> containing <code>measurements</code> from an
-            ELISA binding assay (microwell plate), a peptide-virus binding experiment (microwell plate), and
+                refers to a collection of <code>measurements</code>. This tutorial leads through the workflow of
+                uploading experimental data for an example <code>study</code> containing <code>measurements</code> from
+                an
+                ELISA binding assay (microwell plate), a peptide-virus binding experiment (microwell plate), and
                 a peptide-virus binding experiment on a peptide-array.
             </p>
 
             <p>
-            The specific directory structure for this example <code>study</code> is provided in the following supplementary
-                file: <a href="{{ static('flutype/170929-tutorial.tar.gz') }}"><span class="label label-danger">flutype-tutorial.zip</span></a>. The example study
-                was uploaded in the FluTypeDB an is available <a href="{{ url("tutorial_db")}}"><span class="label label-danger">here</span></a>.
-                The directory tree of the study can be seen <a href="{{ url("tutorial_tree")}}"><span class="label label-danger">here</span></a>.
+                The specific directory structure for this example <code>study</code> is provided in the following
+                supplementary
+                file: <a href="{{ static('flutype/170929-tutorial.tar.gz') }}"><span class="label label-danger">flutype-tutorial.zip</span></a>.
+                The example study
+                was uploaded in the FluTypeDB an is available <a href="{{ url("tutorial_db")}}"><span
+                    class="label label-danger">here</span></a>.
+                The directory tree of the study can be seen <a href="{{ url("tutorial_tree")}}"><span
+                    class="label label-danger">here</span></a>.
             </p>
 
             <p>
-            In the following a step by step tutorial to upload the example <code>study</code> is provided:
+                In the following a step by step tutorial to upload the example <code>study</code> is provided:
             <ul>
                 <li>Creating a study</li>
                 <li>Elisa measurements</li>
@@ -117,45 +141,55 @@
                 The name of the top directory of the tutorial <code>study</code> which we upload is used as a unique
                 identifier <code>sid</code> (identification string) in the FluTypeDB for the study.
                 This must be a unique identifier which is not yet used for another study in the database.
-                In the tutorial the top directory name, and hence <code>sid</code>, is <span class="label label-success">170929-tutorial</span>.
+                In the tutorial the top directory name, and hence <code>sid</code>, is <span
+                    class="label label-success">170929-tutorial</span>.
             </p>
             <p>
                 A study consists off three main building blocks:
-                <ul>
-                    <li><span class="label label-success">meta.tsv</span></li>
-                    <li><span class="label label-success">measurements</span></li>
-                    <li><span class="label label-success">raw_docs</span>, i.e., additional documents and data files to upload</li>
-                </ul>
+            <ul>
+                <li><span class="label label-success">meta.tsv</span></li>
+                <li><span class="label label-success">measurements</span></li>
+                <li><span class="label label-success">raw_docs</span>, i.e., additional documents and data files to
+                    upload
+                </li>
+            </ul>
             </p>
             <p>
-                The <code>metadata</code> defined in the <span class="label label-success">meta.tsv</span> file in the root
+                The <code>metadata</code> defined in the <span class="label label-success">meta.tsv</span> file in the
+                root
                 of the study folder is the obligatory information of a study which describes the key features:
                 what was the reason for the study and what should be answered (task), what are the results (result), and
                 what is the status of the study (status).
 
                 <code>metadata</code> fields are hereby:
-                <ul>
-                    <li><span class="label label-info">task</span>: text (what is the question)</li>
-                    <li><span class="label label-info">results</span></li>
-            <li><span class="label label-info">status</span>: one of the options: <span class="label label-default">planned</span>,
-                <span class="label label-default">in progress</span> and <span class="label label-default">finished</span></li>
-                </ul>
+            <ul>
+                <li><span class="label label-info">task</span>: text (what is the question)</li>
+                <li><span class="label label-info">results</span></li>
+                <li><span class="label label-info">status</span>: one of the options: <span class="label label-default">planned</span>,
+                    <span class="label label-default">in progress</span> and <span
+                            class="label label-default">finished</span></li>
+            </ul>
 
-                <code>Studies</code> do not have to contain any measurements. One can add a study without any measurements
-                or raw docs by adding a "meta.tsv" into a directory with the name of the study. All of the meta fields are optional,
-                but should be filled out.
-             </p>
+            <code>Studies</code> do not have to contain any measurements. One can add a study without any measurements
+            or raw docs by adding a "meta.tsv" into a directory with the name of the study. All of the meta fields are
+            optional,
+            but should be filled out.
+            </p>
             <p>
                 Anytime we describe the content of the experimental data directory and which files have to to placed
                 in which locations, have a look at the tutorial example directory where this is demonstrated
-                <a href="{{ static('flutype/170929-tutorial.tar.gz') }}"><span class="label label-danger">flutype-tutorial.zip</span></a> and the corresponding
-                directory tree at <a href="{{ url("tutorial_tree")}}"><span class="label label-danger">directory tree</span></a>.
+                <a href="{{ static('flutype/170929-tutorial.tar.gz') }}"><span class="label label-danger">flutype-tutorial.zip</span></a>
+                and the corresponding
+                directory tree at <a href="{{ url("tutorial_tree")}}"><span
+                    class="label label-danger">directory tree</span></a>.
             </p>
-            The following table shows the metadata of my study. This table is saved as <span class="label label-success">meta.tsv</span> in the main
-                directory of the study. There is not yet any result defined.
+            The following table shows the metadata of my study. This table is saved as <span
+                class="label label-success">meta.tsv</span> in the main
+            directory of the study. There is not yet any result defined.
             <table class="table table-striped">
+                <tbody>
                 <tr>
-                    <th>task</th>
+                    <th><span class="label label-info">task</span></th>
                     <td>This study demonstrates how an example study is be uploaded into the database.
                         Three different types of experiments are included in the study (ELISA, microarray, microwell).
                         The goal fo this study is to provide example experimental data for the upload in the database,
@@ -164,17 +198,21 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>result</th>
+                    <th><span class="label label-info">result</span></th>
                     <td></td>
                 </tr>
                 <tr>
-                    <th>status</th>
+                    <th><span class="label label-info">status</span></th>
                     <td>in progress</td>
                 </tr>
+                </tbody>
+                <caption>Metadata defined for <code>study</code> in <span class="label label-success">meta.tsv</span>
+                </caption>
             </table>
             </p>
             <p>
-                <code>Measurements</code> are defined in the <span class="label label-success">measurements</span> folder
+                <code>Measurements</code> are defined in the <span class="label label-success">measurements</span>
+                folder
                 and can be uploaded for a study at any time, so it is
                 completely legit to upload an empty study at the beginning and fill this step by step with the
                 experimental <code>measurements</code>. At this point we have defined an empty study.
@@ -183,66 +221,94 @@
             </p>
             <p>
                 In addition to <code>measurements</code> for a <code>study</code> it is also possible to
-                upload documents related or important for the study by providing them in <span class="label label-success">raw_docs</span> folder.
+                upload documents related or important for the study by providing them in <span
+                    class="label label-success">raw_docs</span> folder.
                 These can be for instance experimental protocols, analysis, raw data files, etc. All
                 documents of relevance for a study should be uploaded.
             </p>
 
-            <h2> 2. Elisa Measurement </h2>
-            For the purpose of adding measurements to a study, one has to create the folder "measurements" in the
-            main folder
-            of the study and then add the folders, named accordingly to the measurements, into the measurements
-            folder.
-            For any measurement, the same five pieces of information are important: metadata, ligands, process,
-            results, and raw_docs, results and raw_docs are optional. We start with an elisa measurement without any
-            peptides involved.
-            Let's begin with the most general measurement related information, the metadata.
-            <h3> 2.1 Elisa Meta</h3>
-            <table class="table table-striped">
+            <h2>2. Elisa Measurement</h2>
+            <p>
+                To add <code>measurements</code> to a <code>study</code> one creates the folder <span
+                    class="label label-success">measurements</span> in the
+                study folder. For every <code>measurement</code> an individual <span class="label label-success">subfolder</span>
+                is added
+            </p>
+            <p>
+                For any measurement, five pieces of information are important:
+            <ul>
+                <li><span class="label label-success">meta.tsv</span> (metadata)</li>
+                <li><span class="label label-success">lig_fix.txt</span> and <span class="label label-success">lig_mob.txt</span>
+                    (ligands)
+                </li>
+                <li><span class="label label-success">steps.txt</span> (process)</li>
+                <li><span class="label label-success">results</span> (results)</li>
+                <li><span class="label label-success">raw_docs</span> (additional documents).</li>
+            </ul>
+            The <span class="label label-success">results</span> and <span class="label label-success">raw_docs</span>
+            are optional.
+            </p>
 
+            <h3>2.1 Elisa metadata</h3>
+            <p>
+            <table class="table table-striped">
                 <tr>
-                    <th>batch_sid</th>
-                    <td> 12345689</td>
+                    <th><span class="label label-info">batch_sid</span></th>
+                    <td>12345689</td>
                 </tr>
                 <tr>
-                    <th> measurement_type</th>
-                    <td> elisa</td>
+                    <th><span class="label label-info">measurement_type</span></th>
+                    <td>elisa</td>
                 </tr>
                 <tr>
-                    <th> functionalization</th>
+                    <th><span class="label label-info">functionalization</span></th>
                     <td> No</td>
                 </tr>
                 <tr>
-                    <th>manufacturer</th>
+                    <th><span class="label label-info">manufacturer</span></th>
                     <td> Thermo F96 Maxisorp</td>
                 </tr>
-
+                <caption>Metadata defined for ELISA measurement in <span class="label label-success">meta.tsv</span>
+                </caption>
             </table>
-            The batch sid refers to the batch of the microwell plate. The measurement type
-            has to be chosen from three choices: elisa, microarray and microwell. Both, microarray and microwell
-            refer to fluoresence measurements. The functionalization refers to the surface substance
-            of the microwell plate. In this measurement no ligands were bound to the surface of the microwell
-            plate. Therefore, also no fuctionalization was necessary. We enter a "No", which is different to an
-            empty space. An empty space refers to an unknown value
-            (<a href="https://en.wikipedia.org/wiki/NaN"> NaN </a>). The manufacturer refers to the manufacturer
-            of the microwell plate. These are the metadata of a measurement. This table is saved as "meta.tsv"
-            in the main directory of a measurement folder. Subsequently, we continue with the next
-            important measurement related information: the ligands and their positions on the microwell plate.
+
+            <p>
+                The <span class="label label-info">batchsid</span> refers to the batch of the microwell plate. The <span
+                    class="label label-info">measurement_type</span>
+                has to be chosen from three choices:
+                <span class="label label-default">elisa</span>,
+                <span class="label label-default">microarray</span> and
+                <span class="label label-default">microwell</span>. Both, microarray and microwell
+                refer to fluoresence measurements. The <span class="label label-info">functionalization</span> refers to
+                the surface substance
+                of the microwell plate. In this measurement no ligands were bound to the surface of the microwell
+                plate. Therefore, also no fuctionalization was necessary. We enter a "No", which is different to an
+                empty space. An empty space refers to an unknown value
+                (<a href="https://en.wikipedia.org/wiki/NaN"> NaN </a>). The <span
+                    class="label label-info">manufacturer</span> refers to the manufacturer
+                of the microwell plate. These are the metadata of a measurement. This table is saved as <span
+                    class="label label-success">meta.tsv</span>
+                in the main directory of a measurement folder.
+            </p>
+
 
             <h3>2.2 Elisa Ligands</h3>
             <p>
-                Let's start with some general information related to ligands.
+                Subsequently, we continue with the next
+                important measurement related information: the <code>ligands</code> and their positions on the microwell
+                plate.
+            </p>
+            <p>
+
                 Peptides, antibodies, viruses and any combination of several ligands (complexes) are referred to as
                 ligands. Each of them is an ligand type and includes its specific information. A peptide, for
-                example,
-                is described by a linker, spacer, sequence and c-terminus. Besides the specific information,
+                example, is described by a linker, spacer, sequence and c-terminus. Besides the specific information,
                 all ligands share the common fields: sid and comment. However, it might be interesting also to
-                conduct
-                measurements with e.g. different concentrations of the ligands, which is not captured by the ligands
-                related
-                pieces of information. Here, the concept of ligand batches comes into play.
+                conduct measurements with e.g. different concentrations of the ligands, which is not captured by the
+                ligands
+                related pieces of information. Here, the concept of ligand <code>batches</code> comes into play.
                 A ligand batch links a ligand to the following batch
-                related properties: labeling, concentration, buffer, pH, purity and production date.
+                related information: labeling, concentration, buffer, pH, purity and production date.
                 Also for ligand batches, a sid has to be defined. Keep in mind that ligand batch sids are
                 particularly important, because they are later on referenced in the gal files.
                 Ligand batches, can be of five
@@ -251,13 +317,15 @@
                 a ligand. The remaining four should be self explaining.
             </p>
             <p>
-                Now back to our measurement. In this example we do not immobilize any ligands on the surface. This
-                reduces our work. No, need to define any peptides or peptide batches. However, still we are
-                supposed to deliver a so called gal file, which maps a ligand batch to a location on
+                Now back to our <code>measurement</code>. In this example we do not immobilize any ligands on the
+                surface. This
+                reduces our work. No, need to define any peptides or peptide batches. However, still we need a so
+                called gal file, which maps a ligand batch to a location on
                 a microwell plate. Since no ligands are present in any well, we fill all entries in the table
                 with "No". Note that the table has to have the same dimensions as the microwell plate.
                 For microarrays it might be more reasonable to provide a gal file, which is fine too. This table
-                is saved as "lig_fix.txt" in the main directory of the measurement.
+                is saved as <span class="label label-success">lig_fix.txt</span> in the main directory of the
+                measurement.
             </p>
             <table class="table table-striped">
                 <caption> Fixed Ligand Batches Location on Microwell Plate</caption>
@@ -402,11 +470,11 @@
                 </tbody>
             </table>
             <p>
-                Alright, fixed ligand location within the microwell are provided. Let's continue with the analyt
-                ligand locations on the microwell plate. First, we check which analyts were incubated. For this
-                example, we decided to
-                pick the following: X31, Panama, California. One has to check if these viruses are already
-                listed in the database. Therefore, let's open a new tab with the virus list by clicking the
+                At this point, fixed ligand location within the microwell are provided. Let's continue with the analyte
+                ligand locations on the microwell plate. First, we check which analytes were incubated. In the tutorial
+                example
+                X31, Panama, and California were used. To use the viruses in the measurement these must already exist in
+                in the database. Therefore, let's open a new tab with the virus list by clicking the
                 following <a href="{{ url('viruses') }}"> link </a> or on "Ligands" and than on "Virus" in the
                 navigation menu. If the virus is already present in the database just note the sid and go on,
                 otherwise search for the virus <a href="https://www.ncbi.nlm.nih.gov/taxonomy">here</a> and
@@ -470,8 +538,8 @@
                 </tbody>
             </table>
 
-            Ok, now let's decide what kind of concentration we want to use or more generally speaking define the
-            analyt batches. We are planning to incubate the three viruses in various concentrations but also
+            Now we define which concentrations were used, i.e., we want to use or more generally speaking define the
+            analyte batches. We are planning to incubate the three viruses in various concentrations but also
             some buffer as reference. First, one has to check again if the batches are already defined.
             Therefore, let's open a new tab with the virus batch list by clicking on the following
             <a href="{{ url('virusbatches') }}"> link </a> or on "Batches" and than on "Virus" in the
@@ -1030,10 +1098,10 @@
             </table>
 
             For the buffer batch no ligands have to be provided.
-            So now all batches are defined and we can continue with the gal file for the analyt.
+            At this point all batches are defined and we can continue with the gal file for the analyte.
             Just as a reminder, the gal file maps a ligand batch to a location on a microwell plate.
-            In this example, we again display a rows and columns representation of the gal file, but again the
-            the gal file representation is fine too.
+            In this example, we again display a rows and columns representation of the gal file, but again a
+            gal file representation is fine too.
 
             <table id="test" class="table table-striped">
                 <caption>Analyt Batches Location on Microwell Plate</caption>
@@ -1177,16 +1245,17 @@
                 </tr>
                 </tbody>
             </table>
-            This information is saved as "lig_mob.txt" in the main directory of the measurement.
-            Eventually, we completed all relevant ligand related data for our elisa experiment.
+            This information is saved as <span class="label label-success">lig_mob.txt</span> in the main directory of
+            the measurement.
+            At this point, we completed all relevant ligand related data for the ELISA experiment.
 
             <h3>2.3 Elisa Process</h3>
-            Before digging into the specific process of our elisa measurement,
-            let's start with a general description of a process.
-            The process is described by process steps within a measurement.
+            The next step is to define the <code>process</code> of our ELISA measurement, i.e., which steps were
+            performed
+            in the experimental workflow. The process is described by <code>process steps</code> within a measurement.
             A process step can be of various types: blocking, drying, incubating-analyt, incubating,
             quenching, scanning, spotting and washing. Let me know if you have any suggestions for more.
-            Each step is described by a sid , method, temperature and comment. Some of the steps take also the
+            Each step is described by an sid, method, temperature and comment. Some of the steps take also the
             information substance and duration. Let's take a look at each step.
 
             <table id="process" class="table table-striped ">
@@ -1286,7 +1355,7 @@
             <p> Once a process step is defined, it can be reused in any other process. Thus, it is part of the
                 general data and is not exclusively related to one measurement. A process can contain many steps
                 in an arbitrary ordering and with additional measurement specific pieces of information.
-                We explain this concept based on our example. So, let's go back to our elisa example. </p>
+                We explain this concept based on our example. So, let's go back to our ELISA example. </p>
             <p>
                 Typically, the first step in the process is the spotting/immobilization step. However,
                 no peptides are immobilized in this example. Instead, the first step is the incubation of an
@@ -1390,10 +1459,11 @@
                 </tbody>
             </table>
 
-            So, now that we defined all steps used in the process, let's include theses steps into a process.
-            Therefore, we take the sid and fill them into a table, which can take even more additional
-            pieces of information about the step.
-
+            <p>
+                So, now that we defined all steps used in the process, let's include theses steps into a process.
+                Therefore, we take the sid and fill them into a table, which can take even more additional
+                pieces of information about the step.
+            </p>
             <table class="table table-striped ">
                 <tr>
                     <th>step</th>
@@ -1522,40 +1592,46 @@
                     <td></td>
                 </tr>
             </table>
+            <p>
+                I go quickly through the table above. The first column "step" takes the sid of the step
+                defined before hand.
+                The second column "index" describes the chronological position of the step in the process.
+                The "user" is the person who conducted this step. "Start" is the starting time of the step. The "image"
+                field is left blank for every step in this example. Normally, it takes the name of an image file,
+                which shall be saved in the main directory of the measurement folder. Generally, it is reasonable to
+                use it for microarrays within the scanning step. There, images not intensities are the output of
+                the reader. In the microarray measurement example (4.3) this is described in more detail.
+                The opposite applies to microwell plates. The intensity file name can be plugin into the "intensity"
+                field. Last, a "comment" can be written for every step.
+                With all these pieces of information in place, we have complete all the relevant information
+                related to the process. The above table has to be saved as <span
+                    class="label label-success">steps.tsv</span> into the main directory of a
+                measurement.
+            </p>
 
-            I go quickly through the table above. The first column "step" takes the sid of the step
-            defined before hand.
-            The second column "index" describes the chronological position of the step in the process.
-            The "user" is the person who conducted this step. "Start" is the starting time of the step. The "image"
-            field is left blank for every step in this example. Normally, it takes the name of an image file,
-            which shall be saved in the main directory of the measurement folder. Generally, it is reasonable to
-            use it for microarrays within the scanning step. There, images not intensities are the output of
-            the reader. In the microarray measurement example (4.3) this is described in more detail.
-            The opposite applies to microwell plates. The intensity file name can be plugin into the "intensity"
-            field. Last, a "comment" can be written for every step.
-            With all these pieces of information in place, we have complete all the relavant information
-            related to the process. The above table has to be saved as "steps.tsv" into the main directory of a
-            measurement.
             <h3>2.4. Elisa Results</h3>
-            In this section, we are going to deal with pieces of information related to the measurement results.
-            Measurement results describe the intensities resulting from the measurement. In this example, we
-            measured the intensities during the last step of our process and saved tem as "intensity_final.tsv"
-            in the main folder of the measurement. If we want to use these intensities as results we have to
-            save it again in a folder within the results folder. It might seam to be a redundant procedure.
-            However, the aim is to decouple the results from the process. In the microwell example, this approach
-            might become clearer. There, multiple scans have been performed during one process. From theses scans
-            different results have been obtained. Often, it might be interesting to subtract the background
-            or to do even more sophisticated post-processing on the measured intensities and to show the output
-            in as results. This concept makes it possible to do just that independently from the measured
-            intensities.
-            Again, the "sid" of the measurements results are defined by the folder name. This time the folder has to
-            placed into
-            the folder "results". We decided to call the result "raw".
-            A results folder contains,besides the intensities, also some metadata related to the result.
-            The following table shows the "meta.tsv" saved in our results folder.
+            <p>
+                In this section, we are going to deal with pieces of information related to the measurement results.
+                Measurement results describe the intensities resulting from the measurement. In this example, we
+                measured the intensities during the last step of our process and saved tem as <span
+                    class="label label-success">intensity_final.tsv</span>
+                in the main folder of the measurement. If we want to use these intensities as results we have to
+                save it again in a folder within the results folder. It might seam to be a redundant procedure.
+                However, the aim is to decouple the results from the process. In the microwell example, this approach
+                might become clearer. There, multiple scans have been performed during one process. From these scans
+                different results have been obtained. Often, it might be interesting to subtract the background
+                or to do even more sophisticated post-processing on the measured intensities and to show the output
+                in as results. This concept makes it possible to do these things independently from the measured
+                intensities.
+                Again, the <span class="label label-success">sid</span> of the measurements results are defined by the
+                folder name. This time the folder has to
+                placed into the folder <span class="label label-success">results</span>. We decided to call the result
+                <span class="label label-success">raw</span>.
+                A results folder contains, besides the intensities, also some metadata related to the result.
+                The following table shows the <span class="label label-success">meta.tsv</span> saved in the results
+                folder.
 
             <table class="table table-striped">
-
                 <tr>
                     <td>comment</td>
                     <td>results from an elisa intensity reader without any post processing</td>
@@ -1569,53 +1645,62 @@
                     <td>final_intensity.tsv</td>
                 </tr>
             </table>
-
+            </p>
 
             <h3>2.5 Elisa Raw Docs</h3>
-            Just like studies, also measurements can contain additional files (scientific papers, power
-            point presentations,
-            images , ...) , which do not fit into the database structure provided so far. Just upload them into
-            the folder "raw_docs". For this elisa measurement, I don't have any additional data so we just leave
-            the folder empty. Finally, we have finished with the elisa measurement.
+            <p>
+                Just like studies, also measurements can contain additional files (scientific papers, power
+                point presentations,
+                images , ...) , which do not fit into the database structure provided so far. Just upload them into
+                the folder "raw_docs". For this elisa measurement, I don't have any additional data so we just leave
+                the folder empty. Finally, we have finished with the elisa measurement.
+            </p>
 
-            <h2>3. Microwell Measurement </h2>
-            The microwell measurement will be in parts similar to the elisa measurement. The similar parts can
-            be reused for this measurement. In particular, we are using the same analyt gal file and some of the
-            process steps already defined during the elisa measurement.
-            We are not going as much into detail with every step like in the elisa measurement. If anything is
-            unclear check the procedure during the elisa and microarray measurement. This may already help.
-            As a reminder,for any measurement these five data blocks have to be collected:
-            meta, ligands, process, results, and raw_docs.
-            The "sid" and thus the folder name of the microwell measurement has been choosen as
-            "170929-tutorial-microwell-1".
-            Just like fot the elisa measurement, we start again with the metadata.
+            <!--------------------------------------------------------------------------------------------------------->
+
+            <h2>3. Microwell Measurement</h2>
+            <p>
+                The microwell measurement will be in parts similar to the elisa measurement. The similar parts can
+                be reused for this measurement. In particular, we are using the same analyte gal file and some of the
+                process steps already defined during the elisa measurement.
+                We are not going as much into detail with every step like in the elisa measurement. If anything is
+                unclear check the procedure during the elisa and microarray measurement. This may already help.
+                As a reminder,for any measurement these five data blocks have to be collected:
+                meta, ligands, process, results, and raw_docs.
+                The "sid" and thus the folder name of the microwell measurement has been choosen as
+                <span class="label label-success">170929-tutorial-microwell-1</span>.
+                Just like in the ELISA measurement, we start again with the metadata in <span
+                    class="label label-success">meta.tsv</span>.
+            </p>
 
             <h3>3.1 Microwell Meta</h3>
             <table class="table table-striped">
-
                 <tr>
-                    <th>batch_sid</th>
+                    <th><span class="label label-info">batch_sid</span></th>
                     <td> 161118</td>
                 </tr>
                 <tr>
-                    <th> measurement_type</th>
+                    <th><span class="label label-info">measurement_type</span></th>
                     <td> microwell</td>
                 </tr>
                 <tr>
-                    <th> functionalization</th>
+                    <th><span class="label label-info">functionalization</span></th>
                     <td> 3D-NHS</td>
                 </tr>
                 <tr>
-                    <th>manufacturer</th>
+                    <th><span class="label label-info">manufacturer</span></th>
                     <td> PolyAn</td>
                 </tr>
             </table>
+
             <h3>3.2 Microwell Ligands</h3>
             In the ligands section, one has to check first if the ligands and ligands batches are already
             defined. If not one has to click on the green plus symbol and add them to the database.
             Ligands are linked via their sid to the ligand batches. Ligand batches are referenced in the gal
-            file as well via their sid. In contrast to the elisa measurement, we do want to immobilize
-            peptides. The following table shows the peptides, which were used in this measurement.
+            file as well via their sid. In contrast to the ELISA measurement, in this measurement no peptides were
+            immobilized
+            The following table shows the peptides, which were used in this measurement.
+
             <table class="table table-striped">
                 <caption>Peptides</caption>
                 <thead>
@@ -1697,8 +1782,10 @@
 
                 </tbody>
             </table>
+
             In this example, the concentrations are not varied and the peptides batches are defined simply as
             follows.
+
             <table id="peptidebatch" class="table table-striped">
                 <caption>Peptide Batches</caption>
                 <thead>
@@ -1825,10 +1912,12 @@
                 </tr>
                 </tbody>
             </table>
+
             The field "ligand" again takes the sids from the predefined peptides. As you can see, many fields are
             left empty, this is due to lack of knowledge. Let's continue
             with the peptides gal file. In contrast to the elisa example, I show here the format of a gal file.
             The representations in the elisa example, however, would be fine too.
+
             <table id="gal_fix_lig" class="table table-striped">
                 <thead>
                 <tr>
@@ -2514,15 +2603,18 @@
                 </tr>
                 </tbody>
             </table>
-            We completed all information on fixed ligands and focus now on the analytes. We decided to use the
-            same analytes, analyte batches and analyte gal file like in the elisa measurement.
+
+            We completed all information on fixed ligands and focus now on the analytes. The
+            same analytes, analyte batches and analyte gal file as in the ELISA measurement were used.
             So we don't have to introduce new ligands and ligand batches but only copy/paste the analyte gal file
             from the elisa measurement. All relevant ligand related content is now provided.
 
             <h3>3.3 Microwell Process</h3>
+
             The Process section begins with searching for your measurement steps in the database.
             If not one has to click on the green plus symbol and add them to the database in
             <a href="{{ url('steps') }}"> here </a>. For this measurement, the following steps were conducted.
+
             <table id="process" class="table table-striped ">
                 <thead>
                 <tr>
@@ -2592,9 +2684,12 @@
                 </tr>
                 </tbody>
             </table>
+
             We have already declared some process step in the elisa measurement. The green marked process steps
-            are the same as in the elisa measurement, so we would not have to declare them once again but just
-            use the sids in the "steps.tsv". The process in this example was performed in the following way.
+            are the same as in the ELISA measurement, so we would not have to declare them once again but just
+            use the sids in the <span class="label label-success">steps.tsv</span>. The process in this example was
+            performed in the following way.
+
             <table class="table table-striped ">
                 <tr>
                     <th>step</th>
@@ -2697,91 +2792,110 @@
                 </tr>
             </table>
             Note, that two scans have been performed and both result in a intensity file. These files are referenced
-            in "steps.tsv" and have to be placed in the main directory of the measurement folder.
+            in <span class="label label-success">steps.tsv</span> and have to be placed in the main directory of the
+            measurement folder.
 
             <h3>3.4 Microwell Results</h3>
             In this example, we want to show how to upload three results. The first result will be the
             intensities from the the first scanning (process step 7), the second result will be the the
             intensity from the final scanning and the third will be a subtraction of one from the other.
-            Have a look into the directory "170929-tutorial-microwell-1/results/" in the
-            <a href="{{ url("tutorial_tree")}}"> directory tree </a>. Any directory in the results directory
-            should have a "intensities.tsv" and a "meta.tsv". the intensities file contain gal file like
-            intensities.
-            The meta file contains a , "comment", "processing type" and "intensity_file" name.
-            The processing type names the method how the intensities were generated
-            (e. g. Florescence Reader, Genepix, Image2Numeric0.1, ...).
-            The comments can be used to described more in detail how the intensity values have been obtained.
-            Next, the content of "meta.tsv of the background subtraction result is shown. The other once can be
-            found obviously in the
-            <a href="{{ static('flutype/170929-tutorial.tar.gz') }}"> zipped folder </a>.
+            Have a look into the directory <span class="label label-success">170929-tutorial-microwell-1/results/</span>
+            in the
+            <a href="{{ url("tutorial_tree")}}"><span class="label label-danger">directory tree</span></a>. Any
+            directory in the results directory
+            should contain an <span class="label label-success">intensities.tsv</span> and a <span
+                class="label label-success">meta.tsv</span>.
+            The intensities file contains a gal file like intensities.
+            The meta file contains a <span class="label label-info">comment</span>, <span class="label label-info">processing type</span>
+            and
+            <span class="label label-info">intensity_file</span> name.
+
+            The <span class="label label-info">processing_type</span> describes the method how the intensities were
+            measured
+            (e.g., Florescence Reader, Genepix, Image2Numeric0.1, ...).
+            The <span class="label label-info">comment</span> can be used to described more in detail how the intensity
+            values have been obtained.
+            In the following, the content of <span class="label label-success">meta.tsv</span> of the background
+            subtraction result is shown. The other results can be
+            viewed in the <a href="{{ static('flutype/170929-tutorial.tar.gz') }}"><span class="label label-danger">zipped folder</span></a>.
             <table class="table table-striped">
                 <tr>
-                    <th> comment</th>
-                    <td> subtracted the intensities of the first scanning from the second scanning.</td>
+                    <th><span class="label label-info">comment</span></th>
+                    <td>subtracted the intensities of the first scanning from the second scanning.</td>
                 </tr>
                 <tr>
-                    <th> processing_type</th>
-                    <td> Fluorescence Intensity Reader 1.23</td>
+                    <th><span class="label label-info">processing_type</span></th>
+                    <td>Fluorescence Intensity Reader 1.23</td>
                 </tr>
                 <tr>
-                    <th> intensity_file</th>
+                    <th><span class="label label-info">intensity_file</span></th>
                     <td> intensity_sub.tsv</td>
                 </tr>
             </table>
 
             <h3>3.5 Microwell Raw Docs </h3>
-            Further documents could be attached to any measurement. For this measurement, however,
-            no further documents are attached.
+            <p>
+                Additional documents can be attached to any measurement in <span
+                    class="label label-success">raw_docs</span>. For this measurement, however,
+                no additional documents have been attached.
+            </p>
+
+
             <h2> Microarray Measurement</h2>
-            The microarray measurement will focus on incooperating multiple images in one measurement.
-            For any measurement, the same five steps have to be performed: meta, ligands, process, results, and
-            raw_docs. We decided to name the measurement: "170929-tutorial-microarray-1". So let's start again with
-            the meta.
+            <p>
+                The microarray measurement will focus on incooperating multiple images in one measurement.
+                For any measurement, the same five steps have to be performed: meta, ligands, process, results, and
+                raw_docs. The measurement was named <span
+                    class="label label-success">170929-tutorial-microarray-1</span>.
+            </p>
 
             <h3> 4.1 Microarray Meta</h3>
             <table class="table table-striped">
-
                 <tr>
-                    <th>batch_sid</th>
-                    <td> ABC123_321</td>
+                    <th><span class="label label-info">batch_sid</span></th>
+                    <td>ABC123_321</td>
                 </tr>
                 <tr>
-                    <th> measurement_type</th>
-                    <td> microarray</td>
+                    <th><span class="label label-info">measurement_type</span></th>
+                    <td>microarray</td>
                 </tr>
 
                 <tr>
-                    <th> functionalization</th>
+                    <th><span class="label label-info">functionalization</span></th>
                     <td> 3D-NHS</td>
                 </tr>
                 <tr>
-                    <th>manufacturer</th>
+                    <th><span class="label label-info">manufacturer</span></th>
                     <td> PolyAn</td>
                 </tr>
             </table>
 
             <h3>4.2 Microarray Ligands</h3>
-            Again, ligands have to be defined before using them in a measurement.
-            This procedure is always the same. If you want to add new ligands again click on the green plus
-            symbol or follow the <a href="{{ url('peptide_new') }}"> link </a>. Remember the sids have to be
-            unique. The same applies to the peptide batches. Relevant peptide batches for this example
-            are also already defined <a href="{{ url('peptidebatches') }}"> here </a>.
-            If you want to add new ligand batches again click on the green plus symbole or follow the
-            <a href="{{ url('peptide_batch_new') }}"> link </a>. This time, I will not show the tables
-            of new ligands and ligand batches. You can check for your self that all ligand batches referenced
-            in the galfile are indeed present in the database.
-            The microarrays were spotted with the industry spotter with 5200 spots.
-            Therefore, I will also not show the content of the gal file in the browser but feel
-            free to download the
-            <a href="{{ static('flutype/170929-tutorial.tar.gz') }}"> zipped folder </a>.
+
+            <p>
+                Again, ligands have to be defined before using them in a measurement.
+                This procedure is always the same. If you want to add new ligands again click on the green plus
+                symbol or follow the <a href="{{ url('peptide_new') }}"> link </a>. Remember the sids have to be
+                unique. The same applies to the peptide batches. Relevant peptide batches for this example
+                are also already defined <a href="{{ url('peptidebatches') }}"> here </a>.
+                If you want to add new ligand batches again click on the green plus symbole or follow the
+                <a href="{{ url('peptide_batch_new') }}"> link </a>. This time, I will not show the tables
+                of new ligands and ligand batches. You can check for your self that all ligand batches referenced
+                in the galfile are indeed present in the database.
+                The microarrays were spotted with the industry spotter with 5200 spots.
+                Therefore, I will also not show the content of the gal file in the browser but feel
+                free to download the <a href="{{ static('flutype/170929-tutorial.tar.gz') }}"> zipped folder </a>.
+            </p>
 
             <h3>4.3 Microarray Process</h3>
-            Most of the process information is similar to the microwell example. The biggest difference is that
-            several images are made during the scanning of the microarray plate. Again, we have to define new steps
-            if not yet present in the database. Therefore, have a look at the
-            exisiting process steps <a href="{{ url('peptide_batch_new') }}"> here </a> or click on process and
-            than on process steps in the navigation menu. Create a new step by clicking the green plus symbol.
-            In the following, steps performed during this measurement are shown.
+            <p>
+                Most of the process information is similar to the microwell example. The biggest difference is that
+                several images are made during the scanning of the microarray plate. Again, we have to define new steps
+                if not yet present in the database. Therefore, have a look at the
+                existing process steps <a href="{{ url('peptide_batch_new') }}"> here </a> or click on process and
+                than on process steps in the navigation menu. Create a new step by clicking the green plus symbol.
+                In the following, steps performed during this measurement are shown.
+            </p>
             <table id="process" class="table table-striped ">
                 <thead>
                 <tr>
@@ -2834,7 +2948,8 @@
                 </tbody>
             </table>
 
-            If all steps are declared. Let's generate the content of the "steps.tsv".
+            If all steps are declared. Let's generate the content of the <span
+                class="label label-success">steps.tsv</span>.
 
             <table class="table table-striped ">
                 <thead>
@@ -2917,15 +3032,13 @@
 
             The file names in the "image" column correspond to the file in the main folder of the measurement.
 
-
             <h3> 4.4 Microarray Results</h3>
             No results in this example.
-            <h3> 4.5 Microarray Raw Docs</h3>
-            No rar docs in this example.
 
+            <h3> 4.5 Microarray Raw Docs</h3>
+            No raw docs in this example.
         </div>
     </div>
-</div>
 {% endblock %}
 
 {% block javascript %}
