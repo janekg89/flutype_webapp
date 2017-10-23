@@ -2,9 +2,8 @@
 {% block content %}
     <!-- LIST OF USERS -->
         <div class="standard">
-            <h1>Users</h1>
+            <h1><i class="fa fa-fw fa-group"></i> Users</h1>
             {% if users %}
-
             <table id="users" class="table table-striped">
                 <thead>
                 <tr>
@@ -17,18 +16,10 @@
                 <tbody>
                 {% for u in users %}
                     <tr>
-                        <td class="warning">
-                            <b>{{ u.username }}</b>
-                        </td>
-                        <td>
-                            {{ u.first_name }}
-                        </td>
-                        <td>
-                            {{ u.last_name }}
-                        </td>
-                        <td>
-                            {{ u.email }}
-                        </td>
+                        <td class="warning"><b>{{ u.username }}</b></td>
+                        <td>{{ u.first_name }}</td>
+                        <td>{{ u.last_name }}</td>
+                        <td><a href="mailto:{{ u.email }}">{{ u.email }}</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>
