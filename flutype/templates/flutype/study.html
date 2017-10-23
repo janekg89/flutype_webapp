@@ -1,429 +1,182 @@
 {% extends "flutype/base.html" %}
 {% block content %}
-    <!-- Main Content -->
-    <div class="container">
 
+    <!-- status list
     <div class="btn-group inline-group toggle" role="group" >
-
+    {% for key in ["planning", "in progress", "finished"] %}
      <form method="post" style ='float: left; padding: 5px;'>
          <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-         <input  type= "hidden" name="status" value="planning">
-         <input id="planning" class="btn btn-default {% if study.status == "planning" %} active  {% endif %}"  type="submit" value="planning" />
+         <input  type="hidden" name="status" value="{{ key }}">
+         <input id="planning" class="btn btn-default {% if study.status == key %}active{% endif %}
+        " type="submit" value="{{ key }}" />
      </form>
-
-    <form method="post" style ='float: left; padding: 5px;'>
-         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-            <input  type= "hidden" name="status" value="in progress">
-         <input id="progress" class="btn btn-default {% if study.status == "in progress" %} active {% endif %}"  type="submit" value="in progress" >
-     </form>
-
-    <form method="post" style ='float: left; padding: 5px;'>
-         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-         <input  type= "hidden" name="status" value="finished">
-         <input id="finished" class="btn btn-default {% if study.status == "finished" %} active  {% endif %}"  type="submit" value="finished" >
-     </form>
+    {% endfor %}
     </div>
-    <div class="title1">
-        <h1 style="font-family: butlermedium;font-size: 300%; "> {{ study.sid }}</h1>
+    -->
+
+    <h1><i class="fa fa-fw fa-braille"></i> Study: {{ study.sid }}</h1>
+    <div class="a">
+        <table id="study" class="table table-striped">
+            <tbody>
+            <tr>
+                <td><b>Task </b></td>
+                <td>{{ study.task }}</td>
+            </tr>
+
+            <tr>
+                <td><b>Result</b></td>
+                <td>{{ study.result }}</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-      <div class="a">
 
-          <table id="study" class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><b>Task </b></td>
-                            <td>{{ study.task }}</td>
-                        </tr>
-
-                        <tr>
-                            <td><b>Result</b></td>
-                            <td>{{ study.result }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-      </div>
-      <div class="filebox" >
+    <div class="filebox">
         <div class="box" style="overflow-y:auto;">
+            <table class="table table-condensed">
+                <tbody>
+                {% for raw_doc in study.files.all() %}
+                    <tr>
+                        <td>
+                            <a href="{{ raw_doc.file.url }}" target="_blank"> {{ raw_doc.sid }}</a>
+                        </td>
+                        <td>
+                            {{ raw_doc.file.size|filesizeformat }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <form id="dropzone" class="dropzone" action="{{ url('upload_file_study', args=[study.id])}}" method="post"
+              enctype="multipart/form-data">
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+        </form>
+    </div>
 
+    <div class="c">
+        <nav id="navbar-2" class="navbar navbar-inverse">
+            <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
+                <ul class="nav navbar-nav">
 
-
-          <table class="table table-condensed">
-              <thead>
-              <tr>
-                  <th>  </th>
-                  <th>  </th>
-              </tr>
-              </thead>
-              <tbody>
-              {%for raw_doc in study.files.all() %}
-                  <tr>
-                  <td>
-                       <a href="{{ raw_doc.file.url }}" target="_blank"> {{ raw_doc.sid}}</a>
-                  </td>
-                  <td>
-                  {{ raw_doc.file.size|filesizeformat }}
-                  </td>
-
-                </tr>
-
-              {%endfor%}
-
-              </tbody>
-
-
-              </table>
+                    <li {% if type == "measurement" %}class="active" {% endif %}><a href="{{ url('study', args= [study.id]) }}">
+                        <i class="fa fa-fw fa-building"></i> Measurements
+                        <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li {% if type == "ligands" %}class="active" {% endif %}><a href="{{ url('study_ligands', args= [study.id]) }}">
+                        <i class="fa fa-fw fa-certificate"></i> Ligands
+                        <span class="sr-only">(current)</span></a>
+                    </li>
+                </ul>
             </div>
-            <form id ="dropzone" class="dropzone" action="{{ url('upload_file_study', args=[study.id])}}" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-            </form>
+        </nav>
+    </div>
 
-
-      </div>
-      <div class="c">
-          <nav id="navbar-2" class="navbar navbar-inverse">
-              <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
-                 <ul class="nav navbar-nav">
-
-                    <li {% if type == "measurement" %}class="active" {% endif %} > <a href="{{ url('study', args= [study.id]) }}"><i class="fa fa-eyedropper"></i> Measurements <span
-                        class="sr-only">(current)</span></a></li>
-                     <li {% if type == "ligands" %}class="active" {% endif %} > <a href="{{ url('study_ligands', args= [study.id]) }}"><i class="fa fa-certificate"></i> Ligands <span
-                        class="sr-only">(current)</span></a></li>
-                 </ul>
-              </div>
-          </nav>
-      </div>
     {% if type == "measurement" %}
         <div class="tables1" style="overflow-x:auto;">
-          {% if collections %}
-              <table id="collections" class="table table-striped table-responsive">
-                  <thead>
-                  <tr>
-                      <th>Sid</th>
-                      <th>Batch</th>
-                      <th>Measurement Type</th>
-                      <th>Functionalization</th>
-                      <th>Manufacturer</th>
-                      <th>Image</th>
-                      <th>Results</th>
-                      <th class="hidden-md">Virus</th>
-                      <th>Gal Mobile</th>
-                      <th>Gal Fixed</th>
-                      <th>Process Users</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  {% for c in collections %}
-                      <tr>
-                          <td class="warning">
-                              <b><a href="{{ url('rawspotcollectionview', args=[c.id]) }}"> {{ c.sid }}</a></b>
-                         </td>
-                          <td>{{ c.batch_sid }}</td>
-                          <td>{% if c.measurement_type == "microwell" %}
-                                  <i class="fa fa-building-o"></i>&nbsp;
-                              {% elif c.measurement_type == "microarray" %}
-                                  <i class="fa fa-building"></i>&nbsp;
-                              {% elif c.measurement_type == "elisa" %}
-                                  <i class="fa fa-building-o"></i>&nbsp;
-                              {% endif %}
-                              {{ c.measurement_type }}</td>
-                          <td>{{ c.functionalization}}</td>
-                          <td>{{ c.manufacturer }}</td>
-                          <td>
-                              {% if c.is_picture_in_rsc %}
-                                  {% with prosteps = c.processstep_set.all() %}
-                                      {% for prostep in prosteps %}
-                                          {% if  prostep.image %}
-                                                   <a alt="{{  prostep.image }}" href="{{  prostep.image.url }}" target="blank">
-                                                      <i class="fa fa-file-image-o"></i>
-                                                   </a>
-                                          {% endif %}
-                                      {% endfor %}
-                                  {% endwith %}
-                              {% else %}
-                                              <i class="fa fa-ban fa-stack text-danger"></i>
-                              {%  endif %}
-                          </td>
-                          <td>{% if c.is_spot_collection() %}
-                                   <i class="fa fa-check-square-o" style="color:green" aria-hidden="true"></i>
-                                  {% for s in c.spotcollection_set.all() %}
-                                   <a href="{{ url('qspotcollectionview', args=[s.id]) }}"
-                                      target="_blank">{{ s.sid }}</a>
-                                   {% endfor %}
-                              {% else %}
-                                  <i class="fa fa-ban text-danger"></i>
-                              {%  endif %}</td>
-                          <td class="hidden-md">
-                              {%  for virus in c.viruses2.all()%}
-                                  {% if virus.strain %}
-                                  {{ virus.strain}}
-                                  {% endif %}
-                                  {% endfor %}
-                          </td>
-                          <td><a href="{{ c.lig_mob.file.url }}" target="_blank">
-                                  {{ c.lig_mob.sid }}</a></td>
-                          <td><a href="{{ c.lig_fix.file.url }}" target="_blank">
-                                  {{ c.lig_fix.sid }}</a></td>
-                          <!-- process -->
-                          <!-- user -->
-                          {% if c.process.users() %}
-                              <td>
-                               {% for user in c.process.users() %}
-                              {{ user.first_name }} {{ user.last_name }}
-                              {% endfor %}
-                              </td>
-                              {% else %}
-                              <td></td>
-                          {% endif %}
-                      </tr>
-                  {% endfor %}
-                  </tbody>
-              </table>
-          {% else %}
-              <p>No entries in database.</p>
-          {% endif %}
+        {% include "flutype/measurements_table.html" %}
         </div>
+
     {% elif type == "ligands" %}
+
         <div class="tables1" style="overflow-x:auto;">
-        {% if collections %}
-          <div class="row">
-            <!-- Fixed Ligands -->
+            {% if collections %}
             <div class="col-lg-6 img-rounded img-thumbnail">
-                {% if peptides1 %}
-                    <h3>Fixed Peptides</h3>
-                    <table id="fixed_peptides" class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>sid Peptide</th>
-                            <th>Linker</th>
-                            <th>Spacer</th>
-                            <th>Sequence</th>
-                            <th>C-Terminus</th>
-                            <th>Name</th>
-                            <th>Comment</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for p in peptides1 %}
-                            <tr>
-                                <td class="warning"><b> {{ p.sid }}</b></td>
-                                <td>{{ p.linker }}</td>
-                                <td>{{ p.spacer }}</td>
-                                <td>{{ p.sequence }}</td>
-                                <td>{{ p.c_terminus }}</td>
-                                <td>{{ p.name }}</td>
-                                <td>{{ p.comment }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
-                {% if viruses1 %}
-                    <h3>Fixed Viruses</h3>
-                    <table id="fixed_viruses" class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>Sid</th>
-                            <th>Tax Id</th>
-                            <th>Subtype</th>
-                            <th>Isolation Country</th>
-                            <th>Collection Date</th>
-                            <th>Strain</th>
-                            <th>Comment</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for virus in viruses1 %}
-                            <tr>
-                                {% if virus.sid == "NO" %}
-                                    <td class="warning"><b>{{ virus.sid }}</b></td>
-                                {% else %}
-                                    <td class="warning">
-                                        <a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ virus.sid }}">
-                                        <b>{{ virus.sid }}</b></a>
-                                    </td>
-                                {% endif %}
-                                <td>{{ virus.tax_id }}</td>
-                                <td>{{ virus.subtype }}</td>
-                                <td>{{ virus.isolation_country }}</td>
-                                <td>{{ virus.collection_date }}</td>
-                                <td>{{ virus.strain }}</td>
-                                <td>{{ virus.comment }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
-                {% if antibodies1 %}
-                    <h3>Fixed Antibodies</h3>
-                    <table id="fixed_antibodies" class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>Sid</th>
-                            <th>Target</th>
-                            <th>Name</th>
-                            <th>Database Link</th>
-                            <th>Comment</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for antibody in antibodies1 %}
-                            <tr>
-                                <td class="warning"><b>{{ antibody.sid }}</b></td>
-                                <td>{{ antibody.target }}</td>
-                                <td>{{ antibody.name }}</td>
-                                <td>{{ antibody.link_db }}</td>
-                                <td>{{ antibody.comment }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
+                <!-- Fixed Antibodies -->
+                {% with antibodies = antibodies1 %}
+                    {% if antibodies %}
+                        <h3><i class="fa fa-fw fa-hand-spock-o"></i> Antibodies (Fixed)</h3>
+                        {% with id_antibodies_table="fixed_antibodies" %}
+                            {% include "flutype/antibodies_table.html" %}
+                        {% endwith %}
+                    {% endif %}
+                {% endwith %}
 
+                <!-- Fixed Peptides -->
+                {% with peptides = peptides1 %}
+                    {% if peptides %}
+                        <h3><i class="fa fa-fw fa-server"></i> Peptides (Fixed)</h3>
+                        {% with id_peptides_table="fixed_peptides" %}
+                            {% include "flutype/peptides_table.html" %}
+                        {% endwith %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Fixed Viruses -->
+                {% with viruses = viruses1 %}
+                    {% if viruses %}
+                        <h3><i class="fa fa-fw fa-asterisk"></i> Viruses (Fixed)</h3>
+                        {% with id_viruses_table="fixed_viruses" %}
+                            {% include "flutype/viruses_table.html" %}
+                        {% endwith %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Fixed Complexes -->
+                <!-- FIXME: missing -->
             </div>
-            <!-- Mobile Ligands -->
+
             <div class="col-lg-6 img-rounded img-thumbnail">
-                {% if peptides2 %}
-                    <h3>Analyt: Peptides</h3>
-                    <table id="mobile_peptides" class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>sid Peptide</th>
-                            <th>Linker</th>
-                            <th>Spacer</th>
-                            <th>Sequence</th>
-                            <th>C-Terminus</th>
-                            <th>Name</th>
-                            <th>Comment</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for p in peptides2 %}
-                            <tr>
-                                <td class="warning"><b> {{ p.sid }}</b></td>
-                                <td>{{ p.linker }}</td>
-                                <td>{{ p.spacer }}</td>
-                                <td>{{ p.sequence }}</td>
-                                <td>{{ p.c_terminus }}</td>
-                                <td>{{ p.name }}</td>
-                                <td>{{ p.comment }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
-                {% if viruses2 %}
-                    <h3>Analyt: Viruses</h3>
-                    <table id="mobile_viruses" class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>Sid</th>
-                            <th>Tax Id</th>
-                            <th>Subtype</th>
-                            <th>Isolation Country</th>
-                            <th>Collection Date</th>
-                            <th>Strain</th>
-                            <th>Comment</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for virus in viruses2.all() %}
-                            <tr>
-                                {% if virus.sid == "NO" %}
-                                    <td class="warning"><b>{{ virus.sid }}</b></td>
-                                {% else %}
-                                    <td class="warning"><a
-                                            href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ virus.sid }}">
-                                        <b>{{ virus.sid }}</b></a>
-                                    </td>
-                                {% endif %}
-                                <td>{{ virus.tax_id }}</td>
-                                <td>{{ virus.subtype }}</td>
-                                <td>{{ virus.isolation_country }}</td>
-                                <td>{{ virus.collection_date }}</td>
-                                <td>{{ virus.strain }}</td>
-                                <td>{{ virus.comment }}</td>
+                <!-- Fixed Antibodies -->
+                {% with antibodies = antibodies2 %}
+                    {% if antibodies %}
+                        <h3><i class="fa fa-fw fa-hand-spock-o"></i> Antibodies (Mobile)</h3>
+                        {% with id_antibodies_table="mobile_antibodies" %}
+                            {% include "flutype/antibodies_table.html" %}
+                        {% endwith %}
+                    {% endif %}
+                {% endwith %}
 
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
+                <!-- Fixed Peptides -->
+                {% with peptides = peptides2 %}
+                    {% if peptides %}
+                        <h3><i class="fa fa-fw fa-server"></i> Peptides (Mobile)</h3>
+                        {% with id_peptides_table="mobile_peptides" %}
+                            {% include "flutype/peptides_table.html" %}
+                        {% endwith %}
+                    {% endif %}
+                {% endwith %}
 
-                {% if antibodies2.all() %}
-                    <h3> Analyt: Antibodies</h3>
-                    <table id="mobile_antibodies" class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>Sid</th>
-                            <th>Target</th>
-                            <th>Name</th>
-                            <th>Database Link</th>
-                            <th>Comment</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for antibody in antibodies2.all() %}
-                            <tr>
-                                <td class="warning"><b>{{ antibody.sid }}</b></td>
-                                <td>{{ antibody.target }}</td>
-                                <td>{{ antibody.name }}</td>
-                                <td>{{ antibody.link_db }}</td>
-                                <td>{{ antibody.comment }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                <!-- Fixed Viruses -->
+                {% with viruses = viruses2 %}
+                    {% if viruses %}
+                        <h3><i class="fa fa-fw fa-asterisk"></i> Viruses (Mobile)</h3>
+                        {% with id_viruses_table="fixed_viruses" %}
+                            {% include "flutype/viruses_table.html" %}
+                        {% endwith %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Fixed Complexes -->
+                <!-- FIXME: missing -->
                 {% endif %}
             </div>
         </div>
-      {% else %}
-          <p>No entries in database.</p>
-      {% endif %}
-  </div>
     {% endif %}
 
-    </div>
 {% endblock %}
 
 {% block javascript %}
+    <script>
+        var form = document.getElementById("dropzone");
+        Dropzone.options.myDropzone = {
+            init: function () {
+                form.submit();
+            }
+        }
+    </script>
 
+
+    <!-- DataTables -->
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
-            $('#study').DataTable({
-                searching: false,
-                paging: false,
-                info: false,
-                "order": []
-            });
-        });
-    </script>
-
-     <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#collections').DataTable({
+            $('#measurements').DataTable({
                 pageLength: 25,
-
             });
         });
     </script>
 
-    <script>
-            var form = document.getElementById("dropzone");
-            Dropzone.options.myDropzone = {
-                 init : function() {
-                    form.submit();
-                 }
-            }
-
-    </script>
-
-       <script type="text/javascript" charset="utf-8">
+    <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
             $('#fixed_peptides').DataTable();
         });

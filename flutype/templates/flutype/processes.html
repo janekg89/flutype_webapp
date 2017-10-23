@@ -1,40 +1,35 @@
 {% extends "flutype/base.html" %}
 {% block content %}
-    <!-- LIST OF Virsuses -->
-    <div class="row">
-        <div class="col-lg-12">
-            <h1>Processes</h1>
-            {% if processes %}
+    <div class="standard">
+        <h1><i class="fa fa-fw fa-magic"></i> Processes</h1>
+        {% if processes %}
 
-                <table id="processes" class="table table-striped">
-                    <thead>
+            <table id="processes" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>sid</th>
+                    <th>applied on collections</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for process in processes %}
                     <tr>
-                        <th>Step IDs</th>
-                        <th>Applied on RawSpot Collections</th>
+                        <td>
+                            <b><a href="{{ url('processview', args=[process.id]) }}">{{ process.sid }}</a></b>
+                        </td>
+                        <td>
+                            {% for rawspotcollection in process.rawspotcollection_set.all() %}
+                                <a href="{{ url('rawspotcollectionview', args=[rawspotcollection.id]) }}">{{ rawspotcollection.sid }}</a><br />
+                            {% endfor %}
+                        </td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    {% for process in processes %}
-                        <tr>
-                            <td><a href="{{ url('processview', args=[process.id]) }}"> {{ process.sid }}  </a></td>
-                            <td>
-                                {% for rawspotcollection in process.rawspotcollection_set.all() %}
-                                    <a href="
-                                    {{ url('rawspotcollectionview', args=[rawspotcollection.id]) }}">{{ rawspotcollection.sid }}</a>
-                                {% endfor %}
-                            </td>
+                {% endfor %}
+                </tbody>
+            </table>
 
-
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-
-            {% else %}
-                <p>No entries in database.</p>
-            {% endif %}
-
-        </div>
+        {% else %}
+            <p>No entries in database.</p>
+        {% endif %}
     </div>
 {% endblock %}
 

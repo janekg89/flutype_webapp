@@ -1,40 +1,40 @@
 {% extends "flutype/base.html" %}
 {% block content %}
+    <div class="standard">
 
-    {% if type == "peptide" %}
-    <h1> Peptide Information</h1>
+    <h1>
+    <!-- ligand and ligand batches -->
+    {% if type == "antibody" %}
+        <i class="fa fa-fw fa-hand-spock-o"></i> Antibody
+    {% elif type == "antibody_batch"  %}
+        <i class="fa fa-fw fa-hand-spock-o"></i> Antibody Batch <i class="fa fa-fw fa-flask"></i>
+
+    {% elif type == "peptide" %}
+        <i class="fa fa-fw fa-server"></i>Peptide
+    {% elif type == "peptide_batch"  %}
+        <i class="fa fa-fw fa-server"></i> Peptide Batch <i class="fa fa-fw fa-flask"></i>
+
+    {% elif type == "virus" %}
+        <i class="fa fa-fw fa-asterisk"></i> Virus
+    {% elif type == "virus_batch"  %}
+        <i class="fa fa-fw fa-asterisk"></i> Virus Batch <i class="fa fa-fw fa-flask"></i>
 
     {% elif type == "complex" %}
-        <h1> Complex Information</h1>
+        Complex
     {% elif type == "complex_batch" %}
-        <h1> Complex  Batch Information</h1>
+        Complex Batch <i class="fa fa-fw fa-flask"></i>
 
-    {%elif type == "virus"  %}
-        <h1> Virus Information</h1>
-
-    {%elif type == "antibody"  %}
-        <h1> Antibody Information</h1>
-
-    {%elif type == "peptide_batch"  %}
-            <h1> Peptide Batch Information</h1>
-
-    {%elif type == "antibody_batch"  %}
-        <h1> Antibody Batch Information</h1>
-
-    {%elif type == "virus_batch"  %}
-            <h1> Virus Batch Information</h1>
-    {%elif type == "step"  %}
+    <!-- Steps and process -->
+    {% elif type == "step"  %}
         {% if class %}
-            <h1> {{ class }} Information</h1>
+            {{ class }}
         {% else %}
-        <h1>Step Information</h1>
+            <i class="fa fa-fw fa-paw"></i> Step
         {% endif %}
-    {%elif type == "process"  %}
-        <h1> Process Information</h1>
+    {% elif type == "process"  %}
+        <i class="fa fa-fw fa-magic"></i> Process
     {% endif %}
-
-
-
+    </h1>
 
     <form class="form-horizontal">
       <form method="post" class="post-form">
@@ -45,7 +45,7 @@
            </table>
                   <span style="float:left;">
 
-              <button class="btn btn-default">Save changes</button>
+              <button class="btn btn-default btn-success">Save changes</button>
                   </span>
       </form>
 
@@ -55,27 +55,30 @@
        <form action={{url('complexes')}}>
     {% elif type == "complex_batch" %}
        <form action={{url('complexbatches')}}>
-    {%elif type == "virus"  %}
+    {% elif type == "virus"  %}
        <form action={{url('viruses')}}>
-    {%elif type == "antibody"  %}
+    {% elif type == "antibody"  %}
        <form action={{url('antibodies')}}>
-    {%elif type == "peptide_batch"  %}
+    {% elif type == "peptide_batch"  %}
        <form action={{url('peptidebatches')}}>
-    {%elif type == "antibody_batch"  %}
+    {% elif type == "antibody_batch"  %}
        <form action={{url('antibodybatches')}}>
-    {%elif type == "virus_batch"  %}
+    {% elif type == "virus_batch"  %}
        <form action={{url('virusbatches')}}>
-    {%elif type == "step"  %}
+    {% elif type == "step"  %}
        <form action={{url('steps')}}>
-    {%elif type == "process"  %}
-        <form action={{url('processes')}}>
+    {% elif type == "process"  %}
+        {{url('processes')}}>
     {% endif %}
 
     <span style="float:left;">
-    <button class="btn btn-default"> No, cancel.</button>
+    <button class="btn btn-default btn-danger"> Cancel</button>
         </span>
     </form>
     </form>
+
+
+</div>
 
 {% endblock %}
 <script type="text/javascript" charset="utf-8">
