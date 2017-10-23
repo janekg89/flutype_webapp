@@ -178,7 +178,7 @@ def measurement_view(request, pk):
 
             'type': 'process',
             'collection': collection,
-            'form':form
+            'form': form
         }
         return render(request,
                       'flutype/measurement.html', context)

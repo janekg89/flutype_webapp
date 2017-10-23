@@ -13,12 +13,12 @@
                 <thead>
                 <tr>
                     <th>sid batch</th>
-                    <th>taxonomy id</th>
+                    <th title="taxonomy id">tax id</th>
                     <th>subgroup</th>
                     <th>country</th>
                     <th>appearance</th>
                     <th>strain</th>
-                    <th>passage history</th>
+                    <th title="passage history">passage</th>
                     <th>active</th>
                     <th>labeling</th>
                     <th>concentration</th>
@@ -39,13 +39,11 @@
                         {% with v=virusbatch.ligand %}
                             {% if v %}
                                 <td class="info">
-                                    <b>
                                     {% if v.sid == "NO" %}
                                         {{ v.tax_id }}
                                     {% else %}
                                         <a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ v.sid }}">{{ v.sid }}</a>
                                     {% endif %}
-                                    </b>
                                 </td>
                                 <td class="info">{{ v.subtype }}</td>
                                 <td class="info">{{ v.isolation_country }}</td>
@@ -53,7 +51,7 @@
                                 <td class="info">{{ v.strain }}</td>
                             {% else %}
                                 {% for k in range(5) %}
-                                    <td class="danger">-</td>
+                                    <td><i class="fa fa-fw fa-ban"></i></td>
                                 {% endfor %}
                             {% endif %}
                         {% endwith %}
