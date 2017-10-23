@@ -59,14 +59,14 @@
             <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
                 <ul class="nav navbar-nav">
 
-                    <li {% if type == "measurement" %}class="active" {% endif %}><a
-                            href="{{ url('study', args= [study.id]) }}"><i class="fa fa-eyedropper"></i> Measurements
-                        <span
-                                class="sr-only">(current)</span></a></li>
-                    <li {% if type == "ligands" %}class="active" {% endif %}><a
-                            href="{{ url('study_ligands', args= [study.id]) }}"><i class="fa fa-certificate"></i>
-                        Ligands <span
-                                class="sr-only">(current)</span></a></li>
+                    <li {% if type == "measurement" %}class="active" {% endif %}><a href="{{ url('study', args= [study.id]) }}">
+                        <i class="fa fa-fw fa-building"></i> Measurements
+                        <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li {% if type == "ligands" %}class="active" {% endif %}><a href="{{ url('study_ligands', args= [study.id]) }}">
+                        <i class="fa fa-fw fa-certificate"></i> Ligands
+                        <span class="sr-only">(current)</span></a>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -78,229 +78,85 @@
         </div>
 
     {% elif type == "ligands" %}
+
         <div class="tables1" style="overflow-x:auto;">
             {% if collections %}
-                <div class="row">
-                    <!-- Fixed Ligands -->
-                    <div class="col-lg-6 img-rounded img-thumbnail">
-                        {% if peptides1 %}
-                            <h3>Fixed Peptides</h3>
-                            <table id="fixed_peptides" class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th>sid Peptide</th>
-                                    <th>Linker</th>
-                                    <th>Spacer</th>
-                                    <th>Sequence</th>
-                                    <th>C-Terminus</th>
-                                    <th>Name</th>
-                                    <th>Comment</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for p in peptides1 %}
-                                    <tr>
-                                        <td class="warning"><b> {{ p.sid }}</b></td>
-                                        <td>{{ p.linker }}</td>
-                                        <td>{{ p.spacer }}</td>
-                                        <td>{{ p.sequence }}</td>
-                                        <td>{{ p.c_terminus }}</td>
-                                        <td>{{ p.name }}</td>
-                                        <td>{{ p.comment }}</td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        {% endif %}
-                        {% if viruses1 %}
-                            <h3>Fixed Viruses</h3>
-                            <table id="fixed_viruses" class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th>Sid</th>
-                                    <th>Tax Id</th>
-                                    <th>Subtype</th>
-                                    <th>Isolation Country</th>
-                                    <th>Collection Date</th>
-                                    <th>Strain</th>
-                                    <th>Comment</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for virus in viruses1 %}
-                                    <tr>
-                                        {% if virus.sid == "NO" %}
-                                            <td class="warning"><b>{{ virus.sid }}</b></td>
-                                        {% else %}
-                                            <td class="warning">
-                                                <a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ virus.sid }}">
-                                                    <b>{{ virus.sid }}</b></a>
-                                            </td>
-                                        {% endif %}
-                                        <td>{{ virus.tax_id }}</td>
-                                        <td>{{ virus.subtype }}</td>
-                                        <td>{{ virus.isolation_country }}</td>
-                                        <td>{{ virus.collection_date }}</td>
-                                        <td>{{ virus.strain }}</td>
-                                        <td>{{ virus.comment }}</td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        {% endif %}
-                        {% if antibodies1 %}
-                            <h3>Fixed Antibodies</h3>
-                            <table id="fixed_antibodies" class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th>Sid</th>
-                                    <th>Target</th>
-                                    <th>Name</th>
-                                    <th>Database Link</th>
-                                    <th>Comment</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for antibody in antibodies1 %}
-                                    <tr>
-                                        <td class="warning"><b>{{ antibody.sid }}</b></td>
-                                        <td>{{ antibody.target }}</td>
-                                        <td>{{ antibody.name }}</td>
-                                        <td>{{ antibody.link_db }}</td>
-                                        <td>{{ antibody.comment }}</td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        {% endif %}
+            <div class="col-lg-6 img-rounded img-thumbnail">
+                <!-- Fixed Antibodies -->
+                {% with antibodies = antibodies1 %}
+                    {% if antibodies %}
+                        <h3><i class="fa fa-fw fa-hand-spock-o"></i> Antibodies (Fixed)</h3>
+                        {% with id_antibodies_table="fixed_antibodies" %}
+                            {% include "flutype/antibodies_table.html" %}
+                        {% endwith %}
+                    {% endif %}
+                {% endwith %}
 
-                    </div>
-                    <!-- Mobile Ligands -->
-                    <div class="col-lg-6 img-rounded img-thumbnail">
-                        {% if peptides2 %}
-                            <h3>Analyt: Peptides</h3>
-                            <table id="mobile_peptides" class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th>sid Peptide</th>
-                                    <th>Linker</th>
-                                    <th>Spacer</th>
-                                    <th>Sequence</th>
-                                    <th>C-Terminus</th>
-                                    <th>Name</th>
-                                    <th>Comment</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for p in peptides2 %}
-                                    <tr>
-                                        <td class="warning"><b> {{ p.sid }}</b></td>
-                                        <td>{{ p.linker }}</td>
-                                        <td>{{ p.spacer }}</td>
-                                        <td>{{ p.sequence }}</td>
-                                        <td>{{ p.c_terminus }}</td>
-                                        <td>{{ p.name }}</td>
-                                        <td>{{ p.comment }}</td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        {% endif %}
-                        {% if viruses2 %}
-                            <h3>Analyt: Viruses</h3>
-                            <table id="mobile_viruses" class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th>Sid</th>
-                                    <th>Tax Id</th>
-                                    <th>Subtype</th>
-                                    <th>Isolation Country</th>
-                                    <th>Collection Date</th>
-                                    <th>Strain</th>
-                                    <th>Comment</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for virus in viruses2.all() %}
-                                    <tr>
-                                        {% if virus.sid == "NO" %}
-                                            <td class="warning"><b>{{ virus.sid }}</b></td>
-                                        {% else %}
-                                            <td class="warning"><a
-                                                    href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ virus.sid }}">
-                                                <b>{{ virus.sid }}</b></a>
-                                            </td>
-                                        {% endif %}
-                                        <td>{{ virus.tax_id }}</td>
-                                        <td>{{ virus.subtype }}</td>
-                                        <td>{{ virus.isolation_country }}</td>
-                                        <td>{{ virus.collection_date }}</td>
-                                        <td>{{ virus.strain }}</td>
-                                        <td>{{ virus.comment }}</td>
+                <!-- Fixed Peptides -->
+                {% with peptides = peptides1 %}
+                    {% if peptides %}
+                        <h3><i class="fa fa-fw fa-server"></i> Peptides (Fixed)</h3>
+                        {% with id_peptides_table="fixed_peptides" %}
+                            {% include "flutype/peptides_table.html" %}
+                        {% endwith %}
+                    {% endif %}
+                {% endwith %}
 
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        {% endif %}
+                <!-- Fixed Viruses -->
+                {% with viruses = viruses1 %}
+                    {% if viruses %}
+                        <h3><i class="fa fa-fw fa-asterisk"></i> Viruses (Fixed)</h3>
+                        {% with id_viruses_table="fixed_viruses" %}
+                            {% include "flutype/viruses_table.html" %}
+                        {% endwith %}
+                    {% endif %}
+                {% endwith %}
 
-                        {% if antibodies2.all() %}
-                            <h3> Analyt: Antibodies</h3>
-                            <table id="mobile_antibodies" class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th>Sid</th>
-                                    <th>Target</th>
-                                    <th>Name</th>
-                                    <th>Database Link</th>
-                                    <th>Comment</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for antibody in antibodies2.all() %}
-                                    <tr>
-                                        <td class="warning"><b>{{ antibody.sid }}</b></td>
-                                        <td>{{ antibody.target }}</td>
-                                        <td>{{ antibody.name }}</td>
-                                        <td>{{ antibody.link_db }}</td>
-                                        <td>{{ antibody.comment }}</td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        {% endif %}
-                    </div>
-                </div>
-            {% else %}
-                <p>No entries in database.</p>
-            {% endif %}
+                <!-- Fixed Complexes -->
+                <!-- FIXME: missing -->
+            </div>
+
+            <div class="col-lg-6 img-rounded img-thumbnail">
+                <!-- Fixed Antibodies -->
+                {% with antibodies = antibodies2 %}
+                    {% if antibodies %}
+                        <h3><i class="fa fa-fw fa-hand-spock-o"></i> Antibodies (Mobile)</h3>
+                        {% with id_antibodies_table="mobile_antibodies" %}
+                            {% include "flutype/antibodies_table.html" %}
+                        {% endwith %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Fixed Peptides -->
+                {% with peptides = peptides2 %}
+                    {% if peptides %}
+                        <h3><i class="fa fa-fw fa-server"></i> Peptides (Mobile)</h3>
+                        {% with id_peptides_table="mobile_peptides" %}
+                            {% include "flutype/peptides_table.html" %}
+                        {% endwith %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Fixed Viruses -->
+                {% with viruses = viruses2 %}
+                    {% if viruses %}
+                        <h3><i class="fa fa-fw fa-asterisk"></i> Viruses (Mobile)</h3>
+                        {% with id_viruses_table="fixed_viruses" %}
+                            {% include "flutype/viruses_table.html" %}
+                        {% endwith %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Fixed Complexes -->
+                <!-- FIXME: missing -->
+                {% endif %}
+            </div>
         </div>
     {% endif %}
 
 {% endblock %}
 
 {% block javascript %}
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#study').DataTable({
-                searching: false,
-                paging: false,
-                info: false,
-                "order": []
-            });
-        });
-    </script>
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#measurements').DataTable({
-                pageLength: 25,
-
-            });
-        });
-    </script>
-
     <script>
         var form = document.getElementById("dropzone");
         Dropzone.options.myDropzone = {
@@ -308,6 +164,16 @@
                 form.submit();
             }
         }
+    </script>
+
+
+    <!-- DataTables -->
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#measurements').DataTable({
+                pageLength: 25,
+            });
+        });
     </script>
 
     <script type="text/javascript" charset="utf-8">
