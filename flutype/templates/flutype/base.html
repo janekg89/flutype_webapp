@@ -59,21 +59,21 @@
                 {% if request.user.is_authenticated %}
                     <li class="dropdown active">
                         <a class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-fw fa-eyedropper" aria-hidden="true"></i> Experiments<b class="caret"></b></a>
+                            <i class="fa fa-fw fa-braille"></i> Experiments<b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li><a href="{{ url('index') }}" title="all studies">Studies</a></li>
-                                <li><a href="{{ url('measurements') }}" title="all measurements"><i class="fa fa-fw fa-building"></i> Measurements</a></li>
+                                <li><a href="{{ url('index') }}" title="All studies"><i class="fa fa-fw fa-braille"></i> Studies</a></li>
+                                <li><a href="{{ url('measurements') }}" title="All measurements"><i class="fa fa-fw fa-building"></i> Measurements</a></li>
                             </ul>
                     </li>
                     <li class="dropdown active">
                         <a  class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-fw fa-certificate"></i> Ligands<b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url('antibodies') }}" title="all antibodies"><i class="fa fa-fw fa-hand-spock-o"></i> Antibodies</a></li>
-                            <li><a href="{{ url('peptides') }}" title="all peptides"><i class="fa fa-fw fa-server"></i> Peptides</a></li>
-                            <li><a href="{{ url('viruses') }}" title="all viruses"><i class="fa fa-fw fa-asterisk"></i> Virus</a></li>
+                            <li><a href="{{ url('antibodies') }}" title="All antibodies"><i class="fa fa-fw fa-hand-spock-o"></i> Antibodies</a></li>
+                            <li><a href="{{ url('peptides') }}" title="All peptides"><i class="fa fa-fw fa-server"></i> Peptides</a></li>
+                            <li><a href="{{ url('viruses') }}" title="All viruses"><i class="fa fa-fw fa-asterisk"></i> Virus</a></li>
                             <li class="divider"></li>
-                            <li><a href="{{ url('complexes') }}"title="all ligands which build a complex of any of the existing ligands">Complex</a></li>
+                            <li><a href="{{ url('complexes') }}"title="All ligands which build a complex of any of the existing ligands">Complex</a></li>
                             <li class="divider"></li>
                             <li class="dropdown-submenu">
                                 <a class="dropdown-toggle" data-toggle="dropdown">
@@ -137,7 +137,7 @@
 
                     <li class="dropdown active">
                         <a data-toggle="dropdown" role="button" aria-expanded="false">
-                            <i class="fa fa-fw fa-magic" aria-hidden="true"></i> Process<span class="caret"></span> </a>
+                            <i class="fa fa-fw fa-magic" aria-hidden="true"></i> Processes<span class="caret"></span> </a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="{{ url('processes')}}" title="unique sequence of process steps">
                                 <i class="fa fa-fw fa-magic"></i> Processes<span class="sr-only">(current)</span></a>

@@ -1,61 +1,67 @@
 {% extends "flutype/base.html" %}
 {% block content %}
-    <!-- LIST OF RAWSPOTCOLLECTION -->
-        <div class="standard">
+    <div class="standard">
+
+        <h1><i class="fa fa-fw fa-braille"></i>
         {% if type == "all" %}
-            <h1>Studies</h1>
+            Studies
         {% elif type == "my" %}
-            <h1>My Studies</h1>
+            My Studies
+        {% endif %}
+        </h1>
+
+        {% if studies %}
+            <table id="studies" class="table table-striped">
+                <caption>Studies</caption>
+                <thead>
+                <tr>
+                    <th>sid</th>
+                    <th>status</th>
+                    <th>users</th>
+                    <th>task</th>
+                    <th>result</th>
+                    <th>measurements</th>
+                    <th>created</th>
+                    <th>modified</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for s in studies %}
+                    <tr>
+                        <td><b><a href="{{ url('study', args=[s.id]) }}"> {{ s.sid }}</a></b></td>
+                        <td>
+                            {% if s.status == "finished" %}
+                                <i class="fa fa-fw fa-check-square-o text-success"></i>
+                            {% elif s.status == "in progress" %}
+                                <i class="fa fa-fw fa-cog"></i>
+                            {% endif %}
+                            {{ s.status }}</td>
+                        <td>
+
+                        {% for user in s.users() %}
+                            <i class="fa fa-fw fa-user"></i>{{ user.first_name }} {{ user.last_name }}<br />
+                        {% endfor %}
+                        </td>
+                        <td>{{ s.task }}</td>
+                        <td>{{ s.result}}</td>
+                        <td>
+                            {% for m in s.rawspotcollection_set.all() %}
+                                <a href="{{ url('rawspotcollectionview', args=[m.id]) }}">{{ m.sid }}</a><br />
+                            {% endfor %}
+                        </td>
+                        <td> {{s.create_date.strftime('%Y-%m-%d') }}</td>
+                        <td> {{s.modified_date.strftime('%Y-%m-%d') }}</td>
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        {% else %}
+            <p>No entries in database.</p>
         {% endif %}
 
-            {% if studies %}
-                <table id="studies" class="table table-striped">
-                    <caption>Studies</caption>
-                    <thead>
-                    <tr>
-                        <th>Sid</th>
-                        <th>Task</th>
-                        <th>Result</th>
-                        <th>Status</th>
-                        <th>Measurements</th>
-                        <th>Created</th>
-                        <th>Modified</th>
-                        <th> User</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for s in studies %}
-                        <tr>
-                            <td class="warning">
-                                <b><a href="{{ url('study', args=[s.id]) }}"> {{ s.sid }}</a></b>
-                            <td>{{ s.task }}</td>
-                            <td>{{ s.result}}</td>
-                            <td>{{ s.status }}</td>
-                            <td>
-                                 {% for m in s.rawspotcollection_set.all() %}
-                                <a href="{{ url('rawspotcollectionview', args=[m.id]) }}">{{ m.sid }}</a>
-                                {% endfor %}
-                            </td>
-                            <td> {{s.create_date.strftime('%Y.%m.%d') }}</td>
-                            <td> {{s.modified_date.strftime('%Y.%m.%d') }}</td>
-                            <!-- user -->
-                            <td>
-                                    {% for user in s.users() %}
-                                            {{ user.first_name }} {{ user.last_name }}
-                                    {% endfor %}
-                            </td>
-
-
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-
-            {% else %}
-                <p>No entries in database.</p>
-            {% endif %}
-
-        </div>
+    </div>
 {% endblock %}
 
 {% block javascript %}
