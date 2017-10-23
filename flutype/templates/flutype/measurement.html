@@ -7,120 +7,129 @@
 {% endblock %}
 {% block content %}
     <!-- Main Content -->
-        <div class="title1">
-            <h1><i class="fa fa-fw fa-building"></i> Measurement: {{ collection.sid }}</h1>
-        </div>
+    <div class="title1">
+        <h1><i class="fa fa-fw fa-building"></i> Measurement: {{ collection.sid }}</h1>
+    </div>
 
-        <!--
+    <!--
         <div class="btn-group inline-group toggle" role="group" >
              <form method="post" style ='float: left; padding: 5px;'>
                  <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                  <input  type= "hidden" name="status" value="planning">
-                 <input id="planning" class="btn btn-default {% if collection.status == "planning" %} active  {% endif %}"  type="submit" value="planning" />
+                 <input id="planning" class="btn btn-default {% if collection.status == "planning" %}
+         active  {% endif %}"  type="submit" value="planning" />
              </form>
 
             <form method="post" style ='float: left; padding: 5px;'>
                  <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                     <input  type= "hidden" name="status" value="in progress">
-                 <input id="progress" class="btn btn-default {% if collection.status == "in progress" %} active {% endif %}"  type="submit" value="in progress" >
+                 <input id="progress" class="btn btn-default {% if collection.status == "in progress" %}
+         active {% endif %}"  type="submit" value="in progress" >
              </form>
 
             <form method="post" style ='float: left; padding: 5px;'>
                  <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                  <input  type= "hidden" name="status" value="finished">
-                 <input id="finished" class="btn btn-default {% if collection.status == "finished" %} active  {% endif %}"  type="submit" value="finished" >
+                 <input id="finished" class="btn btn-default {% if collection.status == "finished" %}
+         active  {% endif %}"  type="submit" value="finished" >
              </form>
         </div>
         -->
 
-        <div class="a">
-            <table id="collection" class="table table-striped">
+    <div class="a">
+     <div class="col-lg-8 img-rounded">
+        <table id="collection" class="table table-striped">
             <tbody>
-                <tr>
-                    <th>Measurement Type</th>
-                    <td>{{ collection.measurement_type }}</td>
-                </tr>
-                <tr>
-                    <th>Batch</th>
-                    <td>{{ collection.batch_sid }}</td>
-                </tr>
-                <tr>
-                    <th>Functionalization</th>
-                    <td>{{ collection.functionalization }}</td>
-                </tr>
-                <tr>
-                    <th> Manufacturer</th>
-                    <td>{{ collection.manufacturer }}</td>
-                </tr>
-                <tr>
-                    <th>Comment</th>
-                    <td>{{ collection.comment }}</td>
-                </tr>
+            <tr>
+                <th>Measurement Type</th>
+                <td>{{ collection.measurement_type }}</td>
+            </tr>
+            <tr>
+                <th>Batch</th>
+                <td>{{ collection.batch_sid }}</td>
+            </tr>
+            <tr>
+                <th>Functionalization</th>
+                <td>{{ collection.functionalization }}</td>
+            </tr>
+            <tr>
+                <th> Manufacturer</th>
+                <td>{{ collection.manufacturer }}</td>
+            </tr>
+            <tr>
+                <th>Comment</th>
+                <td>{{ collection.comment }}</td>
+            </tr>
             </tbody>
+        </table>
+     </div>
+    </div>
+
+    <div class="filebox">
+        <div class="box" style="overflow-y:auto;">
+            <table class="table table-condensed">
+                <tbody>
+                {% for raw_doc in collection.files.all() %}
+                    <tr>
+                        <td><a href="{{ raw_doc.file.url }}" target="_blank"> {{ raw_doc.sid }}</a></td>
+                        <td>{{ raw_doc.file.size|filesizeformat }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
             </table>
+
         </div>
+        <form id="dropzone" class="dropzone" action="{{ url('upload_file_measurement', args=[collection.id])}}"
+              method="post" enctype="multipart/form-data">
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+        </form>
+    </div>
 
-      <div class="filebox">
-          <div class="box" style="overflow-y:auto;">
-          <table class="table table-condensed">
-              <tbody>
-              {% for raw_doc in collection.files.all() %}
-                  <tr>
-                  <td><a href="{{ raw_doc.file.url }}" target="_blank"> {{ raw_doc.sid}}</a></td>
-                  <td>{{ raw_doc.file.size|filesizeformat }}</td>
-                </tr>
-              {% endfor %}
-              </tbody>
-          </table>
+    <div class="c">
+        <!-- internal navbar -->
+        <nav id="navbar-2" class="navbar navbar-inverse">
+            <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
+                <ul class="nav navbar-nav">
 
-          </div>
-            <form id ="dropzone" class="dropzone" action="{{ url('upload_file_measurement', args=[collection.id])}}"
-                  method="post" enctype="multipart/form-data">
-                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-            </form>
-      </div>
-
-      <div class="c">
-          <nav id="navbar-2" class="navbar navbar-inverse">
-              <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
-                 <ul class="nav navbar-nav">
-
-                    <li {% if type == "process" %}class="active" {% endif %} > <a href="{{ url('rawspotcollectionview',
-                    args= [collection.id]) }}"><i class="fa fa-magic" aria-hidden="true"></i> Process <span
-                        class="sr-only">(current)</span></a></li>
-                     <li {% if type == "ligands" %}class="active" {% endif %} > <a href="{{ url('measurement_ligands',
-                     args= [collection.id]) }}"><i class="fa fa-certificate"></i> Ligands <span
-                        class="sr-only">(current)</span></a></li>
-                 </ul>
-
-                {% if collection.spotcollection_set.all() %}
-                 <ul class="nav navbar-nav navbar-right">
-                      <li class="dropdown active">
-                        <a data-toggle="dropdown" role="button" aria-expanded="false"> Results </a>
+                    <li>
+                        <a href="{{ url('rawspotcollectionview',
+                            args= [collection.id]) }}"><i class="fa fa-magic" aria-hidden="true"></i> Process <span
+                            class="sr-only">(current)</span></a>
+                    </li>
+                    <li>
+                        <a href="{{ url('measurement_ligands',
+                            args= [collection.id]) }}"><i class="fa fa-certificate"></i> Ligands <span
+                            class="sr-only">(current)</span></a>
+                    </li>
+                    {% if collection.spotcollection_set.all() %}
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" role="button" aria-expanded="false">
+                            <i class="fa fa-fw fa-bar-chart"></i> Results </a>
                         <ul class="dropdown-menu" role="menu">
                             {% for result in collection.spotcollection_set.all() %}
-                                <li> <a href="{{ url('qspotcollectionview', args=[result.id]) }}">  {{ result.sid }} </a>
+                                <li><a href="
+                                        {{ url('qspotcollectionview', args=[result.id]) }}">  {{ result.sid }} </a>
                                 </li>
                             {% endfor %}
                         </ul>
                     </li>
-                 </ul>
-                {% endif %}
-              </div>
-          </nav>
-      </div>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </div>
 
     <!-- process steps -->
     {% if type == "process" %}
         <div class="tables1" style="overflow-x:auto;">
             <div class="col-lg-12 img-rounded img-thumbnail">
-          {% with process = collection.process %}
-            {% include "flutype/process_table.html" %}
-          {% endwith %}
+                {% with process = collection.process %}
+                    {% include "flutype/process_table.html" %}
+                {% endwith %}
             </div>
         </div>
 
-    <!-- fixed and mobile ligands -->
+        <!-- fixed and mobile ligands -->
     {% elif type == "ligands" %}
         <div class="tables1" style="overflow-x:auto;">
 
@@ -128,30 +137,30 @@
                 <!-- Fixed Antibodies -->
                 {% with antibodies = collection.antibodies1 %}
                     {% if antibodies %}
-                    <h3><i class="fa fa-fw fa-hand-spock-o"></i> Antibodies (Fixed)</h3>
-                    {% with id_antibodies_table="fixed_antibodies" %}
-                        {% include "flutype/antibodies_table.html" %}
-                    {% endwith %}
+                        <h3><i class="fa fa-fw fa-hand-spock-o"></i> Antibodies (Fixed)</h3>
+                        {% with id_antibodies_table="fixed_antibodies" %}
+                            {% include "flutype/antibodies_table.html" %}
+                        {% endwith %}
                     {% endif %}
                 {% endwith %}
 
                 <!-- Fixed Peptides -->
                 {% with peptides = collection.peptides1 %}
                     {% if peptides %}
-                    <h3><i class="fa fa-fw fa-server"></i> Peptides (Fixed)</h3>
-                    {% with id_peptides_table="fixed_peptides" %}
-                        {% include "flutype/peptides_table.html" %}
-                    {% endwith %}
+                        <h3><i class="fa fa-fw fa-server"></i> Peptides (Fixed)</h3>
+                        {% with id_peptides_table="fixed_peptides" %}
+                            {% include "flutype/peptides_table.html" %}
+                        {% endwith %}
                     {% endif %}
                 {% endwith %}
 
                 <!-- Fixed Viruses -->
                 {% with viruses = collection.viruses1 %}
                     {% if viruses %}
-                    <h3><i class="fa fa-fw fa-asterisk"></i> Viruses (Fixed)</h3>
-                    {% with id_viruses_table="fixed_viruses" %}
-                        {% include "flutype/viruses_table.html" %}
-                    {% endwith %}
+                        <h3><i class="fa fa-fw fa-asterisk"></i> Viruses (Fixed)</h3>
+                        {% with id_viruses_table="fixed_viruses" %}
+                            {% include "flutype/viruses_table.html" %}
+                        {% endwith %}
                     {% endif %}
                 {% endwith %}
 
@@ -163,30 +172,30 @@
                 <!-- Fixed Antibodies -->
                 {% with antibodies = collection.antibodies2 %}
                     {% if antibodies %}
-                    <h3><i class="fa fa-fw fa-hand-spock-o"></i> Antibodies (Mobile)</h3>
-                    {% with id_antibodies_table="mobile_antibodies" %}
-                        {% include "flutype/antibodies_table.html" %}
-                    {% endwith %}
+                        <h3><i class="fa fa-fw fa-hand-spock-o"></i> Antibodies (Mobile)</h3>
+                        {% with id_antibodies_table="mobile_antibodies" %}
+                            {% include "flutype/antibodies_table.html" %}
+                        {% endwith %}
                     {% endif %}
                 {% endwith %}
 
                 <!-- Fixed Peptides -->
                 {% with peptides = collection.peptides2 %}
                     {% if peptides %}
-                    <h3><i class="fa fa-fw fa-server"></i> Peptides (Mobile)</h3>
-                    {% with id_peptides_table="mobile_peptides" %}
-                        {% include "flutype/peptides_table.html" %}
-                    {% endwith %}
+                        <h3><i class="fa fa-fw fa-server"></i> Peptides (Mobile)</h3>
+                        {% with id_peptides_table="mobile_peptides" %}
+                            {% include "flutype/peptides_table.html" %}
+                        {% endwith %}
                     {% endif %}
                 {% endwith %}
 
                 <!-- Fixed Viruses -->
                 {% with viruses = collection.viruses2 %}
                     {% if viruses %}
-                    <h3><i class="fa fa-fw fa-asterisk"></i> Viruses (Mobile)</h3>
-                    {% with id_viruses_table="fixed_viruses" %}
-                        {% include "flutype/viruses_table.html" %}
-                    {% endwith %}
+                        <h3><i class="fa fa-fw fa-asterisk"></i> Viruses (Mobile)</h3>
+                        {% with id_viruses_table="fixed_viruses" %}
+                            {% include "flutype/viruses_table.html" %}
+                        {% endwith %}
                     {% endif %}
                 {% endwith %}
 
@@ -199,34 +208,105 @@
     <!-- collections -->
     {% if q_collection %}
         <div class="tables2">
-             <table id="measurement" class="cell-border">
+            <table id="measurement" class="table table-striped">
                 <tbody>
                 <tr>
                     <th>Processing Type</th>
                     <td>{{ q_collection.processing_type }}</td>
                 </tr>
-                 <tr>
-                            <th>Comment</th>
-                            <td>{{ q_collection.comment }}</td>
-                 </tr>
+                <tr>
+                    <th>Comment</th>
+                    <td>{{ q_collection.comment }}</td>
+                </tr>
                 </tbody>
             </table>
         </div>
+
         <div id="container1" class="heat"></div>
         <div class="d " style="overflow-x:auto;">
-           <div>
-            <div class="row" id="myDiv"
-                 style="height: 1000px; min-width: 50px; max-width: 1500px; margin: 0 auto"></div>
+        <div>
+            <div class="row" id="myDiv" style="height: 1000px; min-width: 50px; max-width: 1500px; margin: 0 auto"></div>
             <div class="row" id="top" style="margin:0 auto">
                 <button id="lin" class="btn btn-info"> lin</button>
                 <button id="log" class="btn btn-info"> log</button>
             </div>
+        </div>
         </div>
 
     {% endif %}
 {% endblock %}
 
 {% block javascript %}
+    <!-- DataTables -->
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#process').DataTable({
+                searching: false,
+                paging: false,
+                info: false,
+                "order": []
+            });
+        });
+    </script>
+
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#measurement').DataTable({
+                searching: false,
+                paging: false,
+                info: false,
+                "order": []
+            });
+        });
+    </script>
+
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#collections').DataTable({
+                pageLength: 25,
+
+            });
+        });
+    </script>
+
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#fixed_peptides').DataTable();
+        });
+    </script>
+
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#mobile_peptides').DataTable();
+        });
+    </script>
+
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#fixed_viruses').DataTable();
+        });
+    </script>
+
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#mobile_viruses').DataTable();
+        });
+    </script>
+
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#fixed_antibodies').DataTable();
+        });
+    </script>
+
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#mobile_antibodies').DataTable();
+        });
+    </script>
+
+    <!------------------------------------------------------------------>
+
     <script type="text/javascript" charset="utf-8">
         var endpoint = './data';
 
@@ -305,95 +385,13 @@
     </script>
 
     <script type="text/javascript" charset="utf-8">
-            var form = document.getElementById("dropzone");
-            Dropzone.options.myDropzone = {
-                 init : function() {
-                    form.submit();
-                 }
+        var form = document.getElementById("dropzone");
+        Dropzone.options.myDropzone = {
+            init: function () {
+                form.submit();
             }
+        }
     </script>
-
-    <!-- DataTables -->
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#process').DataTable({
-                searching: false,
-                paging: false,
-                info: false,
-                "order": []
-            });
-        });
-    </script>
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#collection').DataTable({
-                searching: false,
-                paging: false,
-                info: false,
-                "order": []
-            });
-        });
-    </script>
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#measurement').DataTable({
-                searching: false,
-                paging: false,
-                info: false,
-                "order": []
-            });
-        });
-    </script>
-
-     <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#collections').DataTable({
-                pageLength: 25,
-
-            });
-        });
-    </script>
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#fixed_peptides').DataTable();
-        });
-    </script>
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#mobile_peptides').DataTable();
-        });
-    </script>
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#fixed_viruses').DataTable();
-        });
-    </script>
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#mobile_viruses').DataTable();
-        });
-    </script>
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#fixed_antibodies').DataTable();
-        });
-    </script>
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#mobile_antibodies').DataTable();
-        });
-    </script>
-
-    <!------------------------------------------------------------------>
-
 
     <script type="text/javascript" charset="utf-8">
 
@@ -474,9 +472,6 @@
             }]
 
         });
-
     </script>
 
-
 {% endblock %}
-
