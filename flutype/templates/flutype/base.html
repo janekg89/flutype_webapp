@@ -3,10 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Flutype Web Database">
-    <meta name="author" content="Janek and Matthias Koenig">
+    <meta name="description" content="FluTypeDB">
+    <meta name="author" content="Janek Grzegorzewski and Matthias Koenig">
     <link rel="icon" href="{{static('flutype/images/flutype.ico')}}"/>
-    <title>FluType</title>
+    <title>FluTypeDB</title>
 
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/dropzone.css') }}"/>
@@ -15,7 +15,6 @@
 
     <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/basic.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/basic.min.css') }}"/>
-
 
     <link rel="stylesheet" type="text/css" href="{{ static('flutype/css/bootstrap.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ static('flutype/js/datatables.min.css') }}"/>
@@ -32,15 +31,11 @@
     <script type="text/javascript" src="{{ static('flutype/js/dropzone.js')}}"></script>
 
 
-
-
     <script type="text/javascript"
             src="{{ static('winmarkltd-BootstrapFormHelpers-d4201db/dist/js/bootstrap-formhelpers.min.js') }}"></script>
 
-
     <!-- HEAD -->
     {% block head %}{% endblock %}
-
 
 </head>
 <body>
@@ -62,9 +57,10 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                {% if request.user.is_authenticated %}<li class="dropdown active">
+                {% if request.user.is_authenticated %}
+                    <li class="dropdown active">
                         <a class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-eyedropper" aria-hidden="true"></i>Experiments <b class="caret"></b></a>
+                            <i class="fa fa-fw fa-eyedropper" aria-hidden="true"></i> Experiments<b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ url('index') }}">Studies</a></li>
                                 <li><a href="{{ url('measurements') }}">Measurements</a></li>
@@ -74,7 +70,7 @@
 
                     <li class="dropdown active">
                         <a  class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-certificate" aria-hidden="true"></i> Ligands <b class="caret"></b></a>
+                            <i class="fa fa-fw fa-certificate" aria-hidden="true"></i> Ligands<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ url('antibodies') }}">Antibodies</a></li>
                             <li><a href="{{ url('peptides') }}">Peptides</a></li>
@@ -83,8 +79,8 @@
                             <li><a href="{{ url('complexes') }}">Complex</a></li>
                             <li class="divider"></li>
                             <li class="dropdown-submenu">
-                                <a  class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="fa fa-anchor fa-fw"> </i> Fixed</a>
+                                <a class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-fw fa-anchor"> </i> Fixed</a>
                                 <ul class="dropdown-menu">
                                     <li><a href="{{ url('antibodies_fixed') }}">Antibodies</a></li>
                                     <li><a href="{{ url('peptides_fixed') }}">Peptides</a></li>
@@ -95,7 +91,7 @@
                             </li>
                              <li class="dropdown-submenu">
                                 <a class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="fa fa-tint fa-fw"></i> Analyt</a>
+                                    <i class="fa fa-fw fa-tint"></i> Analyte</a>
                                  <ul class="dropdown-menu">
                                     <li><a href="{{ url('antibodies_mobile') }}">Antibodies</a></li>
                                     <li><a href="{{ url('peptides_mobile') }}">Peptides</a></li>
@@ -109,7 +105,7 @@
 
                     <li class="dropdown active">
                     <a class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-flask" aria-hidden="true"></i>Batches <b class="caret"></b></a>
+                        <i class="fa fa-fw fa-flask" aria-hidden="true"></i> Batches<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li><a href="{{ url('antibodybatches') }}">Antibodies</a></li>
                         <li><a href="{{ url('peptidebatches') }}">Peptides</a></li>
@@ -119,7 +115,7 @@
                         <li class="divider"></li>
                         <li class="dropdown-submenu">
                             <a class="dropdown-toggle" data-toggle="dropdown">
-                                 <i class="fa fa-anchor fa-fw"></i>Fixed </a>
+                                 <i class="fa fa-fw fa-anchor"></i> Fixed </a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ url('antibodybatches_fixed') }}">Antibodies</a></li>
                                 <li><a href="{{ url('peptidebatches_fixed') }}">Peptides</a></li>
@@ -130,80 +126,75 @@
                         </li>
                          <li class="dropdown-submenu">
                             <a class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-tint fa-fw"></i> Analyt</a>
+                                <i class="fa fa-fw fa-tint"></i> Analyte</a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ url('antibodybatches_mobile') }}">Antibodies</a></li>
                                 <li><a href="{{ url('peptidebatches_mobile') }}">Peptides</a></li>
                                 <li><a href="{{ url('virusbatches_mobile') }}">Virus</a></li>
                                 <li class="divider"></li>
-                                <li><a href="{{ url('complexbatches_mobile') }}" >Complex</a></li>
+                                <li><a href="{{ url('complexbatches_mobile') }}">Complex</a></li>
                             </ul>
                         </li>
                     </ul>
                 </li>
 
                     <li class="dropdown active">
-                        <a data-toggle="dropdown" role="button" aria-expanded="false"> <i class="fa fa-magic"
-                                                                                          aria-hidden="true"></i>
-                            Process <span class="caret"></span> </a>
+                        <a data-toggle="dropdown" role="button" aria-expanded="false">
+                            <i class="fa fa-fw fa-magic" aria-hidden="true"></i> Process<span class="caret"></span> </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href={{ url('processes') }}> Processes <span class="sr-only">(current)</span></a>
+                            <li><a href={{ url('processes') }}>Processes<span class="sr-only">(current)</span></a>
                             </li>
-                            <li><a href={{ url('steps') }}> Process Steps <span class="sr-only">(current)</span></a>
+                            <li><a href={{ url('steps') }}>Process Steps<span class="sr-only">(current)</span></a>
                             </li>
                         </ul>
                     </li>
 
-                    <li class="active"><a href="{{ url('users') }}"> <i class="fa fa-group fa-fw"></i> Users <span
-                            class="sr-only">(current)</span></a></li>
+                    <li class="active"><a href="{{ url('users') }}">
+                        <i class="fa fa-fw fa-group"></i> Users<span class="sr-only">(current)</span></a>
+                    </li>
 
                     <li class="dropdown active">
-                        <a data-toggle="dropdown" role="button" aria-expanded="false"> <i class="fa fa-question fa-fw">
-
-                        </i> Help <span class="caret"></span> </a>
+                        <a data-toggle="dropdown" role="button" aria-expanded="false">
+                            <i class="fa fa-fw fa-question"></i> Help<span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="{{ url('tutorial') }}" title="Tutorial on how to upload data">Tutorial <span class="sr-only">(current)
-                                 <li> <a href="{{ url("tutorial_db")}}" title="Tutorial dataset in the database">Tutorial Data <span class="sr-only">(current)
+                                 <li> <a href="{{ url("tutorial_db")}}" title="Tutorial dataset in database">Tutorial Data <span class="sr-only">(current)
                              </span></a></li>
                         </ul>
                     </li>
 
-
                 {% endif %}
                 <li class="active"><a href="{{ url('about') }}"><i class="fa fa-info fa-fw"></i> About <span
                         class="sr-only">(current)</span></a></li>
-
-
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
                 {% if request.user.is_authenticated %}
                     <li class="dropdown active">
                         <a data-toggle="dropdown" role="button" aria-expanded="false"><i
-                                class="fa fa-user fa-fw"></i> {{ request.user.get_username() }} <span
+                                class="fa fa-fw fa-user"></i> {{ request.user.get_username() }} <span
                                 class="caret"></span> </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="{{ url('my_studies') }}"> <i class="fa fa-user fa-fw" aria-hidden="true"></i> My
+                            <li><a href="{{ url('my_studies') }}"> <i class="fa fa-fw fa-user" aria-hidden="true"></i> My
                                 Studies </a></li>
-                            <li><a href="{{ url('my_measurements') }}"> <i class="fa fa-user fa-fw" aria-hidden="true"></i> My
+                            <li><a href="{{ url('my_measurements') }}"> <i class="fa fa-fw fa-user" aria-hidden="true"></i> My
                                 Measurements </a></li>
                             <li class="divider"></li>
 
-                            <li><a href="{{ url('change_password') }}"> <i class="fa fa-key"></i> Change Password </a>
+                            <li><a href="{{ url('change_password') }}"> <i class="fa fa-fw fa-key"></i> Change Password </a>
                             </li>
                             <li><a href="{{ url('logout') }}?next={{ request.path }}"> <i
-                                    class="fa fa-sign-out fa-fw"> </i> Logout</a></li>
+                                    class="fa fa-fw fa-sign-out"> </i> Logout</a></li>
                         </ul>
                     </li>
                 {% else %}
                     <li class="active"><a href="{{ url('login') }}?next={{ request.path }}"><i
-                            class="fa fa-sign-in fa-fw"></i> Login</a></li>
+                            class="fa fa-fw fa-sign-in"></i> Login</a></li>
                 {% endif %}
-                <li class="active"><a href="http://cloud.flutype.de/owncloud"><i class="fa fa-cloud fa-fw"></i>
+                <li class="active"><a href="http://cloud.flutype.de/owncloud"><i class="fa fa-fw fa-cloud"></i>
                     Cloud</a>
                 <li class="active"><a href="https://github.com/janekg89/flutype_webapp"><i
-                        class="fa fa-github fa-fw"></i> Github</a>
-
+                        class="fa fa-fw fa-github"></i> Github</a>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
