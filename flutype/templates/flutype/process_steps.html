@@ -60,7 +60,7 @@
                                     <td> {{ sg.__class__.__name__ }}</td>
                                     <td>{{ sg.method }}</td>
                                     <td>{{ sg.temperature }}</td>
-                                    {% if class == "Spotting" or class == "Incubating" or class == "Scanning" %}
+                                    {% if class == "Spotting" or class == "IncubatingAnalyt" or class == "Scanning"%}
                                         <td class="danger"></td>
                                     {% else %}
                                         <td>{{ sg.substance }}</td>
