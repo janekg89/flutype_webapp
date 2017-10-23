@@ -62,7 +62,7 @@
                             <i class="fa fa-fw fa-eyedropper" aria-hidden="true"></i> Experiments<b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ url('index') }}" title="all studies">Studies</a></li>
-                                <li><a href="{{ url('measurements') }}" title="all measurements">Measurements</a></li>
+                                <li><a href="{{ url('measurements') }}" title="all measurements"><i class="fa fa-fw fa-building"></i> Measurements</a></li>
                             </ul>
                     </li>
                     <li class="dropdown active">
@@ -139,9 +139,11 @@
                         <a data-toggle="dropdown" role="button" aria-expanded="false">
                             <i class="fa fa-fw fa-magic" aria-hidden="true"></i> Process<span class="caret"></span> </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="{{ url('processes')}}" title="unique sequence of process steps">Processes<span class="sr-only">(current)</span></a>
+                            <li><a href="{{ url('processes')}}" title="unique sequence of process steps">
+                                <i class="fa fa-fw fa-magic"></i> Processes<span class="sr-only">(current)</span></a>
                             </li>
-                            <li><a href="{{ url('steps') }}" title="all process steps">Process Steps<span class="sr-only">(current)</span></a>
+                            <li><a href="{{ url('steps') }}" title="all process steps">
+                                <i class="fa fa-fw fa-paw"></i> Process Steps<span class="sr-only">(current)</span></a>
                             </li>
                         </ul>
                     </li>
