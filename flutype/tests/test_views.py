@@ -46,7 +46,7 @@ class ViewTestCaseNoDataLogOut(TestCase):
     def test_index_view_302(self):
         response = self.c.post('/flutype/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
     def test_redirect_if_not_logged_in(self):
         response = self.c.get('/flutype/', {})
@@ -55,100 +55,100 @@ class ViewTestCaseNoDataLogOut(TestCase):
     def test_antibody_view_302(self):
         response = self.c.post('/flutype/antibodies_mobile/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
         response = self.c.post('/flutype/antibodies_fixed/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
         response = self.c.post('/flutype/antibodies/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
     def test_antibodybatches_view_302(self):
         response = self.c.post('/flutype/antibodybatches/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
         response = self.c.post('/flutype/antibodybatches_mobile/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
         response = self.c.post('/flutype/antibodybatches_fixed/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
     def test_viruses_view_302(self):
         response = self.c.post('/flutype/viruses/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
         response = self.c.post('/flutype/viruses_mobile/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
         response = self.c.post('/flutype/viruses_fixed/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
     def test_virusbatches_view_302(self):
         response = self.c.post('/flutype/virusbatches/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
         response = self.c.post('/flutype/virusbatches_mobile/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
         response = self.c.post('/flutype/virusbatches_fixed/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
     def test_peptides_view_302(self):
         response = self.c.post('/flutype/peptides/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
         response = self.c.post('/flutype/peptides_mobile/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
         response = self.c.post('/flutype/peptides_fixed/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
     def test_peptidebatches_view_302(self):
         response = self.c.post('/flutype/peptidebatches/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
         response = self.c.post('/flutype/peptidebatches_mobile/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
         response = self.c.post('/flutype/peptidebatches_fixed/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
     def test_processes_view_302(self):
         response = self.c.post('/flutype/processes/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
     def test_users_view_302(self):
         response = self.c.post('/flutype/users/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
     def test_myexperiments_view_302(self):
         response = self.c.post('/flutype/mymeasurements/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
     def test_password_view_302(self):
         response = self.c.post('/flutype/password/', {})
         status = response.status_code
-        self.assertEqual(status, 302, "index view 302")
+        self.assertEqual(status, 302, "view 302")
 
 
 class ViewTestCaseNoDataLogedIn(TestCase):
@@ -167,102 +167,102 @@ class ViewTestCaseNoDataLogedIn(TestCase):
     def test_index_view_200(self):
         response = self.c.post('/flutype/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "<h1>Studies</h1>")
 
     def test_antibody_view_200(self):
         response = self.c.post('/flutype/antibodies_mobile/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
         response = self.c.post('/flutype/antibodies_fixed/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
         response = self.c.post('/flutype/antibodies/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
     def test_antibodybatches_view_200(self):
         response = self.c.post('/flutype/antibodybatches/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
         response = self.c.post('/flutype/antibodybatches_mobile/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
         response = self.c.post('/flutype/antibodybatches_fixed/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
     def test_viruses_view_200(self):
         response = self.c.post('/flutype/viruses/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
         response = self.c.post('/flutype/viruses_mobile/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
         response = self.c.post('/flutype/viruses_fixed/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
     def test_virusbatches_view_200(self):
         response = self.c.post('/flutype/virusbatches/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
         response = self.c.post('/flutype/virusbatches_mobile/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
         response = self.c.post('/flutype/virusbatches_fixed/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
     def test_peptides_view_200(self):
         response = self.c.post('/flutype/peptides/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
         response = self.c.post('/flutype/peptides_mobile/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
         response = self.c.post('/flutype/peptides_fixed/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
     def test_peptidebatches_view_200(self):
         response = self.c.post('/flutype/peptidebatches/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
         response = self.c.post('/flutype/peptidebatches_mobile/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
         response = self.c.post('/flutype/peptidebatches_fixed/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
     def test_processes_view_200(self):
         response = self.c.post('/flutype/processes/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
     def test_users_view_200(self):
         response = self.c.post('/flutype/users/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "mkoenig")
 
     def test_myexperiments_view_200(self):
         response = self.c.post('/flutype/mymeasurements/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
 @tag('local')
 class ViewTestCaseOneCollectionLogedIn(TestCase):
@@ -284,107 +284,107 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
     def test_index_view_200(self):
         response = self.c.post('/flutype/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "<h1>Studies</h1>")
         self.assertContains(response, "tutorial")
 
     def test_antibody_view_200(self):
         response = self.c.post('/flutype/antibodies_mobile/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
         response = self.c.post('/flutype/antibodies_fixed/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "AK_28665")
 
         response = self.c.post('/flutype/antibodies/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "AK_28665")
 
     def test_antibodybatches_view_200(self):
         response = self.c.post('/flutype/antibodybatches/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "AK025")
 
         response = self.c.post('/flutype/antibodybatches_mobile/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
         response = self.c.post('/flutype/antibodybatches_fixed/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "1.0_AK_28667")
 
     def test_viruses_view_200(self):
         response = self.c.post('/flutype/viruses/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "A/Aichi/2/68")
 
         response = self.c.post('/flutype/viruses_mobile/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "A/Aichi/2/68")
 
         response = self.c.post('/flutype/viruses_fixed/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
     def test_virusbatches_view_200(self):
         response = self.c.post('/flutype/virusbatches/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "X31")
 
         response = self.c.post('/flutype/virusbatches_mobile/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "X31")
 
         response = self.c.post('/flutype/virusbatches_fixed/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "No entries in database")
 
     def test_peptides_view_200(self):
         response = self.c.post('/flutype/peptides/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "Dye001")
 
         response = self.c.post('/flutype/peptides_mobile/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "No entries in database")
 
         response = self.c.post('/flutype/peptides_fixed/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "Dye001")
 
     def test_peptidebatches_view_200(self):
         response = self.c.post('/flutype/peptidebatches/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "DYE100")
 
         response = self.c.post('/flutype/peptidebatches_mobile/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "No entries in database")
 
         response = self.c.post('/flutype/peptidebatches_fixed/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "DYE100")
 
     def test_processes_view_200(self):
         response = self.c.post('/flutype/processes/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "2017-05-19_E5")
 
     def test_process_view_200(self):
@@ -392,38 +392,38 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         response = self.c.post('/flutype/process/' + str(id) + "/", {})
         status = response.status_code
 
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "No process steps avialable for NoSteps process.")
 
     def test_process_with_process_steps_view_200(self):
         id = Process.objects.last().id
         response = self.c.post('/flutype/process/' + str(id) + "/", {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "Spotting")
 
     def test_users_view_200(self):
         response = self.c.post('/flutype/users/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "konigmatt@googlemail.com")
 
     def test_myexperiments_view_200(self):
         response = self.c.post('/flutype/mymeasurements/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "No entries in database")
 
     def test_myexperiments_view_200_one_collection(self):
         response = self.c.post('/flutype/mymeasurements/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
 
     def test_rawspotcollection_view_200(self):
         id = RawSpotCollection.objects.first().id
         response = self.c.post('/flutype/rawspotcollection/' + str(id) + '/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, '<a href="/flutype/qspotcollection/1/">')
         self.assertContains(response, "<td>A/Aichi/2/68 </td>")
 
@@ -436,7 +436,7 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         id = SpotCollection.objects.first().id
         response = self.c.post('/flutype/qspotcollection/' + str(id) + '/', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, 'href="/flutype/rawspotcollection/1/"')
         self.assertContains(response, "A001")
         self.assertContains(response, "<td>A/Aichi/2/68 </td>")
@@ -445,5 +445,5 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         id = SpotCollection.objects.first().id
         response = self.c.get('/flutype/qspotcollection/' + str(id) + '/data', {})
         status = response.status_code
-        self.assertEqual(status, 200, "index view 200")
+        self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "Dye001")
