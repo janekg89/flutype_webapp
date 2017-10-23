@@ -1,6 +1,5 @@
 {% extends "flutype/base.html" %}
 {% block content %}
-    <!-- LIST OF RAWSPOTCOLLECTION -->
         <div class="standard">
             <div class="pull-right">
                 <a href="{{ url('complex_batch_new') }}" class="top-menu"><span
@@ -12,37 +11,37 @@
         {% else %}
             <h1>Complex Batches</h1>
         {% endif %}
+
+
+
+
             {% if complex_batches %}
                 <table id="complex_batches" class="table table-striped">
                     <thead>
                     <tr>
-                        <th>Sid Complex Batch</th>
-                        <th>Sid Complex</th>
-                        <th>Ligands</th>
-                        <th>Concentration</th>
-                        <th>Buffer</th>
+                        <th>sid batch</th>
+                        <th>sid complex</th>
+                        <th>ligands</th>
+                        <th>concentration</th>
+                        <th>buffer</th>
                         <th>pH</th>
-                        <th>Purity</th>
-                        <th>Labeling</th>
-                        <th>Produced by</th>
-                        <th>Production Date</th>
-                        <th>Comment</th>
-
+                        <th>purity</th>
+                        <th>labeling</th>
+                        <th>produced by</th>
+                        <th>production date</th>
+                        <th>comment</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for complexbatch in complex_batches.all() %}
                         <tr>
-                            <td class="warning">
-                                <b>{{ complexbatch.sid }}</b>
-                            </td>
+                            <td><b>{{ complexbatch.sid }}</b></td>
                             <!-- complex information -->
                             {% with c=complexbatch.ligand %}
-                                <td class="danger">{{ c.sid }}</td>
-
-                                <td class="danger">
+                                <td class="info">{{ c.sid }}</td>
+                                <td class="info">
                                     {% for l in c.complex_ligands.all() %}
-                                        {{l.sid}}
+                                        {{ l.sid }}
                                     {% endfor %}
                                 </td>
                             {% endwith %}

@@ -1,97 +1,92 @@
 {% extends "flutype/base.html" %}
 {% block content %}
-    <!-- LIST OF RAWSPOTCOLLECTION -->
     <div class="standard">
-            <div class="pull-right">
-                <a href="{{ url('virus_batch_new') }}" class="top-menu">
-                    <span class="fa fa-plus-circle fa-4x text-success"></span></a>
-            </div>
-            {% if type == "fixed" %}
-                <h1>Fixed Virus Batches</h1>
-            {% elif type == "mobile" %}
-                <h1>Mobile Virus Batches</h1>
-            {% else %}
-                <h1>Virus Batches</h1>
-            {% endif %}
-            {% if virus_batches %}
-                <table id="peptide_batches" class="table table-striped">
-                    <thead>
+        <h1><i class="fa fa-fw fa-asterisk"></i> Virus Batches
+        {% if type == "fixed" %}(Fixed){% elif type == "mobile" %}(Mobile){% endif %}
+        <i class="fa fa-fw fa-flask"></i>
+        <button class="btn btn-default" title="Add batch">
+        <a href="{{ url('virus_batch_new') }}" class="top-menu">
+        <span class="fa fa-plus-circle fa-3x text-success"></span></a>
+        </button>
+        </h1>
+
+        {% if virus_batches %}
+            <table id="batches" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>sid batch</th>
+                    <th>taxonomy id</th>
+                    <th>subgroup</th>
+                    <th>country</th>
+                    <th>appearance</th>
+                    <th>strain</th>
+                    <th>passage history</th>
+                    <th>active</th>
+                    <th>labeling</th>
+                    <th>concentration</th>
+                    <th>buffer</th>
+                    <th>pH</th>
+                    <th>purity</th>
+                    <th>produced by</th>
+                    <th>production date</th>
+                    <th>comment</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for virusbatch in virus_batches %}
                     <tr>
-                        <th>sid Virus Batch</th>
-                        <th>Taxonomy ID Virus</th>
-                        <th>Subgroup</th>
-                        <th>Country</th>
-                        <th>Date of Appearance</th>
-                        <th>Strain</th>
-                        <th>Passage History</th>
-                        <th>Active</th>
-                        <th>Labeling</th>
-                        <th>Concentration</th>
-                        <th>Buffer</th>
-                        <th>pH</th>
-                        <th>Purity</th>
-                        <th>Produced by</th>
-                        <th>Production Date</th>
-                        <th>Comment</th>
+                        <td><b>{{ virusbatch.sid }}</b></td>
 
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for virusbatch in virus_batches %}
-                        <tr>
-                            <td class="warning"><b>{{ virusbatch.sid }}</b></td>
-
-                            <!-- virus information -->
-                            {% with v=virusbatch.ligand %}
-                                {% if v %}
+                        <!-- virus information -->
+                        {% with v=virusbatch.ligand %}
+                            {% if v %}
+                                <td class="info">
+                                    <b>
                                     {% if v.sid == "NO" %}
-                                        <td class="danger"><b>{{ v.tax_id }}</b></td>
+                                        {{ v.tax_id }}
                                     {% else %}
-                                        <td class="danger"><a
-                                                href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ v.sid }}">
-                                            <b>{{ v.sid }}</b></a>
-                                        </td>
+                                        <a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ v.sid }}">{{ v.sid }}</a>
                                     {% endif %}
-                                    <td class="danger">{{ v.subtype }}</td>
-                                    <td class="danger">{{ v.isolation_country }}</td>
-                                    <td class="danger">{{ v.collection_date }}</td>
-                                    <td class="danger">{{ v.strain }}</td>
-                                {% else %}
-                                    {% for k in range(5) %}
-                                        <td class="danger">-</td>
-                                    {% endfor %}
-                                {% endif %}
-                            {% endwith %}
+                                    </b>
+                                </td>
+                                <td class="info">{{ v.subtype }}</td>
+                                <td class="info">{{ v.isolation_country }}</td>
+                                <td class="info">{{ v.collection_date }}</td>
+                                <td class="info">{{ v.strain }}</td>
+                            {% else %}
+                                {% for k in range(5) %}
+                                    <td class="danger">-</td>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
 
-                            <!-- virus batch information -->
-                            <td>{{ virusbatch.passage_history }}</td>
-                            <td>{{ virusbatch.active }}</td>
-                            <td>{{ virusbatch.labeling }}</td>
-                            <td>{{ virusbatch.concentration }}</td>
-                            <td>{{ virusbatch.buffer }}</td>
-                            <td>{{ virusbatch.ph }}</td>
-                            <td>{{ virusbatch.purity }}</td>
-                            <td>{{ virusbatch.produced_by }}</td>
-                            <td>{{ virusbatch.production_date }}</td>
-                            <td>{{ virusbatch.comment }}</td>
+                        <!-- batch information -->
+                        <td>{{ virusbatch.passage_history }}</td>
+                        <td>{{ virusbatch.active }}</td>
+                        <td>{{ virusbatch.labeling }}</td>
+                        <td>{{ virusbatch.concentration }}</td>
+                        <td>{{ virusbatch.buffer }}</td>
+                        <td>{{ virusbatch.ph }}</td>
+                        <td>{{ virusbatch.purity }}</td>
+                        <td>{{ virusbatch.produced_by }}</td>
+                        <td>{{ virusbatch.production_date }}</td>
+                        <td>{{ virusbatch.comment }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
 
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+        {% else %}
+            <p>No entries in database.</p>
+        {% endif %}
 
-            {% else %}
-                <p>No entries in database.</p>
-            {% endif %}
-
-        </div>
     </div>
 {% endblock %}
 
 {% block javascript %}
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
-            $('#peptide_batches').DataTable();
+            $('#batches').DataTable();
         });
     </script>
 {% endblock %}
