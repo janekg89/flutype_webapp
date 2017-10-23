@@ -1,39 +1,36 @@
 {% extends "flutype/base.html" %}
 {% block content %}
         <div class="standard">
-            <div class="pull-right">
-                <a href="{{ url('complex_new') }}" class="top-menu"><span
-                        class="fa fa-plus-circle fa-4x text-success"></span></a>
-            </div>
-            {% if type == "fixed" %}
-                <h1>Fixed Complexes</h1>
-            {% elif type == "mobile" %}
-                <h1>Mobile Complexes</h1>
-            {% else %}
-                <h1>Complexes</h1>
 
+            <h1>Complexes
+            {% if type == "fixed" %}
+                (Fixed)
+            {% elif type == "mobile" %}
+                (Mobile)
             {% endif %}
+            <a href="{{ url('complex_new') }}" class="btn btn-default" title="Add new complex">
+            <span class="fa fa-plus-circle fa-3x text-success"></span></a>
+            </h1>
+
             {% if complexes %}
                 <table id="complexes" class="table table-striped">
                     <thead>
                     <tr>
-                        <th>Sid </th>
-                        <th>Ligands</th>
-                        <th>Comment</th>
+                        <th>sid</th>
+                        <th>ligands</th>
+                        <th>comment</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for c in complexes.all() %}
                         <tr>
-                            <td class="warning"><b> {{ c.sid }}</b></td>
+                            <td><b> {{ c.sid }}</b></td>
                             <td>
-                                 {% for l in c.complex_ligands.all() %}
-                                     {{ l.sid }}
-                                 {% endfor %}
+                             {% for l in c.complex_ligands.all() %}
+                                 {{ l.sid }}<br />
+                             {% endfor %}
                             </td>
-
                             <td>{{ c.comment }}</td>
-
                         </tr>
                     {% endfor %}
                     </tbody>
