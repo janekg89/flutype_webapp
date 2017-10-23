@@ -1,6 +1,5 @@
 {% if collections %}
     <table id="measurements" class="table table-striped">
-        <caption>Measurements</caption>
         <thead>
         <tr>
             <th>sid</th>
@@ -35,7 +34,7 @@
                     {% endfor %}
 
                     {% else %}
-                        <i class="fa fa-ban"></i>
+                        <i class="fa fa-fw fa-ban"></i>
                     {%  endif %}
                 </td>
                 <td>{% if c.measurement_type == "microwell" %}
