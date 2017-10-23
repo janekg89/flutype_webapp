@@ -1,16 +1,54 @@
-<img alt="flutype logo" src="./docs/logo/flutype-logo-v3.png" height="75"/>
+<h1><img alt="flutype logo" src="./docs/logo/flutype-logo-v3.png" height="50"/>FluTypeDB</h1>
 
-# flutype webapp
 [![Build Status](https://travis-ci.org/janekg89/flutype_webapp.svg?branch=develop)](https://travis-ci.org/janekg89/flutype_webapp)
 [![License (LGPL version 3)](https://img.shields.io/badge/license-LGPLv3.0-blue.svg?style=flat-square)](http://opensource.org/licenses/LGPL-3.0)
 [![Coverage Status](https://coveralls.io/repos/github/janekg89/flutype_webapp/badge.svg?branch=develop)](https://coveralls.io/github/janekg89/flutype_webapp?branch=develop)
-## Introduction
-This project develops a web application for the data management of binding assays for the classification of influenza subtypes.
- 
-The production version is available at
-[http://www.flutype.de](http://www.flutype.de).
+## Overview
 
-## Setup
+The FluTypeDB project is a web application for the data management of binding assays 
+for the classification of influenza subtypes.
+ 
+FluTypeDB consists of a database and web interface with focus on various binding assays 
+for the classification of influenza viruses and contains experimental data based on
+
+* ELISA antibody binding assays
+* Peptid binding assays on microwell plates
+* Peptid bindings assays on peptide microarrays
+
+FluTypeDB is developed for the data management and data analysis within the FluType project
+by <b>Janek Grzegorzewski</b> (Universität Potsdam) and
+<b><a href="https://livermetabolism.com" target="_blank">Matthias König</a></b> (Humboldt Universität Berlin).
+
+The production version is available at
+[http://www.flutype.de](https://www.flutype.de).
+
+
+### License
+* Source Code: [LGPLv3](http://opensource.org/licenses/LGPL-3.0)
+* Documentation: [CC BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/)
+* Data: Copyright and ownership FluType.
+
+### Funding
+FluTypeDB is funded via the German FluType project.
+
+### Changelog
+*v0.1.2*
+
+- new grid system for layout
+- more intuitive layout
+- tutorial and about pages updated
+- bug fixes
+
+*v0.1.0*
+
+- updated web interface
+- data models updated
+
+
+## Technical Documentation
+In this section technical information for setup and testing with FluTypeDB is provided.
+
+### Setup
 To test the webapp with sqlite3 backend just clone the repository
 and run the django development server
 ```
@@ -20,7 +58,7 @@ mkvirtualenv flutype_webapp
 (flutype_webapp) python manage.py runserver
 ```
 
-## Testing
+### Testing
 Tests are run via
 ```
 (flutype_webapp) python manage.py test
@@ -37,7 +75,7 @@ sudo ln -s /usr/local/share/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/loca
 phantomjs --version
 ```
 
-## Recreating database
+### Recreating database
 ```
 cd flutype_webapp
 python manage.py flush
@@ -45,49 +83,19 @@ python flutype/data_management/fill_users.py
 python flutype/data_management/fill_database.py
 ```
 
-## Coverage
+### Coverage
 
 Coverage of Test are run via
-```angular2html
+```
 coverage run --source='.' manage.py test
-
 ```
 a report is displayed via:
-```angular2html
+```
 coverage report
 ```
 a html report is saved via:
-```angular2html
+```
 coverage html
 ```
-## Container & Deployment
-For testing and deployment gunicorn and docker scripts are available. These are still experimental.
 
-### gunicorn
-To test if gunicorn can serve the WSGI application use
-```
-(flutype_webapp) gunicorn --bind 0.0.0.0:8000 flutype_webapp.wsgi:application
-```
-This will not serve the static files but check if the WSGI django works with gunicorn,
-which is close to the actual deployment setup.
-
-Gunicorn can be installed via
-```
-sudo apt-get install gunicorn
-```
-
-### Docker
-Docker support is currently very experimental.
-Install `docker-ce` and `docker-compose` on the system.
-
-Run the app via
-```
-docker-compose up
-```
-
-```
-cd flutype_webapp
-./docker-entrypoint.sh
-```
-
-&copy; 2017 flutype
+&copy; 2017 FluType
