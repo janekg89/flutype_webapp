@@ -1,13 +1,12 @@
 {% load static from staticfiles %}
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Flutype Web Database">
-    <meta name="author" content="Janek and Matthias Koenig">
+    <meta name="author" content="Janek Grzegorzewski and Matthias Koenig">
     <link rel="icon" href="{% static 'flutype/images/flutype.ico' %}">
     <title>FluType</title>
 
@@ -47,8 +46,7 @@
             <ul class="nav navbar-nav">
                 {% if user.is_authenticated %}
                     <li class="active"><a href="{% url "index" %}"><i class="fa fa-building fa-fw"></i> Experiments
-                        <span
-                                class="sr-only">(current)</span></a></li>
+                        <span class="sr-only">(current)</span></a></li>
                     <li class="active"><a href="{% url "peptidebatches" %}">
                         Peptide Batches <span class="sr-only">(current)</span></a>
                     </li>

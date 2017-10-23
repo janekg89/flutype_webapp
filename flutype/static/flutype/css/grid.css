@@ -8,7 +8,7 @@ body {
         grid-gap: 20px;
         width: 100%;
         grid-template-columns: 5% auto auto 20% 5%;
-        grid-template-rows: 100px auto auto 10px 60px auto auto;
+        grid-template-rows: 10px auto auto 10px 60px auto auto;
         background-color: #fff;
         color: #000000;
         grid-template-areas:
@@ -39,6 +39,11 @@ body {
         grid-area: meta_data;
         justify-self: stretch;
         align-self: end;
+    }
+    .standard {
+        grid-column-start: 2;
+        grid-column-end: 5;
+        grid-row: 2;
     }
 
     .filebox {

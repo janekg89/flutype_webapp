@@ -29,6 +29,7 @@ from django.core.urlresolvers import reverse
 
 from django.db.models import Max
 import json
+from flutype import __version__
 
 @login_required
 def upload_file_study(request,pk):
@@ -78,11 +79,10 @@ def study_view(request,pk):
             'form': form,
             'form_rawdoc': form_rawdoc,
             'type': "measurement",
-
         }
 
-    return render(request,
-                  'flutype/study.html', context)
+    return render(request, 'flutype/study.html', context)
+
 
 @login_required
 def study_ligands_view(request,pk):
@@ -96,11 +96,9 @@ def study_ligands_view(request,pk):
             value = request.POST[key]
             print(value)
 
-
         return redirect(request.META['HTTP_REFERER'])
 
     else:
-
         collections = study.rawspotcollection_set.all()
         viruses1 = Virus.objects.filter(ligands1__studies=study)
         viruses2 = Virus.objects.filter(ligands2__studies=study)
@@ -133,12 +131,9 @@ def study_ligands_view(request,pk):
             'antibodies2': antibodies2,
             'complexes1': complexes1,
             'complexes2': complexes2,
-
-
         }
 
-    return render(request,
-                  'flutype/study.html', context)
+    return render(request, 'flutype/study.html', context)
 
 
 @login_required
@@ -405,12 +400,19 @@ def users_view(request):
 
 
 def about_en_view(request):
-
-    return render(request, "flutype/about.html", {"language": "en"})
-
+    return render(request, "flutype/about.html",
+                  {
+                      "language": "en",
+                      "version": __version__,
+                  })
 
 def about_de_view(request):
-    return render(request, "flutype/about.html", {"language": "de"})
+    return render(request, "flutype/about.html",
+                  {
+                      "language": "de",
+                      "version": __version__,
+                  })
+
 
 @login_required
 def database_scheme_en_view(request):
