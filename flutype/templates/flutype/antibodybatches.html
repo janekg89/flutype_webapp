@@ -41,10 +41,10 @@
                             </td>
                             <!-- peptide information -->
                             {% with a=antibodybatch.ligand %}
+                                <td class="danger"> {{ a.sid }} </td>
                                 <td class="danger">{{ a.target }}</td>
                                 <td class="danger">{{ a.name }}</td>
                                 <td class="danger">{{ a.link_db }}</td>
-                                <td class="danger">{{ a.comment }}</td>
 
                             {% endwith %}
                             <!-- batch information -->
