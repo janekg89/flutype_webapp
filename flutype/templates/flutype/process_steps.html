@@ -26,7 +26,7 @@
                                                                                       aria-hidden="true"></i> Incubating
                         </a></li>
                          <li><a href="{{ url('step_new' , args=["IncubatingAnalyt"]) }}"> <i class="fa fa-tint"
-                                                                                      aria-hidden="true"></i> Incubating Analyt
+                                                                                      aria-hidden="true"></i> Incubating Analyte
                         </a></li>
                         <li><a href="{{ url('step_new' , args=["Scanning"]) }}"> <i class="fa fa-camera"
                                                                                     aria-hidden="true"></i> Scanning</a>
@@ -57,7 +57,13 @@
                             {% with class = sg.__class__.__name__ %}
                                 <tr>
                                     <td class="warning"><b> {{ sg.sid }}</b></td>
-                                    <td> {{ sg.__class__.__name__ }}</td>
+                                {% if class == "IncubatingAnalyt"%}
+                                    <td>
+                                        Incubating Analyte
+                                    </td>
+                                    {% else %}
+                                    <td> {{class}}</td>
+                                {% endif %}
                                     <td>{{ sg.method }}</td>
                                     <td>{{ sg.temperature }}</td>
                                     {% if class == "Spotting" or class == "IncubatingAnalyt" or class == "Scanning"%}
