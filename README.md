@@ -43,9 +43,7 @@ cd flutype_webapp
 python manage.py flush
 python flutype/data_management/fill_users.py
 python flutype/data_management/fill_database.py
-
 ```
-
 
 ## Coverage
 
