@@ -2,7 +2,10 @@
 {% block content %}
     <!-- Main Content -->
     <div class="row">
-        <div class="pull-right">
+
+        <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+            <h1><img style="width:50px" src="{{static('flutype/images/flutype-logo.png')}}"> FluTypeDB
+            <div class="pull-right">
             {% if language == "en" %}
                 <a class="btn btn-default active"> <span class="bfh-languages" data-language="en_US"
                                                          data-flags="true"> </span> </a>
@@ -15,15 +18,39 @@
                 <a class="btn btn-default active"> <span class="bfh-languages" data-language="de_DE"
                                                          data-flags="true"> </span> </a>
             {% endif %}
-        </div>
-        <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+            </div>
+            </h1>
+
             {% if language == "de" %}
-                <h1>FluType</h1>
-                <h2>Entwicklung einer peptidbasierten Subtypisierungsplattform für Influenzaviren</h2>
+                <p>
+                Die FluType Datenbank (FluTypeDB) wird im Rahmen des FluType Projekts für das Datenmanagement und
+                Datenauswertung entwickelt. FlutypeDB ist eine Datenbank mit zugehörigem Webinterface für verschiedene
+                Bindungsassays zur Typisierung von Influenzastämmen und umfasst experimentelle Daten basierend auf
+                <ul>
+                <li>ELISA Antikörper-Bindungsassays</li>
+                <li>Peptid Bindungsassays auf Microwell Platten</li>
+                <li>Peptid Bindungsassays auf Peptidemicroarrays</li>
+                </ul>
+                FluTypeDB wurde von <b>Janek Grzegorzewski</b> (Universität Potsdam) und
+                <b><a href="https://livermetabolism.com" target="_blank">Matthias König</a></b> (Humboldt Universität Berlin)
+                entwickelt.
+                </p>
+                <table class="table table-responsive">
+                <tbody>
+                <tr><td>Version</td><td>{{ version }}</td></tr>
+                <tr>
+                    <td><i class="fa fa-fw fa-github"></i> GitHub</td>
+                    <td><a href="https://github.com/janekg89/flutype_webapp">https://github.com/janekg89/flutype_webapp</a></td>
+                </tr>
+                </tbody>
+                </table>
+
+                <h2>FluType</h2>
+                <h3>Entwicklung einer peptidbasierten Subtypisierungsplattform für Influenzaviren</h3>
                 <p>Das Influenzavirus verursacht jährlich wiederkehrende Grippewellen und in größeren Zeitabständen
                     schwerwiegende Pandemien. Der einzig wirksame kosteneffektive Schutz vor einer Grippeerkrankung ist
                     die Impfung. Da das Virus sich sehr schnell verändert (mutiert) treten immer wieder neue Varianten,
-                    sog. Subtypen auf, gegen die mittels Impfung neu immunisiert werden muss. Für eine korrekte
+                    sogenannte Subtypen auf, gegen die mittels Impfung neu immunisiert werden muss. Für eine korrekte
                     Impfempfehlung müssen die zirkulierenden Influenzastämme zeitnah und exakt erfasst werden.
                 </p>
                 <p>Das dafür notwendige Monitoring der auftretenden Subtypen wird von nationalen Referenzlaboren im
@@ -65,8 +92,32 @@
                     wirtschaftliche Verwertung soll im Anschluss durch Auslizenzierung erfolgen.
                 </p>
             {% elif language == "en" %}
-                <h1>FluType</h1>
-                <h2>Development of an influenza subclassification platform based on peptides</h2>
+                <p>
+                The FluType database (FluTypeDB) is developed for the data management and data analysis
+                    within the FluType project. FluTypeDB is a data base with acompanying web interface for various
+                    binding assays for the classification of influenca viruses and contains experimental data based on
+                <ul>
+                <li>ELISA antibody bind</li>
+                <li>Peptid Bindungsassays auf Microwell Platten</li>
+                <li>Peptid Bindungsassays auf Peptidemicroarrays</li>
+                </ul>
+
+                FluTypeDB wurde von <b>Janek Grzegorzewski</b> (Universität Potsdam) und
+                <b><a href="https://livermetabolism.com" target="_blank">Matthias König</a></b> (Humboldt Universität Berlin)
+                entwickelt.
+                </p>
+                <table class="table table-responsive">
+                <tbody>
+                <tr><td>Version</td><td>{{ version }}</td></tr>
+                <tr>
+                    <td><i class="fa fa-fw fa-github"></i> GitHub</td>
+                    <td><a href="https://github.com/janekg89/flutype_webapp">https://github.com/janekg89/flutype_webapp</a></td>
+                </tr>
+                </tbody>
+                </table>
+
+                <h2>FluType</h2>
+                <h3>Development of an influenza subclassification platform based on peptides</h3>
                 <p>The influenza virus is responsible for annually occurring flu outbreaks seldom even expanding to
                     fatal pandemics.
                     So far effective and cost-efficient preservation from pandemics can be achieved only by vaccination.
