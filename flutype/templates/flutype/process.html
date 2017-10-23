@@ -16,8 +16,6 @@
                     </tr>
                     </thead>
 
-
-
                     <tbody>
 
                     {% for prostep in prosteps %}
@@ -43,7 +41,7 @@
                                     </p> {{ p.__class__.__name__ }}</th>
                                 {% elif p.__class__.__name__ == "IncubatingAnalyt" %}
                                     <th><p> # {{ prostep.index + 1 }} <i class="fa fa-tint" aria-hidden="true"></i>
-                                    </p> {{ p.__class__.__name__ }}</th>
+                                    </p> Incubating Analyte</th>
 
                                 {% elif p.__class__.__name__ == "Blocking" %}
                                     <th><p> # {{ prostep.index + 1 }} <i class="fa fa-pause" aria-hidden="true"></i>
