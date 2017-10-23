@@ -1,8 +1,10 @@
 {% extends "flutype/base.html" %}
 {% block content %}
     <!-- Main Content -->
-    <div class="row">
-        <div class="pull-right">
+    <div class="standard">
+
+            <h1><img style="width:50px" src="{{static('flutype/images/flutype-logo.png')}}"> FluTypeDB
+            <div class="pull-right">
             {% if language == "en" %}
                 <a class="btn btn-default active"> <span class="bfh-languages" data-language="en_US"
                                                          data-flags="true"> </span> </a>
@@ -15,15 +17,54 @@
                 <a class="btn btn-default active"> <span class="bfh-languages" data-language="de_DE"
                                                          data-flags="true"> </span> </a>
             {% endif %}
-        </div>
-        <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+            </div>
+            </h1>
+            <p>
             {% if language == "de" %}
-                <h1>FluType</h1>
-                <h2>Entwicklung einer peptidbasierten Subtypisierungsplattform für Influenzaviren</h2>
+                Die FluType Datenbank (FluTypeDB) wird im Rahmen des FluType Projekts für das Datenmanagement und
+                Datenauswertung entwickelt. FlutypeDB ist eine Datenbank mit zugehörigem Webinterface für verschiedene
+                Bindungsassays zur Typisierung von Influenzastämmen und umfasst experimentelle Daten basierend auf
+                <ul>
+                <li>ELISA Antikörper-Bindungsassays</li>
+                <li>Peptid Bindungsassays auf Microwell Platten</li>
+                <li>Peptid Bindungsassays auf Peptidemicroarrays</li>
+                </ul>
+                FluTypeDB wird von <b>Janek Grzegorzewski</b> (Universität Potsdam) und
+                <b><a href="https://livermetabolism.com" target="_blank">Matthias König</a></b> (Humboldt Universität Berlin)
+                entwickelt.
+            {% elif language == "en" %}
+                The FluTypeDB project is a web application for the data management of binding assays
+                for the classification of influenza subtypes.
+                FluTypeDB consists of a database and web interface with focus on various binding assays
+                for the classification of influenza viruses and contains experimental data based on
+                <ul>
+                    <li>ELISA antibody binding assays</li>
+                    <li>Peptid binding assays on microwell plates</li>
+                    <li>Peptid bindings assays on peptide microarrays</li>
+                </ul>
+                FluTypeDB is developed for the data management and data analysis within the FluType project
+                by <b>Janek Grzegorzewski</b> (Universität Potsdam) and
+                <b><a href="https://livermetabolism.com" target="_blank">Matthias König</a></b> (Humboldt Universität Berlin).
+            {% endif %}
+            </p>
+                <table class="table table-responsive">
+                <tbody>
+                <tr><td>Server</td><td><a href="https://www.flutype.de">https://www.flutype.de</a></td></tr>
+                <tr><td>Version</td><td>{{ version }}</td></tr>
+                <tr>
+                    <td><i class="fa fa-fw fa-github"></i> GitHub</td>
+                    <td><a href="https://github.com/janekg89/flutype_webapp">https://github.com/janekg89/flutype_webapp</a></td>
+                </tr>
+                </tbody>
+                </table>
+
+                <h2>FluType</h2>
+            {% if language == "de" %}
+                <h3>Entwicklung einer peptidbasierten Subtypisierungsplattform für Influenzaviren</h3>
                 <p>Das Influenzavirus verursacht jährlich wiederkehrende Grippewellen und in größeren Zeitabständen
                     schwerwiegende Pandemien. Der einzig wirksame kosteneffektive Schutz vor einer Grippeerkrankung ist
                     die Impfung. Da das Virus sich sehr schnell verändert (mutiert) treten immer wieder neue Varianten,
-                    sog. Subtypen auf, gegen die mittels Impfung neu immunisiert werden muss. Für eine korrekte
+                    sogenannte Subtypen auf, gegen die mittels Impfung neu immunisiert werden muss. Für eine korrekte
                     Impfempfehlung müssen die zirkulierenden Influenzastämme zeitnah und exakt erfasst werden.
                 </p>
                 <p>Das dafür notwendige Monitoring der auftretenden Subtypen wird von nationalen Referenzlaboren im
@@ -34,7 +75,7 @@
                     zirkulierenden Virusstämmen erforderlich sind. Diese Versuche sind außerdem nur schlecht
                     standardisier- und reproduzierbar, was die Aussagekraft der Ergebnisse einschränkt.
                 </p>
-                <img src="{{ static('flutype/images/info_about.jpg') }}" align="left" width="400"/>
+                <img class="img-thumbnail" src="{{ static('flutype/images/info_about.jpg') }}" align="left" width="400"/>
                 <p> An der Universität Potsdam und dem Fraunhofer IZI-BB wurde ein neuartiges Testsystem zur
                     Influenzavirus-Subtypisierung entwickelt, welches nun hinsichtlich seiner Anwendbarkeit
                     validiert werden soll. Wie in der Abbildung dargestellt, erfolgt die Differenzierung der
@@ -43,7 +84,6 @@
                     Durch diese Wechselwirkung entstehen spezifische Bindungsmuster, anhand derer die Viren
                     schließlich unterschieden bzw. subtypisiert werden (ii).
                 </p>
-
                 <p> Mit Hilfe dieses Verfahren kann
                     die Subtypisierung stark vereinfacht und beschleunigt werden, was schließlich zu einer besseren
                     Empfehlungsgrundlage hinsichtlich der Impfstoffzusammensetzung, und damit zu einem effektiveren
@@ -64,47 +104,44 @@
                     eine angepasste Validierung hinsichtlich der Anforderungen der Endanwender sichergestellt. Die
                     wirtschaftliche Verwertung soll im Anschluss durch Auslizenzierung erfolgen.
                 </p>
+
             {% elif language == "en" %}
-                <h1>FluType</h1>
-                <h2>Development of an influenza subclassification platform based on peptides</h2>
-                <p>The influenza virus is responsible for annually occurring flu outbreaks seldom even expanding to
+                <h3>Development of an influenza sub-classification platform based on peptides</h3>
+                <p>The influenza virus is responsible for annually occurring flu outbreaks and on longer time scales
                     fatal pandemics.
-                    So far effective and cost-efficient preservation from pandemics can be achieved only by vaccination.
-                    However, Influenza viruses mutate frequently, leading constantly to the appearance of so-called new
-                    subtypes.
-                    Further vaccination is required against the occurrence of ever more subtypes.
+                    Until now effective and cost-efficient protection from pandemics can be achieved only by vaccination.
+                    However, influenza viruses mutate frequently, leading constantly to the appearance of so-called new
+                    subtypes. New vaccination is required against the occurrence of new subtypes.
                     An accurate vaccination recommendation requires a rapid identification of the currently circulating
                     influenza strains.
                 </p>
                 <p>The WHO with its Global Influenza Surveillance and Response System (GISR) globally monitors the
                     occurring subtypes.
-                    The monitoring is conducted by national reference laboratories. Therefore, annually thousands of
+                    The monitoring is conducted by national reference laboratories. Hereby, annually thousands of
                     patient samples are
                     isolated and analyzed. The current analysis involves complex and time-consuming bioassays on
-                    ferrets. So far, bioassays
-                    are necessary to generate specific hyperimmune serum, which then again is essential for the
-                    subclassification. Further,
-                    bad reproducibility and limited opportunities for standardization limit their value.
+                    ferrets. Until now, such bioassays
+                    are necessary to generate specific hyperimmune serum, which is essential for the subclassification.
+                    In addition, low reproducibility and limited standardization limit the value of the results.
                 </p>
-                <img src="{{ static('flutype/images/info_about.jpg') }}" align="left" width="400"/>
+                <img class="img-thumbnail" src="{{ static('flutype/images/info_about.jpg') }}" align="left" width="400"/>
                 <p> At the University of Potsdam and the Fraunhofer IZI-BB, a proof of concept for a novel method for
-                    influenza
-                    subclassification was conducted. Currently, its applicability has to be shown. As illustrated in a
-                    simplified figure,
-                    the novel approach classifies viruses in the subtypes H7N1 and H5N1 by innovative distinguishing
-                    molecules (peptides) (i).
-                    Theses subtypes specifically interact with the set of peptides leading to unique binding patterns
+                    influenza sub-classification has been developed. Currently, its applicability has to be shown.
+                    As illustrated in the simplified figure,
+                    the novel approach classifies viruses in the subtypes H7N1 and H5N1 based on distinguishing
+                    molecule binding patterns (peptides) (i).
+                    The individual subtypes specifically interact with the set of peptides leading to unique binding patterns
                     (ii). Hence, a distinction
-                    (subclassification) of the virus is possible.
+                    (subclassification) of the virus can be achieved.
                 </p>
 
-                <p> The novel method simplifies and accelerates subclassification, as a result of which a more accurate
+                <p> The novel method simplifies and accelerates sub-classification, as a result of which a more accurate
                     composition of the vaccination
                     can be recommended. Thus, enabling a more effective preservation and moreover saving several
                     thousand ferrets.
-                    The test system aims to be capable of identifying the relevant circulating influenza strains of the
+                    The test system aims to distinguish the relevant circulating influenza strains of the
                     last 10 years
-                    in order to first enable the monitoring by reference laboratories. Further advantages of the
+                    in order to enable the monitoring by reference laboratories. Further advantages of the
                     innovative approach are:
                     i) contemporary influenza monitoring ii) high potential of standardization iii) high
                     reproducibility. Over the medium term,
@@ -116,9 +153,8 @@
                     Koch-Institut, the German
                     reference laboratory for influenza, is additionally participating in the project providing a
                     validation of the requirements of the
-                    end user. Eventually, economic recovery will be achieved by out licensing.
+                    end user. Eventually, economic recovery will be achieved by out-licensing.
                 </p>
             {% endif %}
-        </div>
     </div>
 {% endblock %}

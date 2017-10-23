@@ -9,6 +9,7 @@ from .models import Peptide, PeptideBatch, Virus, VirusBatch, Antibody, Antibody
     IncubatingAnalyt, RawDoc
 from .behaviours import Status
 
+
 class OrderedModelMultipleChoiceField(forms.ModelMultipleChoiceField):
     def clean(self, value):
         qs = super(OrderedModelMultipleChoiceField, self).clean(value)
@@ -18,10 +19,12 @@ class OrderedModelMultipleChoiceField(forms.ModelMultipleChoiceField):
             order_by=('ordering',)
         )
 
+
 class RawDocForm(forms.ModelForm):
     class Meta:
         model = RawDoc
-        fields =  '__all__'
+        fields = '__all__'
+
 
 class StudyForm(forms.ModelForm):
     class Meta:
@@ -33,6 +36,7 @@ class MeasurementForm(forms.ModelForm):
     class Meta:
         model = Measurement
         fields = ['status']
+
 
 class PeptideForm(forms.ModelForm):
     class Meta:
@@ -49,7 +53,7 @@ class ComplexForm(forms.ModelForm):
 class VirusForm(forms.ModelForm):
     class Meta:
         model = Virus
-        fields = ['sid','tax_id', 'subtype', "isolation_country", "collection_date", "strain", "link_db", "comment"]
+        fields = ['sid', 'tax_id', 'subtype', "isolation_country", "collection_date", "strain", "link_db", "comment"]
 
 
 class AntibodyForm(forms.ModelForm):
@@ -58,12 +62,14 @@ class AntibodyForm(forms.ModelForm):
         fields = ['sid', 'target','name', 'link_db', 'comment']
 
 
-
 batch_fields = ['sid', 'ligand','concentration', 'buffer', 'ph', 'purity', 'produced_by','production_date', 'comment']
+
+
 class PeptideBatchForm(forms.ModelForm):
     class Meta:
         model = PeptideBatch
         fields = batch_fields
+
 
 class ComplexBatchForm(forms.ModelForm):
     class Meta:
@@ -88,11 +94,11 @@ class ProcessStepForm(forms.ModelForm):
         model = ProcessStep
         fields = ['step','index']
 
+
 class StepForm(forms.ModelForm):
     class Meta:
         model = Step
         fields =['sid','method','temperature','comment']
-
 
 
 class SpottingForm(forms.ModelForm):
@@ -135,6 +141,9 @@ class IncubatingForm(forms.ModelForm):
         help_texts = {
             'temperature': 'In Celsius.',
         }
+
+
+# FIXME: naming analyt -> analyte
 class IncubatingAnalytForm(forms.ModelForm):
     class Meta:
         model = IncubatingAnalyt
@@ -147,8 +156,6 @@ class IncubatingAnalytForm(forms.ModelForm):
         }
 
 
-
-
 class ScanningForm(forms.ModelForm):
     class Meta:
         model = Scanning
@@ -158,7 +165,7 @@ class ScanningForm(forms.ModelForm):
 class ProcessForm(forms.ModelForm):
     class Meta:
         model = Process
-        fields = ['sid','unique_ordering']
+        fields = ['sid', 'unique_ordering']
 
 
 class ProcessFormUpdate(forms.ModelForm):
@@ -173,21 +180,23 @@ class Steps2Form(forms.Form):
 
 
 
-# Generates a function that sequentially calls the two functions that were
-# passed to it
+# Generates a function that sequentially calls the two functions that were passed to it
 def func_concat(old_func, new_func):
     def function():
         old_func()
         new_func()
     return function
 
+
 # A dummy widget to be replaced with your own.
 class OrderedManyToManyWidget(forms.widgets.TextInput):
     pass
 
+
 # A simple CharField that shows a comma-separated list of contestant IDs.
 class OrderedStepField(forms.CharField):
     widget = OrderedManyToManyWidget()
+
 
 class ProcessAdminForm(forms.models.ModelForm):
     # Any fields declared here can be referred to in the "fieldsets" or

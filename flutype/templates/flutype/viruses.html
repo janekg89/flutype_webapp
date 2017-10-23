@@ -1,68 +1,22 @@
 {% extends "flutype/base.html" %}
 {% block content %}
-    <!-- LIST OF Virsuses -->
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="pull-right">
-                <a href="{{ url('virus_new') }}" class="top-menu"><span
-                        class="fa fa-plus-circle fa-4x text-success"></span></a>
-            </div>
-            {% if type == "fixed" %}
-                <h1>Fixed Viruses</h1>
-            {% elif type == "mobile" %}
-                <h1>Mobile Viruses</h1>
-            {% else %}
-                <h1>Viruses</h1>
-            {% endif %}
-            {% if viruses %}
 
-                <table id="viruses" class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>Sid</th>
-                        <th>Tax Id</th>
-                        <th>Subtype</th>
-                        <th>Isolation Country</th>
-                        <th>Collection Date</th>
-                        <th>Strain</th>
-                        <th>Comment</th>
-                        <th>Edit</th>
+    <div class="standard">
 
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for virus in viruses %}
-                        <tr>
-                            {% if virus.sid == "NO" %}
-                                <td class="warning"><b>{{ virus.sid }}</b></td>
-                            {% else %}
-                                <td class="warning" id="virus">
-                                    <a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ virus.sid }}">
-                                    <b>{{ virus.sid }}</b></a>
-                                </td>
-                            {% endif %}
-                            <td>{{ virus.tax_id }}</td>
-                            <td>{{ virus.subtype }}</td>
-                            <td>{{ virus.isolation_country }}</td>
-                            <td>{{ virus.collection_date }}</td>
-                            <td>{{ virus.strain }}</td>
-                            <td>{{ virus.comment }}</td>
-                            <td><a href="{{ url('virus_edit', args=[virus.id]) }}" class="top-menu"><span
-                                    class="fa fa-pencil" aria-hidden="true"></span> </a>
-                                <a href="{{ url('virus_delete', args=[virus.id]) }}" class="top-menu"><span
-                                        class="fa fa-trash text-danger" aria-hidden="true"></span> </a></td>
+        <h1><i class="fa f-fw fa-asterisk"></i> Viruses
+        {% if type == "fixed" %}
+            (Fixed)
+        {% elif type == "mobile" %}
+            (Mobile)
+        {% endif %}
+        <a href="{{ url('virus_new') }}" class="btn btn-default" title="Add new virus">
+        <span class="fa fa-plus-circle fa-3x text-success"></span></a>
+        </h1>
 
+        {% with id_viruses_table = "viruses" %}
+            {% include "flutype/viruses_table.html" %}
+        {% endwith %}
 
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-
-            {% else %}
-                <p>No entries in database.</p>
-            {% endif %}
-
-        </div>
     </div>
 {% endblock %}
 
