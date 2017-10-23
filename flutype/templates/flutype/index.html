@@ -1,8 +1,7 @@
 {% extends "flutype/base.html" %}
 {% block content %}
     <!-- LIST OF RAWSPOTCOLLECTION -->
-    <div class="row">
-        <div class="col-lg-12">
+        <div class="standard">
         {% if type == "all" %}
             <h1>Studies</h1>
         {% elif type == "my" %}
@@ -57,7 +56,6 @@
             {% endif %}
 
         </div>
-    </div>
 {% endblock %}
 
 {% block javascript %}
