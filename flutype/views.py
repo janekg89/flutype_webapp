@@ -212,7 +212,6 @@ def measurement_result_view(request, pk):
     sc = get_object_or_404(SpotCollection, id=pk)
     collection = sc.raw_spot_collection
 
-
     if request.method == 'POST':
         status = request.POST.get("status")
         collection.status = status
