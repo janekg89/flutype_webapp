@@ -20,7 +20,6 @@
                         <th>Sid </th>
                         <th>Ligands</th>
                         <th>Comment</th>
-                        <th>Edit</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -34,10 +33,7 @@
                             </td>
 
                             <td>{{ c.comment }}</td>
-                            <td><a href="{{ url('complex_edit', args=[c.id]) }}" class="top-menu"><span
-                                    class="fa fa-pencil" aria-hidden="true"></span> </a>
-                                <a href="{{ url('complex_delete', args=[c.id]) }}" class="top-menu"><span
-                                        class="fa fa-trash text-danger" aria-hidden="true"></span> </a></td>
+
                         </tr>
                     {% endfor %}
                     </tbody>
