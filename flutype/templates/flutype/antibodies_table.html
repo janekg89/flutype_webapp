@@ -1,0 +1,26 @@
+{% if antibodies %}
+    <table id="{{ id_antibodies_table }}" class="table table-striped">
+        <thead>
+        <tr>
+            <th>sid</th>
+            <th>target</th>
+            <th>name</th>
+            <th>database link</th>
+            <th>comment</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for antibody in antibodies %}
+            <tr>
+                <td><b>{{ antibody.sid }}</b></td>
+                <td>{{ antibody.target }}</td>
+                <td>{{ antibody.name }}</td>
+                <td>{{ antibody.link_db }}</td>
+                <td>{{ antibody.comment }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No entries in database.</p>
+{% endif %}
