@@ -8,11 +8,11 @@
 {% block content %}
     <!-- Main Content -->
         <div class="title1">
-                <h1> {{ collection.sid }}</h1>
+            <h1><i class="fa fa-fw fa-building"></i> Measurement: {{ collection.sid }}</h1>
         </div>
 
+        <!--
         <div class="btn-group inline-group toggle" role="group" >
-
              <form method="post" style ='float: left; padding: 5px;'>
                  <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                  <input  type= "hidden" name="status" value="planning">
@@ -31,47 +31,37 @@
                  <input id="finished" class="btn btn-default {% if collection.status == "finished" %} active  {% endif %}"  type="submit" value="finished" >
              </form>
         </div>
+        -->
 
         <div class="a">
-          <table id="collection" class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th>Measurement Type </th>
-                            <td>{{ collection.measurement_type }}</td>
-                        </tr>
+            <table id="collection" class="table table-striped">
+            <tbody>
+                <tr>
+                    <th>Measurement Type </th>
+                    <td>{{ collection.measurement_type }}</td>
+                </tr>
+                <tr>
+                    <th> Batch </th>
+                    <td>{{ collection.batch_sid }}</td>
+                </tr>
+                <tr>
+                    <th> Functionalization </th>
+                    <td>{{ collection.functionalization }}</td>
+                </tr>
+                <tr>
+                    <th> Manufacturer </th>
+                    <td>{{ collection.manufacturer }}</td>
+                </tr>
+                <tr>
+                    <th> Comment </th>
+                    <td>{{ collection.comment }}</td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
 
-                        <tr>
-                            <th> Batch </th>
-                            <td>{{ collection.batch_sid }}</td>
-                        </tr>
-
-                        <tr>
-                            <th> Functionalization </th>
-                            <td>{{ collection.functionalization }}</td>
-                        </tr>
-
-                        <tr>
-                            <th> Manufacturer </th>
-                            <td>{{ collection.manufacturer }}</td>
-                        </tr>
-                        <tr>
-                            <th> Comment </th>
-                            <td>{{ collection.comment }}</td>
-                        </tr>
-
-                    </tbody>
-                </table>
-     </div>
-      <div class="filebox" >
-        <div class="box" style="overflow-y:auto;">
-
-
+      <div class="filebox">
+          <div class="box" style="overflow-y:auto;">
           <table class="table table-condensed">
               <thead>
               <tr>
@@ -80,7 +70,7 @@
               </tr>
               </thead>
               <tbody>
-              {%for raw_doc in collection.files.all() %}
+              {% for raw_doc in collection.files.all() %}
                   <tr>
                   <td>
                        <a href="{{ raw_doc.file.url }}" target="_blank"> {{ raw_doc.sid}}</a>
@@ -88,24 +78,18 @@
                   <td>
                   {{ raw_doc.file.size|filesizeformat }}
                   </td>
-
                 </tr>
-
-              {%endfor%}
-
+              {% endfor %}
               </tbody>
+          </table>
 
-
-              </table>
-
-            </div>
+          </div>
             <form id ="dropzone" class="dropzone" action="{{ url('upload_file_measurement', args=[collection.id])}}"
                   method="post" enctype="multipart/form-data">
                 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
             </form>
-
-
       </div>
+
       <div class="c">
           <nav id="navbar-2" class="navbar navbar-inverse">
               <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
@@ -132,103 +116,15 @@
                     </li>
                  </ul>
                 {% endif %}
-
-
-
               </div>
           </nav>
       </div>
+
     {% if type == "process" %}
         <div class="tables1" style="overflow-x:auto;">
-          {% with c = collection%}
-                    {% if c.process.is_step_in_process() %}
-                        <table id="processes" class="cell-border">
-                            {% with prosteps = c.processstep_set.all() %}
 
-                                 <thead>
-                                    <tr>
-                                        <th>Step Type</th>
-                                        <th>Sid</th>
-                                        <th>Method</th>
-                                        <th>Substance</th>
-                                        <th>Duration</th>
-                                        <th>User</th>
-                                        <th>Start</th>
-                                        <th>Comment</th>
-                                        <th>Image</th>
-                                        <th>Intensity</th>
-
-                                    </tr>
-                                 </thead>
-
-                                <tbody>
-
-                                {% for prostep in prosteps %}
-                                    <tr>
-                                        {% with p = prostep.step.get_step_type %}
-                                            <th>
-                                            {% if  p.__class__.__name__ == "Washing" %}
-                                                # {{ prostep.index + 1 }} <i class="fa fa-shower" aria-hidden="true"> </i><br />
-                                                {{ p.__class__.__name__ }}
-                                            {% elif p.__class__.__name__ == "Drying" %}
-                                                # {{ prostep.index + 1 }} <i class="fa fa-bullhorn" aria-hidden="true"></i><br />
-                                                {{ p.__class__.__name__ }}
-                                            {% elif p.__class__.__name__ == "Spotting" %}
-                                                # {{ prostep.index + 1 }} <i class="fa fa-anchor fa-fw" aria-hidden="true"></i><br />
-                                                {{ p.__class__.__name__ }} / Immobilization
-                                            {% elif p.__class__.__name__ == "Quenching" %}
-                                                # {{ prostep.index + 1 }} <i class="fa fa-chain-broken" aria-hidden="true"></i><br />
-                                                {{ p.__class__.__name__ }}
-                                            {% elif p.__class__.__name__ == "Incubating" %}
-                                                # {{ prostep.index + 1 }} <i class="fa fa-tint" aria-hidden="true"></i><br />
-                                                {{ p.__class__.__name__ }}
-                                            {% elif p.__class__.__name__ == "IncubatingAnalyt" %}
-                                                # {{ prostep.index + 1 }} <i class="fa fa-tint" aria-hidden="true"></i><br />
-                                                Incubating Analyte
-                                            {% elif p.__class__.__name__ == "Blocking" %}
-                                                # {{ prostep.index + 1 }} <i class="fa fa-pause" aria-hidden="true"></i><br />
-                                                {{ p.__class__.__name__ }}
-                                            {% elif p.__class__.__name__ == "Scanning" %}
-                                                # {{ prostep.index + 1 }} <i class="fa fa-camera" aria-hidden="true"></i><br />
-                                                {{ p.__class__.__name__ }}
-                                            {% endif %}
-                                            </th>
-
-                                            <td> {{ p.sid }}</td>
-                                            <td> {{ p.method }}</td>
-                                            <td>
-                                                {% if p.substance %}{{ p.substance }} {%else%} - {%endif%}
-                                            </td>
-                                            <td>
-                                               {% if p.duration %} {{ p.duration }} {%else%} - {%endif%}
-                                            </td>
-                                            <td>
-                                                {{ prostep.user }}
-                                            </td>
-                                            <td>
-                                                {{ prostep.start }}
-                                            </td>
-
-                                            <td>
-                                              {{ prostep.comment }}
-                                            </td>
-                                            <td>
-                                                 {% if prostep.image %}  <a href="{{ url('imageviewprocess', args=[prostep.id]) }}" target="_blank" title="{{ prostep.image.name}}">
-                                                    <img src="{{ prostep.image_90.url }}"> </a> {%else%} - {%endif%}
-
-                                            </td>
-                                            <td>
-                                                {% if prostep.intensities %} <a href="{{ prostep.intensities.file.url }}" target="_blank" title="{{ prostep.image.name}}">
-                                                {{prostep.intensities}}</a> {% else%} - {%endif%}
-                                            </td>
-                                        {% endwith %}
-                                    </tr>
-                                {% endfor %}
-                            {% endwith %}
-                        </table>
-                    {% else %}
-                        No process steps available for process.
-                    {% endif %}
+          {% with process = collection.process %}
+            {% include "flutype/process_table.html" %}
           {% endwith %}
         </div>
     {% elif type == "ligands" %}
@@ -541,7 +437,7 @@
 
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
-            $('#processes').DataTable({
+            $('#process').DataTable({
                 searching: false,
                 paging: false,
                 info: false,
@@ -549,6 +445,7 @@
             });
         });
     </script>
+
 
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
