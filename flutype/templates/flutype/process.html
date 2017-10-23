@@ -2,54 +2,45 @@
 {% block content %}
     <!-- one process in detail -->
         <div class="standard">
-        <h2>Process: {{ process.sid }}</h2>
+        <h2><i class="fa fa-fw fa-magic"></i> Process: {{ process.sid }}</h2>
         {% if process.is_step_in_process() %}
-            <table id="process" class="cell-border">
+            <table id="process" class="table table-striped">
                 {% with prosteps = process.processstep_set.filter(raw_spot_collection=process.rawspotcollection_set.first())%}
                     <thead>
                     <tr>
-                        <th>Step Type</th>
-                        <th>Sid</th>
-                        <th>Method</th>
-                        <th>Substance</th>
-                        <th>Duration</th>
+                        <th>step</th>
+                        <th>type</th>
+                        <th>sid</th>
+                        <th>method</th>
+                        <th>substance</th>
+                        <th>duration</th>
                     </tr>
                     </thead>
 
                     <tbody>
-
                     {% for prostep in prosteps %}
                         <tr>
+                            <td><b><i class="fa fa-fw fa-paw"></i> {{ prostep.index + 1 }}</b></td>
                             {% with p = prostep.step.get_step_type %}
+                                <td>
                                 {% if  p.__class__.__name__ == "Washing" %}
-                                    <th><p> # {{ prostep.index + 1 }} <i class="fa fa-shower" aria-hidden="true"> </i>
-                                    </p> {{ p.__class__.__name__ }}</th>
+                                    <i class="fa fa-fw fa-shower"></i> {{ p.__class__.__name__ }}
                                 {% elif p.__class__.__name__ == "Drying" %}
-                                    <th><p> # {{ prostep.index + 1 }} <i class="fa fa-bullhorn" aria-hidden="true"></i>
-                                    </p>{{ p.__class__.__name__ }}</th>
+                                    <i class="fa fa-fw fa-bullhorn"></i> {{ p.__class__.__name__ }}
                                 {% elif p.__class__.__name__ == "Spotting" %}
-                                    <th><p> # {{ prostep.index + 1 }} <i class="fa fa-anchor fa-fw"
-                                                                         aria-hidden="true"></i>
-                                    </p>{{ p.__class__.__name__ }} / Immobilization
-                                    </th>
+                                    <i class="fa fa-fw fa-anchor"></i> {{ p.__class__.__name__ }} / Immobilization
                                 {% elif p.__class__.__name__ == "Quenching" %}
-                                    <th><p> # {{ prostep.index + 1 }} <i class="fa fa-chain-broken"
-                                                                         aria-hidden="true"></i>
-                                    </p> {{ p.__class__.__name__ }}</th>
+                                    <i class="fa fa-fw fa-chain-broken"></i> {{ p.__class__.__name__ }}
                                 {% elif p.__class__.__name__ == "Incubating" %}
-                                    <th><p> # {{ prostep.index + 1 }} <i class="fa fa-tint" aria-hidden="true"></i>
-                                    </p> {{ p.__class__.__name__ }}</th>
+                                    <i class="fa fa-fw fa-tint"></i> {{ p.__class__.__name__ }}
                                 {% elif p.__class__.__name__ == "IncubatingAnalyt" %}
-                                    <th><p> # {{ prostep.index + 1 }} <i class="fa fa-tint" aria-hidden="true"></i>
-                                    </p> Incubating Analyte</th>
-
+                                    <i class="fa fa-fw fa-tint" aria-hidden="true"></i>Incubating Analyte
                                 {% elif p.__class__.__name__ == "Blocking" %}
-                                    <th><p> # {{ prostep.index + 1 }} <i class="fa fa-pause" aria-hidden="true"></i>
-                                    </p> {{ p.__class__.__name__ }}</th>
+                                    <i class="fa fa-fw fa-pause" aria-hidden="true"></i> {{ p.__class__.__name__ }}
                                 {% elif p.__class__.__name__ == "Scanning" %}
-                                    <th><p> # {{ prostep.index + 1 }} <i class="fa fa-camera" aria-hidden="true"></i>
-                                    </p> {{ p.__class__.__name__ }}</th>
+                                    <i class="fa fa-fw fa-camera" aria-hidden="true"></i> {{ p.__class__.__name__ }}
                                 {% endif %}
+                                </td>
 
                                 <td> {{ p.sid }}</td>
                                 <td> {{ p.method }}</td>
@@ -59,15 +50,14 @@
                                     <td></td>
                                 {% endif %}
 
-                                {% if  p.duration %}
-                                        <td> {{ p.duration }}</td>
-                                    {% else %}
-                                        <td></td>
-                                    {% endif %}
+                                <td>
+                                {% if p.duration %}
+                                    {{ p.duration }}
+                                {% endif %}
+                                </td>
                             {% endwith %}
                         </tr>
                     {% endfor %}
-
                     </tbody>
                 {% endwith %}
             </table>
