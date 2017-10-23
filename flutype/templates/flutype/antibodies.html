@@ -11,32 +11,9 @@
         <span class="fa fa-plus-circle fa-3x text-success"></span></a>
         </h1>
 
-        {% if antibodies %}
-            <table id="antibodies" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>sid</th>
-                    <th>target</th>
-                    <th>name</th>
-                    <th>database link</th>
-                    <th>comment</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for antibody in antibodies %}
-                    <tr>
-                        <td><b>{{ antibody.sid }}</b></td>
-                        <td>{{ antibody.target }}</td>
-                        <td>{{ antibody.name }}</td>
-                        <td>{{ antibody.link_db }}</td>
-                        <td>{{ antibody.comment }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>No entries in database.</p>
-        {% endif %}
+        {% with id_antibodies_table = "antibodies" %}
+            {% include "flutype/antibodies_table.html" %}
+        {% endwith %}
     </div>
 {% endblock %}
 
