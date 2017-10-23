@@ -61,8 +61,8 @@
                         <a class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-fw fa-eyedropper" aria-hidden="true"></i> Experiments<b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li><a href="{{ url('index') }}">Studies</a></li>
-                                <li><a href="{{ url('measurements') }}">Measurements</a></li>
+                                <li><a href="{{ url('index') }}" title="all studies">Studies</a></li>
+                                <li><a href="{{ url('measurements') }}" title="all measurements">Measurements</a></li>
 
                             </ul>
                     </li>
@@ -71,32 +71,32 @@
                         <a  class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-fw fa-certificate" aria-hidden="true"></i> Ligands<b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url('antibodies') }}">Antibodies</a></li>
-                            <li><a href="{{ url('peptides') }}">Peptides</a></li>
-                            <li><a href="{{ url('viruses') }}">Virus</a></li>
+                            <li><a href="{{ url('antibodies') }}" title="all antibodies">Antibodies</a></li>
+                            <li><a href="{{ url('peptides') }}" title=" all peptides">Peptides</a></li>
+                            <li><a href="{{ url('viruses') }}"title=" all viruses">Virus</a></li>
                             <li class="divider"></li>
-                            <li><a href="{{ url('complexes') }}">Complex</a></li>
+                            <li><a href="{{ url('complexes') }}"title="all ligands which build a complex of any of the existing ligands">Complex</a></li>
                             <li class="divider"></li>
                             <li class="dropdown-submenu">
                                 <a class="dropdown-toggle" data-toggle="dropdown">
                                     <i class="fa fa-fw fa-anchor"> </i> Fixed</a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="{{ url('antibodies_fixed') }}">Antibodies</a></li>
-                                    <li><a href="{{ url('peptides_fixed') }}">Peptides</a></li>
-                                    <li><a href="{{ url('viruses_fixed') }}">Virus</a></li>
+                                    <li><a href="{{ url('antibodies_fixed') }}" title="all antibodies which have been used during spotting or imobilization">Antibodies</a></li>
+                                    <li><a href="{{ url('peptides_fixed') }}" title="all peptides which have been used during spotting or imobilization">Peptides</a></li>
+                                    <li><a href="{{ url('viruses_fixed') }}" title="all viruses which have been used during spotting or imobilization">Virus</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="{{ url('complexes_fixed') }}">Complex</a></li>
+                                    <li><a href="{{ url('complexes_fixed') }}" title="all complexes which have been used during spotting or imobilization">Complex</a></li>
                                 </ul>
                             </li>
                              <li class="dropdown-submenu">
                                 <a class="dropdown-toggle" data-toggle="dropdown">
                                     <i class="fa fa-fw fa-tint"></i> Analyte</a>
                                  <ul class="dropdown-menu">
-                                    <li><a href="{{ url('antibodies_mobile') }}">Antibodies</a></li>
-                                    <li><a href="{{ url('peptides_mobile') }}">Peptides</a></li>
-                                    <li><a href="{{ url('viruses_mobile') }}">Virus</a></li>
+                                    <li><a href="{{ url('antibodies_mobile') }}" title="all antibodies which have been used during analyte incubation">Antibodies</a></li>
+                                    <li><a href="{{ url('peptides_mobile') }}" title="all peptides which have been used during analyte incubation" >Peptides</a></li>
+                                    <li><a href="{{ url('viruses_mobile') }}" title="all viruses which have been used during analyte incubation">Virus</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="{{ url('complexes_mobile') }}">Complex</a></li>
+                                    <li><a href="{{ url('complexes_mobile') }}" title="all complexes which have been used during analyte incubation">Complex</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -106,32 +106,32 @@
                     <a class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-fw fa-flask" aria-hidden="true"></i> Batches<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{ url('antibodybatches') }}">Antibodies</a></li>
-                        <li><a href="{{ url('peptidebatches') }}">Peptides</a></li>
-                        <li><a href="{{ url('virusbatches') }}">Virus</a></li>
+                        <li><a href="{{ url('antibodybatches') }}" title="all antibody batches">Antibodies</a></li>
+                        <li><a href="{{ url('peptidebatches') }}" title="all peptide batches">Peptides</a></li>
+                        <li><a href="{{ url('virusbatches') }}" title="all virus batches">Virus</a></li>
                         <li class="divider"></li>
-                        <li><a href="{{ url('complexbatches') }}">Complex</a></li>
+                        <li><a href="{{ url('complexbatches') }}" title="all complex batches">Complex</a></li>
                         <li class="divider"></li>
                         <li class="dropdown-submenu">
                             <a class="dropdown-toggle" data-toggle="dropdown">
                                  <i class="fa fa-fw fa-anchor"></i> Fixed </a>
                             <ul class="dropdown-menu">
-                                <li><a href="{{ url('antibodybatches_fixed') }}">Antibodies</a></li>
-                                <li><a href="{{ url('peptidebatches_fixed') }}">Peptides</a></li>
-                                <li><a href="{{ url('virusbatches_fixed') }}">Virus</a></li>
+                                <li><a href="{{ url('antibodybatches_fixed') }}" title="all antibody batches which have been used during spotting or imobilization">Antibodies</a></li>
+                                <li><a href="{{ url('peptidebatches_fixed') }}" title="all peptide batches which have been used during spotting or imobilization">Peptides</a></li>
+                                <li><a href="{{ url('virusbatches_fixed') }}" title="all virus batches which have been used during spotting or imobilization">Virus</a></li>
                                 <li class="divider"></li>
-                                <li><a href="{{ url('complexbatches_fixed') }}" >Complex</a></li>
+                                <li><a href="{{ url('complexbatches_fixed') }}" title="all complex batches which have been used during spotting or imobilization">Complex</a></li>
                             </ul>
                         </li>
                          <li class="dropdown-submenu">
                             <a class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-fw fa-tint"></i> Analyte</a>
                             <ul class="dropdown-menu">
-                                <li><a href="{{ url('antibodybatches_mobile') }}">Antibodies</a></li>
-                                <li><a href="{{ url('peptidebatches_mobile') }}">Peptides</a></li>
-                                <li><a href="{{ url('virusbatches_mobile') }}">Virus</a></li>
+                                <li><a href="{{ url('antibodybatches_mobile') }}" title="all antibody batches which have been used during analyte incubation">Antibodies</a></li>
+                                <li><a href="{{ url('peptidebatches_mobile') }}" title="all peptide batches which have been used during analyte incubation">Peptides</a></li>
+                                <li><a href="{{ url('virusbatches_mobile') }}" title="all virus batches which have been used during analyte incubation"> Virus </a></li>
                                 <li class="divider"></li>
-                                <li><a href="{{ url('complexbatches_mobile') }}">Complex</a></li>
+                                <li><a href="{{ url('complexbatches_mobile') }}" title="all complex batches which have been used during analyte incubation"> Complex </a></li>
                             </ul>
                         </li>
                     </ul>
@@ -141,14 +141,14 @@
                         <a data-toggle="dropdown" role="button" aria-expanded="false">
                             <i class="fa fa-fw fa-magic" aria-hidden="true"></i> Process<span class="caret"></span> </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href={{ url('processes') }}>Processes<span class="sr-only">(current)</span></a>
+                            <li><a href="{{ url('processes')}}" title="unique sequence of process steps">Processes<span class="sr-only">(current)</span></a>
                             </li>
-                            <li><a href={{ url('steps') }}>Process Steps<span class="sr-only">(current)</span></a>
+                            <li><a href="{{ url('steps') }}" title="all process steps">Process Steps<span class="sr-only">(current)</span></a>
                             </li>
                         </ul>
                     </li>
 
-                    <li class="active"><a href="{{ url('users') }}">
+                    <li class="active"><a href="{{ url('users') }}"title="all allowed users in the database">
                         <i class="fa fa-fw fa-group"></i> Users<span class="sr-only">(current)</span></a>
                     </li>
 
@@ -163,7 +163,7 @@
                     </li>
 
                 {% endif %}
-                <li class="active"><a href="{{ url('about') }}"><i class="fa fa-info fa-fw"></i> About <span
+                <li class="active"><a href="{{ url('about') }}" title="A description of this project"><i class="fa fa-info fa-fw"></i> About <span
                         class="sr-only">(current)</span></a></li>
             </ul>
 
@@ -174,25 +174,25 @@
                                 class="fa fa-fw fa-user"></i> {{ request.user.get_username() }} <span
                                 class="caret"></span> </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="{{ url('my_studies') }}"> <i class="fa fa-fw fa-user" aria-hidden="true"></i> My
+                            <li><a href="{{ url('my_studies') }}" title="studies which contain a measurement in which you participated."> <i class="fa fa-fw fa-user" aria-hidden="true"></i> My
                                 Studies </a></li>
-                            <li><a href="{{ url('my_measurements') }}"> <i class="fa fa-fw fa-user" aria-hidden="true"></i> My
+                            <li><a href="{{ url('my_measurements') }}" title="measurement which were performed by you. Thus, you are named as the user during any of the process steps. " > <i class="fa fa-fw fa-user" aria-hidden="true"></i> My
                                 Measurements </a></li>
                             <li class="divider"></li>
 
-                            <li><a href="{{ url('change_password') }}"> <i class="fa fa-fw fa-key"></i> Change Password </a>
+                            <li><a href="{{ url('change_password') }}" title="change your password"> <i class="fa fa-fw fa-key"></i> Change Password </a>
                             </li>
-                            <li><a href="{{ url('logout') }}?next={{ request.path }}"> <i
+                            <li><a href="{{ url('logout') }}?next={{ request.path }}" title="log out from this web side"> <i
                                     class="fa fa-fw fa-sign-out"> </i> Logout</a></li>
                         </ul>
                     </li>
                 {% else %}
-                    <li class="active"><a href="{{ url('login') }}?next={{ request.path }}"><i
+                    <li class="active"><a href="{{ url('login') }}?next={{ request.path }}" title="login to get access to the database"><i
                             class="fa fa-fw fa-sign-in"></i> Login</a></li>
                 {% endif %}
-                <li class="active"><a href="http://cloud.flutype.de/owncloud"><i class="fa fa-fw fa-cloud"></i>
+                <li class="active"><a href="http://cloud.flutype.de/owncloud" title="a cloud with the underlying data for this database"><i class="fa fa-fw fa-cloud"></i>
                     Cloud</a>
-                <li class="active"><a href="https://github.com/janekg89/flutype_webapp"><i
+                <li class="active"><a href="https://github.com/janekg89/flutype_webapp"title="the code for the web application on Github">><i
                         class="fa fa-fw fa-github"></i> Github</a>
             </ul>
         </div><!-- /.navbar-collapse -->
