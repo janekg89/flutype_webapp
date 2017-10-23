@@ -2,8 +2,7 @@
 
 {% block content %}
     <!-- Main Content -->
-    <div class="row" align="left">
-        <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+        <div class="standard">
 
             <!--------------------------------------------------------------------------------------------------------->
             <h1>Glossary</h1>
@@ -76,9 +75,12 @@
             <!--------------------------------------------------------------------------------------------------------->
 
             <h1>Tutorial: How to upload data</h1>
-            <p>
+             <p>
                 Uploading data into the database consists of two main parts, filling in generic data reused in
                 multiple experiments, and experiment or measurement specific data:
+            </p>
+
+
             <ul>
                 <li>The first part is the <b>creation of generic data</b> which is used in multiple
                     <code>measurements</code>
@@ -104,8 +106,6 @@
                     (see generic information above).
                 </li>
             </ul>
-            </p>
-
             <p>
                 The largest unit in the database is a so called <code>study</code> which
                 refers to a collection of <code>measurements</code>. This tutorial leads through the workflow of
@@ -128,13 +128,14 @@
 
             <p>
                 In the following a step by step tutorial to upload the example <code>study</code> is provided:
+            </p>
+
             <ul>
                 <li>Creating a study</li>
                 <li>Elisa measurements</li>
                 <li>Microwell measurements</li>
                 <li>Microarray measurements</li>
             </ul>
-            </p>
 
             <h2> 1. Study </h2>
             <p>
@@ -146,6 +147,7 @@
             </p>
             <p>
                 A study consists off three main building blocks:
+            </p>
             <ul>
                 <li><span class="label label-success">meta.tsv</span></li>
                 <li><span class="label label-success">measurements</span></li>
@@ -153,7 +155,6 @@
                     upload
                 </li>
             </ul>
-            </p>
             <p>
                 The <code>metadata</code> defined in the <span class="label label-success">meta.tsv</span> file in the
                 root
@@ -162,6 +163,8 @@
                 what is the status of the study (status).
 
                 <code>metadata</code> fields are hereby:
+            </p>
+
             <ul>
                 <li><span class="label label-info">task</span>: text (what is the question)</li>
                 <li><span class="label label-info">results</span></li>
@@ -174,7 +177,6 @@
             or raw docs by adding a "meta.tsv" into a directory with the name of the study. All of the meta fields are
             optional,
             but should be filled out.
-            </p>
             <p>
                 Anytime we describe the content of the experimental data directory and which files have to to placed
                 in which locations, have a look at the tutorial example directory where this is demonstrated
@@ -209,7 +211,6 @@
                 <caption>Metadata defined for <code>study</code> in <span class="label label-success">meta.tsv</span>
                 </caption>
             </table>
-            </p>
             <p>
                 <code>Measurements</code> are defined in the <span class="label label-success">measurements</span>
                 folder
@@ -236,6 +237,8 @@
             </p>
             <p>
                 For any measurement, five pieces of information are important:
+            </p>
+
             <ul>
                 <li><span class="label label-success">meta.tsv</span> (metadata)</li>
                 <li><span class="label label-success">lig_fix.txt</span> and <span class="label label-success">lig_mob.txt</span>
@@ -247,10 +250,8 @@
             </ul>
             The <span class="label label-success">results</span> and <span class="label label-success">raw_docs</span>
             are optional.
-            </p>
 
             <h3>2.1 Elisa metadata</h3>
-            <p>
             <table class="table table-striped">
                 <tr>
                     <th><span class="label label-info">batch_sid</span></th>
@@ -290,7 +291,6 @@
                     class="label label-success">meta.tsv</span>
                 in the main directory of a measurement folder.
             </p>
-
 
             <h3>2.2 Elisa Ligands</h3>
             <p>
@@ -1245,6 +1245,7 @@
                 </tr>
                 </tbody>
             </table>
+
             This information is saved as <span class="label label-success">lig_mob.txt</span> in the main directory of
             the measurement.
             At this point, we completed all relevant ligand related data for the ELISA experiment.
@@ -1352,6 +1353,7 @@
                 </tr>
                 </tbody>
             </table>
+
             <p> Once a process step is defined, it can be reused in any other process. Thus, it is part of the
                 general data and is not exclusively related to one measurement. A process can contain many steps
                 in an arbitrary ordering and with additional measurement specific pieces of information.
@@ -1464,6 +1466,7 @@
                 Therefore, we take the sid and fill them into a table, which can take even more additional
                 pieces of information about the step.
             </p>
+
             <table class="table table-striped ">
                 <tr>
                     <th>step</th>
@@ -1630,6 +1633,8 @@
                 A results folder contains, besides the intensities, also some metadata related to the result.
                 The following table shows the <span class="label label-success">meta.tsv</span> saved in the results
                 folder.
+            </p>
+
 
             <table class="table table-striped">
                 <tr>
@@ -1645,7 +1650,6 @@
                     <td>final_intensity.tsv</td>
                 </tr>
             </table>
-            </p>
 
             <h3>2.5 Elisa Raw Docs</h3>
             <p>
@@ -3038,7 +3042,6 @@
             <h3> 4.5 Microarray Raw Docs</h3>
             No raw docs in this example.
         </div>
-    </div>
 {% endblock %}
 
 {% block javascript %}

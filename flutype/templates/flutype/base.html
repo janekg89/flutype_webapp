@@ -9,6 +9,7 @@
     <title>FluTypeDB</title>
 
     <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/submenu.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/dropzone.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/dropzone.min.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/Butler_Stencil_Webfont/stylesheet.css') }}"/>
@@ -29,8 +30,6 @@
     <script type="text/javascript" src="{{ static('flutype/js/datatables-1.10.15.min.js') }}"></script>
     <script type="text/javascript" src="{{ static('flutype/js/jquery.formset.js') }}"></script>
     <script type="text/javascript" src="{{ static('flutype/js/dropzone.js')}}"></script>
-
-
     <script type="text/javascript"
             src="{{ static('winmarkltd-BootstrapFormHelpers-d4201db/dist/js/bootstrap-formhelpers.min.js') }}"></script>
 
@@ -203,17 +202,18 @@
 <div id="wrapper">
     <div id="page-wrapper">
 
-        <div class="container-fluid">
+        <div class="container">
             <!-- CONTENT -->
             {% block content %}{% endblock %}
 
             <!-- END CONTENT -->
+        </div>
+
             <!-- FOOTER -->
             <div class="row">
                 <div class="col-lg-12">
                     <hr/>
                     <p>&copy; 2017 FluType</p>
-                </div>
             </div>
             <!-- END FOOTER -->
         </div>
