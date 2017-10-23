@@ -11,38 +11,9 @@
         <a href="{{ url('peptide_new') }}" class="btn btn-default" title="Add new peptide">
         <span class="fa fa-plus-circle fa-3x text-success"></span></a>
         </h1>
-
-        {% if peptides %}
-            <table id="peptides" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>sid</th>
-                    <th>name</th>
-                    <th>linker</th>
-                    <th>spacer</th>
-                    <th>sequence</th>
-                    <th>c-terminus</th>
-                    <th>comment</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for p in peptides.all() %}
-                    <tr>
-                        <td><b>{{ p.sid }}</b></td>
-                        <td>{{ p.name }}</td>
-                        <td>{{ p.linker }}</td>
-                        <td>{{ p.spacer }}</td>
-                        <td>{{ p.sequence }}</td>
-                        <td>{{ p.c_terminus }}</td>
-                        <td>{{ p.comment }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-
-        {% else %}
-            <p>No entries in database.</p>
-        {% endif %}
+        {% with id_peptides_table = "peptides" %}
+            {% include "flutype/peptides_table.html" %}
+        {% endwith %}
 
     </div>
 

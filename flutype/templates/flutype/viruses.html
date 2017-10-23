@@ -13,43 +13,10 @@
         <span class="fa fa-plus-circle fa-3x text-success"></span></a>
         </h1>
 
-        {% if viruses %}
-            <table id="viruses" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>sid</th>
-                    <th>taxonomy id</th>
-                    <th>subtype</th>
-                    <th>isolation country</th>
-                    <th>collection date</th>
-                    <th>strain</th>
-                    <th>comment</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for virus in viruses %}
-                    <tr>
-                        <td>{{ virus.sid }}</td>
-                        <td><b>
-                        {% if virus.tax_id == "NO" %}
-                            {{ virus.tax_id }}
-                        {% else %}
-                            <a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ virus.tax_id }}">{{ virus.tax_id }}</a>
-                        {% endif %}
-                        </b></td>
-                        <td>{{ virus.subtype }}</td>
-                        <td>{{ virus.isolation_country }}</td>
-                        <td>{{ virus.collection_date }}</td>
-                        <td>{{ virus.strain }}</td>
-                        <td>{{ virus.comment }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+        {% with id_viruses_table = "viruses" %}
+            {% include "flutype/viruses_table.html" %}
+        {% endwith %}
 
-        {% else %}
-            <p>No entries in database.</p>
-        {% endif %}
     </div>
 {% endblock %}
 

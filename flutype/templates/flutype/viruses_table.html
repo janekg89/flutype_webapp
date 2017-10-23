@@ -1,0 +1,36 @@
+{% if viruses %}
+    <table id="{{ id_viruses_table }}" class="table table-striped">
+        <thead>
+        <tr>
+            <th>sid</th>
+            <th title="taxonomy id">taxonomy</th>
+            <th>subtype</th>
+            <th title="isolation country">country</th>
+            <th>collected</th>
+            <th>strain</th>
+            <th>comment</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for virus in viruses %}
+            <tr>
+                <td><b>{{ virus.sid }}</b></td>
+                <td>
+                {% if virus.tax_id == "NO" %}
+                    {{ virus.tax_id }}
+                {% else %}
+                    <a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ virus.tax_id }}">{{ virus.tax_id }}</a>
+                {% endif %}
+                </td>
+                <td>{{ virus.subtype }}</td>
+                <td>{{ virus.isolation_country }}</td>
+                <td>{{ virus.collection_date }}</td>
+                <td>{{ virus.strain }}</td>
+                <td>{{ virus.comment }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No entries in database.</p>
+{% endif %}
