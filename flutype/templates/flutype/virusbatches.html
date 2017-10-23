@@ -33,7 +33,6 @@
                         <th>Produced by</th>
                         <th>Production Date</th>
                         <th>Comment</th>
-                        <th>Edit</th>
 
                     </tr>
                     </thead>
@@ -75,10 +74,7 @@
                             <td>{{ virusbatch.produced_by }}</td>
                             <td>{{ virusbatch.production_date }}</td>
                             <td>{{ virusbatch.comment }}</td>
-                            <td><a href="{{ url('virus_batch_edit', args=[virusbatch.id]) }}" class="top-menu"><span
-                                    class="fa fa-pencil" aria-hidden="true"></span> </a>
-                                <a href="{{ url('virus_batch_delete', args=[virusbatch.id]) }}" class="top-menu"><span
-                                        class="fa fa-trash text-danger" aria-hidden="true"></span> </a></td>
+
                         </tr>
                     {% endfor %}
                     </tbody>
