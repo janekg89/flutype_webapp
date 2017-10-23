@@ -168,7 +168,7 @@ class ViewTestCaseNoDataLogedIn(TestCase):
         response = self.c.post('/flutype/', {})
         status = response.status_code
         self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "<h1>Studies</h1>")
+        self.assertContains(response, "Studies")
 
     def test_antibody_view_200(self):
         response = self.c.post('/flutype/antibodies_mobile/', {})
