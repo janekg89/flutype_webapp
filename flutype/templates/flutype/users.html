@@ -1,35 +1,25 @@
 {% extends "flutype/base.html" %}
 {% block content %}
     <!-- LIST OF USERS -->
-    <div class="row">
-        <div class="col-lg-6">
-            <h1>Users</h1>
+        <div class="standard">
+            <h1><i class="fa fa-fw fa-group"></i> Users</h1>
             {% if users %}
-
             <table id="users" class="table table-striped">
                 <thead>
                 <tr>
                     <th>username</th>
-                    <th>first_name</th>
-                    <th>last_name</th>
+                    <th>first name</th>
+                    <th>last name</th>
                     <th>email</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for u in users %}
                     <tr>
-                        <td class="warning">
-                            <b>{{ u.username }}</b>
-                        </td>
-                        <td>
-                            {{ u.first_name }}
-                        </td>
-                        <td>
-                            {{ u.last_name }}
-                        </td>
-                        <td>
-                            {{ u.email }}
-                        </td>
+                        <td><i class="fa fa-fw fa-user"></i> <b>{{ u.username }}</b></td>
+                        <td>{{ u.first_name }}</td>
+                        <td>{{ u.last_name }}</td>
+                        <td><a href="mailto:{{ u.email }}">{{ u.email }}</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -37,8 +27,8 @@
             {% else %}
                 <p>No entries in database.</p>
             {% endif %}
+
         </div>
-    </div>
 {% endblock %}
 
 {% block javascript %}

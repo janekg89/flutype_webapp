@@ -1,5 +1,6 @@
 {% extends "flutype/base.html" %}
 {% block content %}
+<div class="standard">
 {% if type == "peptide" %}
     <h1>Delete Peptide</h1>
     <p>Are you sure you want to delete the peptide [{{ peptide.sid }}]?</p>
@@ -64,5 +65,5 @@
         </span>
     </form>
 
-
+    </div>
 {% endblock %}
