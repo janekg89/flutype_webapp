@@ -1,7 +1,7 @@
 {% extends "flutype/base.html" %}
 {% block content %}
     <!-- one process in detail -->
-    <div  class="col-lg-12">
+        <div class="standard">
         <h2>Process: {{ process.sid }}</h2>
         {% if process.is_step_in_process() %}
             <table id="process" class="cell-border">

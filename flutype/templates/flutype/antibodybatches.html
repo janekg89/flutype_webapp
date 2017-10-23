@@ -1,8 +1,7 @@
 {% extends "flutype/base.html" %}
 {% block content %}
     <!-- LIST OF RAWSPOTCOLLECTION -->
-    <div class="row">
-        <div class="col-lg-12">
+        <div class="standard">
             <div class="pull-right">
                 <a href="{{ url('antibody_batch_new') }}" class="top-menu"><span
                         class="fa fa-plus-circle fa-4x text-success"></span></a>
@@ -42,10 +41,10 @@
                             </td>
                             <!-- peptide information -->
                             {% with a=antibodybatch.ligand %}
+                                <td class="danger"> {{ a.sid }} </td>
                                 <td class="danger">{{ a.target }}</td>
                                 <td class="danger">{{ a.name }}</td>
                                 <td class="danger">{{ a.link_db }}</td>
-                                <td class="danger">{{ a.comment }}</td>
 
                             {% endwith %}
                             <!-- batch information -->
@@ -73,7 +72,6 @@
             {% endif %}
 
         </div>
-    </div>
 {% endblock %}
 
 {% block javascript %}

@@ -7,9 +7,8 @@
 {% endblock %}
 {% block content %}
     <!-- Main Content -->
-    <div class="container">
         <div class="title1">
-                <h1 style="font-family: butlermedium; font-size: 300%;"> {{ collection.sid }}</h1>
+                <h1> {{ collection.sid }}</h1>
         </div>
 
         <div class="btn-group inline-group toggle" role="group" >
@@ -446,8 +445,8 @@
                     </tbody>
             </table>
         </div>
-        <div id="container" class="heat"></div>
-          <div class="d " style="overflow-x:auto;">
+        <div id="container1" class="heat"></div>
+        <div class="d " style="overflow-x:auto;">
                            <div>
                             <div class="row" id="myDiv"
                                  style="height: 1000px; min-width: 50px; max-width: 1500px; margin: 0 auto"></div>
@@ -459,9 +458,7 @@
 
 
           </div>
-
     {% endif %}
-  </div>
 {% endblock %}
 
 {% block javascript %}
@@ -637,7 +634,7 @@
         var con1 = {{ con1|safe}};
         var con2 = {{ con2|safe}};
 
-        Highcharts.chart('container', {
+        Highcharts.chart('container1', {
             chart: {
                 type: 'heatmap',
                 marginTop: 40,

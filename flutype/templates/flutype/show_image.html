@@ -7,7 +7,8 @@
 
 {% block content %}
     <!-- Main Content -->
-<div id="imageContainer" style="overflow:auto">
+        <div class="standard">
+<div id="imageContainer" style="overflow-y:auto;">
 <div  class="active">
   <canvas id="canvas"></canvas>
 </div>
@@ -26,6 +27,7 @@
     <input id="saturation" name="saturation" type="range" min="1" max="100" value="1">
   </div>
 </div>
+        </div>
 
 
 {% endblock %}

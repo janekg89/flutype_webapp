@@ -1,8 +1,7 @@
 {% extends "flutype/base.html" %}
 {% block content %}
     <!-- LIST OF USERS -->
-    <div class="row">
-        <div class="col-lg-6">
+        <div class="standard">
             <h1><i class="fa fa-fw fa-group"></i> Users</h1>
             {% if users %}
             <table id="users" class="table table-striped">
@@ -28,8 +27,8 @@
             {% else %}
                 <p>No entries in database.</p>
             {% endif %}
+
         </div>
-    </div>
 {% endblock %}
 
 {% block javascript %}
