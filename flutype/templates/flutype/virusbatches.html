@@ -4,10 +4,8 @@
         <h1><i class="fa fa-fw fa-asterisk"></i> Virus Batches
         {% if type == "fixed" %}(Fixed){% elif type == "mobile" %}(Mobile){% endif %}
         <i class="fa fa-fw fa-flask"></i>
-        <button class="btn btn-default" title="Add batch">
-        <a href="{{ url('virus_batch_new') }}" class="top-menu">
+        <a href="{{ url('virus_batch_new') }}" class="btn btn-default" title="Add new virus batch">
         <span class="fa fa-plus-circle fa-3x text-success"></span></a>
-        </button>
         </h1>
 
         {% if virus_batches %}
