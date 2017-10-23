@@ -45,7 +45,9 @@
                     <th>substance</th>
                     <th>duration</th>
                     <th>comment</th>
+                    <!--
                     <th>edit</th>
+                    -->
                 </tr>
                 </thead>
                 <tbody>
@@ -53,8 +55,7 @@
                     {% with sg = s.get_step_type %}
                         {% with class = sg.__class__.__name__ %}
                             <tr>
-                                <td class="warning"><b> {{ sg.sid }}</b></td>
-
+                                <td><b> {{ sg.sid }}</b></td>
                                 <td>
                                 {% if class == "IncubatingAnalyt"%}
                                     Incubating Analyte
@@ -79,12 +80,14 @@
                                 {% endif %}
                                 </td>
                                 <td>{{ sg.comment }}</td>
+                                <!--
                                 <td>
                                     <a href="{{ url('step_edit', args=[sg.id]) }}" class="top-menu">
                                         <span class="fa fa-pencil" aria-hidden="true"></span></a>
                                     <a href="{{ url('step_delete', args=[sg.id]) }}" class="top-menu">
                                         <span class="fa fa-trash text-danger" aria-hidden="true"></span> </a>
                                 </td>
+                                -->
                             </tr>
                         {% endwith %}
                     {% endwith %}
