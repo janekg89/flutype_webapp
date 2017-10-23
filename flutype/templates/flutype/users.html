@@ -16,7 +16,7 @@
                 <tbody>
                 {% for u in users %}
                     <tr>
-                        <td><b>{{ u.username }}</b></td>
+                        <td><i class="fa fa-fw fa-user"></i> <b>{{ u.username }}</b></td>
                         <td>{{ u.first_name }}</td>
                         <td>{{ u.last_name }}</td>
                         <td><a href="mailto:{{ u.email }}">{{ u.email }}</a></td>
