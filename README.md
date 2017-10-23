@@ -1,5 +1,4 @@
-<h1><img alt="flutype logo" src="./docs/logo/flutype-logo-v3.png" height="75"/>FluTypeDB (data base and web application)
-</h1>
+<h1><img alt="flutype logo" src="./docs/logo/flutype-logo-v3.png" height="50"/>FluTypeDB</h1>
 
 [![Build Status](https://travis-ci.org/janekg89/flutype_webapp.svg?branch=develop)](https://travis-ci.org/janekg89/flutype_webapp)
 [![License (LGPL version 3)](https://img.shields.io/badge/license-LGPLv3.0-blue.svg?style=flat-square)](http://opensource.org/licenses/LGPL-3.0)
@@ -21,7 +20,7 @@ by <b>Janek Grzegorzewski</b> (Universität Potsdam) and
 <b><a href="https://livermetabolism.com" target="_blank">Matthias König</a></b> (Humboldt Universität Berlin).
 
 The production version is available at
-[http://www.flutype.de](http://www.flutype.de).
+[http://www.flutype.de](https://www.flutype.de).
 
 
 ### License
@@ -44,9 +43,6 @@ FluTypeDB is funded via the German FluType project.
 
 - updated web interface
 - data models updated
-
-
-
 
 
 ## Technical Documentation
@@ -102,4 +98,4 @@ a html report is saved via:
 coverage html
 ```
 
-&copy; 2017 flutype
+&copy; 2017 FluType
