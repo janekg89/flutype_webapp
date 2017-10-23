@@ -1,89 +1,102 @@
 {% extends "flutype/base.html" %}
 {% block content %}
-        <div class="standard">
-            <h1>Process Steps
-            <!-- Buttons -->
-            <div class="btn-group">
-                <button class="btn dropdown-toggle glyphicon glyphicon-triangle-bottom" title="Add process step" data-toggle="dropdown">
-                    <span class="fa fa-plus-circle fa-3x text-success"></span></button>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-                    <li><a href="{{ url('step_new' , args=["Washing"]) }}">
-                        <i class="fa fa-fw fa-shower" aria-hidden="true"></i> Washing</a>
-                    </li>
-                    <li><a href="{{ url('step_new' , args=["Drying"]) }}">
-                        <i class="fa fa-fw fa-bullhorn" aria-hidden="true"></i> Drying</a>
-                    </li>
-                    <li><a href="{{ url('step_new' , args=["Spotting"]) }}">
-                        <i class="fa fa-fw fa-anchor" aria-hidden="true"></i> Spotting</a>
-                    </li>
-                    <li><a href="{{ url('step_new' , args=["Quenching"]) }}">
-                        <i class="fa fa-fw fa-chain-broken" aria-hidden="true"></i> Quenching</a>
-                    </li>
-                    <li><a href="{{ url('step_new' , args=["Blocking"]) }}">
-                        <i class="fa fa-fw fa-pause" aria-hidden="true"></i> Blocking</a>
-                    </li>
-                    <li><a href="{{ url('step_new' , args=["Incubating"]) }}">
-                        <i class="fa fa-fw fa-tint" aria-hidden="true"></i> Incubating</a>
-                    </li>
-                    <li><a href="{{ url('step_new' , args=["IncubatingAnalyt"]) }}">
-                        <i class="fa fa-fw fa-tint" aria-hidden="true"></i> Incubating Analyte</a>
-                    </li>
-                    <li><a href="{{ url('step_new' , args=["Scanning"]) }}">
-                        <i class="fa fa-fw fa-camera" aria-hidden="true"></i> Scanning</a>
-                    </li>
-                </ul>
-            </div>
-            </h1>
-            {% if steps %}
-                <table id="steps" class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>sid</th>
-                        <th>type</th>
-                        <th>method</th>
-                        <th>temperature</th>
-                        <th>substance</th>
-                        <th>duration</th>
-                        <th>comment</th>
-                        <th>edit</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for s in steps.all() %}
-                        {% with sg = s.get_step_type %}
-                            {% with class = sg.__class__.__name__ %}
-                                <tr>
-                                    <td class="warning"><b> {{ sg.sid }}</b></td>
-                                    <td> {{ sg.__class__.__name__ }}</td>
-                                    <td>{{ sg.method }}</td>
-                                    <td>{{ sg.temperature }}</td>
-                                    {% if class == "Spotting" or class == "Incubating" or class == "Scanning" %}
-                                        <td class="danger"></td>
-                                    {% else %}
-                                        <td>{{ sg.substance }}</td>
-                                    {% endif %}
-                                    {% if class == "Spotting" or class == "Scanning" %}
-                                        <td class="danger"></td>
-                                    {% else %}
-                                        <td>{{ sg.duration }}</td>
-                                    {% endif %}
-                                    <td>{{ sg.comment }}</td>
-                                    <td><a href="{{ url('step_edit', args=[sg.id]) }}" class="top-menu"><span
-                                            class="fa fa-pencil" aria-hidden="true"></span> </a>
-                                        <a href="{{ url('step_delete', args=[sg.id]) }}" class="top-menu"><span
-                                                class="fa fa-trash text-danger" aria-hidden="true"></span> </a></td>
-                                </tr>
-                            {% endwith %}
-                        {% endwith %}
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p>No entries in database.</p>
-            {% endif %}
-
+    <div class="standard">
+        <h1><i class="fa fa-fw fa-paw"></i> Process Steps
+        <!-- Buttons -->
+        <div class="btn-group">
+            <button class="btn dropdown-toggle glyphicon glyphicon-triangle-bottom" title="Add process step" data-toggle="dropdown">
+                <span class="fa fa-plus-circle fa-3x text-success"></span></button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+                <li><a href="{{ url('step_new' , args=["Washing"]) }}">
+                    <i class="fa fa-fw fa-shower" aria-hidden="true"></i> Washing</a>
+                </li>
+                <li><a href="{{ url('step_new' , args=["Drying"]) }}">
+                    <i class="fa fa-fw fa-bullhorn" aria-hidden="true"></i> Drying</a>
+                </li>
+                <li><a href="{{ url('step_new' , args=["Spotting"]) }}">
+                    <i class="fa fa-fw fa-anchor" aria-hidden="true"></i> Spotting</a>
+                </li>
+                <li><a href="{{ url('step_new' , args=["Quenching"]) }}">
+                    <i class="fa fa-fw fa-chain-broken" aria-hidden="true"></i> Quenching</a>
+                </li>
+                <li><a href="{{ url('step_new' , args=["Blocking"]) }}">
+                    <i class="fa fa-fw fa-pause" aria-hidden="true"></i> Blocking</a>
+                </li>
+                <li><a href="{{ url('step_new' , args=["Incubating"]) }}">
+                    <i class="fa fa-fw fa-tint" aria-hidden="true"></i> Incubating</a>
+                </li>
+                <li><a href="{{ url('step_new' , args=["IncubatingAnalyt"]) }}">
+                    <i class="fa fa-fw fa-tint" aria-hidden="true"></i> Incubating Analyte</a>
+                </li>
+                <li><a href="{{ url('step_new' , args=["Scanning"]) }}">
+                    <i class="fa fa-fw fa-camera" aria-hidden="true"></i> Scanning</a>
+                </li>
+            </ul>
         </div>
+        </h1>
+        {% if steps %}
+            <table id="steps" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>sid</th>
+                    <th>type</th>
+                    <th>method</th>
+                    <th>temperature</th>
+                    <th>substance</th>
+                    <th>duration</th>
+                    <th>comment</th>
+                    <th>edit</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for s in steps.all() %}
+                    {% with sg = s.get_step_type %}
+                        {% with class = sg.__class__.__name__ %}
+                            <tr>
+                                <td class="warning"><b> {{ sg.sid }}</b></td>
+
+                                <td>
+                                {% if class == "IncubatingAnalyt"%}
+                                    Incubating Analyte
+                                {% else %}
+                                    {{class}}
+                                {% endif %}
+                                </td>
+                                <td>{{ sg.method }}</td>
+                                <td>{{ sg.temperature }}</td>
+                                <td>
+                                {% if class in ["Spotting", "IncubatingAnalyt", "Scanning"] %}
+                                    <i class="fa fa-fw fa-ban"></i>
+                                {% else %}
+                                    {{ sg.substance }}
+                                {% endif %}
+                                </td>
+                                <td>
+                                {% if class in ["Spotting", "Scanning"] %}
+                                    <i class="fa fa-fw fa-ban"></i>
+                                {% else %}
+                                    {{ sg.duration }}
+                                {% endif %}
+                                </td>
+                                <td>{{ sg.comment }}</td>
+                                <td>
+                                    <a href="{{ url('step_edit', args=[sg.id]) }}" class="top-menu">
+                                        <span class="fa fa-pencil" aria-hidden="true"></span></a>
+                                    <a href="{{ url('step_delete', args=[sg.id]) }}" class="top-menu">
+                                        <span class="fa fa-trash text-danger" aria-hidden="true"></span> </a>
+                                </td>
+                            </tr>
+                        {% endwith %}
+                    {% endwith %}
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No entries in database.</p>
+        {% endif %}
+    </div>
 {% endblock %}
+
 {% block javascript %}
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {

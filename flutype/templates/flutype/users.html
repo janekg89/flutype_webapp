@@ -8,15 +8,15 @@
                 <thead>
                 <tr>
                     <th>username</th>
-                    <th>first_name</th>
-                    <th>last_name</th>
+                    <th>first name</th>
+                    <th>last name</th>
                     <th>email</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for u in users %}
                     <tr>
-                        <td class="warning"><b>{{ u.username }}</b></td>
+                        <td><b>{{ u.username }}</b></td>
                         <td>{{ u.first_name }}</td>
                         <td>{{ u.last_name }}</td>
                         <td><a href="mailto:{{ u.email }}">{{ u.email }}</a></td>
