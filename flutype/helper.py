@@ -130,7 +130,7 @@ def read_ligand_batches(ligand_batch):
                                           "ligand__sid"])
         df.replace([np.NaN], [None], inplace=True)
         df['purity'] = list(map(str, df['purity'].values))
-        df['concentration'] = list(map(unicode, df['concentration'].values))
+        df['concentration'] = list(map(str, df['concentration'].values))
 
     elif ligand_batch == "virusBatch":
         df = read_frame(model.objects.all(),
@@ -141,7 +141,7 @@ def read_ligand_batches(ligand_batch):
         df['active'] = list(map(str, df['active'].values))
         df['passage_history'] = list(map(str, df['passage_history'].values))
         df['purity'] = list(map(str, df['purity'].values))
-        df['concentration'] = list(map(unicode, df['concentration'].values) )
+        df['concentration'] = list(map(str, df['concentration'].values) )
 
     elif ligand_batch == "bufferBatch":
         df = read_frame(model.objects.all(),

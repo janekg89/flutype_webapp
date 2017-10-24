@@ -268,9 +268,13 @@ class ViewTestCaseNoDataLogedIn(TestCase):
 
 @tag('local')
 class ViewTestCaseOneCollectionLogedIn(TransactionTestCase):
+
     @classmethod
-    def setUpTestData(cls):
+    def setUpClass(cls):
         create_users(user_defs=user_defs)
+        ma = Master(MASTERPATH)
+        DatabaseDJ(ma).update_db()
+
 
 
     def setUp(self):
@@ -278,8 +282,6 @@ class ViewTestCaseOneCollectionLogedIn(TransactionTestCase):
 
         self.c = Client()
         self.c.login(username='hmemczak', password=DEFAULT_USER_PASSWORD)
-        self.ma = Master(MASTERPATH)
-        self.DatabaseDJ(self.ma).update_db()
 
     def tearDown(self):
         create_users(user_defs=None, delete_all=True)
