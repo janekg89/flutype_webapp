@@ -6,6 +6,9 @@ from django.test import TransactionTestCase
 from flutype.data_management.fill_users import create_users, user_defs
 from django.apps import apps
 from django.test import tag
+from flutype.helper import get_model_by_name
+from django_pandas.io import read_frame
+
 
 MASTERPATH = os.path.join(BASEPATH, "master_test")
 
@@ -91,6 +94,39 @@ class DatabaseDJTestCase(TransactionTestCase):
         self.assertEqual(studies.count(), 1)
         self.assertEqual(raw_spot_collections.count(), 3)
         self.assertEqual(spot_collections.count(), 4)
+
+    def test_read_ligand(self):
+        ligands = self.ma.read_ligands()
+        complex = self.ma.read_complex()
+
+        self.db.update_ligands_or_batches(ligands)
+        self.db.update_ligands_or_batches(complex)
+
+        ligand_batches = self.ma.read_ligand_batches()
+        self.db.update_ligands_or_batches(ligand_batches)
+
+        steps = self.ma.read_steps()
+        self.db.update_steps(steps)
+
+
+
+        ligands1 = self.ma.ligands
+
+
+        for ligand in ligands1:
+            object_capitalized = ligand.capitalize()
+            model = get_model_by_name(object_capitalized)
+            df = read_frame(model.objects.all())
+            df.drop(["polymorphic_ctype","id","ligand_ptr"], axis=1, inplace=True)
+            print(df)
+            print(ligands["peptide"])
+
+
+
+
+
+
+
 
 
 

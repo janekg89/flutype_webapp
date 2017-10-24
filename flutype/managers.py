@@ -2,6 +2,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 from django.db import models
 from django.apps import apps
 from django.core.files import File
+from django_pandas.io import read_frame
+
 
 
 from flutype.helper import get_ligand_or_none, get_user_or_none, get_duration_or_none,\
@@ -27,6 +29,18 @@ else:
    bytes = str
    basestring = basestring
 
+class LigandManager(PolymorphicManager):
+
+    def all_to_df(self):
+        dic_ligand_batches = {}
+        for batch in dic_ligand_batches:
+            dic_ligand_batches[batch] = self.to_df()
+
+    def to_df(self):
+        df = read_frame(self.all())
+        return df
+
+
 
 class LigandBatchManager(models.Manager):
     def get_or_create(self, *args, **kwargs):
@@ -36,6 +50,17 @@ class LigandBatchManager(models.Manager):
             kwargs['produced_by'] =  get_user_or_none(kwargs['produced_by'])
         object, created = super(LigandBatchManager, self).get_or_create(*args,**kwargs)
         return object, created
+
+
+    def all_to_df(self):
+        dic_ligand_batches = {}
+        for batch in dic_ligand_batches:
+            dic_ligand_batches[batch] = self.to_df()
+
+    def to_df(self):
+        df = read_frame(self.all())
+        return df
+
 
 class ComplexManager(PolymorphicManager):
     def get_or_create(self, *args, **kwargs):
@@ -185,6 +210,7 @@ class ProcessManager(models.Manager):
                     this_process_step.image.save(step["image"],File(f))
 
         return this_process, created
+
 
 
 

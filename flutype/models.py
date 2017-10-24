@@ -21,7 +21,7 @@ from imagekit.models import ImageSpecField
 from imagekit.processors import Transpose, ResizeToFit, Adjust
 from .helper import OverwriteStorage, CHAR_MAX_LENGTH
 from .managers import LigandBatchManager,ComplexManager, StepManager,StudyManager, MeasurementManager , GalFileManager, \
-    ProcessManager , SpotcollectionManager,RawSpotManager, RawDocManager
+    ProcessManager , SpotcollectionManager,RawSpotManager, RawDocManager, LigandManager
 
 
 #############################################################
@@ -77,14 +77,13 @@ class ProcessingType(DjangoChoices):
 ########################################
 
 class Ligand(PolymorphicModel):
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
-    comment = models.TextField(blank=True, null=True)
-
-
     """
     Generic ligand.
     This can be for instance a peptide, virus or antibody.
     """
+
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.sid
@@ -98,6 +97,7 @@ class Peptide(Ligand):
     sequence = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     c_terminus = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    objects = LigandManager()
 
 
 class Virus(Ligand):
@@ -110,15 +110,20 @@ class Virus(Ligand):
     isolation_country = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     collection_date = models.CharField(max_length=10, blank=True, null=True)
     strain = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    objects = LigandManager()
+
 
 class Antibody(Ligand):
     target = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     link_db = models.URLField(blank=True, null=True)
+    objects = LigandManager()
+
 
 class Complex(Ligand):
     complex_ligands = models.ManyToManyField(Ligand, related_name="complex_ligands")
     objects = ComplexManager()
+
 
 
     @property

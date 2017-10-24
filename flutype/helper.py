@@ -88,6 +88,12 @@ def read_tsv_table(fpath):
     table.replace([np.NaN], [None], inplace=True)
     return table
 
+def write_tsv_table(df,fpath):
+    df.replace([None], [np.NaN], inplace=True)
+    df.to_csv(fpath,sep="\t", encoding='utf-8')
+
+
+
 def get_or_create_raw_spots(**kwargs):
     raw_spots = []
     RawSpot = apps.get_model("flutype","RawSpot")
@@ -102,6 +108,8 @@ def get_or_create_raw_spots(**kwargs):
         raw_spot, created = RawSpot.objects.get_or_create(**spot)
         raw_spots.append(raw_spot)
     return raw_spots, created
+
+
 
 
 
@@ -225,8 +233,9 @@ def get_ligand_or_none(ligand):
     if ligand is None:
             ligand = None
     else:
-
+        print(ligand)
         ligand = Ligand.objects.get(sid=ligand)
+
 
     return ligand
 
