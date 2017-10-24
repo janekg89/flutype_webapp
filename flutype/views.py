@@ -216,7 +216,6 @@ def measurement_result_view(request, pk):
         status = request.POST.get("status")
         collection.status = status
         collection.save()
-
         return redirect(request.META['HTTP_REFERER'])
 
     else:
