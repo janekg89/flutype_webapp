@@ -59,6 +59,8 @@ class DatabaseDJ(object):
 
 
 
+
+
 if __name__ == "__main__":
     MASTERPATH = os.path.join(BASEPATH, "master")
 

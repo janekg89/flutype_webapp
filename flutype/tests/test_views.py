@@ -3,14 +3,16 @@
 from __future__ import unicode_literals
 
 from flutype_webapp.settings import DEFAULT_USER_PASSWORD
-from django.test import TestCase
-from django.test import Client
+from django.test import TestCase, Client, TransactionTestCase, tag
+
+
 
 from flutype.data_management.fill_users import create_users, user_defs
 from flutype.data_management.fill_database import DatabaseDJ
-from django.test import tag
 
 from flutype.models import RawSpotCollection, SpotCollection, Process
+from flutype.tests.test_fill_database import MASTERPATH
+from flutype.data_management.master import Master, BASEPATH
 
 
 class ViewTestCaseNoDataLogOut(TestCase):
@@ -265,12 +267,12 @@ class ViewTestCaseNoDataLogedIn(TestCase):
         self.assertEqual(status, 200, "view 200")
 
 @tag('local')
-class ViewTestCaseOneCollectionLogedIn(TestCase):
-
+class ViewTestCaseOneCollectionLogedIn(TransactionTestCase):
     @classmethod
     def setUpTestData(cls):
         create_users(user_defs=user_defs)
-
+        cls.ma = Master(MASTERPATH)
+        cls.DatabaseDJ(cls.ma).update_db()
 
     def setUp(self):
         # only create once
