@@ -271,14 +271,15 @@ class ViewTestCaseOneCollectionLogedIn(TransactionTestCase):
     @classmethod
     def setUpTestData(cls):
         create_users(user_defs=user_defs)
-        cls.ma = Master(MASTERPATH)
-        cls.DatabaseDJ(cls.ma).update_db()
+
 
     def setUp(self):
         # only create once
 
         self.c = Client()
         self.c.login(username='hmemczak', password=DEFAULT_USER_PASSWORD)
+        self.ma = Master(MASTERPATH)
+        self.DatabaseDJ(self.ma).update_db()
 
     def tearDown(self):
         create_users(user_defs=None, delete_all=True)
