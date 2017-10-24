@@ -76,7 +76,7 @@ class Master(BaseAll):
         self.write_ligands(dic_ligands=dic_batches)
 
     def write_steps(self, dic_steps):
-        for step in self.steps:
+        for step in dic_steps:
             path_step = os.path.join(self.path_process_steps,"{}.tsv".format(step))
             write_tsv_table(dic_steps[step],path_step)
 
