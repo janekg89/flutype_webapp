@@ -116,6 +116,7 @@ class Master(object):
             file_path = os.path.join(self.data_tables_path, file_name)
             data_tables_dic[key].to_csv(path_or_buf=file_path, sep="\t", encoding='utf-8')
 
+
     def write_steps(self, steps_dic, collection_id):
         """
         saves datatables in master Folder
