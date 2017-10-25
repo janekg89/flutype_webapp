@@ -59,9 +59,13 @@
                     {% endfor %}
                 </td>
                 <td><a href="{{ c.lig_mob.file.url }}" target="_blank">
-                        <i class="fa fa-fw fa-rotate-90 fa-braille"></a></td>
+                        <i class="fa fa-fw fa-rotate-90 fa-braille fa-2x"></a></td>
                 <td><a href="{{ c.lig_fix.file.url }}" target="_blank">
-                       <i class="fa fa-fw fa-rotate-270 fa-braille"> </a></td>
+                       <i class="fa fa-fw fa-rotate-270 fa-braille fa-2x">
+
+
+                </a></td>
+
                 <!-- process -->
                 <td>
                     <a href="{{ url('processview', args=[c.process.id]) }}"> {{ c.process.sid }}</a>
