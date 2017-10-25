@@ -271,8 +271,6 @@ class ViewTestCaseNoDataLogedIn(TestCase):
         self.assertEqual(status, 200, "view 200")
 
 class ViewTestCaseOneCollectionLogedIn(TransactionTestCase):
-
-
     def setUp(self):
         create_users(user_defs=user_defs)
 

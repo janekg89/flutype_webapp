@@ -129,7 +129,6 @@ class Complex(Ligand):
     @property
     def ligands_str(self):
         ligands = self.complex_ligands.values_list('sid', flat=True)
-        print(ligands)
         vals = '-'.join(ligands)
         return vals
 
