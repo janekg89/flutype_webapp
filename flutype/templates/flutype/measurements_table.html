@@ -15,11 +15,13 @@
             <th>process</th>
             <th>users</th>
             <th>status</th>
+            <th>comment</th>
+
         </tr>
         </thead>
         <tbody>
         {% for c in collections %}
-            <img>
+            <tr>
                 <td><b><a href="{{ url('rawspotcollectionview', args=[c.id]) }}"> {{ c.sid }}</a></b></td>
                 <td>
                     {% for study in c.studies.all() %}
@@ -89,6 +91,7 @@
                     <td></td>
                 {% endif %}
                 <td>{{c.status}}</td>
+                <td>{{c.comment}}</td>
             </tr>
         {% endfor %}
         </tbody>
