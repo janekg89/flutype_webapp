@@ -70,7 +70,7 @@
                 <!-- studies -->
                 <td>
                     {% for study in c.studies.all() %}
-                        {{ study.sid }} <br/>
+                        <a href="{{ url("study",args=[study.id]) }}">{{ study.sid }} </a> <br/>
                     {% endfor %}
                 </td>
                 <!-- results -->
