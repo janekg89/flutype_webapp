@@ -46,7 +46,16 @@
                         <td>{{ s.result}}</td>
                         <td>
                             {% for m in s.rawspotcollection_set.all() %}
-                                <a href="{{ url('rawspotcollectionview', args=[m.id]) }}">{{ m.sid }}</a><br />
+                                {% if m.measurement_type == "microwell" %}
+                                    <i class="fa fa-fw fa-building-o"></i>&nbsp;
+                                {% elif m.measurement_type == "microarray" %}
+                                    <i class="fa fa-fw fa-building"></i>&nbsp;
+                                {% elif m.measurement_type == "elisa" %}
+                                    <i class="fa fa-fw fa-building-o fa-rotate-90 text-info"></i>&nbsp;
+                                {% endif %}
+
+
+                                <a href="{{ url('rawspotcollectionview', args=[m.id]) }}">{{ m.sid }}</a><br/>
                             {% endfor %}
                         </td>
                         <td> {{s.create_date.strftime('%Y-%m-%d') }}</td>
