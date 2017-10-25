@@ -58,7 +58,7 @@ class MasterTestCase(TransactionTestCase):
                                                 'status'
                                                 })
         self.assertEqual(next(iter(meas.read_results().keys())), "raw")
-        self.assertEqual(set(meas.read().keys()),{"meta","lig_mob_path","lig_fix_path","steps_path","results","raw_docs_fpaths"})
+        self.assertEqual(set(meas.read().keys()),{"meta","lig_mob_path","lig_fix_path","steps_path","results"})
 
 
     def test_measurement_results_init(self):
@@ -69,7 +69,7 @@ class MasterTestCase(TransactionTestCase):
         path_measurement_results = os.path.join(meas.path_results,next(iter(meas.results_sids)))
         mea_result = MeasurementResult(path_measurement_results)
         self.assertEqual(mea_result.sid,"raw")
-        self.assertEqual(set(mea_result.read().keys()),{'raw_docs_fpaths','intensities', 'meta'})
+        self.assertEqual(set(mea_result.read().keys()),{'intensities', 'meta'})
 
 
 
