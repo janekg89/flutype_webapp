@@ -68,7 +68,7 @@
                 <td>
                     {% for virus in c.viruses2.all()%}
                         {% if virus.strain %}
-                        {{ virus.strain }}
+                        {{ virus.strain }} <br/>
                         {% endif %}
                     {% endfor %}
                 </td>
