@@ -58,7 +58,7 @@ class MasterTestCase(TransactionTestCase):
 
                                                 })
         self.assertEqual(next(iter(meas.read_results().keys())), "raw")
-        self.assertEqual(set(meas.read().keys()),{"meta","lig_mob_path","lig_fix_path","steps_path","results"})
+        self.assertEqual(set(meas.read().keys()),{"meta","lig_mob_path","lig_fix_path","steps_path","results",'raw_docs_fpaths'})
 
 
     def test_measurement_results_init(self):
