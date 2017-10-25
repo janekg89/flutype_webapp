@@ -90,6 +90,8 @@ class StepManager(models.Manager):
 class StudyManager(models.Manager):
     def get_or_create(self, *args, **kwargs):
         if "meta" in kwargs:
+            if "user" in kwargs["meta"] and isinstance(kwargs["meta"]["user"], basestring):
+                kwargs["meta"]["user"]=get_user_or_none(kwargs["meta"]["user"])
             print("*** Creating Study <{}>***".format(kwargs["meta"]["sid"]))
             this_study, created_s = super(StudyManager, self).get_or_create(*args, **kwargs["meta"])
 
@@ -186,8 +188,6 @@ class ProcessManager(models.Manager):
         sid= unique_ordering(steps)
         this_process, created = super(ProcessManager, self).get_or_create(sid=sid)
         steps["start"]=steps["start"].str.replace('.', '-')
-
-
         for _ , step in steps.iterrows():
             if step["start"]:
                 unaware_datetime = datetime.datetime.strptime(step["start"], '%Y-%m-%d %H:%M')
