@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 
 from .helper import generate_tree, tar_tree, empty_list
 from .forms import PeptideForm, VirusForm, AntibodyForm, AntibodyBatchForm, \
-    PeptideBatchForm, VirusBatchForm, ProcessStepForm, ComplexBatchForm, ComplexForm, StudyForm, MeasurementForm, \
+    PeptideBatchForm, VirusBatchForm, ProcessStepForm, ComplexBatchForm, ComplexForm, StudyForm, \
     WashingForm,DryingForm,SpottingForm, QuenchingForm,BlockingForm,IncubatingForm, \
     ScanningForm, IncubatingAnalytForm, RawDocForm
 from .models import RawSpotCollection, SpotCollection, Process, PeptideBatch, \
@@ -158,52 +158,29 @@ def my_index_view(request):
     return render(request,
                   'flutype/index.html', context)
 
+
 @login_required
 def measurement_view(request, pk):
     """ Renders detailed RawSpotCollection View. """
 
     collection = get_object_or_404(RawSpotCollection, id=pk)
+    context = {
 
-    if request.method == 'POST':
-        status = request.POST.get("status")
-        collection.status = status
-        collection.save()
-
-        return redirect(request.META['HTTP_REFERER'])
-
-    else:
-
-        form = MeasurementForm(instance=collection)
-        context = {
-
-            'type': 'process',
-            'collection': collection,
-            'form': form
-        }
-        return render(request,
-                      'flutype/measurement.html', context)
+        'type': 'process',
+        'collection': collection,
+    }
+    return render(request,
+                  'flutype/measurement.html', context)
 @login_required
 def measurement_ligands_view(request, pk):
     """ Renders detailed RawSpotCollection View. """
-
     collection = get_object_or_404(RawSpotCollection, id=pk)
-
-    if request.method == 'POST':
-        status = request.POST.get("status")
-        collection.status = status
-        collection.save()
-
-        return redirect(request.META['HTTP_REFERER'])
-
-    else:
-        form = MeasurementForm(instance=collection)
-        context = {
-            'type': 'ligands',
-            'collection': collection,
-            'form':form
-        }
-        return render(request,
-                      'flutype/measurement.html', context)
+    context = {
+        'type': 'ligands',
+        'collection': collection,
+    }
+    return render(request,
+                  'flutype/measurement.html', context)
 
 @login_required
 def measurement_result_view(request, pk):
@@ -211,43 +188,31 @@ def measurement_result_view(request, pk):
 
     sc = get_object_or_404(SpotCollection, id=pk)
     collection = sc.raw_spot_collection
-
-    if request.method == 'POST':
-        status = request.POST.get("status")
-        collection.status = status
-        collection.save()
-        return redirect(request.META['HTTP_REFERER'])
-
-    else:
-
-        spots = sc.spot_set.all()
-        row_max = spots.aggregate(Max('raw_spot__row'))
-        column_max = spots.aggregate(Max('raw_spot__column'))
-        row_list = empty_list(row_max["raw_spot__row__max"])
-        column_list = empty_list(column_max["raw_spot__column__max"])
-        data = []
-        for spot in spots:
-            data.append([spot.raw_spot.column - 1, spot.raw_spot.row - 1, spot.intensity])
-            ##################################################################################
-
-        form = MeasurementForm(instance=collection)
-
-        context = {
-            'lig1': json.dumps(collection.pivot_ligand1().values.tolist()),
-            'lig2': json.dumps(collection.pivot_ligand2().values.tolist()),
-            'con1': json.dumps(collection.pivot_concentration1().values.tolist()),
-            'con2': json.dumps(collection.pivot_concentration2().values.tolist()),
-            'type': 'quantified',
-            'collection': collection,
-            'q_collection': sc,
-            'data': json.dumps(data),
-            'row_list': json.dumps(row_list),
-            'column_list': json.dumps(column_list),
-            'form': form,
+    spots = sc.spot_set.all()
+    row_max = spots.aggregate(Max('raw_spot__row'))
+    column_max = spots.aggregate(Max('raw_spot__column'))
+    row_list = empty_list(row_max["raw_spot__row__max"])
+    column_list = empty_list(column_max["raw_spot__column__max"])
+    data = []
+    for spot in spots:
+        data.append([spot.raw_spot.column - 1, spot.raw_spot.row - 1, spot.intensity])
+        ##################################################################################
 
 
+
+    context = {
+        'lig1': json.dumps(collection.pivot_ligand1().values.tolist()),
+        'lig2': json.dumps(collection.pivot_ligand2().values.tolist()),
+        'con1': json.dumps(collection.pivot_concentration1().values.tolist()),
+        'con2': json.dumps(collection.pivot_concentration2().values.tolist()),
+        'type': 'quantified',
+        'collection': collection,
+        'q_collection': sc,
+        'data': json.dumps(data),
+        'row_list': json.dumps(row_list),
+        'column_list': json.dumps(column_list),
         }
-        return render(request,
+    return render(request,
                       'flutype/measurement.html', context)
 
 
@@ -290,39 +255,29 @@ def raw_spot_collection(request, pk):
 
     collection = get_object_or_404(RawSpotCollection, id=pk)
 
-    if request.method == 'POST':
-        form = MeasurementForm(request.POST,  instance=collection)
-        if form.is_valid():
-            form.save()
-        return redirect(request.META['HTTP_REFERER'])
+    spots = collection.rawspot_set.all()
+    row_max = spots.aggregate(Max('row'))
+    column_max = spots.aggregate(Max('column'))
+    row_list = empty_list(row_max["row__max"])
+    column_list = empty_list(column_max["column__max"])
 
-    else:
+    data = []
+    for spot in spots:
+        data.append([spot.column - 1, spot.row - 1, 0])
 
-        form = MeasurementForm(instance=collection)
-        spots = collection.rawspot_set.all()
-        row_max = spots.aggregate(Max('row'))
-        column_max = spots.aggregate(Max('column'))
-        row_list = empty_list(row_max["row__max"])
-        column_list = empty_list(column_max["column__max"])
-
-        data = []
-        for spot in spots:
-            data.append([spot.column - 1, spot.row - 1, 0])
-
-        context = {
-            'lig1': json.dumps(collection.pivot_ligand1().values.tolist()),
-            'lig2': json.dumps(collection.pivot_ligand2().values.tolist()),
-            'con1': json.dumps(collection.pivot_concentration1().values.tolist()),
-            'con2': json.dumps(collection.pivot_concentration2().values.tolist()),
-            'type': 'raw',
-            'collection': collection,
-            'data': json.dumps(data),
-            'row_list': json.dumps(row_list),
-            'column_list': json.dumps(column_list),
-            'form':form
-        }
-        return render(request,
-                      'flutype/spotcollection.html', context)
+    context = {
+        'lig1': json.dumps(collection.pivot_ligand1().values.tolist()),
+        'lig2': json.dumps(collection.pivot_ligand2().values.tolist()),
+        'con1': json.dumps(collection.pivot_concentration1().values.tolist()),
+        'con2': json.dumps(collection.pivot_concentration2().values.tolist()),
+        'type': 'raw',
+        'collection': collection,
+        'data': json.dumps(data),
+        'row_list': json.dumps(row_list),
+        'column_list': json.dumps(column_list),
+    }
+    return render(request,
+                  'flutype/spotcollection.html', context)
 
 
 @login_required
