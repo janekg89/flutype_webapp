@@ -34,7 +34,7 @@ class MasterTestCase(TransactionTestCase):
         self.assertEqual(st.measurement_sids, {'170929-tutorial-elisa-1',
                                                '170929-tutorial-microwell-1',
                                                '170929-tutorial-microarray-1'})
-        self.assertEqual(set(st.meta.keys()),{'task', 'result','hidden','status'})
+        self.assertEqual(set(st.meta.keys()),{'comment', 'user','description','date','hidden','status'})
         self.assertEqual(set(st.read_measurements().keys()),{'170929-tutorial-elisa-1',
                                                              '170929-tutorial-microwell-1',
                                                              '170929-tutorial-microarray-1'})
@@ -55,7 +55,7 @@ class MasterTestCase(TransactionTestCase):
                                                 'hidden',
                                                 'comment',
                                                 'functionalization',
-                                                'status'
+
                                                 })
         self.assertEqual(next(iter(meas.read_results().keys())), "raw")
         self.assertEqual(set(meas.read().keys()),{"meta","lig_mob_path","lig_fix_path","steps_path","results"})
