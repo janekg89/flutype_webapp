@@ -174,7 +174,6 @@ def get_or_create_raw_spots(**kwargs):
     spots["lig_mob_batch"]= lig_mob["Name"].values
     spots["raw_spot_collection"]=kwargs["raw_spot_collection"]
     for k, spot in spots.iterrows():
-        #print(spot["lig_fix_batch"])
         raw_spot, created = RawSpot.objects.get_or_create(**spot)
         raw_spots.append(raw_spot)
     return raw_spots, created
@@ -244,7 +243,7 @@ def read_gal_file(fpath):
     return this_gal
 
 def read_gal_file_to_temporaray_file(fpath):
-    # prints whether python is version 3 or not
+
     python_version = sys.version_info.major
     if python_version == 3:
         f = io.StringIO()

@@ -49,7 +49,6 @@ def write_all_ligand_batches(master_path):
 def write_all_steps(master_path):
     ma = Master(master_path)
     for step in STEPS:
-        print(step)
         ma.write_steps({step: read_steps(step)})
 
 
