@@ -17,12 +17,11 @@
                 <tr>
                     <th>sid</th>
                     <th>status</th>
-                    <th>users</th>
-                    <th>task</th>
-                    <th>result</th>
+                    <th>user</th>
+                    <th>description</th>
+                    <th>comment</th>
                     <th>measurements</th>
                     <th>created</th>
-                    <th>modified</th>
                     <th>comment</th>
 
                 </tr>
@@ -39,13 +38,14 @@
                             {% endif %}
                             {{ s.status }}</td>
                         <td>
-
-                        {% for user in s.users() %}
-                            <i class="fa fa-fw fa-user"></i>{{ user.first_name }} {{ user.last_name }}<br />
-                        {% endfor %}
+                            {% if s.user %}
+                            <i class="fa fa-fw fa-user"></i>{{ s.user.first_name }} {{ s.user.last_name }}<br />
+                            {% else %}
+                                -
+                            {% endif %}
                         </td>
-                        <td>{{ s.task }}</td>
-                        <td>{{ s.result}}</td>
+                        <td>{{ s.description }}</td>
+                        <td>{{ s.comment}}</td>
                         <td>
                             {% for m in s.rawspotcollection_set.all() %}
                                 {% if m.measurement_type == "microwell" %}
@@ -57,11 +57,10 @@
                                 {% endif %}
 
 
-                                <a href="{{ url('rawspotcollectionview', args=[m.id]) }}">{{ m.sid }}</a><br/>
+                                <a href="{{ url('rawspotcollectionview', args=[m.id]) }}">{{ m.sid }}<br/></a>
                             {% endfor %}
                         </td>
-                        <td> {{s.create_date.strftime('%Y-%m-%d') }}</td>
-                        <td> {{s.modified_date.strftime('%Y-%m-%d') }}</td>
+                        <td> {{s.date.strftime('%Y-%m-%d') }}</td>
                         <td> {{s.comment }}</td>
 
 

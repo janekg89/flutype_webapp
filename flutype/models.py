@@ -14,13 +14,13 @@ from flutype_webapp.settings import MEDIA_ROOT
 fs = FileSystemStorage(location=MEDIA_ROOT)
 from django.db import models
 from django.contrib.auth.models import User
-from .behaviours import Statusable, Timestampable, Sidable, Userable, Commentable, FileAttachable, Hidable, Hashable
+from .behaviours import Statusable, Dateable, Sidable, Userable, Commentable, FileAttachable, Hidable, Hashable
 from model_utils.managers import InheritanceManager
 from polymorphic.models import PolymorphicModel
 from imagekit.models import ImageSpecField
 from imagekit.processors import Transpose, ResizeToFit, Adjust
 from .helper import OverwriteStorage, CHAR_MAX_LENGTH
-from .managers import LigandBatchManager,ComplexManager, StepManager,StudyManager, MeasurementManager , GalFileManager, \
+from .managers import LigandBatchManager,ComplexManager, StepManager,StudyManager, MeasurementManager , GalFileManager,\
     ProcessManager , SpotcollectionManager,RawSpotManager, RawDocManager, LigandManager
 
 
@@ -301,16 +301,16 @@ class Quenching(Step):
     objects =  StepManager()
 
 
-class Study(Commentable,Sidable, Timestampable, Statusable, FileAttachable, Hidable, models.Model):
-    task = models.TextField(blank=True, null=True)
-    result = models.TextField(blank=True, null=True)
+class Study(Commentable,Sidable, Dateable, Userable , Statusable, FileAttachable, Hidable, models.Model):
+    description = models.TextField(blank=True, null=True)
+
     objects = StudyManager()
 
     def users(self):
         user_ids = self.rawspotcollection_set.values_list("processstep__user", flat="True").distinct()
         return User.objects.filter(id__in=user_ids)
 
-class Measurement(Sidable, Commentable, Timestampable, FileAttachable, Hidable, models.Model):
+class Measurement(Sidable, Commentable, Userable, FileAttachable, Hidable, models.Model):
     """
     """
     measurement_type = models.CharField(max_length=CHAR_MAX_LENGTH, choices=MeasurementType.choices)
