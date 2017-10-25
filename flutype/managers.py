@@ -3,6 +3,10 @@ from django.db import models
 from django.apps import apps
 from django.core.files import File
 from django_pandas.io import read_frame
+from django.utils import timezone
+import datetime
+
+
 
 
 
@@ -182,7 +186,14 @@ class ProcessManager(models.Manager):
         sid= unique_ordering(steps)
         this_process, created = super(ProcessManager, self).get_or_create(sid=sid)
         steps["start"]=steps["start"].str.replace('.', '-')
+
+
         for _ , step in steps.iterrows():
+            if step["start"]:
+                unaware_datetime = datetime.datetime.strptime(step["start"], '%Y-%m-%d %H:%M')
+                current_tz = timezone.get_current_timezone()
+                step["start"] = current_tz.localize(unaware_datetime)
+
             Step= apps.get_model("flutype","Step")
             this_step = Step.objects.get(sid=step["step"])
             ProcessStep = apps.get_model("flutype","ProcessStep")
