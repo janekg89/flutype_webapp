@@ -23,6 +23,8 @@
                     <th>measurements</th>
                     <th>created</th>
                     <th>modified</th>
+                    <th>comment</th>
+
                 </tr>
                 </thead>
                 <tbody>
@@ -60,6 +62,8 @@
                         </td>
                         <td> {{s.create_date.strftime('%Y-%m-%d') }}</td>
                         <td> {{s.modified_date.strftime('%Y-%m-%d') }}</td>
+                        <td> {{s.comment }}</td>
+
 
                     </tr>
                 {% endfor %}
