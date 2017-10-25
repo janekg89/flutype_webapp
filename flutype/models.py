@@ -310,7 +310,7 @@ class Study(Commentable,Sidable, Timestampable, Statusable, FileAttachable, Hida
         user_ids = self.rawspotcollection_set.values_list("processstep__user", flat="True").distinct()
         return User.objects.filter(id__in=user_ids)
 
-class Measurement(Sidable, Commentable, Timestampable, Statusable, FileAttachable, Hidable, models.Model):
+class Measurement(Sidable, Commentable, Timestampable, FileAttachable, Hidable, models.Model):
     """
     """
     measurement_type = models.CharField(max_length=CHAR_MAX_LENGTH, choices=MeasurementType.choices)
