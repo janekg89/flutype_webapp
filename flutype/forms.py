@@ -32,12 +32,6 @@ class StudyForm(forms.ModelForm):
         fields = '__all__'
 
 
-class MeasurementForm(forms.ModelForm):
-    class Meta:
-        model = Measurement
-        fields = ['status']
-
-
 class PeptideForm(forms.ModelForm):
     class Meta:
         model = Peptide
