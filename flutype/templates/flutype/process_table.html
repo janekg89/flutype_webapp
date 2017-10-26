@@ -1,3 +1,5 @@
+{% import 'flutype/macros.html' as macros %}
+
 {% if process.is_step_in_process() %}
 <table id="process" class="table table-striped">
     {% with prosteps = process.processstep_set.filter(raw_spot_collection=process.rawspotcollection_set.first())%}
@@ -9,6 +11,8 @@
             <th>method</th>
             <th>substance</th>
             <th>duration</th>
+            <th>temperature</th>
+            <th>comment</th>
         </tr>
         </thead>
 
@@ -17,26 +21,7 @@
             <tr>
                 <td><b><i class="fa fa-fw fa-paw"></i> {{ prostep.index + 1 }}</b></td>
                 {% with p = prostep.step.get_step_type %}
-                    <td>
-                    {% if  p.__class__.__name__ == "Washing" %}
-                        <i class="fa fa-fw fa-shower"></i> {{ p.__class__.__name__ }}
-                    {% elif p.__class__.__name__ == "Drying" %}
-                        <i class="fa fa-fw fa-bullhorn"></i> {{ p.__class__.__name__ }}
-                    {% elif p.__class__.__name__ == "Spotting" %}
-                        <i class="fa fa-fw fa-anchor"></i> {{ p.__class__.__name__ }} / Immobilization
-                    {% elif p.__class__.__name__ == "Quenching" %}
-                        <i class="fa fa-fw fa-chain-broken"></i> {{ p.__class__.__name__ }}
-                    {% elif p.__class__.__name__ == "Incubating" %}
-                        <i class="fa fa-fw fa-tint"></i> {{ p.__class__.__name__ }}
-                    {% elif p.__class__.__name__ == "IncubatingAnalyt" %}
-                        <i class="fa fa-fw fa-tint" aria-hidden="true"></i>Incubating Analyte
-                    {% elif p.__class__.__name__ == "Blocking" %}
-                        <i class="fa fa-fw fa-pause" aria-hidden="true"></i> {{ p.__class__.__name__ }}
-                    {% elif p.__class__.__name__ == "Scanning" %}
-                        <i class="fa fa-fw fa-camera" aria-hidden="true"></i> {{ p.__class__.__name__ }}
-                    {% endif %}
-                    </td>
-
+                    <td>{{ macros.step_type(p) }}</td>
                     <td> {{ p.sid }}</td>
                     <td> {{ p.method }}</td>
                     {% if  p.substance %}
@@ -50,6 +35,8 @@
                         {{ p.duration }}
                     {% endif %}
                     </td>
+                    <td>{{ p.temperature }}</td>
+                    <td>{{ p.comment }}</td>
                 {% endwith %}
             </tr>
         {% endfor %}

@@ -26,6 +26,8 @@ class Timestampable(models.Model):
     modified_date = models.DateTimeField(auto_now=True)
     class Meta:
         abstract = True
+class Dateable(models.Model):
+    date =models.DateField(blank=True, null=True)
 
 class Sidable(models.Model):
     sid = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)

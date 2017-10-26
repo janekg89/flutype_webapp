@@ -1,3 +1,5 @@
+{% import 'flutype/macros.html' as macros %}
+
 {% extends "flutype/base.html" %}
 {% block content %}
     <div class="standard">
@@ -34,6 +36,7 @@
             </ul>
         </div>
         </h1>
+
         {% if steps %}
             <table id="steps" class="table table-striped">
                 <thead>
@@ -41,13 +44,10 @@
                     <th>sid</th>
                     <th>type</th>
                     <th>method</th>
-                    <th>temperature</th>
-                    <th>substance</th>
+                     <th>substance</th>
                     <th>duration</th>
+                    <th>temperature</th>
                     <th>comment</th>
-                    <!--
-                    <th>edit</th>
-                    -->
                 </tr>
                 </thead>
                 <tbody>
@@ -56,15 +56,8 @@
                         {% with class = sg.__class__.__name__ %}
                             <tr>
                                 <td><b> {{ sg.sid }}</b></td>
-                                <td>
-                                {% if class == "IncubatingAnalyt"%}
-                                    Incubating Analyte
-                                {% else %}
-                                    {{class}}
-                                {% endif %}
-                                </td>
+                                <td>{{ macros.step_type(sg) }}</td>
                                 <td>{{ sg.method }}</td>
-                                <td>{{ sg.temperature }}</td>
                                 <td>
                                 {% if class in ["Spotting", "IncubatingAnalyt", "Scanning"] %}
                                     <i class="fa fa-fw fa-ban"></i>
@@ -79,15 +72,8 @@
                                     {{ sg.duration }}
                                 {% endif %}
                                 </td>
+                                <td>{{ sg.temperature }}</td>
                                 <td>{{ sg.comment }}</td>
-                                <!--
-                                <td>
-                                    <a href="{{ url('step_edit', args=[sg.id]) }}" class="top-menu">
-                                        <span class="fa fa-pencil" aria-hidden="true"></span></a>
-                                    <a href="{{ url('step_delete', args=[sg.id]) }}" class="top-menu">
-                                        <span class="fa fa-trash text-danger" aria-hidden="true"></span> </a>
-                                </td>
-                                -->
                             </tr>
                         {% endwith %}
                     {% endwith %}
