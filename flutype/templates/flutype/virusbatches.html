@@ -13,7 +13,8 @@
                 <thead>
                 <tr>
                     <th>sid batch</th>
-                    <th title="taxonomy id">tax id</th>
+                    <th>sid virus</th>
+                    <th>tax id</th>
                     <th>subgroup</th>
                     <th>country</th>
                     <th>appearance</th>
@@ -38,6 +39,7 @@
                         <!-- virus information -->
                         {% with v=virusbatch.ligand %}
                             {% if v %}
+                                <td class="info">{{ v.sid }}</td>
                                 <td class="info">
                                     {% if v.sid == "NO" %}
                                         {{ v.tax_id }}
@@ -50,7 +52,7 @@
                                 <td class="info">{{ v.collection_date }}</td>
                                 <td class="info">{{ v.strain }}</td>
                             {% else %}
-                                {% for k in range(5) %}
+                                {% for k in range(6) %}
                                     <td><i class="fa fa-fw fa-ban"></i></td>
                                 {% endfor %}
                             {% endif %}
