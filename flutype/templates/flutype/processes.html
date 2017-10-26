@@ -1,3 +1,5 @@
+{% import 'flutype/macros.html' as macros %}
+
 {% extends "flutype/base.html" %}
 {% block content %}
     <div class="standard">
@@ -8,7 +10,7 @@
                 <thead>
                 <tr>
                     <th>sid</th>
-                    <th>applied on collections</th>
+                    <th>applied on measurements</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -18,8 +20,9 @@
                             <b><a href="{{ url('processview', args=[process.id]) }}">{{ process.sid }}</a></b>
                         </td>
                         <td>
-                            {% for rawspotcollection in process.rawspotcollection_set.all() %}
-                                <a href="{{ url('rawspotcollectionview', args=[rawspotcollection.id]) }}">{{ rawspotcollection.sid }}</a><br />
+                            {% for m in process.rawspotcollection_set.all() %}
+                                {{ macros.measurement_type(m.measurement_type) }}
+                                <a href="{{ url('rawspotcollectionview', args=[m.id]) }}">{{ m.sid }}</a><br />
                             {% endfor %}
                         </td>
                     </tr>

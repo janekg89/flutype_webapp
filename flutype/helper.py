@@ -1,7 +1,9 @@
+
 from __future__ import absolute_import, print_function, unicode_literals
 from django.core.files.storage import FileSystemStorage
 from flutype_webapp.settings import MEDIA_ROOT
 from django.contrib.auth.models import User
+from django_pandas.io import read_frame
 import os
 import hashlib
 import pandas as pd
@@ -88,6 +90,80 @@ def read_tsv_table(fpath):
     table.replace([np.NaN], [None], inplace=True)
     return table
 
+def write_tsv_table(df,fpath):
+    df.replace([None], [np.NaN], inplace=True)
+    df.to_csv(fpath,sep=str("\t"), encoding='utf-8', index=False)
+
+def read_ligands(ligand):
+    object_capitalized = ligand.capitalize()
+    model = get_model_by_name(object_capitalized)
+    df = read_frame(model.objects.all())
+    df.drop(["polymorphic_ctype", "id", "ligand_ptr"], axis=1, inplace=True)
+    return df
+
+def read_complex():
+    model = get_model_by_name("complex")
+    df = read_frame(model.objects.all(), ["sid","comment"])
+    ligands_str = []
+    for instance in model.objects.all():
+        ligands_str.append(instance.ligands_str)
+    df["complex_ligands"] = ligands_str
+    return df
+
+def read_steps(step):
+    object_capitalized = step.capitalize()
+    model = get_model_by_name(object_capitalized)
+    df = read_frame(model.objects.all())
+    df.drop(["id", "step_ptr"], axis=1, inplace=True)
+    df.replace([np.NaN], [None], inplace=True)
+    if "duration" in df:
+       for k,row in df.iterrows():
+           row["duration"] = duration_to_string(row["duration"])
+    return df
+
+def read_ligand_batches(ligand_batch):
+    object_capitalized = ligand_batch.capitalize()
+    model = get_model_by_name(object_capitalized)
+    if ligand_batch in ["peptideBatch","antibodyBatch", "complexBatch"]:
+        df = read_frame(model.objects.all(), ["sid", "labeling", "concentration","buffer", "ph","purity", "produced_by__username",
+                                          "production_date", "comment",
+                                          "ligand__sid"])
+        df.replace([np.NaN], [None], inplace=True)
+        df['purity'] = list(map(str, df['purity'].values))
+        df['concentration'] = list(map(str, df['concentration'].values))
+
+    elif ligand_batch == "virusBatch":
+        df = read_frame(model.objects.all(),
+                        ["sid", "labeling", "concentration","buffer", "ph","purity", "produced_by__username",
+                                          "production_date", "comment",
+                                          "ligand__sid", "passage_history","active"])
+        df.replace([np.NaN], [None], inplace=True)
+        df['active'] = list(map(str, df['active'].values))
+        df['passage_history'] = list(map(str, df['passage_history'].values))
+        df['purity'] = list(map(str, df['purity'].values))
+        df['concentration'] = list(map(str, df['concentration'].values) )
+
+    elif ligand_batch == "bufferBatch":
+        df = read_frame(model.objects.all(),
+                        ["sid", "buffer", "ph", "produced_by__username",
+                         "production_date", "comment"])
+        df.replace([np.NaN], [None], inplace=True)
+
+    df['ph']=list(map(str, df['ph'].values))
+    df['production_date']=list(map(str, df['production_date'].values))
+
+    df.replace(["None"],[None], inplace=True)
+
+
+
+
+    df = df.rename(columns={"ligand__sid":"ligand","produced_by__username":"produced_by"})
+
+
+    return df
+
+
+
 def get_or_create_raw_spots(**kwargs):
     raw_spots = []
     RawSpot = apps.get_model("flutype","RawSpot")
@@ -98,10 +174,11 @@ def get_or_create_raw_spots(**kwargs):
     spots["lig_mob_batch"]= lig_mob["Name"].values
     spots["raw_spot_collection"]=kwargs["raw_spot_collection"]
     for k, spot in spots.iterrows():
-        #print(spot["lig_fix_batch"])
         raw_spot, created = RawSpot.objects.get_or_create(**spot)
         raw_spots.append(raw_spot)
     return raw_spots, created
+
+
 
 
 
@@ -129,11 +206,6 @@ def create_spots(**kwargs):
         else:
             this_spot.intensity = spot["intensity"]
             this_spot.save()
-
-
-
-
-
 
 
 def get_unique_galfile(type, **kwargs):
@@ -171,7 +243,7 @@ def read_gal_file(fpath):
     return this_gal
 
 def read_gal_file_to_temporaray_file(fpath):
-    # prints whether python is version 3 or not
+
     python_version = sys.version_info.major
     if python_version == 3:
         f = io.StringIO()
@@ -225,8 +297,8 @@ def get_ligand_or_none(ligand):
     if ligand is None:
             ligand = None
     else:
-
         ligand = Ligand.objects.get(sid=ligand)
+
 
     return ligand
 
@@ -240,6 +312,18 @@ def get_duration_or_none(duration):
                                       minutes=int(dursplit[2]),
                                       seconds=int(dursplit[3]))
 
+    return duration
+
+def duration_to_string(duration):
+    if duration is None:
+        duration = None
+    else:
+        seconds = duration.total_seconds()
+        days = int(seconds // (3600*24))
+        hours = int((seconds % (3600*24)) // 3600)
+        minutes = int((seconds % 3600) // 60)
+        seconds = int(seconds % 60)
+        duration = "{}:{}:{}:{}".format(days,hours,minutes,seconds)
     return duration
 
 

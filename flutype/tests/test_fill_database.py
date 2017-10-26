@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 
 from flutype.data_management.master import Master, BASEPATH
@@ -6,6 +8,10 @@ from django.test import TransactionTestCase
 from flutype.data_management.fill_users import create_users, user_defs
 from django.apps import apps
 from django.test import tag
+from flutype.helper import  read_ligands ,read_complex, read_ligand_batches, get_model_by_name, read_steps \
+    ,get_duration_or_none, duration_to_string
+from django_pandas.io import read_frame
+
 
 MASTERPATH = os.path.join(BASEPATH, "master_test")
 
@@ -91,6 +97,112 @@ class DatabaseDJTestCase(TransactionTestCase):
         self.assertEqual(studies.count(), 1)
         self.assertEqual(raw_spot_collections.count(), 3)
         self.assertEqual(spot_collections.count(), 4)
+
+    def test_read_ligand(self):
+        ligands = self.ma.read_ligands()
+        complex = self.ma.read_complex()
+
+        self.db.update_ligands_or_batches(ligands)
+        self.db.update_ligands_or_batches(complex)
+
+
+        ligands1 = self.ma.ligands
+        for ligand in ligands1:
+            df = read_ligands(ligand)
+            self.assertTrue(ligands[ligand].equals(df))
+        self.assertTrue(complex["complex"].equals(read_complex()))
+
+    def test_read_ligand_batches(self):
+        ligands = self.ma.read_ligands()
+        complex = self.ma.read_complex()
+        self.db.update_ligands_or_batches(ligands)
+        self.db.update_ligands_or_batches(complex)
+
+
+        ligand_batches = self.ma.read_ligand_batches()
+        self.db.update_ligands_or_batches(ligand_batches)
+
+        for ligand_batch in ligand_batches.keys():
+            df = read_ligand_batches(ligand_batch)
+            self.assertTrue(ligand_batches[ligand_batch]["sid"].equals(df["sid"]))
+            self.assertTrue(ligand_batches[ligand_batch]["comment"].equals(df["comment"]))
+            self.assertTrue(ligand_batches[ligand_batch]["buffer"].equals(df["buffer"]))
+            self.assertTrue(ligand_batches[ligand_batch]["produced_by"].equals(df["produced_by"]))
+            self.assertTrue(ligand_batches[ligand_batch]["ph"].equals(df["ph"]))
+            self.assertTrue(ligand_batches[ligand_batch]["production_date"].equals(df["production_date"]))
+            self.assertEqual(len(ligand_batches[ligand_batch]),len(df))
+            self.assertEqual(ligand_batches[ligand_batch].keys().all(),df.keys().all())
+
+
+            if ligand_batch =="bufferBatch":
+                #self.assertTrue(ligand_batches[ligand_batch].equals(df))
+                pass
+
+            elif ligand_batch =="virusBatch":
+                self.assertTrue(ligand_batches[ligand_batch]["active"].equals(df["active"]))
+                self.assertTrue(ligand_batches[ligand_batch]["passage_history"].equals(df["passage_history"]))
+                self.assertTrue(ligand_batches[ligand_batch]["ligand"].equals(df["ligand"]))
+                self.assertTrue(ligand_batches[ligand_batch]["labeling"].equals(df["labeling"]))
+                self.assertTrue(ligand_batches[ligand_batch]["purity"].equals(df["purity"]))
+                con = ligand_batches[ligand_batch]["concentration"].astype(float)
+                con2 = df["concentration"].astype(float)
+                self.assertTrue(con.equals(con2))
+
+            else:
+                self.assertTrue(ligand_batches[ligand_batch]["ligand"].equals(df["ligand"]))
+                self.assertTrue(ligand_batches[ligand_batch]["labeling"].equals(df["labeling"]))
+                self.assertTrue(ligand_batches[ligand_batch]["purity"].equals(df["purity"]))
+
+    def test_read_steps(self):
+        steps = self.ma.read_steps()
+        self.db.update_steps(steps)
+        for step in steps.keys():
+            df = read_steps(step)
+            self.assertTrue(steps[step]["sid"].equals(df["sid"]))
+            self.assertTrue(steps[step]["comment"].equals(df["comment"]))
+            self.assertTrue(steps[step]["temperature"].equals(df["temperature"]))
+            self.assertTrue(steps[step]["method"].equals(df["method"]))
+
+            if "substance" in steps[step].keys():
+                self.assertTrue(steps[step]["substance"].equals(df["substance"]))
+
+    def test_duration(self):
+        time_delta = "2:12:12:30"
+        dt = get_duration_or_none(time_delta)
+        dt2 = duration_to_string(dt)
+        self.assertEqual(dt2,time_delta)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

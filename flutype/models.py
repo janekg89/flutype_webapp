@@ -14,14 +14,14 @@ from flutype_webapp.settings import MEDIA_ROOT
 fs = FileSystemStorage(location=MEDIA_ROOT)
 from django.db import models
 from django.contrib.auth.models import User
-from .behaviours import Statusable, Timestampable, Sidable, Userable, Commentable, FileAttachable, Hidable, Hashable
+from .behaviours import Statusable, Dateable, Sidable, Userable, Commentable, FileAttachable, Hidable, Hashable
 from model_utils.managers import InheritanceManager
 from polymorphic.models import PolymorphicModel
 from imagekit.models import ImageSpecField
 from imagekit.processors import Transpose, ResizeToFit, Adjust
 from .helper import OverwriteStorage, CHAR_MAX_LENGTH
-from .managers import LigandBatchManager,ComplexManager, StepManager,StudyManager, MeasurementManager , GalFileManager, \
-    ProcessManager , SpotcollectionManager,RawSpotManager, RawDocManager
+from .managers import LigandBatchManager,ComplexManager, StepManager,StudyManager, MeasurementManager , GalFileManager,\
+    ProcessManager , SpotcollectionManager,RawSpotManager, RawDocManager, LigandManager
 
 
 #############################################################
@@ -77,14 +77,13 @@ class ProcessingType(DjangoChoices):
 ########################################
 
 class Ligand(PolymorphicModel):
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
-    comment = models.TextField(blank=True, null=True)
-
-
     """
     Generic ligand.
     This can be for instance a peptide, virus or antibody.
     """
+
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    comment = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.sid
@@ -98,6 +97,7 @@ class Peptide(Ligand):
     sequence = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     c_terminus = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    objects = LigandManager()
 
 
 class Virus(Ligand):
@@ -110,21 +110,25 @@ class Virus(Ligand):
     isolation_country = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     collection_date = models.CharField(max_length=10, blank=True, null=True)
     strain = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    objects = LigandManager()
+
 
 class Antibody(Ligand):
     target = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     link_db = models.URLField(blank=True, null=True)
+    objects = LigandManager()
+
 
 class Complex(Ligand):
     complex_ligands = models.ManyToManyField(Ligand, related_name="complex_ligands")
     objects = ComplexManager()
 
 
+
     @property
     def ligands_str(self):
         ligands = self.complex_ligands.values_list('sid', flat=True)
-        print(ligands)
         vals = '-'.join(ligands)
         return vals
 
@@ -297,16 +301,16 @@ class Quenching(Step):
     objects =  StepManager()
 
 
-class Study(Sidable, Timestampable, Statusable, FileAttachable, Hidable, models.Model):
-    task = models.TextField(blank=True, null=True)
-    result = models.TextField(blank=True, null=True)
+class Study(Commentable, Sidable, Dateable, Userable , Statusable, FileAttachable, Hidable, models.Model):
+    description = models.TextField(blank=True, null=True)
+
     objects = StudyManager()
 
     def users(self):
         user_ids = self.rawspotcollection_set.values_list("processstep__user", flat="True").distinct()
         return User.objects.filter(id__in=user_ids)
 
-class Measurement(Sidable, Commentable, Timestampable, Statusable, FileAttachable, Hidable, models.Model):
+class Measurement(Sidable, Commentable, Userable, FileAttachable, Hidable, models.Model):
     """
     """
     measurement_type = models.CharField(max_length=CHAR_MAX_LENGTH, choices=MeasurementType.choices)

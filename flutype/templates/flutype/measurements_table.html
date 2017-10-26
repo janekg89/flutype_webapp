@@ -1,11 +1,13 @@
+{% import 'flutype/macros.html' as macros %}
+
 {% if collections %}
     <table id="measurements" class="table table-striped">
         <thead>
         <tr>
             <th>sid</th>
-            <th>studies</th>
-            <th>results</th>
             <th>type</th>
+            <th>users</th>
+            <th>batch</th>
             <th>functionalization</th>
             <th>manufacturer</th>
             <th>images</th>
@@ -13,46 +15,34 @@
             <th>gal mobile</th>
             <th>gal fixed</th>
             <th>process</th>
-            <th>users</th>
-            <th>status</th>
+            <th>studies</th>
+            <th>results</th>
+            <th>comment</th>
         </tr>
         </thead>
         <tbody>
         {% for c in collections %}
-            <img>
+            <tr>
                 <td><b><a href="{{ url('rawspotcollectionview', args=[c.id]) }}"> {{ c.sid }}</a></b></td>
+                <td>{{ macros.measurement_type(c.measurement_type) }} {{ c.measurement_type }}
+                </td>
+                <!-- user -->
                 <td>
-                    {% for study in c.studies.all() %}
-                        {{ study.sid }}
+                {% if c.process.users() %}
+                    {% for user in c.process.users() %}
+                    {{ macros.user(user) }}
                     {% endfor %}
+                {% endif %}
                 </td>
-                <td>{% if c.is_spot_collection() %}
-                    <i class="fa fa-fw fa-check-square-o" style="color:green" aria-hidden="true"></i>
-
-                    {% for s in c.spotcollection_set.all() %}
-                        <a href="{{ url('qspotcollectionview', args=[s.id]) }}" target="_blank">{{ s.sid }}</a>
-                    {% endfor %}
-
-                    {% else %}
-                        <i class="fa fa-fw fa-ban"></i>
-                    {%  endif %}
-                </td>
-                <td>{% if c.measurement_type == "microwell" %}
-                        <i class="fa fa-fw fa-building-o"></i>&nbsp;
-                    {% elif c.measurement_type == "microarray" %}
-                        <i class="fa fa-fw fa-building"></i>&nbsp;
-                    {% elif c.measurement_type == "elisa" %}
-                        <i class="fa fa-fw fa-building-o fa-rotate-90 text-info"></i>&nbsp;
-                    {% endif %}
-                    {{ c.measurement_type }}</td>
-                <td>{{ c.functionalization}}</td>
+                <td>{{ c.batch_sid }}</td>
+                <td>{{ c.functionalization }}</td>
                 <td>{{ c.manufacturer }}</td>
                 <td>
                     {% if c.is_picture_in_rsc %}
                         {% with prosteps = c.processstep_set.all() %}
                             {% for prostep in prosteps %}
                                 {% if prostep.image %}
-                                         <a alt="{{  prostep.image }}" href="{{  prostep.image.url }}" target="blank">
+                                         <a alt="{{  prostep.image }}" href="{{ prostep.image.url }}" target="blank">
                                             <i class="fa fa-file-image-o"></i>
                                          </a>
                                 {% endif %}
@@ -62,33 +52,43 @@
                         <i class="fa fa-fw fa-ban fa-stack"></i>
                     {% endif %}
                 </td>
-
                 <td>
                     {% for virus in c.viruses2.all()%}
                         {% if virus.strain %}
-                        {{ virus.strain }}
+                            {{ virus.strain }}<br />
                         {% endif %}
                     {% endfor %}
                 </td>
-                <td><a href="{{ c.lig_mob.file.url }}" target="_blank">
-                        {{ c.lig_mob.sid }}</a></td>
-                <td><a href="{{ c.lig_fix.file.url }}" target="_blank">
-                        {{ c.lig_fix.sid }}</a></td>
+                <td><a href="{{ c.lig_mob.file.url }}" target="_blank" title="{{ c.lig_mob.file.url }}">
+                    <i class="fa fa-fw fa-file"></i></a></td>
+                <td><a href="{{ c.lig_fix.file.url }}" target="_blank" title="{{ c.lig_mob.file.url }}">
+                    <i class="fa fa-fw fa-file"></i></a></td>
+
                 <!-- process -->
                 <td>
                     <a href="{{ url('processview', args=[c.process.id]) }}"> {{ c.process.sid }}</a>
                 </td>
-                <!-- user -->
-                {% if c.process.users() %}
-                    <td>
-                     {% for user in c.process.users() %}
-                    <i class="fa fa-fw fa-user"></i> {{ user.first_name }} {{ user.last_name }}
+
+                <!-- studies -->
+                <td>
+                    {% for study in c.studies.all() %}
+                        <a href="{{ url("study", args=[study.id]) }}">{{ study.sid }} </a> <br/>
                     {% endfor %}
-                    </td>
+                </td>
+                <!-- results -->
+                <td>{% if c.is_spot_collection() %}
+                    <i class="fa fa-fw fa-check-square-o" style="color:green" aria-hidden="true"></i>
+
+                    {% for s in c.spotcollection_set.all() %}
+                        <a href="{{ url('qspotcollectionview', args=[s.id]) }}" target="_blank">{{ s.sid }}<br/></a>
+                    {% endfor %}
+
                     {% else %}
-                    <td></td>
-                {% endif %}
-                <td>{{c.status}}</td>
+                        <i class="fa fa-fw fa-ban"></i>
+                    {%  endif %}
+                </td>
+
+                <td>{{ c.comment }}</td>
             </tr>
         {% endfor %}
         </tbody>

@@ -10,62 +10,10 @@
     <div class="title1">
         <h1><i class="fa fa-fw fa-building"></i> Measurement: {{ collection.sid }}</h1>
     </div>
-
-    <!--
-        <div class="btn-group inline-group toggle" role="group" >
-             <form method="post" style ='float: left; padding: 5px;'>
-                 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                 <input  type= "hidden" name="status" value="planning">
-                 <input id="planning" class="btn btn-default {% if collection.status == "planning" %}
-         active  {% endif %}"  type="submit" value="planning" />
-             </form>
-
-            <form method="post" style ='float: left; padding: 5px;'>
-                 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                    <input  type= "hidden" name="status" value="in progress">
-                 <input id="progress" class="btn btn-default {% if collection.status == "in progress" %}
-         active {% endif %}"  type="submit" value="in progress" >
-             </form>
-
-            <form method="post" style ='float: left; padding: 5px;'>
-                 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                 <input  type= "hidden" name="status" value="finished">
-                 <input id="finished" class="btn btn-default {% if collection.status == "finished" %}
-         active  {% endif %}"  type="submit" value="finished" >
-             </form>
-        </div>
-        -->
-
     <div class="a">
-        <table id="collection" class="table table-striped">
-            <tbody>
-            <tr>
-                <th>Measurement Type</th>
-                <td>{{ collection.measurement_type }}</td>
-            </tr>
-            <tr>
-                <th>Batch</th>
-                <td>{{ collection.batch_sid }}</td>
-            </tr>
-            <tr>
-                <th>Functionalization</th>
-                <td>{{ collection.functionalization }}</td>
-            </tr>
-            <tr>
-                <th> Manufacturer</th>
-                <td>{{ collection.manufacturer }}</td>
-            </tr>
-            <tr>
-                <th>Comment</th>
-                <td>{{ collection.comment }}</td>
-            </tr>
-            </tbody>
-        </table>
-
         {% with collections = [collection] %}
         {% include "flutype/measurements_table.html" %}
         {% endwith %}
-
     </div>
 
     <div class="filebox">
@@ -80,7 +28,6 @@
                 {% endfor %}
                 </tbody>
             </table>
-
         </div>
         <form id="dropzone" class="dropzone" action="{{ url('upload_file_measurement', args=[collection.id])}}"
               method="post" enctype="multipart/form-data">

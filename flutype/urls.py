@@ -3,8 +3,8 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.index_view, name='index'),
-    url(r'^mystudies/$', views.my_index_view, name='my_studies'),
+    url(r'^$', views.studies_view, name='index'),
+    url(r'^mystudies/$', views.my_studies_view, name='my_studies'),
     url(r'^uploadfile_study/(?P<pk>[0-9]+)/$', views.upload_file_study, name='upload_file_study'),
 
     url(r'^study/(?P<pk>[0-9]+)/$', views.study_view, name='study'),

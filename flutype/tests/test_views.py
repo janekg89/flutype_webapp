@@ -3,21 +3,27 @@
 from __future__ import unicode_literals
 
 from flutype_webapp.settings import DEFAULT_USER_PASSWORD
-from django.test import TestCase
-from django.test import Client
+from django.test import TestCase, Client, TransactionTestCase, tag
+
+
 
 from flutype.data_management.fill_users import create_users, user_defs
 from flutype.data_management.fill_database import DatabaseDJ
-from django.test import tag
 
 from flutype.models import RawSpotCollection, SpotCollection, Process
-
+from flutype.tests.test_fill_database import MASTERPATH
+from flutype.data_management.master import Master, BASEPATH, Study
+from django.db import transaction
+import os
 
 class ViewTestCaseNoDataLogOut(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        create_users(user_defs=user_defs)
+
 
     def setUp(self):
         # only create once
-        create_users(user_defs=user_defs)
         self.c = Client()
 
     def tearDown(self):
@@ -264,16 +270,27 @@ class ViewTestCaseNoDataLogedIn(TestCase):
         status = response.status_code
         self.assertEqual(status, 200, "view 200")
 
-@tag('local')
-class ViewTestCaseOneCollectionLogedIn(TestCase):
-
-    @classmethod
-    def setUpTestData(cls):
+class ViewTestCaseOneCollectionLogedIn(TransactionTestCase):
+    def setUp(self):
         create_users(user_defs=user_defs)
 
+        MASTERPATH = os.path.join(BASEPATH, "master")
+        study_path = os.path.join(BASEPATH, "master/studies/170509-microwell")
+        self.ma = Master(MASTERPATH)
+        study = Study(study_path).read()
+        study_dic = {"170509-microwell": study}
+        self.db = DatabaseDJ(self.ma)
+        ligands = self.ma.read_ligands()
+        complex =  self.ma.read_complex()
+        self.db.update_ligands_or_batches(ligands)
+        self.db.update_ligands_or_batches(complex)
 
-    def setUp(self):
-        # only create once
+        ligand_batches =  self.ma.read_ligand_batches()
+        self.db.update_ligands_or_batches(ligand_batches)
+
+        steps =  self.ma.read_steps()
+        self.db.update_steps(steps)
+        self.db.update_studies(study_dic)
 
         self.c = Client()
         self.c.login(username='hmemczak', password=DEFAULT_USER_PASSWORD)
@@ -296,7 +313,6 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         response = self.c.post('/flutype/antibodies_fixed/', {})
         status = response.status_code
         self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "AK_28665")
 
         response = self.c.post('/flutype/antibodies/', {})
         status = response.status_code
@@ -316,7 +332,6 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         response = self.c.post('/flutype/antibodybatches_fixed/', {})
         status = response.status_code
         self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "1.0_AK_28667")
 
     def test_viruses_view_200(self):
         response = self.c.post('/flutype/viruses/', {})
@@ -353,7 +368,7 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         response = self.c.post('/flutype/peptides/', {})
         status = response.status_code
         self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "Dye001")
+        self.assertContains(response, "P001")
 
         response = self.c.post('/flutype/peptides_mobile/', {})
         status = response.status_code
@@ -363,13 +378,13 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         response = self.c.post('/flutype/peptides_fixed/', {})
         status = response.status_code
         self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "Dye001")
+        self.assertContains(response, "P001")
 
     def test_peptidebatches_view_200(self):
         response = self.c.post('/flutype/peptidebatches/', {})
         status = response.status_code
         self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "DYE100")
+        self.assertContains(response, "L002")
 
         response = self.c.post('/flutype/peptidebatches_mobile/', {})
         status = response.status_code
@@ -379,13 +394,13 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         response = self.c.post('/flutype/peptidebatches_fixed/', {})
         status = response.status_code
         self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "DYE100")
+        self.assertContains(response, "L002")
 
     def test_processes_view_200(self):
         response = self.c.post('/flutype/processes/', {})
         status = response.status_code
         self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "2017-05-19_E5")
+        self.assertContains(response, "170509-00")
 
     def test_process_view_200(self):
         id = Process.objects.last().id
@@ -393,14 +408,12 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         status = response.status_code
 
         self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "No process steps avialable for NoSteps process.")
 
     def test_process_with_process_steps_view_200(self):
         id = Process.objects.last().id
         response = self.c.post('/flutype/process/' + str(id) + "/", {})
         status = response.status_code
         self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "Spotting")
 
     def test_users_view_200(self):
         response = self.c.post('/flutype/users/', {})
@@ -408,42 +421,12 @@ class ViewTestCaseOneCollectionLogedIn(TestCase):
         self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "konigmatt@googlemail.com")
 
-    def test_myexperiments_view_200(self):
-        response = self.c.post('/flutype/mymeasurements/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "No entries in database")
-
-    def test_myexperiments_view_200_one_collection(self):
-        response = self.c.post('/flutype/mymeasurements/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
 
     def test_rawspotcollection_view_200(self):
         id = RawSpotCollection.objects.first().id
-        response = self.c.post('/flutype/rawspotcollection/' + str(id) + '/', {})
+        response = self.c.get('/flutype/measurement/' + str(id) + '/', {})
         status = response.status_code
         self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, '<a href="/flutype/qspotcollection/1/">')
-        self.assertContains(response, "<td>A/Aichi/2/68 </td>")
-
-        id = RawSpotCollection.objects.last().id
-        response = self.c.post('/flutype/rawspotcollection/' + str(id) + '/', {})
-        self.assertContains(response, "No process steps available for process.")
 
 
-    def test_qspotcollection_view_200(self):
-        id = SpotCollection.objects.first().id
-        response = self.c.post('/flutype/qspotcollection/' + str(id) + '/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, 'href="/flutype/rawspotcollection/1/"')
-        self.assertContains(response, "A001")
-        self.assertContains(response, "<td>A/Aichi/2/68 </td>")
 
-    def test_qspotcollection_data_view_200(self):
-        id = SpotCollection.objects.first().id
-        response = self.c.get('/flutype/qspotcollection/' + str(id) + '/data', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "Dye001")
