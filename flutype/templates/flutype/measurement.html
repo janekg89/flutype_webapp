@@ -1,3 +1,5 @@
+{% import 'flutype/macros.html' as macros %}
+
 {% extends "flutype/base.html" %}
 {% block head %}
     <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -8,7 +10,7 @@
 {% block content %}
     <!-- Main Content -->
     <div class="title1">
-        <h1><i class="fa fa-fw fa-building"></i> Measurement: {{ collection.sid }}</h1>
+        <h1>{{ macros.measurement_type(collection.measurement_type) }} Measurement: {{ collection.sid }}</h1>
     </div>
     <div class="a">
         {% with collections = [collection] %}
