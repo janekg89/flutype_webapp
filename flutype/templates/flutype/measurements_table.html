@@ -42,7 +42,7 @@
                         {% with prosteps = c.processstep_set.all() %}
                             {% for prostep in prosteps %}
                                 {% if prostep.image %}
-                                         <a alt="{{  prostep.image }}" href="{{  prostep.image.url }}" target="blank">
+                                         <a alt="{{  prostep.image }}" href="{{ prostep.image.url }}" target="blank">
                                             <i class="fa fa-file-image-o"></i>
                                          </a>
                                 {% endif %}
