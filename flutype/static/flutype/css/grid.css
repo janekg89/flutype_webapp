@@ -50,21 +50,17 @@ body {
         grid-area: filebox;
     }
 
-
-
     .title1 {
         grid-area: title1;
         align-self: start;
         justify-self: start;
     }
 
-
-
     .c {
        grid-area:navbar2;
     }
 
-    .d{display:block;
+    .d {display:block;
        grid-area:table;
     }
 

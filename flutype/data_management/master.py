@@ -13,7 +13,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flutype_webapp.settings")
 import django
 django.setup()
 
-from flutype.helper import read_tsv_diconary , read_tsv_table
+from flutype.helper import read_tsv_diconary , read_tsv_table, write_tsv_table
 
 ###############################################
 
@@ -45,9 +45,6 @@ class Master(BaseAll):
         self.ligand_batches =  LIGAND_BATCHES
         self.path_ligands = os.path.join(self.path, "ligands")
 
-
-
-
     def read_ligand_batches(self):
         dic_ligand_batches = {}
 
@@ -57,7 +54,6 @@ class Master(BaseAll):
 
         return dic_ligand_batches
 
-
     def read_ligands(self):
         dic_ligands = {}
 
@@ -66,6 +62,20 @@ class Master(BaseAll):
             dic_ligands[ligand] = read_tsv_table(path_ligand)
 
         return dic_ligands
+
+    def write_ligands(self, dic_ligands):
+        for ligand in dic_ligands:
+            path_ligand = os.path.join(self.path_ligands, "{}.tsv".format(ligand))
+            write_tsv_table(dic_ligands[ligand],path_ligand)
+
+    def write_ligand_batches(self,dic_batches):
+        self.write_ligands(dic_ligands=dic_batches)
+
+    def write_steps(self, dic_steps):
+        for step in dic_steps:
+            path_step = os.path.join(self.path_process_steps,"{}.tsv".format(step))
+            write_tsv_table(dic_steps[step],path_step)
+
 
     def read_complex(self):
         complex_dic = {}

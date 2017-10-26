@@ -65,8 +65,8 @@
                 </tr>
                 <tr>
                     <td><code>study metadata</code></td>
-                    <td>The <code>study metadata</code> provides the general information for a study, i.e., which task
-                        should be performed in the study, which results were obtained, and the progress of the task.
+                    <td>The <code>study metadata</code> provides the general information for a study, i.e.
+                        a description of the study or a comment .
                 </tr>
 
                 </tbody>
@@ -159,15 +159,18 @@
                 The <code>metadata</code> defined in the <span class="label label-success">meta.tsv</span> file in the
                 root
                 of the study folder is the obligatory information of a study which describes the key features:
-                what was the reason for the study and what should be answered (task), what are the results (result), and
+                what was the reason for the study and what should be answered (description),
+                optional comments (comment),who is responsible for study (user), when was the study started (date),and
                 what is the status of the study (status).
 
                 <code>metadata</code> fields are hereby:
             </p>
 
             <ul>
-                <li><span class="label label-info">task</span>: text (what is the question)</li>
-                <li><span class="label label-info">results</span></li>
+                <li><span class="label label-info">description</span>: text (a description)</li>
+                <li><span class="label label-info">comment</span>:text (a comment)</li>
+                <li><span class="label label-info">user</span> : username </li>
+                <li><span class="label label-info">date</span>: format (YYYY-MM-DD) </li>
                 <li><span class="label label-info">status</span>: one of the options: <span class="label label-default">planned</span>,
                     <span class="label label-default">in progress</span> and <span
                             class="label label-default">finished</span></li>
@@ -191,7 +194,7 @@
             <table class="table table-striped">
                 <tbody>
                 <tr>
-                    <th><span class="label label-info">task</span></th>
+                    <th><span class="label label-info">description</span></th>
                     <td>This study demonstrates how an example study is be uploaded into the database.
                         Three different types of experiments are included in the study (ELISA, microarray, microwell).
                         The goal fo this study is to provide example experimental data for the upload in the database,
@@ -200,8 +203,16 @@
                     </td>
                 </tr>
                 <tr>
-                    <th><span class="label label-info">result</span></th>
+                    <th><span class="label label-info">comment</span></th>
                     <td></td>
+                </tr>
+                <tr>
+                    <th><span class="label label-info">user</span></th>
+                    <td>mhovestaedt</td>
+                </tr>
+                 <tr>
+                    <th><span class="label label-info">date</span></th>
+                    <td>2017-09-29</td>
                 </tr>
                 <tr>
                     <th><span class="label label-info">status</span></th>

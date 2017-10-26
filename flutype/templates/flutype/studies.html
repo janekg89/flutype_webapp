@@ -1,20 +1,24 @@
+{% import 'flutype/macros.html' as macros %}
+
 {% extends "flutype/base.html" %}
 {% block content %}
     <div class="standard">
-        <h1><i class="fa fa-fw fa-building"></i>
+
+        <h1><i class="fa fa-fw fa-braille"></i>
             {% if type == "my" %}My{% endif %}
-            Measurements
+            Studies
             {% if type == "my" %}(<i class="fa fa-fw fa-user"></i> {{ request.user }}){% endif %}
         </h1>
 
-        {% include "flutype/measurements_table.html" %}
+        {% include "flutype/studies_table.html" %}
+
     </div>
 {% endblock %}
 
 {% block javascript %}
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
-            $('#measurements').DataTable({
+            $('#studies').DataTable({
                 pageLength: 25,
             });
         });
