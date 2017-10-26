@@ -166,18 +166,20 @@
                     <li class="dropdown active">
                         <a data-toggle="dropdown" role="button" aria-expanded="false"><i
                                 class="fa fa-fw fa-user"></i> {{ request.user.get_username() }} <span
-                                class="caret"></span> </a>
+                                class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="{{ url('my_studies') }}" title="studies which contain a measurement in which you participated."> <i class="fa fa-fw fa-user" aria-hidden="true"></i> My
-                                Studies </a></li>
-                            <li><a href="{{ url('my_measurements') }}" title="measurement which were performed by you. Thus, you are named as the user during any of the process steps. " > <i class="fa fa-fw fa-user" aria-hidden="true"></i> My
-                                Measurements </a></li>
-                            <li class="divider"></li>
-
-                            <li><a href="{{ url('change_password') }}" title="change your password"> <i class="fa fa-fw fa-key"></i> Change Password </a>
+                            <li><a href="{{ url('my_studies') }}" title="studies which contain a measurement in which you participated.">
+                                <i class="fa fa-fw fa-braille"></i> My Studies</a>
                             </li>
-                            <li><a href="{{ url('logout') }}?next={{ request.path }}" title="log out from this web side"> <i
-                                    class="fa fa-fw fa-sign-out"> </i> Logout</a></li>
+                            <li><a href="{{ url('my_measurements') }}" title="measurement which were performed by you. Thus, you are named as the user during any of the process steps.">
+                                <i class="fa fa-fw fa-building" aria-hidden="true"></i> My Measurements</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{{ url('change_password') }}" title="change your password">
+                                <i class="fa fa-fw fa-key"></i> Change Password</a>
+                            </li>
+                            <li><a href="{{ url('logout') }}?next={{ request.path }}" title="log out from this web side">
+                                <i class="fa fa-fw fa-sign-out"> </i> Logout</a>
+                            </li>
                         </ul>
                     </li>
                 {% else %}
