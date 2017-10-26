@@ -1,0 +1,40 @@
+{% import 'flutype/macros.html' as macros %}
+
+{% if studies %}
+    <table id="studies" class="table table-striped">
+        <thead>
+        <tr>
+            <th>sid</th>
+            <th>status</th>
+            <th>users</th>
+            <th>description</th>
+            <th>measurements</th>
+            <th>created</th>
+            <th>comment</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for s in studies %}
+            <tr>
+                <td><b><a href="{{ url('study', args=[s.id]) }}"> {{ s.sid }}</a></b></td>
+                <td>{{ macros.status(s.status) }}</td>
+                <td>{% for user in s.users() %}
+                    {{ macros.user(user) }}
+                    {% endfor %}
+                </td>
+                <td>{{ s.description }}</td>
+                <td>
+                    {% for m in s.rawspotcollection_set.all() %}
+                        {{ macros.measurement_type(m.measurement_type) }}
+                        <a href="{{ url('rawspotcollectionview', args=[m.id]) }}">{{ m.sid }}<br/></a>
+                    {% endfor %}
+                </td>
+                <td> {{s.date.strftime('%Y-%m-%d') }}</td>
+                <td> {{s.comment }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No entries in database.</p>
+{% endif %}

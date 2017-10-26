@@ -10,37 +10,10 @@
     <div class="title1">
         <h1><i class="fa fa-fw fa-building"></i> Measurement: {{ collection.sid }}</h1>
     </div>
-
     <div class="a">
-        <table id="collection" class="table table-striped">
-            <tbody>
-            <tr>
-                <th>Measurement Type</th>
-                <td>{{ collection.measurement_type }}</td>
-            </tr>
-            <tr>
-                <th>Batch</th>
-                <td>{{ collection.batch_sid }}</td>
-            </tr>
-            <tr>
-                <th>Functionalization</th>
-                <td>{{ collection.functionalization }}</td>
-            </tr>
-            <tr>
-                <th> Manufacturer</th>
-                <td>{{ collection.manufacturer }}</td>
-            </tr>
-            <tr>
-                <th>Comment</th>
-                <td>{{ collection.comment }}</td>
-            </tr>
-            </tbody>
-        </table>
-
         {% with collections = [collection] %}
         {% include "flutype/measurements_table.html" %}
         {% endwith %}
-
     </div>
 
     <div class="filebox">
@@ -55,7 +28,6 @@
                 {% endfor %}
                 </tbody>
             </table>
-
         </div>
         <form id="dropzone" class="dropzone" action="{{ url('upload_file_measurement', args=[collection.id])}}"
               method="post" enctype="multipart/form-data">
