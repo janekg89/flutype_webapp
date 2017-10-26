@@ -268,44 +268,6 @@ class Quenching(Step):
     objects = StepManager()
 
 
-class ProcessStep(Userable, Commentable, Hashable, models.Model):
-    """ Step in a process.
-        Via the ProcessStep the Steps are connected to the process, thereby creating an order of the steps.
-        This is the through model connecting steps with processes.
-
-        index: position of step in the process.
-
-    """
-    process = models.ForeignKey(Process)
-    step = models.ForeignKey(Step)
-    raw_spot_collection =  models.ForeignKey(RawSpotCollection)
-
-    index = models.IntegerField(blank=True, null=True)
-    start = models.DateTimeField(null=True, blank=True)
-    image = models.ImageField(upload_to="image", null=True, blank=True, storage=OverwriteStorage())
-    image_contrast = ImageSpecField(source='image',
-                                    processors=[Adjust(contrast=124, brightness=126)]
-                                    )
-    image_90 = ImageSpecField(source='image',
-                              processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(700, 200)],
-                              )
-    image_90_big = ImageSpecField(source='image',
-                                  processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(2800, 880)],
-                                  )
-
-    intensities = models.ForeignKey(GalFile, null=True, blank=True)
-
-    # FIXME: ? what are the image fields  and image information doing in this models, also why are the intensities here?
-    # This does not belong in the process step
-
-    class Meta:
-        ordering = ['index']
-        unique_together = ["raw_spot_collection", "process","step","index"]
-
-    def __str__(self):
-        return str(self.process.sid + "-" + self.step.sid + "-" + str(self.index))
-
-
 class Process(Sidable, models.Model):
     """ A process is a collection of process steps. """
     steps = models.ManyToManyField(Step, through='ProcessStep')
@@ -341,6 +303,44 @@ class Process(Sidable, models.Model):
 
     def __str__(self):
         return self.sid
+
+
+class ProcessStep(Userable, Commentable, Hashable, models.Model):
+    """ Step in a process.
+        Via the ProcessStep the Steps are connected to the process, thereby creating an order of the steps.
+        This is the through model connecting steps with processes.
+
+        index: position of step in the process.
+
+    """
+    process = models.ForeignKey(Process)
+    step = models.ForeignKey(Step)
+    raw_spot_collection = models.ForeignKey("RawSpotCollection")
+
+    index = models.IntegerField(blank=True, null=True)
+    start = models.DateTimeField(null=True, blank=True)
+    image = models.ImageField(upload_to="image", null=True, blank=True, storage=OverwriteStorage())
+    image_contrast = ImageSpecField(source='image',
+                                    processors=[Adjust(contrast=124, brightness=126)]
+                                    )
+    image_90 = ImageSpecField(source='image',
+                              processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(700, 200)],
+                              )
+    image_90_big = ImageSpecField(source='image',
+                                  processors=[Transpose(Transpose.ROTATE_90), ResizeToFit(2800, 880)],
+                                  )
+
+    intensities = models.ForeignKey(GalFile, null=True, blank=True)
+
+    # FIXME: ? what are the image fields  and image information doing in this models, also why are the intensities here?
+    # This does not belong in the process step
+
+    class Meta:
+        ordering = ['index']
+        unique_together = ["raw_spot_collection", "process","step","index"]
+
+    def __str__(self):
+        return str(self.process.sid + "-" + self.step.sid + "-" + str(self.index))
 
 
 ########################################
