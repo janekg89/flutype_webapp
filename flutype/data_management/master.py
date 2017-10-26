@@ -45,9 +45,6 @@ class Master(BaseAll):
         self.ligand_batches =  LIGAND_BATCHES
         self.path_ligands = os.path.join(self.path, "ligands")
 
-
-
-
     def read_ligand_batches(self):
         dic_ligand_batches = {}
 
@@ -56,7 +53,6 @@ class Master(BaseAll):
             dic_ligand_batches[ligand_batch] =  read_tsv_table(path_ligand_batch)
 
         return dic_ligand_batches
-
 
     def read_ligands(self):
         dic_ligands = {}
