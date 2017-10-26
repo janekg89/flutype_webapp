@@ -32,6 +32,12 @@ The production version is available at
 FluTypeDB is funded via the German FluType project.
 
 ### Changelog
+*v0.1.3*
+
+- bug fixes and small improvements
+- reusable macros
+- improved UI
+
 *v0.1.2*
 
 - new grid system for layout
