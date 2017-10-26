@@ -1,74 +1,50 @@
+{% import 'flutype/macros.html' as macros %}
+
 {% extends "flutype/base.html" %}
 {% block content %}
     <div class="standard">
 
         <h1><i class="fa fa-fw fa-braille"></i>
-        {% if type == "all" %}
+            {% if type == "my" %}My{% endif %}
             Studies
-        {% elif type == "my" %}
-            My Studies
-        {% endif %}
+            {% if type == "my" %}(<i class="fa fa-fw fa-user"></i> {{ request.user }}){% endif %}
         </h1>
 
         {% if studies %}
             <table id="studies" class="table table-striped">
-                <caption>Studies</caption>
                 <thead>
                 <tr>
                     <th>sid</th>
                     <th>status</th>
-                    <th>user</th>
+                    <th>users</th>
                     <th>description</th>
-                    <th>comment</th>
                     <th>measurements</th>
                     <th>created</th>
                     <th>comment</th>
-
                 </tr>
                 </thead>
                 <tbody>
                 {% for s in studies %}
                     <tr>
                         <td><b><a href="{{ url('study', args=[s.id]) }}"> {{ s.sid }}</a></b></td>
-                        <td>
-                            {% if s.status == "finished" %}
-                                <i class="fa fa-fw fa-check-square-o text-success"></i>
-                            {% elif s.status == "in progress" %}
-                                <i class="fa fa-fw fa-cog"></i>
-                            {% endif %}
-                            {{ s.status }}</td>
-                        <td>
-                            {% if s.user %}
-                            <i class="fa fa-fw fa-user"></i>{{ s.user.first_name }} {{ s.user.last_name }}<br />
-                            {% else %}
-                                -
-                            {% endif %}
+                        <td>{{ macros.status(s.status) }}</td>
+                        <td>{% for user in s.users() %}
+                            {{ macros.user(user) }}
+                            {% endfor %}
                         </td>
                         <td>{{ s.description }}</td>
-                        <td>{{ s.comment}}</td>
                         <td>
                             {% for m in s.rawspotcollection_set.all() %}
-                                {% if m.measurement_type == "microwell" %}
-                                    <i class="fa fa-fw fa-building-o"></i>&nbsp;
-                                {% elif m.measurement_type == "microarray" %}
-                                    <i class="fa fa-fw fa-building"></i>&nbsp;
-                                {% elif m.measurement_type == "elisa" %}
-                                    <i class="fa fa-fw fa-building-o fa-rotate-90 text-info"></i>&nbsp;
-                                {% endif %}
-
-
+                                {{ macros.measurement_type(m.measurement_type) }}
                                 <a href="{{ url('rawspotcollectionview', args=[m.id]) }}">{{ m.sid }}<br/></a>
                             {% endfor %}
                         </td>
                         <td> {{s.date.strftime('%Y-%m-%d') }}</td>
                         <td> {{s.comment }}</td>
-
-
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
-
         {% else %}
             <p>No entries in database.</p>
         {% endif %}

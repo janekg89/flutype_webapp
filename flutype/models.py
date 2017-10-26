@@ -301,7 +301,7 @@ class Quenching(Step):
     objects =  StepManager()
 
 
-class Study(Commentable,Sidable, Dateable, Userable , Statusable, FileAttachable, Hidable, models.Model):
+class Study(Commentable, Sidable, Dateable, Userable , Statusable, FileAttachable, Hidable, models.Model):
     description = models.TextField(blank=True, null=True)
 
     objects = StudyManager()
