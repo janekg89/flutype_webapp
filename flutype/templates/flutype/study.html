@@ -1,3 +1,4 @@
+{% import 'flutype/macros.html' as macros %}
 {% extends "flutype/base.html" %}
 {% block content %}
 
@@ -15,33 +16,11 @@
     -->
 
     <h1><i class="fa fa-fw fa-braille"></i> Study: {{ study.sid }}</h1>
+
     <div class="a">
-        <table id="study" class="table table-striped">
-            <tbody>
-            <tr>
-                <td><b>Task </b></td>
-                <td>{{ study.description }}</td>
-            </tr>
-
-            <tr>
-                <td><b>Comment</b></td>
-                <td>{{ study.comment }}</td>
-            </tr>
-
-            <tr>
-                <td><b>Date</b></td>
-                <td>{{ study.date }}</td>
-            </tr>
-            <tr>
-                <td><b>User</b></td>
-                <td> <i class="fa fa-fw fa-user"></i> {{ study.user.first_name }} {{ study.user.last_name }}</td>
-            </tr>
-            <tr>
-                <td><b>Status</b></td>
-                <td>{{ study.status }}</td>
-            </tr>
-            </tbody>
-        </table>
+    {% with studies = [study] %}
+    {% include "flutype/studies_table.html" %}
+    {% endwith %}
     </div>
 
     <div class="filebox">
