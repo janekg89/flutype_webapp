@@ -137,7 +137,7 @@ def study_ligands_view(request,pk):
 
 
 @login_required
-def index_view(request):
+def studies_view(request):
     studies = Study.objects.filter(hidden=False)
 
     context = {
@@ -145,18 +145,18 @@ def index_view(request):
         'studies': studies,
     }
     return render(request,
-                  'flutype/index.html', context)
+                  'flutype/studies.html', context)
 
 
 @login_required
-def my_index_view(request):
+def my_studies_view(request):
     studies = Study.objects.filter(rawspotcollection__processstep__user=request.user, hidden=False).distinct()
     context = {
         'type': 'my',
         'studies': studies,
     }
     return render(request,
-                  'flutype/index.html', context)
+                  'flutype/studies.html', context)
 
 
 @login_required

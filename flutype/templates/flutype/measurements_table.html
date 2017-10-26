@@ -1,9 +1,12 @@
+{% import 'flutype/macros.html' as macros %}
+
 {% if collections %}
     <table id="measurements" class="table table-striped">
         <thead>
         <tr>
             <th>sid</th>
             <th>type</th>
+            <th>users</th>
             <th>batch</th>
             <th>functionalization</th>
             <th>manufacturer</th>
@@ -14,26 +17,25 @@
             <th>process</th>
             <th>studies</th>
             <th>results</th>
-            <th>users</th>
             <th>comment</th>
-
         </tr>
         </thead>
         <tbody>
         {% for c in collections %}
             <tr>
                 <td><b><a href="{{ url('rawspotcollectionview', args=[c.id]) }}"> {{ c.sid }}</a></b></td>
-
-                <td>{% if c.measurement_type == "microwell" %}
-                        <i class="fa fa-fw fa-building-o"></i>&nbsp;
-                    {% elif c.measurement_type == "microarray" %}
-                        <i class="fa fa-fw fa-building"></i>&nbsp;
-                    {% elif c.measurement_type == "elisa" %}
-                        <i class="fa fa-fw fa-building-o fa-rotate-90 text-info"></i>&nbsp;
-                    {% endif %}
-                    {{ c.measurement_type }}</td>
-                <td>{{ c.batch_sid}}</td>
-                <td>{{ c.functionalization}}</td>
+                <td>{{ macros.measurement_type(c.measurement_type) }} {{ c.measurement_type }}
+                </td>
+                <!-- user -->
+                <td>
+                {% if c.process.users() %}
+                    {% for user in c.process.users() %}
+                    {{ macros.user(user) }}
+                    {% endfor %}
+                {% endif %}
+                </td>
+                <td>{{ c.batch_sid }}</td>
+                <td>{{ c.functionalization }}</td>
                 <td>{{ c.manufacturer }}</td>
                 <td>
                     {% if c.is_picture_in_rsc %}
@@ -50,18 +52,17 @@
                         <i class="fa fa-fw fa-ban fa-stack"></i>
                     {% endif %}
                 </td>
-
                 <td>
                     {% for virus in c.viruses2.all()%}
                         {% if virus.strain %}
-                        {{ virus.strain }} <br />
+                            {{ virus.strain }}<br />
                         {% endif %}
                     {% endfor %}
                 </td>
-                <td><a href="{{ c.lig_mob.file.url }}" target="_blank">
-                    <i class="fa fa-fw fa-rotate-90 fa-braille fa-2x"></i></a></td>
-                <td><a href="{{ c.lig_fix.file.url }}" target="_blank">
-                    <i class="fa fa-fw fa-rotate-270 fa-braille fa-2x"></i></a></td>
+                <td><a href="{{ c.lig_mob.file.url }}" target="_blank" title="{{ c.lig_mob.file.url }}">
+                    <i class="fa fa-fw fa-file"></i></a></td>
+                <td><a href="{{ c.lig_fix.file.url }}" target="_blank" title="{{ c.lig_mob.file.url }}">
+                    <i class="fa fa-fw fa-file"></i></a></td>
 
                 <!-- process -->
                 <td>
@@ -71,7 +72,7 @@
                 <!-- studies -->
                 <td>
                     {% for study in c.studies.all() %}
-                        <a href="{{ url("study",args=[study.id]) }}">{{ study.sid }} </a> <br/>
+                        <a href="{{ url("study", args=[study.id]) }}">{{ study.sid }} </a> <br/>
                     {% endfor %}
                 </td>
                 <!-- results -->
@@ -86,17 +87,8 @@
                         <i class="fa fa-fw fa-ban"></i>
                     {%  endif %}
                 </td>
-                <!-- user -->
-                {% if c.process.users() %}
-                    <td>
-                     {% for user in c.process.users() %}
-                    <i class="fa fa-fw fa-user"></i> {{ user.first_name }} {{ user.last_name }}
-                    {% endfor %}
-                    </td>
-                    {% else %}
-                    <td></td>
-                {% endif %}
-                <td>{{c.comment}}</td>
+
+                <td>{{ c.comment }}</td>
             </tr>
         {% endfor %}
         </tbody>

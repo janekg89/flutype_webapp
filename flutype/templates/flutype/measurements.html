@@ -2,15 +2,12 @@
 {% block content %}
     <div class="standard">
         <h1><i class="fa fa-fw fa-building"></i>
-        {% if type == "all" %}
+            {% if type == "my" %}My{% endif %}
             Measurements
-        {% elif type == "my" %}
-            My Measurements
-        {% endif %}
+            {% if type == "my" %}(<i class="fa fa-fw fa-user"></i> {{ request.user }}){% endif %}
         </h1>
 
         {% include "flutype/measurements_table.html" %}
-
     </div>
 {% endblock %}
 

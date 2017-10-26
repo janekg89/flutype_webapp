@@ -1,0 +1,33 @@
+<!--
+Definition of reusable macro function in templates
+-->
+
+<!-- Measurement type -->
+{% macro measurement_type(measurement_type) %}
+{% if measurement_type == "microwell" %}
+    <i class="fa fa-fw fa-building-o" title="{{ measurement_type }}"></i>&nbsp;
+{% elif measurement_type == "microarray" %}
+    <i class="fa fa-fw fa-building" title="{{ measurement_type }}"></i>&nbsp;
+{% elif measurement_type == "elisa" %}
+    <i class="fa fa-fw fa-building text-info" title="{{ measurement_type }}"></i>&nbsp;
+{% endif %}
+{% endmacro %}
+
+<!-- User -->
+{% macro user(user) %}
+{% if user %}
+<i class="fa fa-fw fa-user"></i> {{ user.first_name }} {{ user.last_name }}<br />
+{% else %}
+<i class="fa fa-fw fa-ban"></i>
+{% endif %}
+{% endmacro %}
+
+<!-- Status -->
+{% macro status(status) %}
+{% if status == "finished" %}
+<i class="fa fa-fw fa-check-square-o text-success" title="{{ status }}"></i>
+{% elif status == "in progress" %}
+    <i class="fa fa-fw fa-cog" title="{{ status }}"></i>
+{% endif %}
+{{ status }}</td>
+{% endmacro %}
