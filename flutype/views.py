@@ -45,6 +45,20 @@ def upload_file_study(request,pk):
             return redirect(request.META['HTTP_REFERER'])
 
 @login_required
+def gal_file_view(request, pk):
+    if request.method == 'POST':
+        study = get_object_or_404(Study, id=pk)
+        form = RawDocForm(request.POST, request.FILES)
+        if form.is_valid():
+            new_file = RawDoc(file=form.cleaned_data['file'],
+                              sid=request.FILES['file'].name)
+            new_file.save()
+
+            study.files.add(new_file)
+            return redirect(request.META['HTTP_REFERER'])
+
+
+@login_required
 def upload_file_measurement(request,pk):
     if request.method == 'POST':
         raw_spot_collection = get_object_or_404(RawSpotCollection, id=pk)
