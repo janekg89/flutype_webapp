@@ -4,8 +4,8 @@ W01	1	hmemczak	2017.09.27 10:00
 W01	2	hmemczak	2017.09.27 10:10			
 D01	3	hmemczak	2017.09.27 10:15			
 B01	6	hmemczak	2017.09.27 10:20			
-SC02	7	hmemczak	2017.09.27 12:00	first_intensity.tsv		
+SC02	7	hmemczak	2017.09.27 12:00			first_intensity.tsv
 IA01	8	hmemczak	2017.09.27 13:00			
 W01	9	hmemczak	2017.09.27 14:30			
 D01	10	hmemczak	2017.09.27 14:40			
-SC02	11	hmemczak	2017.09.27 15:00	intensity_final.tsv		
+SC02	11	hmemczak	2017.09.27 15:00			intensity_final.tsv
