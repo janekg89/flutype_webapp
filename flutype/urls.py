@@ -17,7 +17,7 @@ urlpatterns = [
 
     url(r'^measurement/(?P<pk>[0-9]+)/$',views.measurement_view, name='rawspotcollectionview'),
     url(r'^measurement_ligands/(?P<pk>[0-9]+)/$', views.measurement_ligands_view, name='measurement_ligands'),
-    url(r'^qspotcollection/(?P<pk>[0-9]+)/$', views.measurement_result_view, name='qspotcollectionview'),
+    url(r'^measurement_result/(?P<pk>[0-9]+)/$', views.measurement_result_view, name='qspotcollectionview'),
     url(r'^measurement_result/(?P<pk>[0-9]+)/data$', views.barplot_data_view, name='barplot_plotly1'),
     url(r'^measurement_result/(?P<pk>[0-9]+)/barplot_p$', views.highcharts_view, name='heatmap_highchart1'),
 
@@ -29,6 +29,8 @@ urlpatterns = [
 
     url(r'^database_scheme/$', views.database_scheme_en_view, name='database_scheme'),
     url(r'^database_scheme_de/$', views.database_scheme_de_view, name='database_scheme_de'),
+
+    url(r'^gal_file/$', views.gal_file_view, name='gal_file'),
 
     url(r'^tutorial/$', views.tutorial_en_view, name='tutorial'),
     url(r'^tree/$', views.tutorial_tree_view, name='tutorial_tree'),
@@ -114,11 +116,7 @@ urlpatterns = [
 
     url(r'^password/$', views.change_password_view, name='change_password'),
 
-    # renders spot collections
-    #url(r'^rawspotcollection/(?P<pk>[0-9]+)/$', views.raw_spot_collection, name='rawspotcollectionview'),
-    #url(r'^qspotcollection/(?P<pk>[0-9]+)/$', views.quantified_spot_collection, name='qspotcollectionview1'),
 
-    # render heatmap image
     url(r'^qspotcollection/(?P<pk>[0-9]+)/data$', views.barplot_data_view, name='barplot_plotly'),
     url(r'^qspotcollection/(?P<pk>[0-9]+)/barplot_p$', views.highcharts_view, name='heatmap_highchart'),
 ]
