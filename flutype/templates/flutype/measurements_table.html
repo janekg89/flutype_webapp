@@ -23,7 +23,7 @@
         <tbody>
         {% for c in collections %}
             <tr>
-                <td><b><a href="{{ url('rawspotcollectionview', args=[c.id]) }}"> {{ c.sid }}</a></b></td>
+                <td><b><a href="{{ url('rawspotcollectionview', args=[c.sid]) }}"> {{ c.sid }}</a></b></td>
                 <td>{{ macros.measurement_type(c.measurement_type) }} {{ c.measurement_type }}
                 </td>
                 <!-- user -->
@@ -66,13 +66,13 @@
 
                 <!-- process -->
                 <td>
-                    <a href="{{ url('processview', args=[c.process.id]) }}"> {{ c.process.sid }}</a>
+                    <a href="{{ url('processview', args=[c.process.sid]) }}"> {{ c.process.sid }}</a>
                 </td>
 
                 <!-- studies -->
                 <td>
                     {% for study in c.studies.all() %}
-                        <a href="{{ url("study", args=[study.id]) }}">{{ study.sid }} </a> <br/>
+                        <a href="{{ url("study", args=[study.sid]) }}">{{ study.sid }} </a> <br/>
                     {% endfor %}
                 </td>
                 <!-- results -->
@@ -80,7 +80,7 @@
                     <i class="fa fa-fw fa-check-square-o" style="color:green" aria-hidden="true"></i>
 
                     {% for s in c.spotcollection_set.all() %}
-                        <a href="{{ url('qspotcollectionview', args=[s.id]) }}" target="_blank">{{ s.sid }}<br/></a>
+                        <a href="{{ url('qspotcollectionview', args=[c.sid,s.sid]) }}" target="_blank">{{ s.sid }}<br/></a>
                     {% endfor %}
 
                     {% else %}

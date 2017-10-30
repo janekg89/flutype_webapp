@@ -40,7 +40,7 @@
                 </tbody>
             </table>
         </div>
-        <form id="dropzone" class="dropzone" action="{{ url('upload_file_study', args=[study.id])}}" method="post"
+        <form id="dropzone" class="dropzone" action="{{ url('upload_file_study', args=[study.sid])}}" method="post"
               enctype="multipart/form-data">
             <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
         </form>
@@ -51,11 +51,11 @@
             <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
                 <ul class="nav navbar-nav">
 
-                    <li {% if type == "measurement" %}class="active" {% endif %}><a href="{{ url('study', args= [study.id]) }}">
+                    <li {% if type == "measurement" %}class="active" {% endif %}><a href="{{ url('study', args= [study.sid]) }}">
                         <i class="fa fa-fw fa-building"></i> Measurements
                         <span class="sr-only">(current)</span></a>
                     </li>
-                    <li {% if type == "ligands" %}class="active" {% endif %}><a href="{{ url('study_ligands', args= [study.id]) }}">
+                    <li {% if type == "ligands" %}class="active" {% endif %}><a href="{{ url('study_ligands', args= [study.sid]) }}">
                         <i class="fa fa-fw fa-certificate"></i> Ligands
                         <span class="sr-only">(current)</span></a>
                     </li>
