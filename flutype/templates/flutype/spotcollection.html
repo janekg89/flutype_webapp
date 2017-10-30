@@ -18,7 +18,7 @@
             <!-- Title -->
             <div class="row ">
                 {% if type == "quantified" %}
-                    <a class = "btn btn-default" href="{{ url('rawspotcollectionview', args=[collection.pk]) }}">
+                    <a class = "btn btn-default" href="{{ url('rawspotcollectionview', args=[collection.sid]) }}">
                         <i class="fa fa-arrow-up" aria-hidden="true"></i>
                             <b>  back to Measurement: {{collection.sid}}  </b>
                     </a>
@@ -36,7 +36,7 @@
                     {% if collection.is_spot_collection() %}
                         <p>
                             {% for sc in collection.spotcollection_set.all() %}
-                                <a href="{{ url('qspotcollectionview', args=[sc.id]) }}">
+                                <a href="{{ url('qspotcollectionview', args=[sc.sid]) }}">
                                     <b>{{ sc.sid }}</b></a>
                                 <br/>
                             {% endfor %}
@@ -211,7 +211,7 @@
                                               {{ prostep.comment }}
                                             </td>
                                             <td>
-                                                 {% if prostep.image %}  <a href="{{ url('imageviewprocess', args=[prostep.id]) }}" target="_blank" title="{{ prostep.image.name}}">
+                                                 {% if prostep.image %}  <a href="{{ url('imageviewprocess', args=[prostep.sid]) }}" target="_blank" title="{{ prostep.image.name}}">
                                                     <img src="{{ prostep.image_90.url }}"> </a> {%else%} - {%endif%}
 
                                             </td>
