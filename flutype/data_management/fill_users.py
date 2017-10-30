@@ -29,7 +29,10 @@ user_defs = [
     UserDef("hmemczak", "Henry", "Memczak", "memczak@uni-potsdam.de"),
     UserDef("mhovestaedt", "Marc", "Hovestädt", "hovestaedt@uni-potsdam.de"),
     UserDef("ssaenger", "Sandra", "Sänger", "SaengerS@rki.de"),
-    UserDef("bay", "Bernhard", "Ay", "aybernha@uni-potsdam.de")
+    UserDef("bay", "Bernhard", "Ay", "aybernha@uni-potsdam.de"),
+    UserDef("thofmeister", "Theresa", "Hofmeister", "theresa.hofmeister@uni-potsdam.de"),
+    UserDef("pbecker", "Paul", "Becker", "pc-becker@gmx.de"),
+    UserDef("fbier", "Frank", "Bier", "Frank.Bier@izi-bb.fraunhofer.de"),
 ]
 ########################################################
 
