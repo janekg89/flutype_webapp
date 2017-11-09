@@ -33,6 +33,8 @@ user_defs = [
     UserDef("thofmeister", "Theresa", "Hofmeister", "theresa.hofmeister@uni-potsdam.de"),
     UserDef("pbecker", "Paul", "Becker", "pc-becker@gmx.de"),
     UserDef("fbier", "Frank", "Bier", "Frank.Bier@izi-bb.fraunhofer.de"),
+    UserDef("herzigk", "Katjana", "Herzig",None),
+
 ]
 ########################################################
 

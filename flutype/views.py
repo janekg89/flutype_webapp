@@ -800,11 +800,14 @@ def virus_new(request):
 
 @login_required
 def antibody_new(request):
+
     if request.method == 'POST':
-        form = VirusForm(request.POST)
+        form = AntibodyForm(request.POST)
+        print(form.errors)
         if form.is_valid():
             form.save()
             return redirect('antibodies')
+
     else:
         form = AntibodyForm()
         return render(request, 'flutype/create.html', {'form': form, 'type': 'antibody'})
