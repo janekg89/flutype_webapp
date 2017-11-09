@@ -282,8 +282,12 @@ class ViewTestCaseOneCollectionLogedIn(TransactionTestCase):
         self.db = DatabaseDJ(self.ma)
         ligands = self.ma.read_ligands()
         complex =  self.ma.read_complex()
+        buffer =  self.ma.read_buffer()
+
         self.db.update_ligands_or_batches(ligands)
         self.db.update_ligands_or_batches(complex)
+        self.db.update_ligands_or_batches(buffer)
+
 
         ligand_batches =  self.ma.read_ligand_batches()
         self.db.update_ligands_or_batches(ligand_batches)
