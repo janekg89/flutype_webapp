@@ -102,6 +102,12 @@ def read_ligands(ligand):
     df.drop(["polymorphic_ctype", "id", "ligand_ptr"], axis=1, inplace=True)
     return df
 
+def read_buffer():
+    model = get_model_by_name("Buffer")
+    df = read_frame(model.objects.all())
+    df.drop(["id"], axis=1, inplace=True)
+    return df
+
 def read_complex():
     model = get_model_by_name("complex")
     df = read_frame(model.objects.all(), ["sid","comment"])
@@ -126,16 +132,17 @@ def read_ligand_batches(ligand_batch):
     object_capitalized = ligand_batch.capitalize()
     model = get_model_by_name(object_capitalized)
     if ligand_batch in ["peptideBatch","antibodyBatch", "complexBatch"]:
-        df = read_frame(model.objects.all(), ["sid", "labeling", "concentration","buffer", "ph","purity", "produced_by__username",
+        df = read_frame(model.objects.all(), ["sid", "labeling", "concentration","buffer__sid", "ph","purity", "produced_by__username",
                                           "production_date", "comment",
                                           "ligand__sid"])
         df.replace([np.NaN], [None], inplace=True)
         df['purity'] = list(map(str, df['purity'].values))
         df['concentration'] = list(map(str, df['concentration'].values))
 
+
     elif ligand_batch == "virusBatch":
         df = read_frame(model.objects.all(),
-                        ["sid", "labeling", "concentration","buffer", "ph","purity", "produced_by__username",
+                        ["sid", "labeling", "concentration","buffer__sid", "ph","purity", "produced_by__username",
                                           "production_date", "comment",
                                           "ligand__sid", "passage_history","active"])
         df.replace([np.NaN], [None], inplace=True)
@@ -144,12 +151,14 @@ def read_ligand_batches(ligand_batch):
         df['purity'] = list(map(str, df['purity'].values))
         df['concentration'] = list(map(str, df['concentration'].values) )
 
+
     elif ligand_batch == "bufferBatch":
         df = read_frame(model.objects.all(),
-                        ["sid", "buffer", "ph", "produced_by__username",
+                        ["sid", "buffer__sid", "ph", "produced_by__username",
                          "production_date", "comment"])
         df.replace([np.NaN], [None], inplace=True)
 
+    df['buffer__sid'] = list(map(str, df['buffer__sid'].values))
     df['ph']=list(map(str, df['ph'].values))
     df['production_date']=list(map(str, df['production_date'].values))
 
@@ -158,7 +167,7 @@ def read_ligand_batches(ligand_batch):
 
 
 
-    df = df.rename(columns={"ligand__sid":"ligand","produced_by__username":"produced_by"})
+    df = df.rename(columns={"ligand__sid":"ligand","produced_by__username":"produced_by","buffer__sid":"buffer"})
 
 
     return df
@@ -289,8 +298,7 @@ def get_user_or_none(user):
     if user is None:
             user = None
     else:
-        user = User.objects.get(username=user)
-
+        user = User.objects.get(username__iexact=user)
     return user
 
 def get_ligand_or_none(ligand):
@@ -298,10 +306,18 @@ def get_ligand_or_none(ligand):
     if ligand is None:
             ligand = None
     else:
-        ligand = Ligand.objects.get(sid=ligand)
+        ligand = Ligand.objects.get(sid__iexact=ligand)
 
 
     return ligand
+
+def get_buffer_or_none(buffer):
+    Buffer = apps.get_model("flutype", model_name="Buffer")
+    if buffer is None:
+            buffer = None
+    else:
+        buffer = Buffer.objects.get(sid__iexact=buffer)
+    return buffer
 
 def get_duration_or_none(duration):
     if duration is None:

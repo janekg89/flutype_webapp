@@ -8,7 +8,7 @@ from django.test import TransactionTestCase
 from flutype.data_management.fill_users import create_users, user_defs
 from django.apps import apps
 from django.test import tag
-from flutype.helper import  read_ligands ,read_complex, read_ligand_batches, get_model_by_name, read_steps \
+from flutype.helper import  read_ligands ,read_complex, read_ligand_batches, get_model_by_name, read_steps, read_buffer \
     ,get_duration_or_none, duration_to_string
 from django_pandas.io import read_frame
 
@@ -28,9 +28,13 @@ class DatabaseDJTestCase(TransactionTestCase):
         #read ligands from master
         ligands = self.ma.read_ligands()
         complex = self.ma.read_complex()
+        buffer = self.ma.read_buffer()
+
         #fill database with ligands
         self.db.update_ligands_or_batches(ligands)
         self.db.update_ligands_or_batches(complex)
+        self.db.update_ligands_or_batches(buffer)
+
         #test count
         for ligand in Ligand_count:
             Ligand = apps.get_model("flutype", ligand)
@@ -38,12 +42,16 @@ class DatabaseDJTestCase(TransactionTestCase):
 
 
     def test_update_batches(self):
-        Ligand_batch_count = {"AntibodyBatch":12,"BufferBatch":3, "ComplexBatch":1, "VirusBatch":64, "PeptideBatch":234}
+        Ligand_batch_count = {"AntibodyBatch":12,"BufferBatch":3, "ComplexBatch":1, "VirusBatch":66, "PeptideBatch":242}
 
         ligands = self.ma.read_ligands()
         complex = self.ma.read_complex()
+        buffer = self.ma.read_buffer()
+
         self.db.update_ligands_or_batches(ligands)
         self.db.update_ligands_or_batches(complex)
+        self.db.update_ligands_or_batches(buffer)
+
         ligand_batches = self.ma.read_ligand_batches()
         self.db.update_ligands_or_batches(ligand_batches)
 
@@ -71,9 +79,13 @@ class DatabaseDJTestCase(TransactionTestCase):
     def test_update_study(self):
         ligands = self.ma.read_ligands()
         complex = self.ma.read_complex()
+        buffer = self.ma.read_buffer()
+
 
         self.db.update_ligands_or_batches(ligands)
         self.db.update_ligands_or_batches(complex)
+        self.db.update_ligands_or_batches(buffer)
+
 
         ligand_batches = self.ma.read_ligand_batches()
         self.db.update_ligands_or_batches(ligand_batches)
@@ -101,9 +113,12 @@ class DatabaseDJTestCase(TransactionTestCase):
     def test_read_ligand(self):
         ligands = self.ma.read_ligands()
         complex = self.ma.read_complex()
+        buffer = self.ma.read_buffer()
 
         self.db.update_ligands_or_batches(ligands)
         self.db.update_ligands_or_batches(complex)
+        self.db.update_ligands_or_batches(buffer)
+
 
 
         ligands1 = self.ma.ligands
@@ -111,13 +126,17 @@ class DatabaseDJTestCase(TransactionTestCase):
             df = read_ligands(ligand)
             self.assertTrue(ligands[ligand].equals(df))
         self.assertTrue(complex["complex"].equals(read_complex()))
+        self.assertTrue(buffer["buffer"].equals(read_buffer()))
+
 
     def test_read_ligand_batches(self):
         ligands = self.ma.read_ligands()
         complex = self.ma.read_complex()
+        buffer = self.ma.read_buffer()
+
         self.db.update_ligands_or_batches(ligands)
         self.db.update_ligands_or_batches(complex)
-
+        self.db.update_ligands_or_batches(buffer)
 
         ligand_batches = self.ma.read_ligand_batches()
         self.db.update_ligands_or_batches(ligand_batches)

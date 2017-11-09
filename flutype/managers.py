@@ -10,7 +10,7 @@ import datetime
 
 
 
-from flutype.helper import get_ligand_or_none, get_user_or_none, get_duration_or_none,\
+from flutype.helper import get_ligand_or_none, get_buffer_or_none,get_user_or_none, get_duration_or_none,\
      unique_ordering, read_tsv_table, get_unique_galfile,\
      create_spots, get_or_create_raw_spots, md5, read_gal_file, read_gal_file_to_temporaray_file
 
@@ -48,6 +48,8 @@ class LigandManager(PolymorphicManager):
 
 class LigandBatchManager(models.Manager):
     def get_or_create(self, *args, **kwargs):
+        if "buffer" in kwargs and isinstance(kwargs['buffer'], basestring):
+            kwargs['buffer'] =  get_buffer_or_none(kwargs['buffer'])
         if "ligand" in kwargs and isinstance(kwargs['ligand'], basestring):
             kwargs['ligand'] =  get_ligand_or_none(kwargs['ligand'])
         if "produced_by" in kwargs and isinstance(kwargs['produced_by'], basestring):

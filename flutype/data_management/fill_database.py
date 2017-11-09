@@ -44,9 +44,13 @@ class DatabaseDJ(object):
     def update_db(self):
         ligands = self.ma.read_ligands()
         complex = self.ma.read_complex()
+        buffer = self.ma.read_buffer()
+
 
         self.update_ligands_or_batches(ligands)
         self.update_ligands_or_batches(complex)
+        self.update_ligands_or_batches(buffer)
+
 
         ligand_batches = self.ma.read_ligand_batches()
         self.update_ligands_or_batches(ligand_batches)
