@@ -1,3 +1,22 @@
+Skip to content
+This repository
+Search
+Pull requests
+Issues
+Marketplace
+Explore
+ @janekg89
+ Sign out
+ Unwatch 2
+  Unstar 1
+ Fork 1 janekg89/flutype_webapp
+ Code  Issues 35  Pull requests 1  Projects 0  Wiki  Insights  Settings
+Branch: develop Find file Copy pathflutype_webapp/flutype/templates/flutype/create.html
+0222818  17 days ago
+@matthiaskoenig matthiaskoenig redesign and fixing display
+2 contributors @janekg89 @matthiaskoenig
+RawBlameHistory    
+92 lines (79 sloc)  2.79 KB
 {% extends "flutype/base.html" %}
 {% block content %}
     <div class="standard">
@@ -36,7 +55,6 @@
     {% endif %}
     </h1>
 
-    <form class="form-horizontal">
       <form method="post" class="post-form">
           <table id="edit">
               <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
@@ -75,7 +93,6 @@
     <button class="btn btn-default btn-danger"> Cancel</button>
         </span>
     </form>
-    </form>
 
 
 </div>
@@ -89,4 +106,4 @@
             info : false,
             "order": []});
         });
-    </script>
+</script>
