@@ -1,11 +1,11 @@
 sid	labeling	concentration	buffer	ph	purity	produced_by	production_date	comment	ligand
-L001		0.1	natriumhydrogencarbonat	8.5			2017-05-09		P012
-L002		1	natriumhydrogencarbonat	8.5					P001
-L003		1	natriumhydrogencarbonat	8.5					P008
-L004		1	natriumhydrogencarbonat	8.5					P009
-L005		1	natriumhydrogencarbonat	8.5					P010
-L006		1	natriumhydrogencarbonat	8.5					P011
-L007		0.07	natriumhydrogencarbonat	8.5					P013
+L001		0.1	Natriumhydrogencarbonat	8.5			2017-05-09		P012
+L002		1	Natriumhydrogencarbonat	8.5					P001
+L003		1	Natriumhydrogencarbonat	8.5					P008
+L004		1	Natriumhydrogencarbonat	8.5					P009
+L005		1	Natriumhydrogencarbonat	8.5					P010
+L006		1	Natriumhydrogencarbonat	8.5					P011
+L007		0.07	Natriumhydrogencarbonat	8.5					P013
 P1									P1
 P3									P3
 P4									P4
@@ -60,71 +60,71 @@ P14100		1							P017
 P16025		0.25							P019
 P16050		0.5							P019
 P16100		1							P019
-P032-1:50		50	natriumhydrogencarbonat	8.5					P032
-P012-2		2	natriumhydrogencarbonat	8.5					P012
-P012-1		1	natriumhydrogencarbonat	8.5					P012
-P012-05		0.5	natriumhydrogencarbonat	8.5					P012
-P012-025		0.25	natriumhydrogencarbonat	8.5					P012
-P012-0125		0.125	natriumhydrogencarbonat	8.5					P012
-P012-00625		0.0625	natriumhydrogencarbonat	8.5					P012
-P012-00313		0.0313	natriumhydrogencarbonat	8.5					P012
-P012-00156		0.0156	natriumhydrogencarbonat	8.5					P012
-P019-2		2	natriumhydrogencarbonat	8.5					P019
-P019-1		1	natriumhydrogencarbonat	8.5					P019
-P019-05		0.5	natriumhydrogencarbonat	8.5					P019
-P019-025		0.25	natriumhydrogencarbonat	8.5					P019
-P019-0125		0.125	natriumhydrogencarbonat	8.5					P019
-P019-00625		0.0625	natriumhydrogencarbonat	8.5					P019
-P019-00313		0.0313	natriumhydrogencarbonat	8.5					P019
-P019-00156		0.0156	natriumhydrogencarbonat	8.5					P019
-P011-2		2	natriumhydrogencarbonat	8.5					P011
-P011-1		1	natriumhydrogencarbonat	8.5					P011
-P011-05		0.5	natriumhydrogencarbonat	8.5					P011
-P011-025		0.25	natriumhydrogencarbonat	8.5					P011
-P011-0125		0.125	natriumhydrogencarbonat	8.5					P011
-P011-00625		0.0625	natriumhydrogencarbonat	8.5					P011
-P011-00313		0.0313	natriumhydrogencarbonat	8.5					P011
-P011-00156		0.0156	natriumhydrogencarbonat	8.5					P011
-P001-2		2	natriumhydrogencarbonat	8.5					P001
-P001-1		1	natriumhydrogencarbonat	8.5					P001
-P001-05		0.5	natriumhydrogencarbonat	8.5					P001
-P001-025		0.25	natriumhydrogencarbonat	8.5					P001
-P001-0125		0.125	natriumhydrogencarbonat	8.5					P001
-P001-00625		0.0625	natriumhydrogencarbonat	8.5					P001
-P001-00313		0.0313	natriumhydrogencarbonat	8.5					P001
-P001-00156		0.0156	natriumhydrogencarbonat	8.5					P001
-P008-2		2	natriumhydrogencarbonat	8.5					P008
-P008-1		1	natriumhydrogencarbonat	8.5					P008
-P008-05		0.5	natriumhydrogencarbonat	8.5					P008
-P008-025		0.25	natriumhydrogencarbonat	8.5					P008
-P008-0125		0.125	natriumhydrogencarbonat	8.5					P008
-P008-00625		0.0625	natriumhydrogencarbonat	8.5					P008
-P008-00313		0.0313	natriumhydrogencarbonat	8.5					P008
-P008-00156		0.0156	natriumhydrogencarbonat	8.5					P008
-P009-2		2	natriumhydrogencarbonat	8.5					P009
-P009-1		1	natriumhydrogencarbonat	8.5					P009
-P009-05		0.5	natriumhydrogencarbonat	8.5					P009
-P009-025		0.25	natriumhydrogencarbonat	8.5					P009
-P009-0125		0.125	natriumhydrogencarbonat	8.5					P009
-P009-00625		0.0625	natriumhydrogencarbonat	8.5					P009
-P009-00313		0.0313	natriumhydrogencarbonat	8.5					P009
-P009-00156		0.0156	natriumhydrogencarbonat	8.5					P009
-P010-2		2	natriumhydrogencarbonat	8.5					P010
-P010-1		1	natriumhydrogencarbonat	8.5					P010
-P010-05		0.5	natriumhydrogencarbonat	8.5					P010
-P010-025		0.25	natriumhydrogencarbonat	8.5					P010
-P010-0125		0.125	natriumhydrogencarbonat	8.5					P010
-P010-00625		0.0625	natriumhydrogencarbonat	8.5					P010
-P010-00313		0.0313	natriumhydrogencarbonat	8.5					P010
-P010-00156		0.0156	natriumhydrogencarbonat	8.5					P010
-P013-100		0.1	natriumhydrogencarbonat	8.5					P013
-P013-050		0.05	natriumhydrogencarbonat	8.5					P013
-P013-025		0.025	natriumhydrogencarbonat	8.5					P013
-P013-0125		0.0125	natriumhydrogencarbonat	8.5					P013
-P013-00625		0.00625	natriumhydrogencarbonat	8.5					P013
-P013-00313		0.00313	natriumhydrogencarbonat	8.5					P013
-P013-00156		0.00156	natriumhydrogencarbonat	8.5					P013
-P013-00078		0.00078	natriumhydrogencarbonat	8.5					P013
+P032-1:50		50	Natriumhydrogencarbonat	8.5					P032
+P012-2		2	Natriumhydrogencarbonat	8.5					P012
+P012-1		1	Natriumhydrogencarbonat	8.5					P012
+P012-05		0.5	Natriumhydrogencarbonat	8.5					P012
+P012-025		0.25	Natriumhydrogencarbonat	8.5					P012
+P012-0125		0.125	Natriumhydrogencarbonat	8.5					P012
+P012-00625		0.0625	Natriumhydrogencarbonat	8.5					P012
+P012-00313		0.0313	Natriumhydrogencarbonat	8.5					P012
+P012-00156		0.0156	Natriumhydrogencarbonat	8.5					P012
+P019-2		2	Natriumhydrogencarbonat	8.5					P019
+P019-1		1	Natriumhydrogencarbonat	8.5					P019
+P019-05		0.5	Natriumhydrogencarbonat	8.5					P019
+P019-025		0.25	Natriumhydrogencarbonat	8.5					P019
+P019-0125		0.125	Natriumhydrogencarbonat	8.5					P019
+P019-00625		0.0625	Natriumhydrogencarbonat	8.5					P019
+P019-00313		0.0313	Natriumhydrogencarbonat	8.5					P019
+P019-00156		0.0156	Natriumhydrogencarbonat	8.5					P019
+P011-2		2	Natriumhydrogencarbonat	8.5					P011
+P011-1		1	Natriumhydrogencarbonat	8.5					P011
+P011-05		0.5	Natriumhydrogencarbonat	8.5					P011
+P011-025		0.25	Natriumhydrogencarbonat	8.5					P011
+P011-0125		0.125	Natriumhydrogencarbonat	8.5					P011
+P011-00625		0.0625	Natriumhydrogencarbonat	8.5					P011
+P011-00313		0.0313	Natriumhydrogencarbonat	8.5					P011
+P011-00156		0.0156	Natriumhydrogencarbonat	8.5					P011
+P001-2		2	Natriumhydrogencarbonat	8.5					P001
+P001-1		1	Natriumhydrogencarbonat	8.5					P001
+P001-05		0.5	Natriumhydrogencarbonat	8.5					P001
+P001-025		0.25	Natriumhydrogencarbonat	8.5					P001
+P001-0125		0.125	Natriumhydrogencarbonat	8.5					P001
+P001-00625		0.0625	Natriumhydrogencarbonat	8.5					P001
+P001-00313		0.0313	Natriumhydrogencarbonat	8.5					P001
+P001-00156		0.0156	Natriumhydrogencarbonat	8.5					P001
+P008-2		2	Natriumhydrogencarbonat	8.5					P008
+P008-1		1	Natriumhydrogencarbonat	8.5					P008
+P008-05		0.5	Natriumhydrogencarbonat	8.5					P008
+P008-025		0.25	Natriumhydrogencarbonat	8.5					P008
+P008-0125		0.125	Natriumhydrogencarbonat	8.5					P008
+P008-00625		0.0625	Natriumhydrogencarbonat	8.5					P008
+P008-00313		0.0313	Natriumhydrogencarbonat	8.5					P008
+P008-00156		0.0156	Natriumhydrogencarbonat	8.5					P008
+P009-2		2	Natriumhydrogencarbonat	8.5					P009
+P009-1		1	Natriumhydrogencarbonat	8.5					P009
+P009-05		0.5	Natriumhydrogencarbonat	8.5					P009
+P009-025		0.25	Natriumhydrogencarbonat	8.5					P009
+P009-0125		0.125	Natriumhydrogencarbonat	8.5					P009
+P009-00625		0.0625	Natriumhydrogencarbonat	8.5					P009
+P009-00313		0.0313	Natriumhydrogencarbonat	8.5					P009
+P009-00156		0.0156	Natriumhydrogencarbonat	8.5					P009
+P010-2		2	Natriumhydrogencarbonat	8.5					P010
+P010-1		1	Natriumhydrogencarbonat	8.5					P010
+P010-05		0.5	Natriumhydrogencarbonat	8.5					P010
+P010-025		0.25	Natriumhydrogencarbonat	8.5					P010
+P010-0125		0.125	Natriumhydrogencarbonat	8.5					P010
+P010-00625		0.0625	Natriumhydrogencarbonat	8.5					P010
+P010-00313		0.0313	Natriumhydrogencarbonat	8.5					P010
+P010-00156		0.0156	Natriumhydrogencarbonat	8.5					P010
+P013-100		0.1	Natriumhydrogencarbonat	8.5					P013
+P013-050		0.05	Natriumhydrogencarbonat	8.5					P013
+P013-025		0.025	Natriumhydrogencarbonat	8.5					P013
+P013-0125		0.0125	Natriumhydrogencarbonat	8.5					P013
+P013-00625		0.00625	Natriumhydrogencarbonat	8.5					P013
+P013-00313		0.00313	Natriumhydrogencarbonat	8.5					P013
+P013-00156		0.00156	Natriumhydrogencarbonat	8.5					P013
+P013-00078		0.00078	Natriumhydrogencarbonat	8.5					P013
 1.0_pep6		1							P001
 0.5_pep6		0.5							P001
 0.25_pep6		0.25							P001
@@ -233,3 +233,11 @@ P013-00078		0.00078	natriumhydrogencarbonat	8.5					P013
 1.0_Christian		1							Christian
 0.5_Christian		0.5							Christian
 0.25_Christian		0.25							Christian
+Pep44_1		1	NaHCO3	8.5					pep44
+Pep42_1		1	NaHCO3	8.5					pep42
+Pep41_1		1	NaHCO3	8.5					pep41
+Pep39_1		1	NaHCO3	8.5					pep39
+P019_1		1	NaHCO3	8.5					P019
+Pep7_1		1	NaHCO3	8.5					pep7
+Neutra+sl6b_0.1		0.1	NaHCO3	8.5					neutra1
+Fet_0.3		0.3	NaHCO3	8.5					P012

@@ -26,27 +26,19 @@ fs = FileSystemStorage(location=MEDIA_ROOT)
 #############################################################
 # Helper models, i.e., choices
 #############################################################
-# FIXME: rename to BufferType
-class Buffer(DjangoChoices):
-    """ Buffer model. """
-    na = ChoiceItem("NA")
-    pbst = ChoiceItem("PBST")
-    natriumhydrogencarbonat = ChoiceItem("Natriumhydrogencarbonat")
 
-
-# FIXME: rename to FunctionalizationType (this is not a substance, but functionalization)
-class Substance(DjangoChoices):
+class FunctionalizationType(DjangoChoices):
     """ Substance types. """
     nhs_3d = ChoiceItem("3D-NHS")
     no = ChoiceItem("No")
     epoxy_3d = ChoiceItem("3D-Epoxy")
-
 
 class MeasurementType(DjangoChoices):
     """ Measurement types. """
     microarray = ChoiceItem("microarray")
     microwell = ChoiceItem("microwell")
     elisa = ChoiceItem("elisa")
+    na_activitiy = ChoiceItem("na_activitiy")
 
 
 class GalType(DjangoChoices):
@@ -55,16 +47,17 @@ class GalType(DjangoChoices):
     intensity = ChoiceItem("intensity")
     ligand_batch = ChoiceItem("ligand_batch")
 
-# FIXME: rename to ManufacturerModel
-class Manufacturer(DjangoChoices):
+class ManufacturerModel(DjangoChoices):
     """ Manufacturer type """
     polyan = ChoiceItem("PolyAn")
 
 
 class ProcessingType(DjangoChoices):
-    # FIXME: rename to substract_buffer (this does not save anything, be specific with the names)
-    substract_buffer = ChoiceItem("sub_buf")
+    substract_buffer = ChoiceItem("substract_buffer")
 
+class Buffer(Sidable,Commentable,models.Model):
+    """ Buffer model """
+    name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
 
 ########################################
 # Ligand
@@ -135,9 +128,9 @@ class Batch(Sidable, Commentable, models.Model):
     """
     labeling = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     concentration = models.FloatField(validators=[MinValueValidator(0)], blank=True, null=True)
-    buffer = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Buffer.choices, blank=True, null=True)
     ph = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(14)], blank=True, null=True)
     purity = models.FloatField(validators=[MinValueValidator(0)], blank=True, null=True)
+    buffer = models.ForeignKey(Buffer, blank=True, null=True)
     produced_by = models.ForeignKey(User, blank=True, null=True)
     production_date = models.DateField(blank=True, null=True)
 
@@ -368,8 +361,8 @@ class Measurement(Sidable, Commentable, Userable, FileAttachable, Hidable, model
     """ Measurement is a single experimental measurement. """
     measurement_type = models.CharField(max_length=CHAR_MAX_LENGTH, choices=MeasurementType.choices)
     batch_sid = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
-    functionalization = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Substance.choices)
-    manufacturer = models.CharField(max_length=CHAR_MAX_LENGTH, choices=Manufacturer.choices)
+    functionalization = models.CharField(max_length=CHAR_MAX_LENGTH, choices=FunctionalizationType.choices)
+    manufacturer = models.CharField(max_length=CHAR_MAX_LENGTH, choices=ManufacturerModel.choices)
     process = models.ForeignKey("Process", blank=True, null=True)
     studies = models.ManyToManyField(Study, blank=True)
     objects = MeasurementManager()
