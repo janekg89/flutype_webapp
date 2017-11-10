@@ -13,6 +13,7 @@
             <table id="batches" class="table table-striped">
                 <thead>
                 <tr>
+                    <th></th>
                     <th>sid batch</th>
                     <!-- ligand information -->
                     <th>sid peptide</th>
@@ -35,6 +36,9 @@
                 <tbody>
                 {% for peptidebatch in peptide_batches.all() %}
                     <tr>
+                        <td>{% if request.user.is_superuser %}
+                    <a href="{{ url('peptide_batch_edit', args=[peptidebatch.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                {%  endif %}</td>
                         <td><b>{{ peptidebatch.sid }}</b></td>
                         <!-- ligand information -->
                         {% with p=peptidebatch.ligand %}

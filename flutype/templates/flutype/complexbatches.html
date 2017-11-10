@@ -17,6 +17,7 @@
             <table id="complex_batches" class="table table-striped">
                 <thead>
                 <tr>
+                    <th></th>
                     <th>sid batch</th>
                     <th>sid complex</th>
                     <th>ligands</th>
@@ -33,6 +34,9 @@
                 <tbody>
                 {% for complexbatch in complex_batches.all() %}
                     <tr>
+                        <td>{% if request.user.is_superuser %}
+                    <a href="{{ url('complex_batch_edit', args=[complexbatch.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                {%  endif %}</td>
                         <td><b>{{ complexbatch.sid }}</b></td>
                         <!-- complex information -->
                         {% with c=complexbatch.ligand %}

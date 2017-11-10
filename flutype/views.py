@@ -624,6 +624,19 @@ def buffer_new(request):
         return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer'})
 
 @login_required
+def buffer_edit(request, sid):
+    instance = get_object_or_404(Buffer, sid=sid)
+    if request.method == 'POST':
+        form = BufferForm(request.POST, instance=instance)
+        if form.is_valid():
+            form.save()
+            return redirect('buffers')
+    else:
+        form = BufferForm(instance=instance)
+        return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer'})
+
+
+@login_required
 def buffer_batch_view(request):
     buffer_batches = BufferBatch.objects.all()
     context = {
@@ -646,6 +659,17 @@ def buffer_batch_new(request):
         form = BufferBatchForm()
         return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer_batch'})
 
+@login_required
+def buffer_batch_edit(request, sid):
+    instance = get_object_or_404(BufferBatch, sid=sid)
+    if request.method == 'POST':
+        form = BufferBatchForm(request.POST, instance=instance)
+        if form.is_valid():
+            form.save()
+            return redirect('buffer_batches')
+    else:
+        form = BufferBatchForm(instance=instance)
+        return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer_batch'})
 
 
 @login_required

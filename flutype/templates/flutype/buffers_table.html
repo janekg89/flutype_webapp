@@ -11,7 +11,9 @@
         <tbody>
         {% for buffer in buffers %}
             <tr>
-                <th></th>
+                <td>{% if request.user.is_superuser %}
+                    <a href="{{ url('buffer_edit', args=[buffer.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                {% endif %}</td>
                 <td><b>{{ buffer.sid }}</b></td>
                 <td>{{ buffer.name }}</td>
                 <td>{{ buffer.comment }}</td>

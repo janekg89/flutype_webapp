@@ -2,6 +2,7 @@
     <table id="{{ id_viruses_table }}" class="table table-striped">
         <thead>
         <tr>
+            <th></th>
             <th>sid</th>
             <th title="taxonomy id">taxonomy</th>
             <th>subtype</th>
@@ -14,6 +15,9 @@
         <tbody>
         {% for virus in viruses %}
             <tr>
+                <td>{% if request.user.is_superuser %}
+                    <a href="{{ url('virus_edit', args=[virus.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                {% endif %}</td>
                 <td><b>{{ virus.sid }}</b></td>
                 <td>
                 {% if virus.tax_id == "NO" %}
