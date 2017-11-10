@@ -26,7 +26,7 @@
                 <td>
                     {% for m in s.rawspotcollection_set.all() %}
                         {{ macros.measurement_type(m.measurement_type) }}
-                        <a href="{{ url('rawspotcollectionview', args=[m.sid]) }}">{{ m.sid }}<br/></a>
+                        <a href="{{ url('rawspotcollectionview', args=[m.sid]) }}">{{ m.sid }}</a> ({{ m.comment }})<br />
                     {% endfor %}
                 </td>
                 <td> {{s.date.strftime('%Y-%m-%d') }}</td>
