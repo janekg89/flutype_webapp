@@ -1,7 +1,8 @@
 import numpy as np
 from django import forms
-
+from django.urls import reverse
 from django.contrib import admin
+from django.utils.safestring import mark_safe
 
 from .models import Peptide, PeptideBatch, Virus, VirusBatch, Antibody, AntibodyBatch, Complex, \
     ProcessStep, Step, Spotting, Washing, Drying, Quenching, Blocking, Scanning, Incubating, \
@@ -75,10 +76,15 @@ class PeptideBatchForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PeptideBatchForm, self).__init__(*args, **kwargs)
         self.fields['ligand'].queryset = Peptide.objects.all()
+        self.fields['ligand'].label = "Peptide"
+        self.fields['ligand'].help_text = "go to <a href='{}'>peptides list </a>.".format(reverse('peptides'))
+
 
     class Meta:
         model = PeptideBatch
         fields = batch_fields
+
+
 
 
 class ComplexBatchForm(forms.ModelForm):
@@ -86,6 +92,10 @@ class ComplexBatchForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ComplexBatchForm, self).__init__(*args, **kwargs)
         self.fields['ligand'].queryset = Complex.objects.all()
+        self.fields['ligand'].label = "Complex"
+        self.fields['ligand'].help_text = "go to <a href='{}'>complexes list </a>.".format(reverse('complexes'))
+
+
 
     class Meta:
         model = ComplexBatch
@@ -97,6 +107,11 @@ class VirusBatchForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(VirusBatchForm, self).__init__(*args, **kwargs)
         self.fields['ligand'].queryset = Virus.objects.all()
+        self.fields['ligand'].label = "Virus"
+        self.fields['ligand'].help_text = "go to <a href='{}'>viruses list </a>.".format(reverse('viruses'))
+
+
+
 
     class Meta:
         model = VirusBatch
@@ -108,6 +123,9 @@ class AntibodyBatchForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(AntibodyBatchForm, self).__init__(*args, **kwargs)
         self.fields['ligand'].queryset = Antibody.objects.all()
+        self.fields['ligand'].label = "Antibody"
+        self.fields['ligand'].help_text = "go to <a href='{}'>antibodies list </a>.".format(reverse('antibodies'))
+
 
     class Meta:
         model = AntibodyBatch
