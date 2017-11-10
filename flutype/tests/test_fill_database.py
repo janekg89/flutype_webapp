@@ -126,6 +126,8 @@ class DatabaseDJTestCase(TransactionTestCase):
             df = read_ligands(ligand)
             self.assertTrue(ligands[ligand].equals(df))
         self.assertTrue(complex["complex"].equals(read_complex()))
+        print(read_buffer())
+        print(buffer["buffer"])
         self.assertTrue(buffer["buffer"].equals(read_buffer()))
 
 
@@ -143,6 +145,7 @@ class DatabaseDJTestCase(TransactionTestCase):
 
         for ligand_batch in ligand_batches.keys():
             df = read_ligand_batches(ligand_batch)
+
             self.assertTrue(ligand_batches[ligand_batch]["sid"].equals(df["sid"]))
             self.assertTrue(ligand_batches[ligand_batch]["comment"].equals(df["comment"]))
             self.assertTrue(ligand_batches[ligand_batch]["buffer"].equals(df["buffer"]))
