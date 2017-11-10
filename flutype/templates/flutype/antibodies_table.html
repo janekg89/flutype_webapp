@@ -13,7 +13,7 @@
         <tbody>
         {% for antibody in antibodies %}
             <tr>
-                <td>{% if request.user.username in ['mkoenig', 'janekg89'] %}
+                <td>{% if request.user.is_superuser %}
                     <a href="{{ url('antibody_edit', args=[antibody.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
                 {%  endif %}
                 </td>
