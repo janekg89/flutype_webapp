@@ -47,7 +47,7 @@
                         {% endwith %}
                         <!-- batch information -->
                         <td>{{ peptidebatch.concentration }}</td>
-                        <td>{{ peptidebatch.buffer }}</td>
+                        <td class="info"> {% if peptidebatch.buffer.sid %}{{ peptidebatch.buffer.sid }} {% else %} - {% endif %}</td>
                         <td>{{ peptidebatch.ph }}</td>
                         <td>{{ peptidebatch.purity }}</td>
                         <td>{{ peptidebatch.labeling }}</td>

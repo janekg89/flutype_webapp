@@ -50,6 +50,11 @@ urlpatterns = [
     url(r'^image/(?P<sid>.*)/$', views.image_view, name='imageview'),
     url(r'^image/process/(?P<sid>.*)/$', views.image_process_view, name='imageviewprocess'),
 
+    url(r'^buffers/$', views.buffer_view, name='buffers'),
+    url(r'^buffers/new/$', views.buffer_new, name='buffer_new'),
+    url(r'^bufferbatches/$', views.buffer_batch_view, name='bufferbatches'),
+    url(r'^bufferbatches/new/$', views.buffer_batch_new, name='buffer_batch_new'),
+
     url(r'^peptidebatches/$', views.peptide_batch_view, name='peptidebatches'),
     url(r'^peptidebatches/new/$', views.peptide_batch_new, name='peptide_batch_new'),
     url(r'^peptidebatches/edit/(?P<sid>.*)/$', views.peptide_batch_edit, name='peptide_batch_edit'),

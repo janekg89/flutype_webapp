@@ -1,18 +1,13 @@
 {% extends "flutype/base.html" %}
 {% block content %}
     <div class="standard">
-        <h1><i class="fa f-fw fa-hand-spock-o"></i> Buffer
-        {% if type == "fixed" %}
-            (Fixed)
-        {% elif type == "mobile" %}
-            (Mobile)
-        {% endif %}
-        <a href="{{ url('antibody_new') }}" class="btn btn-default" title="Add new antibody">
+        <h1><i class="fa fa-fw fa-circle-o-notch"></i> Buffer
+        <a href="{{ url('buffer_new') }}" class="btn btn-default" title="Add new buffer">
         <span class="fa fa-plus-circle fa-3x text-success"></span></a>
         </h1>
 
-        {% with id_antibodies_table = "buffer" %}
-            {% include "flutype/buffer_table.html" %}
+        {% with id_buffer_table = "buffer" %}
+            {% include "flutype/buffers_table.html" %}
         {% endwith %}
     </div>
 {% endblock %}

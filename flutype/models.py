@@ -55,9 +55,13 @@ class ManufacturerModel(DjangoChoices):
 class ProcessingType(DjangoChoices):
     substract_buffer = ChoiceItem("substract_buffer")
 
-class Buffer(Sidable,Commentable,models.Model):
+class Buffer(Commentable,models.Model):
     """ Buffer model """
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+
+    def __str__(self):
+        return self.sid
 
 ########################################
 # Ligand

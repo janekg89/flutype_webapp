@@ -1,0 +1,22 @@
+{% if buffers %}
+    <table id="{{ id_buffers_table }}" class="table table-striped">
+        <thead>
+        <tr>
+            <th>sid</th>
+            <th>name</th>
+            <th>comment</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for buffer in buffers %}
+            <tr>
+                <td><b>{{ buffer.sid }}</b></td>
+                <td>{{ buffer.name }}</td>
+                <td>{{ buffer.comment }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No entries in database.</p>
+{% endif %}
