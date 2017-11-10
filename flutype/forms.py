@@ -64,10 +64,10 @@ class VirusForm(forms.ModelForm):
 class AntibodyForm(forms.ModelForm):
     class Meta:
         model = Antibody
-        fields = ['sid', 'target','name', 'link_db', 'comment']
+        fields = ['sid', 'target', 'name', 'link_db', 'comment']
 
 
-batch_fields = ['sid', 'ligand','concentration', 'buffer', 'ph', 'purity', 'produced_by','production_date', 'comment']
+batch_fields = ['sid', 'ligand', 'concentration', 'buffer', 'ph', 'purity', 'produced_by','production_date', 'comment']
 
 
 class PeptideBatchForm(forms.ModelForm):

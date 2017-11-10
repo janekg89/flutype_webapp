@@ -2,6 +2,7 @@
     <table id="{{ id_antibodies_table }}" class="table table-striped">
         <thead>
         <tr>
+            <th></th>
             <th>sid</th>
             <th>target</th>
             <th>name</th>
@@ -12,6 +13,10 @@
         <tbody>
         {% for antibody in antibodies %}
             <tr>
+                <td>{% if request.user.username in ['mkoenig', 'janekg89'] %}
+                    <a href="{{ url('antibody_edit', args=[antibody.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                {%  endif %}
+                </td>
                 <td><b>{{ antibody.sid }}</b></td>
                 <td>{{ antibody.target }}</td>
                 <td>{{ antibody.name }}</td>

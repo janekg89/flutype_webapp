@@ -633,6 +633,8 @@ def buffer_batch_view(request):
     return render(request,
                   'flutype/bufferbatches.html', context)
 
+# TODO: create one ligand create and edit view
+
 @login_required
 def buffer_batch_new(request):
     if request.method == 'POST':
@@ -643,6 +645,7 @@ def buffer_batch_new(request):
     else:
         form = BufferBatchForm()
         return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer_batch'})
+
 
 
 @login_required
