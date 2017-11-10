@@ -47,8 +47,8 @@ urlpatterns = [
 
     url(r'^process/(?P<sid>.*)/$', views.process_view, name='processview'),
 
-    url(r'^image/(?P<sid>.*)/$', views.image_view, name='imageview'),
-    url(r'^image/process/(?P<sid>.*)/$', views.image_process_view, name='imageviewprocess'),
+    #url(r'^image/(?P<sid>.*)/$', views.image_view, name='imageview'),
+    url(r'^image/processtep/(?P<id>.*)/$', views.image_process_view, name='imageviewprocess'),
 
     url(r'^buffers/$', views.buffer_view, name='buffers'),
     url(r'^buffers/new/$', views.buffer_new, name='buffer_new'),
