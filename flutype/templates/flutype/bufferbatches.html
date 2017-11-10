@@ -1,0 +1,63 @@
+{% extends "flutype/base.html" %}
+{% block content %}
+    <div class="standard">
+
+        <h1>Buffer Batches
+        <i class="fa fa-fw fa-circle-o-notch"></i>
+        <a href="{{ url('buffer_batch_new') }}" class="btn btn-default" title="Add new buffer batch">
+        <span class="fa fa-plus-circle fa-3x text-success"></span></a>
+        </h1>
+
+        {% if buffer_batches %}
+            <table id="buffer_batches" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>sid batch</th>
+                    <th>sid buffer</th>
+                    <th>name buffer</th>
+                    <th>comment buffer</th>
+                    <th>pH</th>
+                    <th>produced by</th>
+                    <th>production date</th>
+                    <th>comment</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for bufferbatch in buffer_batches.all() %}
+                    <tr>
+                        <td><b>{{ bufferbatch.sid }}</b></td>
+                        <!-- buffer information -->
+
+                        {% with b=bufferbatch.buffer %}
+                            {% if b %}
+                            <td class="info">{{ b.sid }}</td>
+                            <td class="info">{{ b.name }}</td>
+                            <td class="info">{{ b.comment }}</td>
+                            {% else %} <td class="info"> - </td>
+                            <td class="info"> - </td>
+                            <td class="info"> - </td> {% endif %}
+                        {% endwith %}
+                        <!-- batch information -->
+                        <td>{{ bufferbatch.ph }}</td>
+                        <td>{{ bufferbatch.produced_by }}</td>
+                        <td>{{ bufferbatch.production_date }}</td>
+                        <td>{{ bufferbatch.comment }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        {% else %}
+            <p>No entries in database.</p>
+        {% endif %}
+
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            $('#buffer_batches').DataTable();
+        });
+    </script>
+{% endblock %}

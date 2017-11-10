@@ -8,7 +8,8 @@
         <i class="fa fa-fw fa-hand-spock-o"></i> Antibody
     {% elif type == "antibody_batch"  %}
         <i class="fa fa-fw fa-hand-spock-o"></i> Antibody Batch <i class="fa fa-fw fa-flask"></i>
-
+    {% elif type == "buffer" %}
+        <i class="fa fa-fw fa-circle-o-notch"></i> Buffer
     {% elif type == "peptide" %}
         <i class="fa fa-fw fa-server"></i>Peptide
     {% elif type == "peptide_batch"  %}
@@ -44,11 +45,12 @@
            </table>
                   <span style="float:left;">
 
-              <button class="btn btn-default btn-success">Save changes</button>
+              <button class="btn btn-default btn-success">save Changes</button>
                   </span>
       </form>
-
-    {% if type == "peptide" %}
+     {% if type == "buffer" %}
+       <form action={{url('buffers')}}>
+    {% elif type == "peptide" %}
        <form action={{url('peptides')}}>
     {% elif type == "complex" %}
        <form action={{url('complexes')}}>
@@ -71,7 +73,7 @@
     {% endif %}
 
     <span style="float:left;">
-    <button class="btn btn-default btn-danger"> Cancel</button>
+    <button class="btn btn-default btn-danger">Cancel</button>
         </span>
     </form>
 

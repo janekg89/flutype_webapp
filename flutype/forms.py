@@ -6,7 +6,7 @@ from django.contrib import admin
 from .models import Peptide, PeptideBatch, Virus, VirusBatch, Antibody, AntibodyBatch, Complex, \
     ProcessStep, Step, Spotting, Washing, Drying, Quenching, Blocking, Scanning, Incubating, \
     Process, GalFile, Measurement, RawSpotCollection, RawSpot,SpotCollection, Spot, ComplexBatch, Study, \
-    IncubatingAnalyt, RawDoc
+    IncubatingAnalyt, RawDoc, Buffer, BufferBatch
 from .behaviours import Status
 
 
@@ -37,8 +37,19 @@ class PeptideForm(forms.ModelForm):
         model = Peptide
         fields = ['sid', 'linker', 'spacer', 'sequence', 'c_terminus', 'name', 'comment']
 
+class BufferForm(forms.ModelForm):
+    class Meta:
+        model = Buffer
+        fields = '__all__'
+
+class BufferBatchForm(forms.ModelForm):
+    class Meta:
+        model = BufferBatch
+        fields = ['sid', 'buffer', 'ph','produced_by','production_date', 'comment']
+
 
 class ComplexForm(forms.ModelForm):
+
     class Meta:
         model = Complex
         fields = ['sid', 'complex_ligands', 'comment']
@@ -60,24 +71,44 @@ batch_fields = ['sid', 'ligand','concentration', 'buffer', 'ph', 'purity', 'prod
 
 
 class PeptideBatchForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(PeptideBatchForm, self).__init__(*args, **kwargs)
+        self.fields['ligand'].queryset = Peptide.objects.all()
+
     class Meta:
         model = PeptideBatch
         fields = batch_fields
 
 
 class ComplexBatchForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ComplexBatchForm, self).__init__(*args, **kwargs)
+        self.fields['ligand'].queryset = Complex.objects.all()
+
     class Meta:
         model = ComplexBatch
         fields = batch_fields
 
 
 class VirusBatchForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(VirusBatchForm, self).__init__(*args, **kwargs)
+        self.fields['ligand'].queryset = Virus.objects.all()
+
     class Meta:
         model = VirusBatch
         fields = batch_fields
 
 
 class AntibodyBatchForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(AntibodyBatchForm, self).__init__(*args, **kwargs)
+        self.fields['ligand'].queryset = Antibody.objects.all()
+
     class Meta:
         model = AntibodyBatch
         fields = batch_fields

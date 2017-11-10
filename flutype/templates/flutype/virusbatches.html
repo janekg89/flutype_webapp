@@ -23,7 +23,7 @@
                     <th>active</th>
                     <th>labeling</th>
                     <th>concentration</th>
-                    <th>buffer</th>
+                    <th>sid buffer</th>
                     <th>pH</th>
                     <th>purity</th>
                     <th>produced by</th>
@@ -63,7 +63,8 @@
                         <td>{{ virusbatch.active }}</td>
                         <td>{{ virusbatch.labeling }}</td>
                         <td>{{ virusbatch.concentration }}</td>
-                        <td>{{ virusbatch.buffer }}</td>
+                        <td class="info"> {% if virusbatch.buffer.sid %}{{ virusbatch.buffer.sid }} {% else %} - {% endif %}</td>
+
                         <td>{{ virusbatch.ph }}</td>
                         <td>{{ virusbatch.purity }}</td>
                         <td>{{ virusbatch.produced_by }}</td>

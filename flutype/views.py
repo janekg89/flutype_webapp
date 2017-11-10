@@ -11,10 +11,10 @@ from .helper import generate_tree, tar_tree, empty_list
 from .forms import PeptideForm, VirusForm, AntibodyForm, AntibodyBatchForm, \
     PeptideBatchForm, VirusBatchForm, ProcessStepForm, ComplexBatchForm, ComplexForm, StudyForm, \
     WashingForm,DryingForm,SpottingForm, QuenchingForm,BlockingForm,IncubatingForm, \
-    ScanningForm, IncubatingAnalytForm, RawDocForm
+    ScanningForm, IncubatingAnalytForm, RawDocForm, BufferForm, BufferBatchForm
 from .models import RawSpotCollection, SpotCollection, Process, PeptideBatch, \
     Peptide, VirusBatch, Virus, AntibodyBatch, Antibody, Step, ProcessStep, Complex, ComplexBatch, Study, \
-    RawDoc
+    RawDoc , Buffer, BufferBatch
 from django.forms import formset_factory, inlineformset_factory
 from django.shortcuts import get_object_or_404, render, redirect
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -601,6 +601,48 @@ def virus_fixed_view(request):
     return render(request,
                   'flutype/viruses.html', context)
 
+
+@login_required
+def buffer_view(request):
+    buffers = Buffer.objects.all()
+    context = {
+
+        'buffers': buffers,
+    }
+    return render(request,
+                  'flutype/buffers.html', context)
+
+@login_required
+def buffer_new(request):
+    if request.method == 'POST':
+        form = BufferForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('buffers')
+    else:
+        form = BufferForm()
+        return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer'})
+
+@login_required
+def buffer_batch_view(request):
+    buffer_batches = BufferBatch.objects.all()
+    context = {
+
+        'buffer_batches': buffer_batches,
+    }
+    return render(request,
+                  'flutype/bufferbatches.html', context)
+
+@login_required
+def buffer_batch_new(request):
+    if request.method == 'POST':
+        form = BufferBatchForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('bufferbatches')
+    else:
+        form = BufferBatchForm()
+        return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer_batch'})
 
 
 @login_required
