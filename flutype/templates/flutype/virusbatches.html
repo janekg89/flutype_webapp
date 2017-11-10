@@ -12,6 +12,7 @@
             <table id="batches" class="table table-striped">
                 <thead>
                 <tr>
+                    <th></th>
                     <th>sid batch</th>
                     <th>sid virus</th>
                     <th>tax id</th>
@@ -34,6 +35,9 @@
                 <tbody>
                 {% for virusbatch in virus_batches %}
                     <tr>
+                        <td>{% if request.user.is_superuser %}
+                    <a href="{{ url('virus_batch_edit', args=[virusbatch.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                {%  endif %}</td>
                         <td><b>{{ virusbatch.sid }}</b></td>
 
                         <!-- virus information -->

@@ -12,6 +12,7 @@
             <table id="buffer_batches" class="table table-striped">
                 <thead>
                 <tr>
+                    <th></th>
                     <th>sid batch</th>
                     <th>sid buffer</th>
                     <th>name buffer</th>
@@ -25,6 +26,9 @@
                 <tbody>
                 {% for bufferbatch in buffer_batches.all() %}
                     <tr>
+                        <td>{% if request.user.is_superuser %}
+                            <a href="{{ url('buffer_batch_edit', args=[bufferbatch.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                        {% endif %}</td>
                         <td><b>{{ bufferbatch.sid }}</b></td>
                         <!-- buffer information -->
 

@@ -24,8 +24,6 @@ from collections import namedtuple
 ########################################################
 UserDef = namedtuple('UserDef', ['username', 'first_name', 'last_name', 'email'])
 user_defs = [
-    UserDef("janekg89", "Jan", "Grzegorzewski", "janekg89@hotmail.de"),
-    UserDef("mkoenig", "Matthias", "König", "konigmatt@googlemail.com"),
     UserDef("hmemczak", "Henry", "Memczak", "memczak@uni-potsdam.de"),
     UserDef("mhovestaedt", "Marc", "Hovestädt", "hovestaedt@uni-potsdam.de"),
     UserDef("ssaenger", "Sandra", "Sänger", "SaengerS@rki.de"),
@@ -34,7 +32,10 @@ user_defs = [
     UserDef("pbecker", "Paul", "Becker", "pc-becker@gmx.de"),
     UserDef("fbier", "Frank", "Bier", "Frank.Bier@izi-bb.fraunhofer.de"),
     UserDef("herzigk", "Katjana", "Herzig",None),
-
+]
+superuser_defs = [
+    UserDef("janekg89", "Jan", "Grzegorzewski", "janekg89@hotmail.de"),
+    UserDef("mkoenig", "Matthias", "König", "konigmatt@googlemail.com"),
 ]
 ########################################################
 
@@ -60,9 +61,14 @@ def create_users(user_defs, delete_all=True):
         user.last_name = user_def.last_name
         user.first_name = user_def.first_name
         user.save()
+    for superuser_def in superuser_defs:
+        user = User.objects.create_superuser(username=superuser_def.username,email=superuser_def.email,password=DEFAULT_USER_PASSWORD)
+        user.last_name = superuser_def.last_name
+        user.first_name = superuser_def.first_name
 
     for user in User.objects.all():
         print('\t', user.username, user.email, user.password)
+
 
 
 if __name__ == "__main__":
