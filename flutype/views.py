@@ -1123,8 +1123,8 @@ def image_view(request, sid):
     return render(request, 'flutype/show_image.html', {'image': rsc.image_90_big})
 
 @login_required
-def image_process_view(request, sid):
-    ps = get_object_or_404(ProcessStep, sid=sid)
+def image_process_view(request, id):
+    ps = get_object_or_404(ProcessStep, id=id)
     return render(request, 'flutype/show_image.html', {'image': ps.image_90_big})
 
 @login_required
