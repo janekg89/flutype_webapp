@@ -3,12 +3,14 @@ from django import forms
 from django.urls import reverse
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-
+from measurement.measures import Volume, Mass
 from .models import Peptide, PeptideBatch, Virus, VirusBatch, Antibody, AntibodyBatch, Complex, \
     ProcessStep, Step, Spotting, Washing, Drying, Quenching, Blocking, Scanning, Incubating, \
     Process, GalFile, Measurement, RawSpotCollection, RawSpot,SpotCollection, Spot, ComplexBatch, Study, \
-    IncubatingAnalyt, RawDoc, Buffer, BufferBatch
-from .behaviours import Status
+    IncubatingAnalyt, RawDoc, Buffer, BufferBatch, Concentration
+from django_measurement.forms import MeasurementField
+from django.forms.utils import ErrorList
+
 
 
 class OrderedModelMultipleChoiceField(forms.ModelMultipleChoiceField):
@@ -19,7 +21,6 @@ class OrderedModelMultipleChoiceField(forms.ModelMultipleChoiceField):
             select={'ordering': 'CASE %s END' % clauses},
             order_by=('ordering',)
         )
-
 
 class RawDocForm(forms.ModelForm):
     class Meta:
@@ -67,18 +68,28 @@ class AntibodyForm(forms.ModelForm):
         model = Antibody
         fields = ['sid', 'target', 'name', 'link_db', 'comment']
 
+batch_fields = ['sid', 'ligand', 'concentration','concentration_unit', 'buffer', 'ph', 'purity', 'produced_by','production_date', 'comment']
 
-batch_fields = ['sid', 'ligand', 'concentration', 'buffer', 'ph', 'purity', 'produced_by','production_date', 'comment']
+
+class FormCleanMixin(forms.ModelForm):
+
+    def clean(self):
+        if self.cleaned_data.get('concentration') and not self.cleaned_data.get('concentration_unit'):
+            self.errors['concentration_unit'] = ErrorList(["A concentration unit is required if concentration present"])
+
+        if not self.cleaned_data.get('concentration') and self.cleaned_data.get('concentration_unit'):
+            self.errors['concentration_unit'] = ErrorList(
+                ["A concentration Unit should only be present if there\'s a Concentration"])
 
 
-class PeptideBatchForm(forms.ModelForm):
+class PeptideBatchForm(FormCleanMixin):
 
     def __init__(self, *args, **kwargs):
         super(PeptideBatchForm, self).__init__(*args, **kwargs)
         self.fields['ligand'].queryset = Peptide.objects.all()
         self.fields['ligand'].label = "Peptide"
         self.fields['ligand'].help_text = "go to <a href='{}'>peptides list </a>.".format(reverse('peptides'))
-
+        self.fields['ligand'].required = True
 
     class Meta:
         model = PeptideBatch
@@ -87,30 +98,27 @@ class PeptideBatchForm(forms.ModelForm):
 
 
 
-class ComplexBatchForm(forms.ModelForm):
+class ComplexBatchForm(FormCleanMixin):
 
     def __init__(self, *args, **kwargs):
         super(ComplexBatchForm, self).__init__(*args, **kwargs)
         self.fields['ligand'].queryset = Complex.objects.all()
         self.fields['ligand'].label = "Complex"
         self.fields['ligand'].help_text = "go to <a href='{}'>complexes list </a>.".format(reverse('complexes'))
-
-
+        self.fields['ligand'].required = True
 
     class Meta:
         model = ComplexBatch
         fields = batch_fields
 
 
-class VirusBatchForm(forms.ModelForm):
-
+class VirusBatchForm(FormCleanMixin):
     def __init__(self, *args, **kwargs):
         super(VirusBatchForm, self).__init__(*args, **kwargs)
         self.fields['ligand'].queryset = Virus.objects.all()
         self.fields['ligand'].label = "Virus"
         self.fields['ligand'].help_text = "go to <a href='{}'>viruses list </a>.".format(reverse('viruses'))
-
-
+        self.fields['ligand'].required = True
 
 
     class Meta:
@@ -118,18 +126,22 @@ class VirusBatchForm(forms.ModelForm):
         fields = batch_fields
 
 
-class AntibodyBatchForm(forms.ModelForm):
+class AntibodyBatchForm(FormCleanMixin):
 
     def __init__(self, *args, **kwargs):
         super(AntibodyBatchForm, self).__init__(*args, **kwargs)
         self.fields['ligand'].queryset = Antibody.objects.all()
         self.fields['ligand'].label = "Antibody"
         self.fields['ligand'].help_text = "go to <a href='{}'>antibodies list </a>.".format(reverse('antibodies'))
+        self.fields['ligand'].required = True
+
 
 
     class Meta:
         model = AntibodyBatch
         fields = batch_fields
+
+basic_step_fields= ['sid','method','temperature','comment']
 
 
 class ProcessStepForm(forms.ModelForm):
@@ -141,66 +153,59 @@ class ProcessStepForm(forms.ModelForm):
 class StepForm(forms.ModelForm):
     class Meta:
         model = Step
-        fields =['sid','method','temperature','comment']
+        fields = basic_step_fields
+        help_texts = {
+            'temperature': 'temeperature in °C',
+        }
+
 
 
 class SpottingForm(forms.ModelForm):
-    class Meta:
+    class Meta(StepForm.Meta):
         model = Spotting
-        fields = ['sid', 'method', 'temperature', 'comment']
 
 
 class WashingForm(forms.ModelForm):
-    class Meta:
+    class Meta(StepForm.Meta):
         model = Washing
-        fields = ['sid', 'method', 'substance', 'temperature', 'comment']
+        fields  = ['sid', 'method', 'substance', 'temperature', 'comment']
 
 
 class DryingForm(forms.ModelForm):
-    class Meta:
+    class Meta(StepForm.Meta):
         model = Drying
         fields = ['sid', 'method', 'substance', 'temperature', 'comment']
 
 
 class QuenchingForm(forms.ModelForm):
-    class Meta:
+    class Meta(StepForm.Meta):
         model = Quenching
         fields = ['sid', 'method', 'substance', 'temperature', 'comment']
 
 
 class BlockingForm(forms.ModelForm):
-    class Meta:
+    class Meta(StepForm.Meta):
         model = Blocking
         fields = ['sid', 'method', 'substance', 'temperature', 'comment']
 
 
 class IncubatingForm(forms.ModelForm):
-    class Meta:
+    class Meta(StepForm.Meta):
         model = Incubating
         fields = ['sid', 'method', 'temperature', 'comment']
-        labels ={
-            'temperature':'Temperature',
-        }
-        help_texts = {
-            'temperature': 'In Celsius.',
-        }
+
 
 
 # FIXME: naming analyt -> analyte
 class IncubatingAnalytForm(forms.ModelForm):
-    class Meta:
+    class Meta(StepForm.Meta):
         model = IncubatingAnalyt
         fields = ['sid', 'method', 'temperature', 'comment']
-        labels ={
-            'temperature':'Temperature',
-        }
-        help_texts = {
-            'temperature': 'In Celsius.',
-        }
+
 
 
 class ScanningForm(forms.ModelForm):
-    class Meta:
+    class Meta(StepForm.Meta):
         model = Scanning
         fields = '__all__'
 

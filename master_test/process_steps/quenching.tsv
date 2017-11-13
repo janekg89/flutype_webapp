@@ -1,3 +1,3 @@
-sid	method	temperature	comment	duration	substance
-Q01	Magermilch				
+sid	comment	method	temperature	duration	substance
+Q01		Magermilch			
 Q02					hydroxylamin

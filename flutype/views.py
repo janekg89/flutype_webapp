@@ -16,20 +16,19 @@ from .models import RawSpotCollection, SpotCollection, Process, PeptideBatch, \
     Peptide, VirusBatch, Virus, AntibodyBatch, Antibody, Step, ProcessStep, Complex, ComplexBatch, Study, \
     RawDoc , Buffer, BufferBatch
 from django.forms import formset_factory, inlineformset_factory
-from django.shortcuts import get_object_or_404, render, redirect
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from django.shortcuts import get_object_or_404, render, redirect, render_to_response
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
-from django.http import HttpResponseRedirect
+from django.utils.timezone import localtime, now
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-from django.core.urlresolvers import reverse
 
 
 from django.db.models import Max
 import json
 from flutype import __version__
+
 
 @login_required
 def upload_file_study(request,pk):
@@ -656,7 +655,8 @@ def buffer_batch_new(request):
             form.save()
             return redirect('bufferbatches')
     else:
-        form = BufferBatchForm()
+        form = BufferBatchForm(initial={'produced_by': request.user, 'production_date': localtime(now()).date()}
+)
         return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer_batch'})
 
 @login_required
@@ -803,25 +803,25 @@ def complex_batch_delete(request, sid):
 @login_required
 def complex_batch_edit(request, sid):
     instance = get_object_or_404(ComplexBatch, sid=sid)
+    form = ComplexBatchForm(instance=instance)
+
     if request.method == 'POST':
         form = ComplexBatchForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
             return redirect('complexbatches')
-    else:
-        form = ComplexBatchForm(instance=instance)
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'complex_batch'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'complex_batch'})
 
 @login_required
 def complex_batch_new(request):
+    form = ComplexBatchForm(initial={'produced_by': request.user, 'production_date': localtime(now()).date()}
+                            )
     if request.method == 'POST':
         form = ComplexBatchForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('complexbatches')
-    else:
-        form = ComplexBatchForm()
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'complex_batch'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'complex_batch'})
 
 @login_required
 def complex_batch_view(request):
@@ -979,76 +979,77 @@ def virus_batch_delete(request, sid):
 @login_required
 def antibody_batch_edit(request, sid):
     instance = get_object_or_404(AntibodyBatch, sid=sid)
+    form = AntibodyBatchForm(instance=instance)
+
     if request.method == 'POST':
         form = AntibodyBatchForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
             return redirect('antibodybatches')
-    else:
-        form = AntibodyBatchForm(instance=instance)
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'antibody_batch'})
+
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'antibody_batch'})
 
 
 @login_required
 def virus_batch_edit(request, sid):
     instance = get_object_or_404(VirusBatch, sid=sid)
+    form = VirusBatchForm(instance=instance)
+
     if request.method == 'POST':
         form = VirusBatchForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
             return redirect('virusbatches')
-    else:
-        form = VirusBatchForm(instance=instance)
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'virus_batch'})
+
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'virus_batch'})
 
 
 @login_required
 def peptide_batch_edit(request, sid):
     instance = get_object_or_404(PeptideBatch, sid=sid)
+    form = PeptideBatchForm(instance=instance)
     if request.method == 'POST':
         form = PeptideBatchForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
             return redirect('peptidebatches')
-    else:
-        form = PeptideBatchForm(instance=instance)
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'peptide_batch'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'peptide_batch'})
 
 
 @login_required
 def peptide_batch_new(request):
+    form = PeptideBatchForm(initial={'produced_by': request.user, 'production_date': localtime(now()).date()})
     if request.method == 'POST':
         form = PeptideBatchForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('peptidebatches')
-    else:
-        form = PeptideBatchForm()
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'peptide_batch'})
+
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'peptide_batch'})
 
 
 @login_required
 def virus_batch_new(request):
+    form = VirusBatchForm(initial={'produced_by': request.user, 'production_date': localtime(now()).date()})
     if request.method == 'POST':
         form = VirusBatchForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('virusbatches')
-    else:
-        form = VirusBatchForm()
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'virus_batch'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'virus_batch'})
+
 
 
 @login_required
 def antibody_batch_new(request):
+    form = AntibodyBatchForm(initial={'produced_by': request.user, 'production_date': localtime(now()).date()}
+                             )
     if request.method == 'POST':
         form = AntibodyBatchForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('antibodybatches')
-    else:
-        form = AntibodyBatchForm()
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'antibody_batch'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'antibody_batch'})
 
 
 @login_required
