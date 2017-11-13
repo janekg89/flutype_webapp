@@ -16,6 +16,7 @@
                 <table id="complexes" class="table table-striped">
                     <thead>
                     <tr>
+                        <th></th>
                         <th>sid</th>
                         <th>ligands</th>
                         <th>comment</th>
@@ -24,6 +25,9 @@
                     <tbody>
                     {% for c in complexes.all() %}
                         <tr>
+                            <td>{% if request.user.is_superuser %}
+                    <a href="{{ url('complex_edit', args=[c.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                {%  endif %}</td>
                             <td><b> {{ c.sid }}</b></td>
                             <td>
                              {% for l in c.complex_ligands.all() %}

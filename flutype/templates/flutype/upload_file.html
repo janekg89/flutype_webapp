@@ -2,7 +2,7 @@
 {% block content %}
     <!-- Main Content -->
 
-    <form class="dropzone" action="{{ url('upload_file', args=[study.id]) }}" method="post" enctype="multipart/form-data">
+    <form class="dropzone" action="{{ url('upload_file', args=[study.sid]) }}" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
     </form>
 

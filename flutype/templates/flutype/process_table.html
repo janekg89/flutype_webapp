@@ -13,6 +13,12 @@
             <th>duration</th>
             <th>temperature</th>
             <th>comment</th>
+            {% if type and type == "process" %}
+            <th>user</th>
+            <th>started</th>
+            <th>intensites</th>
+            <th>images</th>
+            {% endif %}
         </tr>
         </thead>
 
@@ -36,7 +42,22 @@
                     {% endif %}
                     </td>
                     <td>{{ p.temperature }}</td>
-                    <td>{{ p.comment }}</td>
+                    {% if  type and type == "process" %}
+                        <td>{{ prostep.comment }}</td>
+                         <td>{{ macros.user(prostep.user) }}</td>
+                        <td>{{ prostep.start}}</td>
+                        <td>
+                            {% if prostep.intensities %} <a href="{{ prostep.intensities.file.url }}" target="_blank" title="{{ prostep.image.name}}">
+                                                 <i class="fa fa-fw fa-file"></i></a> {% else%} - {%endif%}
+                        </td>
+
+                        <td>
+                            {% if prostep.image %}  <a href="{{ url('imageviewprocess', args=[prostep.id]) }}" target="_blank" title="{{ prostep.image.name}}">
+                                <img src="{{ prostep.image_90.url }}"> </a> {%else%} - {%endif%}
+                        </td>
+                        {% else %}
+                        <td>{{ p.comment }}</td>
+                    {% endif %}
                 {% endwith %}
             </tr>
         {% endfor %}

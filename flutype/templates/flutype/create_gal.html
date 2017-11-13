@@ -1,0 +1,41 @@
+
+{% import 'flutype/macros.html' as macros %}
+
+{% extends "flutype/base.html" %}
+
+{% block content %}
+<div class="standard">
+<h1> Gal File</h1>
+    <button> select existing gal file</button>
+    <form>
+         <ul class="list-group">
+             <li class = "list-group-item"><label> Select ligand batches </label> </li>
+             <li class = "list-group-item"><label> Select Type <input type="checkbox" data-toggle="toggle" data-on="microarray" data-off="microwell plate" name="number_replicants"> </label> </li>
+             <li class = "list-group-item"><label>Select number of replicants <input type="number" name="number_replicants"> </label></li>
+             <li class = "list-group-item"> <label> Select shape of tray <br>  Rows
+                 <input type="number" name="tray_rows">  Columns <input type="number" name="tray_columns"> </label></li>
+             <li class= "list-group-item"> <label>Select shape  of trays <br>  Rows
+                 <input type="number" name="trays_rows">  Columns <input type="number" name="trays_columns"> </label></li>
+             <li class= "list-group-item">   <label> Do you want to randomize within tray?
+                    <input data-toggle="toggle" data-on="Yes" data-off="No" type="checkbox">
+                    </label>
+               </li>
+             <li class= "list-group-item">   <label> Do you want to have identical trays?
+                    <input data-toggle="toggle" data-on="Yes" data-off="No" type="checkbox">
+                    </label>
+                 </li>
+         </ul>
+
+        <ul class="list-group">
+            <li class = "list-group-item">
+                <label> Select Format of Gal File
+                    <input data-toggle="toggle" data-off="Standard" data-on="Pivoted" type="checkbox">
+                </label>
+            </li>
+            <li class = "list-group-item">download </li>
+        </ul>
+
+    </form>
+</div>
+
+{%endblock%}

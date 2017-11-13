@@ -8,7 +8,8 @@
         <i class="fa fa-fw fa-hand-spock-o"></i> Antibody
     {% elif type == "antibody_batch"  %}
         <i class="fa fa-fw fa-hand-spock-o"></i> Antibody Batch <i class="fa fa-fw fa-flask"></i>
-
+    {% elif type == "buffer" %}
+        <i class="fa fa-fw fa-circle-o-notch"></i> Buffer
     {% elif type == "peptide" %}
         <i class="fa fa-fw fa-server"></i>Peptide
     {% elif type == "peptide_batch"  %}
@@ -24,6 +25,7 @@
     {% elif type == "complex_batch" %}
         Complex Batch <i class="fa fa-fw fa-flask"></i>
 
+
     <!-- Steps and process -->
     {% elif type == "step"  %}
         {% if class %}
@@ -36,7 +38,6 @@
     {% endif %}
     </h1>
 
-    <form class="form-horizontal">
       <form method="post" class="post-form">
           <table id="edit">
               <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
@@ -45,11 +46,12 @@
            </table>
                   <span style="float:left;">
 
-              <button class="btn btn-default btn-success">Save changes</button>
+              <button class="btn btn-default btn-success">Save Changes</button>
                   </span>
       </form>
-
-    {% if type == "peptide" %}
+     {% if type == "buffer" %}
+       <form action={{url('buffers')}}>
+    {% elif type == "peptide" %}
        <form action={{url('peptides')}}>
     {% elif type == "complex" %}
        <form action={{url('complexes')}}>
@@ -72,9 +74,9 @@
     {% endif %}
 
     <span style="float:left;">
-    <button class="btn btn-default btn-danger"> Cancel</button>
+    <button class="btn btn-default btn-danger">Cancel</button>
         </span>
-    </form>
+
     </form>
 
 
@@ -89,4 +91,4 @@
             info : false,
             "order": []});
         });
-    </script>
+</script>
