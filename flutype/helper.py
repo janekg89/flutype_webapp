@@ -14,6 +14,7 @@ import re
 import tempfile
 import sys
 import io
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 CHAR_MAX_LENGTH = 100
@@ -101,6 +102,12 @@ def read_ligands(ligand):
     df.drop(["polymorphic_ctype", "id", "ligand_ptr"], axis=1, inplace=True)
     return df
 
+def read_buffer():
+    model = get_model_by_name("Buffer")
+    df = read_frame(model.objects.all())
+    df.drop(["id"], axis=1, inplace=True)
+    return df
+
 def read_complex():
     model = get_model_by_name("complex")
     df = read_frame(model.objects.all(), ["sid","comment"])
@@ -117,24 +124,32 @@ def read_steps(step):
     df.drop(["id", "step_ptr"], axis=1, inplace=True)
     df.replace([np.NaN], [None], inplace=True)
     if "duration" in df:
-       for k,row in df.iterrows():
-           row["duration"] = duration_to_string(row["duration"])
+        durations=[]
+        for k,row in df.iterrows():
+            durations.append(duration_to_string(row["duration"]))
+        df["duration"]=durations
+    if "temperature" in df:
+        df['temperature'] = list(map(str, df['temperature'].values))
+    df.replace(["None"],[None], inplace=True)
+
+
     return df
 
 def read_ligand_batches(ligand_batch):
     object_capitalized = ligand_batch.capitalize()
     model = get_model_by_name(object_capitalized)
     if ligand_batch in ["peptideBatch","antibodyBatch", "complexBatch"]:
-        df = read_frame(model.objects.all(), ["sid", "labeling", "concentration","buffer", "ph","purity", "produced_by__username",
+        df = read_frame(model.objects.all(), ["sid", "labeling", "concentration","concentration_unit","buffer__sid", "ph","purity", "produced_by__username",
                                           "production_date", "comment",
                                           "ligand__sid"])
         df.replace([np.NaN], [None], inplace=True)
         df['purity'] = list(map(str, df['purity'].values))
         df['concentration'] = list(map(str, df['concentration'].values))
 
+
     elif ligand_batch == "virusBatch":
         df = read_frame(model.objects.all(),
-                        ["sid", "labeling", "concentration","buffer", "ph","purity", "produced_by__username",
+                        ["sid", "labeling", "concentration","concentration_unit","buffer__sid", "ph","purity", "produced_by__username",
                                           "production_date", "comment",
                                           "ligand__sid", "passage_history","active"])
         df.replace([np.NaN], [None], inplace=True)
@@ -143,12 +158,15 @@ def read_ligand_batches(ligand_batch):
         df['purity'] = list(map(str, df['purity'].values))
         df['concentration'] = list(map(str, df['concentration'].values) )
 
+
+
     elif ligand_batch == "bufferBatch":
         df = read_frame(model.objects.all(),
-                        ["sid", "buffer", "ph", "produced_by__username",
+                        ["sid", "buffer__sid", "ph", "produced_by__username",
                          "production_date", "comment"])
         df.replace([np.NaN], [None], inplace=True)
 
+    df['buffer__sid'] = list(map(str, df['buffer__sid'].values))
     df['ph']=list(map(str, df['ph'].values))
     df['production_date']=list(map(str, df['production_date'].values))
 
@@ -157,7 +175,7 @@ def read_ligand_batches(ligand_batch):
 
 
 
-    df = df.rename(columns={"ligand__sid":"ligand","produced_by__username":"produced_by"})
+    df = df.rename(columns={"ligand__sid":"ligand","produced_by__username":"produced_by","buffer__sid":"buffer"})
 
 
     return df
@@ -288,8 +306,7 @@ def get_user_or_none(user):
     if user is None:
             user = None
     else:
-        user = User.objects.get(username=user)
-
+        user = User.objects.get(username__iexact=user)
     return user
 
 def get_ligand_or_none(ligand):
@@ -297,10 +314,18 @@ def get_ligand_or_none(ligand):
     if ligand is None:
             ligand = None
     else:
-        ligand = Ligand.objects.get(sid=ligand)
+        ligand = Ligand.objects.get(sid__iexact=ligand)
 
 
     return ligand
+
+def get_buffer_or_none(buffer):
+    Buffer = apps.get_model("flutype", model_name="Buffer")
+    if buffer is None:
+            buffer = None
+    else:
+        buffer = Buffer.objects.get(sid__iexact=buffer)
+    return buffer
 
 def get_duration_or_none(duration):
     if duration is None:
@@ -346,9 +371,21 @@ def create_objects_from_df(object_n , object_df):
 
 def fill_multiple_models_from_dict(object_dics):
     for object, object_df in object_dics.items():
-       create_objects_from_df(object, object_df)
+        create_objects_from_df(object, object_df)
 
 
 
 
+def datetimeformat(value, format='%H:%M / %d-%m-%Y'):
+    return value.strftime(format)
 
+
+
+def AbstractClassWithoutFieldsNamed(cls, *excl):
+    if cls._meta.abstract:
+        remove_fields = [f for f in cls._meta.local_fields if f.name in excl]
+        for f in remove_fields:
+            cls._meta.local_fields.remove(f)
+        return cls
+    else:
+        raise Exception("Not an abstract model")

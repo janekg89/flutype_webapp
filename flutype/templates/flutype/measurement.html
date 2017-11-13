@@ -1,3 +1,5 @@
+{% import 'flutype/macros.html' as macros %}
+
 {% extends "flutype/base.html" %}
 {% block head %}
     <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -8,7 +10,7 @@
 {% block content %}
     <!-- Main Content -->
     <div class="title1">
-        <h1><i class="fa fa-fw fa-building"></i> Measurement: {{ collection.sid }}</h1>
+        <h1>{{ macros.measurement_type(collection.measurement_type) }} Measurement: {{ collection.sid }}</h1>
     </div>
     <div class="a">
         {% with collections = [collection] %}
@@ -29,7 +31,7 @@
                 </tbody>
             </table>
         </div>
-        <form id="dropzone" class="dropzone" action="{{ url('upload_file_measurement', args=[collection.id])}}"
+        <form id="dropzone" class="dropzone" action="{{ url('upload_file_measurement', args=[collection.sid])}}"
               method="post" enctype="multipart/form-data">
             <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
         </form>
@@ -43,12 +45,12 @@
 
                     <li>
                         <a href="{{ url('rawspotcollectionview',
-                            args= [collection.id]) }}"><i class="fa fa-magic" aria-hidden="true"></i> Process <span
+                            args= [collection.sid]) }}"><i class="fa fa-magic" aria-hidden="true"></i> Process <span
                             class="sr-only">(current)</span></a>
                     </li>
                     <li>
                         <a href="{{ url('measurement_ligands',
-                            args= [collection.id]) }}"><i class="fa fa-certificate"></i> Ligands <span
+                            args= [collection.sid]) }}"><i class="fa fa-certificate"></i> Ligands <span
                             class="sr-only">(current)</span></a>
                     </li>
                     {% if collection.spotcollection_set.all() %}
@@ -58,7 +60,7 @@
                         <ul class="dropdown-menu" role="menu">
                             {% for result in collection.spotcollection_set.all() %}
                                 <li><a href="
-                                        {{ url('qspotcollectionview', args=[result.id]) }}">  {{ result.sid }} </a>
+                                        {{ url('qspotcollectionview', args=[collection.sid,result.sid]) }}">  {{ result.sid }} </a>
                                 </li>
                             {% endfor %}
                         </ul>

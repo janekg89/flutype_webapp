@@ -17,12 +17,12 @@
                 {% for process in processes %}
                     <tr>
                         <td>
-                            <b><a href="{{ url('processview', args=[process.id]) }}">{{ process.sid }}</a></b>
+                            <b><a href="{{ url('processview', args=[process.sid]) }}">{{ process.sid }}</a></b>
                         </td>
                         <td>
                             {% for m in process.rawspotcollection_set.all() %}
                                 {{ macros.measurement_type(m.measurement_type) }}
-                                <a href="{{ url('rawspotcollectionview', args=[m.id]) }}">{{ m.sid }}</a><br />
+                                <a href="{{ url('rawspotcollectionview', args=[m.sid]) }}">{{ m.sid }}</a><br />
                             {% endfor %}
                         </td>
                     </tr>

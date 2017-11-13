@@ -16,6 +16,7 @@
             <table id="batches" class="table table-striped">
                 <thead>
                 <tr>
+                     <th></th>
                     <th>sid batch</th>
                     <th>sid antibody</th>
                     <th>target</th>
@@ -34,6 +35,9 @@
                 <tbody>
                 {% for antibodybatch in antibody_batches.all() %}
                     <tr>
+                        <td>{% if request.user.is_superuser %}
+                    <a href="{{ url('antibody_batch_edit', args=[antibodybatch.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                {%  endif %}</td>
                         <td><b>{{ antibodybatch.sid }}</b></td>
                         <!-- ligand information -->
                         {% with a=antibodybatch.ligand %}
@@ -45,7 +49,7 @@
                         {% endwith %}
                         <!-- batch information -->
                         <td>{{ antibodybatch.concentration }}</td>
-                        <td>{{ antibodybatch.buffer }}</td>
+                        <td class="info"> {% if antibodybatch.buffer.sid %}{{ antibodybatch.buffer.sid }} {% else %} - {% endif %}</td>
                         <td>{{ antibodybatch.ph }}</td>
                         <td>{{ antibodybatch.purity }}</td>
                         <td>{{ antibodybatch.labeling }}</td>
