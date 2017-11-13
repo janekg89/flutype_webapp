@@ -182,8 +182,6 @@ class DatabaseDJTestCase(TransactionTestCase):
             df = read_steps(step)
             self.assertTrue(steps[step]["sid"].equals(df["sid"]))
             self.assertTrue(steps[step]["comment"].equals(df["comment"]))
-            print(steps[step]["temperature"])
-            #print(df["temperature"])
             self.assertTrue(steps[step]["temperature"].equals(df["temperature"]))
             self.assertTrue(steps[step]["method"].equals(df["method"]))
 
