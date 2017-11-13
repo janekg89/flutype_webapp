@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/dropzone.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/dropzone.min.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/Butler_Stencil_Webfont/stylesheet.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/bootstrap-toggle.min.css')}}" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/basic.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/basic.min.css') }}"/>
@@ -25,6 +26,7 @@
     <link rel="stylesheet" type="text/css" href="{{ static('flutype/css/grid.css') }}"/>
 
     <script type="text/javascript" src="{{ static('flutype/js/jquery-3.2.1.min.js') }}"></script>
+    <script src="{{ static ('flutype/js/bootstrap-toggle.min.js')}}"></script>
     <script type="text/javascript" src="{{ static('flutype/js/tether-1.4.0.min.js') }}"></script>
     <script type="text/javascript" src="{{ static('flutype/js/bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ static('flutype/js/datatables-1.10.15.min.js') }}"></script>
@@ -66,7 +68,9 @@
                             <li><a href="{{ url('measurements') }}" title="All measurements"><i
                                     class="fa fa-fw fa-building"></i> Measurements</a></li>
                         </ul>
-                    </li>
+                    <li class="active"><a href="{{ url('buffers') }}" title="Overview of all buffers used in measurements">
+                        <i class="fa fa-fw fa-circle-o-notch" aria-hidden="true"></i> Buffers</a></li>
+                    <!-- LIGANDS -->
                     <li class="dropdown active">
                         <a class="dropdown-toggle" data-toggle="dropdown" title="Overview of ligands used in measurements">
                             <i class="fa fa-fw fa-certificate"></i> Ligands<b class="caret"></b></a>
@@ -79,97 +83,30 @@
                                 Viruses</a></li>
                             <li><a href="{{ url('complexes') }}"
                                    title="All ligands which build a complex from existing ligands">Complexes</a></li>
-                            <li class="divider"></li>
-                            <li class="dropdown-submenu">
-                                <a class="dropdown-toggle" data-toggle="dropdown" title="Fixed ligands">
-                                    <i class="fa fa-fw fa-anchor"> </i> Fixed ligands</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="{{ url('antibodies_fixed') }}"
-                                           title="All antibodies used during spotting or imobilization"><i
-                                            class="fa fa-fw fa-hand-spock-o"></i> Antibodies</a></li>
-                                    <li><a href="{{ url('peptides_fixed') }}"
-                                           title="All peptides used during spotting or imobilization"><i
-                                            class="fa fa-fw fa-server"></i> Peptides</a></li>
-                                    <li><a href="{{ url('viruses_fixed') }}"
-                                           title="All viruses which have been used during spotting or imobilization"><i
-                                            class="fa fa-fw fa-asterisk"></i> Viruses</a></li>
-                                    <li><a href="{{ url('complexes_fixed') }}"
-                                           title="All complexes which have been used during spotting or imobilization">Complexes</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="dropdown-submenu">
-                                <a class="dropdown-toggle" data-toggle="dropdown"
-                                   title="Analytes, i.e., mobile ligands">
-                                    <i class="fa fa-fw fa-tint"></i> Analytes</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="{{ url('antibodies_mobile') }}"
-                                           title="All antibodies used during analyte incubation"><i
-                                            class="fa fa-fw fa-hand-spock-o"></i> Antibodies</a></li>
-                                    <li><a href="{{ url('peptides_mobile') }}"
-                                           title="All peptides used during analyte incubation"><i
-                                            class="fa fa-fw fa-server"></i> Peptides</a></li>
-                                    <li><a href="{{ url('viruses_mobile') }}"
-                                           title="All viruses used during analyte incubation"><i
-                                            class="fa fa-fw fa-asterisk"></i> Viruses</a></li>
-                                    <li><a href="{{ url('complexes_mobile') }}"
-                                           title="All complexes used during analyte incubation">Complexes</a></li>
-                                </ul>
-                            </li>
+
                         </ul>
                     </li>
-
+                    <!-- BATCHES -->
                     <li class="dropdown active">
                         <a class="dropdown-toggle" data-toggle="dropdown" title="Overview of ligand batches used in measurements">
                             <i class="fa fa-fw fa-flask" aria-hidden="true"></i> Batches<b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url('antibodybatches') }}" title="All antibody batches"><i
-                                    class="fa fa-fw fa-hand-spock-o"></i> Antibodies</a></li>
-                            <li><a href="{{ url('peptidebatches') }}" title="All peptide batches"><i
-                                    class="fa fa-fw fa-server"></i> Peptides</a></li>
-                            <li><a href="{{ url('virusbatches') }}" title="All virus batches"><i
-                                    class="fa fa-fw fa-asterisk"></i> Viruses</a></li>
-                            <li><a href="{{ url('complexbatches') }}" title="All complex batches">Complexes</a></li>
+                            <li class="dropdown-header"> Buffer</li>
+                             <li><a href="{{ url('bufferbatches') }}" title="All buffer batches"><i
+                                    class="fa fa-fw fa-circle-o-notch"></i> Buffer Batches</a></li>
                             <li class="divider"></li>
-                            <li class="dropdown-submenu">
-                                <a class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="fa fa-fw fa-anchor"></i> Fixed </a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="{{ url('antibodybatches_fixed') }}"
-                                           title="all antibody batches which have been used during spotting or imobilization"><i
-                                            class="fa fa-fw fa-hand-spock-o"></i> Antibodies</a></li>
-                                    <li><a href="{{ url('peptidebatches_fixed') }}"
-                                           title="all peptide batches which have been used during spotting or imobilization"><i
-                                            class="fa fa-fw fa-server"></i> Peptides</a></li>
-                                    <li><a href="{{ url('virusbatches_fixed') }}"
-                                           title="all virus batches which have been used during spotting or imobilization"><i
-                                            class="fa fa-fw fa-asterisk"></i> Viruses</a></li>
-                                    <li><a href="{{ url('complexbatches_fixed') }}"
-                                           title="all complex batches which have been used during spotting or imobilization">Complexes</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="dropdown-submenu">
-                                <a class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="fa fa-fw fa-tint"></i> Analyte</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="{{ url('antibodybatches_mobile') }}"
-                                           title="all antibody batches which have been used during analyte incubation"><i
-                                            class="fa fa-fw fa-hand-spock-o"></i> Antibodies</a></li>
-                                    <li><a href="{{ url('peptidebatches_mobile') }}"
-                                           title="all peptide batches which have been used during analyte incubation"><i
-                                            class="fa fa-fw fa-server"></i> Peptides</a></li>
-                                    <li><a href="{{ url('virusbatches_mobile') }}"
-                                           title="all virus batches which have been used during analyte incubation"><i
-                                            class="fa fa-fw fa-asterisk"></i> Viruses</a></li>
-                                    <li><a href="{{ url('complexbatches_mobile') }}"
-                                           title="all complex batches which have been used during analyte incubation">
-                                        Complexes</a></li>
-                                </ul>
-                            </li>
+                            <li class="dropdown-header"> Ligands</li>
+                            <li><a href="{{ url('antibodybatches') }}" title="All antibody batches"><i
+                                    class="fa fa-fw fa-hand-spock-o"></i> Antibody Batches</a></li>
+                            <li><a href="{{ url('peptidebatches') }}" title="All peptide batches"><i
+                                    class="fa fa-fw fa-server"></i> Peptide Batches</a></li>
+                            <li><a href="{{ url('virusbatches') }}" title="All virus batches"><i
+                                    class="fa fa-fw fa-asterisk"></i> Virus Batches</a></li>
+                            <li><a href="{{ url('complexbatches') }}" title="All complex batches">Complex Batches</a></li>
                         </ul>
                     </li>
 
+                    <!-- PROCESSES -->
                     <li class="dropdown active">
                         <a data-toggle="dropdown" role="button" aria-expanded="false" title="Processes, i.e., experimental workflows, used in measurements">
                             <i class="fa fa-fw fa-magic" aria-hidden="true"></i> Processes<span class="caret"></span>

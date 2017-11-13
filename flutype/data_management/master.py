@@ -83,6 +83,12 @@ class Master(BaseAll):
         complex_dic["complex"]= read_tsv_table(path_complex)
         return complex_dic
 
+    def read_buffer(self):
+        buffer_dic = {}
+        path_buffer = os.path.join(self.path_ligands, "buffer.tsv")
+        buffer_dic["buffer"]= read_tsv_table(path_buffer)
+        return buffer_dic
+
     def read_steps(self):
 
         dic_steps = {}

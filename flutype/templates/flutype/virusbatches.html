@@ -12,8 +12,10 @@
             <table id="batches" class="table table-striped">
                 <thead>
                 <tr>
+                    <th></th>
                     <th>sid batch</th>
-                    <th title="taxonomy id">tax id</th>
+                    <th>sid virus</th>
+                    <th>tax id</th>
                     <th>subgroup</th>
                     <th>country</th>
                     <th>appearance</th>
@@ -22,7 +24,7 @@
                     <th>active</th>
                     <th>labeling</th>
                     <th>concentration</th>
-                    <th>buffer</th>
+                    <th>sid buffer</th>
                     <th>pH</th>
                     <th>purity</th>
                     <th>produced by</th>
@@ -33,11 +35,15 @@
                 <tbody>
                 {% for virusbatch in virus_batches %}
                     <tr>
+                        <td>{% if request.user.is_superuser %}
+                    <a href="{{ url('virus_batch_edit', args=[virusbatch.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                {%  endif %}</td>
                         <td><b>{{ virusbatch.sid }}</b></td>
 
                         <!-- virus information -->
                         {% with v=virusbatch.ligand %}
                             {% if v %}
+                                <td class="info">{{ v.sid }}</td>
                                 <td class="info">
                                     {% if v.sid == "NO" %}
                                         {{ v.tax_id }}
@@ -50,7 +56,7 @@
                                 <td class="info">{{ v.collection_date }}</td>
                                 <td class="info">{{ v.strain }}</td>
                             {% else %}
-                                {% for k in range(5) %}
+                                {% for k in range(6) %}
                                     <td><i class="fa fa-fw fa-ban"></i></td>
                                 {% endfor %}
                             {% endif %}
@@ -61,7 +67,8 @@
                         <td>{{ virusbatch.active }}</td>
                         <td>{{ virusbatch.labeling }}</td>
                         <td>{{ virusbatch.concentration }}</td>
-                        <td>{{ virusbatch.buffer }}</td>
+                        <td class="info"> {% if virusbatch.buffer.sid %}{{ virusbatch.buffer.sid }} {% else %} - {% endif %}</td>
+
                         <td>{{ virusbatch.ph }}</td>
                         <td>{{ virusbatch.purity }}</td>
                         <td>{{ virusbatch.produced_by }}</td>

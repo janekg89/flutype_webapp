@@ -16,7 +16,7 @@
         <tbody>
         {% for s in studies %}
             <tr>
-                <td><b><a href="{{ url('study', args=[s.id]) }}"> {{ s.sid }}</a></b></td>
+                <td><b><a href="{{ url('study', args=[s.sid]) }}"> {{ s.sid }}</a></b></td>
                 <td>{{ macros.status(s.status) }}</td>
                 <td>{% for user in s.users() %}
                     {{ macros.user(user) }}
@@ -26,7 +26,7 @@
                 <td>
                     {% for m in s.rawspotcollection_set.all() %}
                         {{ macros.measurement_type(m.measurement_type) }}
-                        <a href="{{ url('rawspotcollectionview', args=[m.id]) }}">{{ m.sid }}<br/></a>
+                        <a href="{{ url('rawspotcollectionview', args=[m.sid]) }}">{{ m.sid }}</a> ({{ m.comment }})<br />
                     {% endfor %}
                 </td>
                 <td> {{s.date.strftime('%Y-%m-%d') }}</td>

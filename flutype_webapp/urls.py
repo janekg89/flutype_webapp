@@ -27,9 +27,8 @@ from django.views.generic import RedirectView
 
 
 urlpatterns = [
-    
     url(r'^admin/', admin.site.urls),
-    url(r'^flutype/', include('flutype.urls')),
+    url(r'^', include('flutype.urls')),
     url(r'^$', RedirectView.as_view(pattern_name='index', permanent=False)),
     url(r'^login/$', auth_views.login, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
