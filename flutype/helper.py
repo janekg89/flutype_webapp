@@ -124,15 +124,22 @@ def read_steps(step):
     df.drop(["id", "step_ptr"], axis=1, inplace=True)
     df.replace([np.NaN], [None], inplace=True)
     if "duration" in df:
-       for k,row in df.iterrows():
-           row["duration"] = duration_to_string(row["duration"])
+        durations=[]
+        for k,row in df.iterrows():
+            durations.append(duration_to_string(row["duration"]))
+        df["duration"]=durations
+    if "temperature" in df:
+        df['temperature'] = list(map(str, df['temperature'].values))
+    df.replace(["None"],[None], inplace=True)
+
+
     return df
 
 def read_ligand_batches(ligand_batch):
     object_capitalized = ligand_batch.capitalize()
     model = get_model_by_name(object_capitalized)
     if ligand_batch in ["peptideBatch","antibodyBatch", "complexBatch"]:
-        df = read_frame(model.objects.all(), ["sid", "labeling", "concentration","buffer__sid", "ph","purity", "produced_by__username",
+        df = read_frame(model.objects.all(), ["sid", "labeling", "concentration","concentration_unit","buffer__sid", "ph","purity", "produced_by__username",
                                           "production_date", "comment",
                                           "ligand__sid"])
         df.replace([np.NaN], [None], inplace=True)
@@ -142,7 +149,7 @@ def read_ligand_batches(ligand_batch):
 
     elif ligand_batch == "virusBatch":
         df = read_frame(model.objects.all(),
-                        ["sid", "labeling", "concentration","buffer__sid", "ph","purity", "produced_by__username",
+                        ["sid", "labeling", "concentration","concentration_unit","buffer__sid", "ph","purity", "produced_by__username",
                                           "production_date", "comment",
                                           "ligand__sid", "passage_history","active"])
         df.replace([np.NaN], [None], inplace=True)
@@ -150,6 +157,7 @@ def read_ligand_batches(ligand_batch):
         df['passage_history'] = list(map(str, df['passage_history'].values))
         df['purity'] = list(map(str, df['purity'].values))
         df['concentration'] = list(map(str, df['concentration'].values) )
+
 
 
     elif ligand_batch == "bufferBatch":
@@ -363,7 +371,7 @@ def create_objects_from_df(object_n , object_df):
 
 def fill_multiple_models_from_dict(object_dics):
     for object, object_df in object_dics.items():
-       create_objects_from_df(object, object_df)
+        create_objects_from_df(object, object_df)
 
 
 
@@ -371,3 +379,13 @@ def fill_multiple_models_from_dict(object_dics):
 def datetimeformat(value, format='%H:%M / %d-%m-%Y'):
     return value.strftime(format)
 
+
+
+def AbstractClassWithoutFieldsNamed(cls, *excl):
+    if cls._meta.abstract:
+        remove_fields = [f for f in cls._meta.local_fields if f.name in excl]
+        for f in remove_fields:
+            cls._meta.local_fields.remove(f)
+        return cls
+    else:
+        raise Exception("Not an abstract model")

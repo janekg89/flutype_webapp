@@ -10,7 +10,11 @@ from djchoices import DjangoChoices, ChoiceItem
 from django.core.files.storage import FileSystemStorage
 from django_pandas.io import read_frame
 from flutype_webapp.settings import MEDIA_ROOT
+from django_measurement.models import MeasurementField
+from .helper import AbstractClassWithoutFieldsNamed as without
 from django.db import models
+from measurement.base import BidimensionalMeasure
+from measurement.measures import Volume, Mass
 from django.contrib.auth.models import User
 from .behaviours import Statusable, Dateable, Sidable, Userable, Commentable, FileAttachable, Hidable, Hashable
 from model_utils.managers import InheritanceManager
@@ -26,6 +30,19 @@ fs = FileSystemStorage(location=MEDIA_ROOT)
 #############################################################
 # Helper models, i.e., choices
 #############################################################
+
+class Concentration(BidimensionalMeasure):
+    PRIMARY_DIMENSION = Mass
+    REFERENCE_DIMENSION = Volume
+
+
+class UnitsType(DjangoChoices):
+    kilogram__l = ChoiceItem("kilogram__l")
+    milligram__l = ChoiceItem("milligram__l")
+    microgram__l = ChoiceItem("microgram__l")
+    stock__1 = ChoiceItem("stock__1")
+
+
 
 class FunctionalizationType(DjangoChoices):
     """ Substance types. """
@@ -51,7 +68,6 @@ class ManufacturerModel(DjangoChoices):
     """ Manufacturer type """
     polyan = ChoiceItem("PolyAn")
 
-
 class ProcessingType(DjangoChoices):
     substract_buffer = ChoiceItem("substract_buffer")
 
@@ -69,7 +85,7 @@ class Ligand(PolymorphicModel):
     """ Generic ligand.
     E.g, a peptide, virus or antibody.
     """
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True, unique=True)
     comment = models.TextField(blank=True, null=True)
 
     def __str__(self):
@@ -130,7 +146,9 @@ class Batch(Sidable, Commentable, models.Model):
 
     """
     labeling = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
+    #concentration = MeasurementField(measurement_class=Concentration,validators=[MinValueValidator(0)], blank=True, null=True)
     concentration = models.FloatField(validators=[MinValueValidator(0)], blank=True, null=True)
+    concentration_unit = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True, choices= UnitsType.choices)
     ph = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(14)], blank=True, null=True)
     purity = models.FloatField(validators=[MinValueValidator(0)], blank=True, null=True)
     buffer = models.ForeignKey(Buffer, blank=True, null=True)
@@ -148,7 +166,7 @@ class LigandBatch(Batch):
     """ Generic batch of a given ligand.
     This can be for instance a peptide, virus or antibody.
     """
-    ligand = models.ForeignKey(Ligand, blank=True, null=True)
+    ligand = models.ForeignKey(Ligand, blank=True ,null= True)
     objects = LigandBatchManager()
 
 
@@ -179,6 +197,8 @@ class BufferBatch(LigandBatch):
     objects = LigandBatchManager()
 
 
+
+
 ########################################
 # Gal files
 ########################################
@@ -201,7 +221,7 @@ class Step(Sidable, Commentable, models.Model):
     """
     objects = InheritanceManager()
     method = models.CharField(max_length=300, null=True, blank=True)
-    temperature = models.CharField(max_length=300, null=True, blank=True)
+    temperature = models.FloatField(null=True, blank=True)
 
     @property
     def get_step_type(self):
@@ -500,8 +520,9 @@ class RawSpot(models.Model):
 #####################################
 # Quantified spots
 #####################################
-class SpotCollection(Sidable, Commentable, FileAttachable, models.Model):
+class SpotCollection(Commentable, FileAttachable, models.Model):
     """ SpotCollection model. """
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     raw_spot_collection = models.ForeignKey(RawSpotCollection)
     std_gal = models.ForeignKey(GalFile,null=True, blank=True,related_name="std_gal")
     int_gal = models.ForeignKey(GalFile,null=True, blank=True,related_name="int_gal")
@@ -526,6 +547,10 @@ class SpotCollection(Sidable, Commentable, FileAttachable, models.Model):
         std = data.pivot(index="raw_spot__row", columns="raw_spot__column", values="std")
         std.fillna(value="", inplace=True)
         return std
+
+    class Meta:
+        unique_together = ('raw_spot_collection', 'sid')
+
 
 
 class Spot(models.Model):

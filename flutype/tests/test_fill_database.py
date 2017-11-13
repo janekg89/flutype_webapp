@@ -24,7 +24,7 @@ class DatabaseDJTestCase(TransactionTestCase):
 
 
     def test_update_ligands(self):
-        Ligand_count = {"Antibody":4, "Complex":1, "Virus":6, "Peptide":66}
+        Ligand_count = {"Antibody":4, "Complex":1, "Virus":7, "Peptide":66}
         #read ligands from master
         ligands = self.ma.read_ligands()
         complex = self.ma.read_complex()
@@ -182,6 +182,8 @@ class DatabaseDJTestCase(TransactionTestCase):
             df = read_steps(step)
             self.assertTrue(steps[step]["sid"].equals(df["sid"]))
             self.assertTrue(steps[step]["comment"].equals(df["comment"]))
+            print(steps[step]["temperature"])
+            #print(df["temperature"])
             self.assertTrue(steps[step]["temperature"].equals(df["temperature"]))
             self.assertTrue(steps[step]["method"].equals(df["method"]))
 

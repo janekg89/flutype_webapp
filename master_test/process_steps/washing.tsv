@@ -1,8 +1,8 @@
-sid	method	temperature	comment	substance	duration
-no	no				
-W001	100 mu l/well			 NaHCO3	
-W002	100 mu l/well			 PBST	
-W003	H2O Leitung und Becherglas 20x Konjugate 90 min schuetteln				
-W004	100 mu l/well			 H2O	
-W005	300 mu l/well			PBST	
-W01	Air displacement pipette  300 micro liter	22		PBST	00:00:00:30
+sid	comment	method	temperature	substance	duration
+no		no			
+W001		100 mu l/well		 NaHCO3	
+W002		100 mu l/well		 PBST	
+W003		H2O Leitung und Becherglas 20x Konjugate 90 min schuetteln			
+W004		100 mu l/well		 H2O	
+W005		300 mu l/well		PBST	
+W01		Air displacement pipette  300 micro liter	22.0	PBST	0:0:0:30
