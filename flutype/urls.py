@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^study_ligands/(?P<sid>.*)/$', views.study_ligands_view, name='study_ligands'),
 
     url(r'^tutorial_db/$', views.tutorial_db_view, name='tutorial_db'),
+    url(r'^glossary/$', views.glossary_view, name='glossary'),
 
     url(r'^measurements/$', views.measurements_view, name='measurements'),
     url(r'^mymeasurements/$', views.my_measurements_view, name='my_measurements'),
