@@ -230,7 +230,10 @@ def tutorial_db_view(request):
     return study_view(request, study.sid)
 
 
+@login_required
+def glossary_view(request):
 
+    return render(request, "flutype/glossary.html", {"language": "en"})
 
 
 @login_required

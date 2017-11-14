@@ -1,72 +1,11 @@
-<h1>Glossary</h1>
-In the following an overview about the main concepts is given and how they are used.
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th>term</th>
-        <th>explanation</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td><code>batch</code></td>
-        <td>A <code>batch</code> is a solution used in a measurement or experiment. Mostly these are <code>ligand
-            batches</code>
-            i.e, solutions of a given <code>ligand</code>, e.g., peptides, viruses, or antibodies.
-        </td>
-    </tr>
-    <tr>
-        <td><code>buffer</code></td>
-        <td>A <code>buffer</code> is a buffer solution used in a measurement or experiment. The concrete buffers are
-            defined in the <code>buffer batches</code>.
-        </td>
-    </tr>
-    <tr>
-        <td><code>ligand</code></td>
-        <td>A <code>ligand</code> is the main object used in a binding assay. <code>Ligands</code> can be
-            peptides, viruses, or
-            antibodies. To refer to the actual solution of a <code>ligand</code> use the <code>batch</code>
-            concept.
-        </td>
-    </tr>
-    <tr>
-        <td><code>measurement</code></td>
-        <td>A <code>measurement</code> is a single experiment, i.e., a single microwell or peptide array
-            which was
-            measured. Multiple <code>measurements</code> can be combined to a <code>study</code>.
-    </tr>
-    <tr>
-        <td><code>process</code></td>
-        <td>A <code>process</code> describes the workflow in a measurement and consists of individual
-            <code>process steps</code>. In a nutshell, the process describes all the individual steps taken
-            in
-            an experiment and in which order.
-    </tr>
-    <tr>
-        <td><code>process step</code></td>
-        <td>A <code>process step</code> describes a single step like washing, drying, incubation, ... in the
-            workflow of doing
-            a measurement.
-    </tr>
-    <tr>
-        <td><code>sid</code></td>
-        <td>A <code>sid</code> is an identifier to identify a resource in the FluTypeDB and the web
-            application.
-            This is the identifier under which some resource is located and can be accessed.
-    </tr>
-    <tr>
-        <td><code>study</code></td>
-        <td>A <code>study</code> is a collection of multiple <code>measurements</code>, which were performed
-            to answer
-            a common question. E.g., multiple Elisa experiments to determine the concentration dependence of
-            various
-            viruses.
-    </tr>
-    <tr>
-        <td><code>study metadata</code></td>
-        <td>The <code>study metadata</code> provides the general information for a study, i.e.
-            a description of the study or a comment .
-    </tr>
+{% extends "flutype/base.html" %}
 
-    </tbody>
-</table>
+{% block content %}
+    <!-- Main Content -->
+        <div class="standard">
+
+            <!--------------------------------------------------------------------------------------------------------->
+            {% include "flutype/glossary_table.html" %}
+        </div>
+
+{% endblock %}
