@@ -5,6 +5,7 @@ Django models for the flutype webapp.
 from __future__ import absolute_import, print_function, unicode_literals
 
 import os
+import numpy as np
 from django.core.validators import MaxValueValidator, MinValueValidator
 from djchoices import DjangoChoices, ChoiceItem
 from django.core.files.storage import FileSystemStorage
@@ -205,10 +206,52 @@ class BufferBatch(LigandBatch):
 class GalFile(Sidable, models.Model):
     type = models.CharField(max_length=CHAR_MAX_LENGTH, choices=GalType.choices)
     file = models.FileField(upload_to="gal_file", null=True, blank=True, storage=OverwriteStorage())
+    rows_in_tray = models.IntegerField(null=True,blank=True)
+    columns_in_tray = models.IntegerField(null=True,blank=True)
+    vertical_trays =  models.IntegerField(null=True,blank=True)
+    horizontal_trays =  models.IntegerField(null=True,blank=True)
+    identical_trays = models.NullBooleanField(blank=True, null=True)
+    ligand_batches = models.ManyToManyField(LigandBatch, blank=True)
+
+
     objects = GalFileManager()
+
+    def create_gal_file_base(self):
+        tray_x = np.array(range(self.rows_in_tray))
+        tray_y = np.array(range(self.columns_in_tray))
+
+        space_between_trays_x = tray_x.max() / 2
+        space_between_trays_y = tray_y.max() / 2
+
+        matrix_x = np.array(tray_x)
+        matrix_y = np.array(tray_y)
+
+        for _ in range(self.horizontal_trays - 1):
+            matrix_x = np.append(matrix_x, tray_x + matrix_x.max() + space_between_trays_x)
+
+        for _ in range(self.vertical_trays - 1):
+            matrix_y = np.append(matrix_y, tray_y + matrix_y.max() + space_between_trays_y)
+
+        xx, yy = np.meshgrid(matrix_x, matrix_y)
+
+        positions = np.vstack([xx.ravel(), yy.ravel()])
+
+        return positions.T
+
+    def create_tray_base(self):
+        tray_x = np.array(range(self.rows_in_tray))
+        tray_y = np.array(range(self.columns_in_tray))
+
+        xx, yy = np.meshgrid(tray_x, tray_y)
+
+        positions = np.vstack([xx.ravel(), yy.ravel()])
+
+        return positions.T
 
     def __str__(self):
         return self.sid
+
+
 
 
 ########################################
