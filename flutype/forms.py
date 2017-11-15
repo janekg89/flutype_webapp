@@ -29,6 +29,11 @@ class RawDocForm(forms.ModelForm):
         model = RawDoc
         fields = '__all__'
 
+class GalFileForm(forms.ModelForm):
+    class Meta:
+        model = GalFile
+        fields = ['rows_in_tray','columns_in_tray','vertical_trays','horizontal_trays']
+
 
 class StudyForm(forms.ModelForm):
     class Meta:

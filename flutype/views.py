@@ -11,7 +11,7 @@ from .helper import generate_tree, tar_tree, empty_list
 from .forms import PeptideForm, VirusForm, AntibodyForm, AntibodyBatchForm, \
     PeptideBatchForm, VirusBatchForm, ProcessStepForm, ComplexBatchForm, ComplexForm, StudyForm, \
     WashingForm,DryingForm,SpottingForm, QuenchingForm,BlockingForm,IncubatingForm, \
-    ScanningForm, IncubatingAnalytForm, RawDocForm, BufferForm, BufferBatchForm
+    ScanningForm, IncubatingAnalytForm, RawDocForm, BufferForm, BufferBatchForm, GalFileForm
 from .models import RawSpotCollection, SpotCollection, Process, PeptideBatch, \
     Peptide, VirusBatch, Virus, AntibodyBatch, Antibody, Step, ProcessStep, Complex, ComplexBatch, Study, \
     RawDoc , Buffer, BufferBatch
@@ -45,8 +45,31 @@ def upload_file_study(request,pk):
 
 @login_required
 def gal_file_view(request):
+    type="start"
+    form = GalFileForm()
+    context = {
+        "type":type,
+        "form":form,
+    }
+    if request.method == 'POST':
+        form = GalFileForm(request.POST, request.FILES)
+        context["form"] =form
+        if "exisiting_gal" in request.POST:
+            context["type"] ="edit"
+        elif "new_gal" in request.POST:
+            context["type"]="detail"
+        elif "update" in request.POST:
+            context["type"] = "detail"
+            if form.is_valid():
+                model_instance = form.save(commit=False)
+                context["gal_file"]=model_instance
+                context["grid"]= json.dumps(model_instance.create_gal_file_base().tolist())
+                context["tray"]= json.dumps(model_instance.create_tray_base().tolist())
+                context["form"]= form
 
-    return render(request, 'flutype/create_gal.html')
+
+
+    return render(request, 'flutype/create_gal.html', context)
 
 
 @login_required

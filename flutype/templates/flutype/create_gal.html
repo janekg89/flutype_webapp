@@ -2,40 +2,165 @@
 {% import 'flutype/macros.html' as macros %}
 
 {% extends "flutype/base.html" %}
+{% block head %}
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+{% endblock %}
 
 {% block content %}
 <div class="standard">
 <h1> Gal File</h1>
-    <button> select existing gal file</button>
-    <form>
-         <ul class="list-group">
-             <li class = "list-group-item"><label> Select ligand batches </label> </li>
-             <li class = "list-group-item"><label> Select Type <input type="checkbox" data-toggle="toggle" data-on="microarray" data-off="microwell plate" name="number_replicants"> </label> </li>
-             <li class = "list-group-item"><label>Select number of replicants <input type="number" name="number_replicants"> </label></li>
-             <li class = "list-group-item"> <label> Select shape of tray <br>  Rows
-                 <input type="number" name="tray_rows">  Columns <input type="number" name="tray_columns"> </label></li>
-             <li class= "list-group-item"> <label>Select shape  of trays <br>  Rows
-                 <input type="number" name="trays_rows">  Columns <input type="number" name="trays_columns"> </label></li>
-             <li class= "list-group-item">   <label> Do you want to randomize within tray?
-                    <input data-toggle="toggle" data-on="Yes" data-off="No" type="checkbox">
-                    </label>
-               </li>
-             <li class= "list-group-item">   <label> Do you want to have identical trays?
-                    <input data-toggle="toggle" data-on="Yes" data-off="No" type="checkbox">
-                    </label>
-                 </li>
-         </ul>
+    {%if type=="start" %}
+        <form method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+             <label> Do you want to start of an exisiting gal file?
+                 <input type="submit" name="exisiting_gal" value="Yes">
+                 <input type="submit" name="new_gal" value="No">
+             </label>
+        </form>
 
-        <ul class="list-group">
-            <li class = "list-group-item">
-                <label> Select Format of Gal File
-                    <input data-toggle="toggle" data-off="Standard" data-on="Pivoted" type="checkbox">
-                </label>
-            </li>
-            <li class = "list-group-item">download </li>
-        </ul>
+    {% elif type=="detail" %}
 
-    </form>
+      <form method="post" class="post-form">
+          <table id="edit">
+              <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+       {{ form.as_table() }}
+           </table>
+                  <span style="float:left;">
+                        <button class="btn btn-default btn-success" name="update">Update Picture</button>
+                  </span>
+      </form>
+
+    {%endif%}
+    {% if gal_file %}
+    <div id="container1">
+    </div>
+    <div id="container2">
+    </div>
+    {% endif %}
 </div>
 
 {%endblock%}
+{% block javascript %}
+{% if gal_file %}
+<script>
+    var spots ={{ grid| safe }};
+
+    Highcharts.chart('container1', {
+    chart: {
+        type: 'scatter',
+        zoomType: 'xy'
+    },
+    title: {
+        text: 'arrangement of spots on array'
+    },
+
+    xAxis: {        visible: false
+
+
+
+    },
+    yAxis: {        visible: false
+
+
+    },
+    legend: {
+        enabled: false
+    },
+
+    plotOptions: {
+        scatter: {
+            marker: {
+                radius: 5,
+                states: {
+                    hover: {
+                        enabled: true,
+                        lineColor: 'rgb(100,100,100)'
+                    }
+                }
+            },
+            states: {
+                hover: {
+                    marker: {
+                        enabled: false
+                    }
+                }
+            },
+            tooltip: {
+                headerFormat: '<b>{series.name}</b><br>',
+                pointFormat: '{point.x} cm, {point.y} kg'
+            }
+        }
+    },
+    series: [ {
+        color: 'rgba(119, 152, 191, .5)',
+        data: spots
+    }]
+});
+
+
+</script>
+<script>
+    var spots ={{ tray| safe }};
+
+    Highcharts.chart('container2', {
+    chart: {
+        type: 'scatter',
+        zoomType: 'xy'
+    },
+    title: {
+        text: 'arrangement of spots in tray'
+    },
+
+    xAxis: {        visible: false
+
+
+
+    },
+    yAxis: {        visible: false
+
+
+    },
+
+
+    legend: {
+        enabled: false
+    },
+
+    plotOptions: {
+        allowOverlap:true,
+        scatter: {
+             dataLabels: {
+                 enabled: true,
+             },
+            marker: {
+                radius: 5,
+                states: {
+                    hover: {
+                        enabled: true,
+                        lineColor: 'rgb(100,100,100)'
+                    }
+                }
+            },
+            states: {
+                hover: {
+                    marker: {
+                        enabled: false
+                    }
+                }
+            },
+
+        }
+    },
+    series: [ {
+        color: 'rgba(119, 152, 191, .5)',
+        data: spots
+    }]
+});
+
+
+</script>
+{%endif%}
+
+{% endblock %}
