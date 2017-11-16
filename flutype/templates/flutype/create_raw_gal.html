@@ -2,12 +2,7 @@
 {% extends "flutype/base.html" %}
 {% import 'flutype/macros.html' as macros %}
 {% block head %}
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.css">
-        <script type="text/javascript" src="{{ static('flutype/js/libs/FileSaver/FileSaver.min.js') }}"></script>
-        <script type="text/javascript" src="{{ static('flutype/js/libs/js-xlsx/xlsx.core.min.js') }}"></script>
-        <script type="text/javascript" src="{{ static('flutype/js/tableExport.min.js') }}"></script>
-        <script type="text/javascript" src="{{ static('flutype/js/bootstrap-table-export.js') }}"></script>
-        <script type="text/javascript" src="{{ static('flutype/js/bootstrap-table-cookie.js') }}"></script>
+
 
 {% endblock %}
 
@@ -24,7 +19,8 @@
                data-pagination="true"
                data-height="400"
                data-cookie="true"
-               data-cookie-id-table="saveId">
+               data-cookie-id-table="saveId"
+               data-show-refresh="true">
 
         <thead>
             <tr>
@@ -119,7 +115,7 @@
     <script>
     $(document).ready(function () {
     $('#navbar-2 li a').click(function(e) {
-        
+
         var $parent = $(this).parent();
         if($parent.hasClass('active')){
            $parent.removeClass('active').addClass('inactive')
@@ -134,7 +130,7 @@
 <script>
     var checkedRows = [];
     var row_numbers = 0;
-    var new_gal_file = [];
+    var new_gal_file =[];
 
     function current_row(row_number){
         row = Math.ceil((row_number+1)/12)
@@ -146,8 +142,8 @@
          return column+1;
     };
 
-    function append(new_gal_file) {
-    $('#output').bootstrapTable("append",new_gal_file)
+    function load(new_gal_file) {
+    $('#output').bootstrapTable("load",new_gal_file)
     }
 
 
@@ -175,32 +171,27 @@
 $("#add_batch").click(function() {
   $.each(checkedRows, function(index, value) {
       var json_row = {row:current_row(row_numbers),column:current_column(row_numbers),name:value.sid};
-      new_gal_file.push(json_row);
-      console.log(new_gal_file);
-      append(json_row);
-      // var row = '<tr><td>'+current_row(row_numbers)+'</td><td>'+current_column(row_numbers)+'</td><td>'+value.sid+'</td></tr>';
-      //$('#output > tbody:last-child').append(row);
+      new_gal_file.push(json_row)
+
+      load(new_gal_file);
       row_numbers++;
   })});
 
   $("#remove_batch").click(function() {
-    var table = document.getElementById('output');
-    var rowCount = table.rows.length;
-      if (table.rows.length > 1) {
-          table.deleteRow(rowCount - 1)
+      var table = document.getElementById('output');
+      var rowCount = table.rows.length;
+      if (rowCount > 1) {
+          table.deleteRow(rowCount -1)
+          new_gal_file.splice(-1)
+
+          row_numbers--;
       }
-    row_numbers--;
 
     });
 
   </script>
 
 
-<!--
-<script type="text/javascript" charset="utf-8">
-     $('#table').tableExport({type:'csv'});
-</script>
--->
 
 
 {% endblock %}

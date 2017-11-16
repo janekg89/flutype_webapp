@@ -1,7 +1,17 @@
 {% import 'flutype/macros.html' as macros %}
 
 {% if studies %}
-    <table id="studies" class="table table-striped">
+    <table id="studies"
+           data-toggle="table"
+           data-pagination="true"
+           data-search="true"
+           data-show-toggle="true"
+           data-show-columns="true"
+           data-toolbar="#toolbar"
+           data-show-export="true"
+           data-show-refresh="true"
+
+           class="table table-striped">
         <thead>
         <tr>
             <th>sid</th>
