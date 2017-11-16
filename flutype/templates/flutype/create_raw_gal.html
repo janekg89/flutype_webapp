@@ -118,10 +118,8 @@
 {% block javascript %}
     <script>
     $(document).ready(function () {
-    $('.nav li a').click(function(e) {
-
-        //$('.nav li.active').removeClass('active');
-        //$('#antibodybatch_div,#bufferbatch_div,#complexbatch_div,#peptidebatch_div,#virusbatch_div').collapse("hide")
+    $('#navbar-2 li a').click(function(e) {
+        
         var $parent = $(this).parent();
         if($parent.hasClass('active')){
            $parent.removeClass('active').addClass('inactive')
