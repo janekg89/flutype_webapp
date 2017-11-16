@@ -8,72 +8,14 @@
             <span class="fa fa-plus-circle fa-3x text-success"></span>
         </a>
         </h1>
+        {% with id_peptidebatches_table = "batches" %}
+            {% include "flutype/peptidebatches_table.html" %}
+        {% endwith %}
 
-        {% if peptide_batches %}
-            <table id="batches" class="table table-striped">
-                <thead>
-                <tr>
-                    <th></th>
-                    <th>sid batch</th>
-                    <!-- ligand information -->
-                    <th>sid peptide</th>
-                    <th>name</th>
-                    <th>linker</th>
-                    <th>spacer</th>
-                    <th>sequence</th>
-                    <th>c-terminus</th>
-                    <!-- batch information -->
-                    <th>concentration</th>
-                    <th>buffer</th>
-                    <th>pH</th>
-                    <th>purity</th>
-                    <th>labeling</th>
-                    <th>produced by</th>
-                    <th>production date</th>
-                    <th>comment</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for peptidebatch in peptide_batches.all() %}
-                    <tr>
-                        <td>{% if request.user.is_superuser %}
-                    <a href="{{ url('peptide_batch_edit', args=[peptidebatch.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
-                {%  endif %}</td>
-                        <td><b>{{ peptidebatch.sid }}</b></td>
-                        <!-- ligand information -->
-                        {% with p=peptidebatch.ligand %}
-                            <td class="info">{{ p.sid }}</td>
-                            <td class="info">{{ p.name }}</td>
-                            <td class="info">{{ p.linker }}</td>
-                            <td class="info">{{ p.spacer }}</td>
-                            <td class="info">{{ p.sequence }}</td>
-                            <td class="info">{{ p.c_terminus }}</td>
-                        {% endwith %}
-                        <!-- batch information -->
-                        <td>{{ peptidebatch.concentration }}</td>
-                        <td class="info"> {% if peptidebatch.buffer.sid %}{{ peptidebatch.buffer.sid }} {% else %} - {% endif %}</td>
-                        <td>{{ peptidebatch.ph }}</td>
-                        <td>{{ peptidebatch.purity }}</td>
-                        <td>{{ peptidebatch.labeling }}</td>
-                        <td>{{ peptidebatch.produced_by }}</td>
-                        <td>{{ peptidebatch.production_date }}</td>
-                        <td>{{ peptidebatch.comment }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-
-        {% else %}
-            <p>No entries in database.</p>
-        {% endif %}
 
     </div>
 {% endblock %}
 
 {% block javascript %}
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#batches').DataTable();
-        });
-    </script>
+
 {% endblock %}

@@ -1,7 +1,20 @@
 <!--
 Definition of reusable macro function in templates
 -->
-
+<!-- Ligands -->
+{% macro ligand_type(ligand_type) %}
+{% if ligand_type in ["Antibody Batch","Antibody"] %}
+    <i class="fa fa-fw fa-hand-spock-o" title="{{ ligand_type }}"> </i> {{ ligand_type }}&nbsp;
+{% elif ligand_type in ["Buffer Batch","Buffer"] %}
+    <i class="fa fa-fw fa-circle-o-notch" title="{{ ligand_type }}"> </i> {{ ligand_type }}
+{% elif ligand_type in ["Complex Batch","Complex"] %}
+    {{ ligand_type }}
+{% elif ligand_type in ["Peptide Batch","Peptide"] %}
+    <i class="fa fa-fw fa-server" title="{{ ligand_type }}"> </i> {{ ligand_type }}
+{% elif ligand_type in ["Virus Batch","Virus"] %}
+    <i class="fa fa-fw fa-asterisk" title="{{ ligand_type }}"> </i> {{ ligand_type }}
+{% endif %}
+{% endmacro %}
 <!-- Measurement type -->
 {% macro measurement_type(measurement_type) %}
 {% if measurement_type == "microwell" %}
@@ -29,7 +42,7 @@ Definition of reusable macro function in templates
 {% elif status == "in progress" %}
     <i class="fa fa-fw fa-cog" title="{{ status }}"></i>
 {% endif %}
-{{ status }}</td>
+{{ status }}
 {% endmacro %}
 
 <!-- Step type -->

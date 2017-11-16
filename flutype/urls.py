@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^database_scheme_de/$', views.database_scheme_de_view, name='database_scheme_de'),
 
     url(r'^gal_file/$', views.gal_file_view, name='gal_file'),
+    url(r'^raw_gal_file/$', views.raw_gal_file_view, name='raw_gal_file'),
 
     url(r'^tutorial/$', views.tutorial_en_view, name='tutorial'),
     url(r'^tree/$', views.tutorial_tree_view, name='tutorial_tree'),

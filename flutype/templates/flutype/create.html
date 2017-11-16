@@ -84,11 +84,25 @@
 
 {% endblock %}
 <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-        $('#edit').DataTable({
-            searching: false,
-            paging: false,
-            info : false,
-            "order": []});
-        });
+        $(document).ready(function() {
+    $('#batches').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'print',
+                text: 'Print all'
+            },
+            {
+                extend: 'print',
+                text: 'Print selected',
+                exportOptions: {
+                    modifier: {
+                        selected: true
+                    }
+                }
+            }
+        ],
+        select: true
+    } );
+} );
 </script>
