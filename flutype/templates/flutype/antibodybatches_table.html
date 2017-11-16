@@ -1,0 +1,61 @@
+{% if antibody_batches %}
+            <table id="{{ id_antibodybatches_table }}"
+                    data-toggle="table"
+                    data-pagination="true"
+                    data-search="true"
+                    data-show-toggle="true"
+                    data-show-columns="true"
+                    data-toolbar="#toolbar"
+                   >
+                <thead>
+                <tr>
+                    {% if type == "gal_file" %}  <th data-field="state" data-checkbox="true"></th>{% endif %}
+                    {% if request.user.is_superuser %}<th></th>{%  endif %}
+                    <th data-field="sid">sid batch</th>
+                    <th data-field="sid antibody">sid antibody</th>
+                    <th data-field="target">target</th>
+                    <th data-field="name"> name</th>
+                    <th data-field="link"> db link</th>
+                    <th data-field="concentration">concentration</th>
+                    <th data-field="buffer">buffer</th>
+                    <th data-field="pH">pH</th>
+                    <th data-field="purity">purity</th>
+                    <th data-field="labeling">labeling</th>
+                    <th data-field="produced by">produced by</th>
+                    <th data-field="production date">production date</th>
+                    <th data-field="comment">comment</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for antibodybatch in antibody_batches.all() %}
+                    <tr>
+                        {% if type == "gal_file" %}  <td></td>{% endif %}
+                        {% if request.user.is_superuser %}<td>
+                    <a href="{{ url('antibody_batch_edit', args=[antibodybatch.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                </td>{%  endif %}
+
+                        <td><b>{{ antibodybatch.sid }}</b></td>
+                        <!-- ligand information -->
+                        {% with a=antibodybatch.ligand %}
+                            <td class="info"> {{ a.sid }} </td>
+                            <td class="info">{{ a.target }}</td>
+                            <td class="info">{{ a.name }}</td>
+                            <td class="info">{{ a.link_db }}</td>
+
+                        {% endwith %}
+                        <!-- batch information -->
+                        <td>{{ antibodybatch.concentration }}</td>
+                        <td class="info"> {% if antibodybatch.buffer.sid %}{{ antibodybatch.buffer.sid }} {% else %} - {% endif %}</td>
+                        <td>{{ antibodybatch.ph }}</td>
+                        <td>{{ antibodybatch.purity }}</td>
+                        <td>{{ antibodybatch.labeling }}</td>
+                        <td>{{ antibodybatch.produced_by }}</td>
+                        <td>{{ antibodybatch.production_date }}</td>
+                        <td>{{ antibodybatch.comment }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+{% else %}
+    <p>No entries in database.</p>
+{% endif %}

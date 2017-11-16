@@ -1,0 +1,61 @@
+{% if complex_batches %}
+            <table id="{{ id_complexbatches_table }}"
+                    data-toggle="table"
+                    data-pagination="true"
+                    data-search="true"
+                    data-show-toggle="true"
+                    data-show-columns="true"
+                    data-toolbar="#toolbar">
+                <thead>
+                <tr>
+                    {% if type == "gal_file" %}  <th data-field="state" data-checkbox="true"></th>{% endif %}
+                    {% if request.user.is_superuser %}<th></th>{%  endif %}
+                    <th data-field="sid">sid batch</th>
+                    <!-- ligand information -->
+                    <th>sid complex</th>
+                    <th>ligands</th>
+                    <!-- batch information -->
+                    <th>concentration</th>
+                    <th>buffer</th>
+                    <th>pH</th>
+                    <th>purity</th>
+                    <th>labeling</th>
+                    <th>produced by</th>
+                    <th>production date</th>
+                    <th>comment</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for complexbatch in complex_batches.all() %}
+                    <tr>
+                        {% if type == "gal_file" %}  <td></td>{% endif %}
+                       {% if request.user.is_superuser %}  <td>
+                    <a href="{{ url('complex_batch_edit', args=[complexbatch.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                        </td>{%  endif %}
+                        <td><b>{{ complexbatch.sid }}</b></td>
+                        <!-- complex information -->
+                        {% with c=complexbatch.ligand %}
+                            <td class="info">{{ c.sid }}</td>
+                            <td class="info">
+                                {% for l in c.complex_ligands.all() %}
+                                    {{ l.sid }}
+                                {% endfor %}
+                            </td>
+                        {% endwith %}
+                        <!-- batch information -->
+                        <td>{{ complexbatch.concentration }}</td>
+                        <td>{{ complexbatch.buffer }}</td>
+                        <td>{{ complexbatch.ph }}</td>
+                        <td>{{ complexbatch.purity }}</td>
+                        <td>{{ complexbatch.labeling }}</td>
+                        <td>{{ complexbatch.produced_by }}</td>
+                        <td>{{ complexbatch.production_date }}</td>
+                        <td>{{ complexbatch.comment }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        {% else %}
+            <p>No entries in database.</p>
+        {% endif %}

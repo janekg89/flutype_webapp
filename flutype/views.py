@@ -16,7 +16,7 @@ from .models import RawSpotCollection, SpotCollection, Process, PeptideBatch, \
     Peptide, VirusBatch, Virus, AntibodyBatch, Antibody, Step, ProcessStep, Complex, ComplexBatch, Study, \
     RawDoc , Buffer, BufferBatch
 from django.forms import formset_factory, inlineformset_factory
-from django.shortcuts import get_object_or_404, render, redirect, render_to_response
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
@@ -70,6 +70,25 @@ def gal_file_view(request):
 
 
     return render(request, 'flutype/create_gal.html', context)
+
+def raw_gal_file_view(request):
+    antibody_batches = AntibodyBatch.objects.all()
+    peptide_batches = PeptideBatch.objects.all()
+    virus_batches = VirusBatch.objects.all()
+    complex_batches = ComplexBatch.objects.all()
+    buffer_batches = BufferBatch.objects.all()
+
+    context = {
+        'type':"gal_file",
+        'antibody_batches': antibody_batches,
+        'peptide_batches': peptide_batches,
+        'virus_batches': virus_batches,
+        'complex_batches': complex_batches,
+        'buffer_batches': buffer_batches,
+
+    }
+    return render(request,
+                  'flutype/create_raw_gal.html', context)
 
 
 @login_required

@@ -1,0 +1,81 @@
+ {% if virus_batches %}
+             <table id="{{ id_virusbatches_table }}"
+                    data-toggle="table"
+                    data-pagination="true"
+                    data-search="true"
+                    data-show-toggle="true"
+                    data-show-columns="true"
+                    data-toolbar="#toolbar">
+                <thead>
+                <tr>
+                    {% if type == "gal_file" %}  <th data-field="state" data-checkbox="true"></th>{% endif %}
+                    {% if request.user.is_superuser %}<th></th>{%  endif %}
+                    <th data-field="sid">sid batch</th>
+                    <th>sid virus</th>
+                    <th>tax id</th>
+                    <th>subgroup</th>
+                    <th>country</th>
+                    <th>appearance</th>
+                    <th>strain</th>
+                    <th title="passage history">passage</th>
+                    <th>active</th>
+                    <th>labeling</th>
+                    <th>concentration</th>
+                    <th>sid buffer</th>
+                    <th>pH</th>
+                    <th>purity</th>
+                    <th>produced by</th>
+                    <th>production date</th>
+                    <th>comment</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for virusbatch in virus_batches %}
+                    <tr>
+                        {% if type == "gal_file" %}  <td></td>{% endif %}
+                        {% if request.user.is_superuser %}<td>
+                    <a href="{{ url('virus_batch_edit', args=[virusbatch.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                </td>{%  endif %}
+                        <td><b>{{ virusbatch.sid }}</b></td>
+                        <!-- virus information -->
+                        {% with v=virusbatch.ligand %}
+                            {% if v %}
+                                <td class="info">{{ v.sid }}</td>
+                                <td class="info">
+                                    {% if v.sid == "NO" %}
+                                        {{ v.tax_id }}
+                                    {% else %}
+                                        <a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ v.sid }}">{{ v.sid }}</a>
+                                    {% endif %}
+                                </td>
+                                <td class="info">{{ v.subtype }}</td>
+                                <td class="info">{{ v.isolation_country }}</td>
+                                <td class="info">{{ v.collection_date }}</td>
+                                <td class="info">{{ v.strain }}</td>
+                            {% else %}
+                                {% for k in range(6) %}
+                                    <td><i class="fa fa-fw fa-ban"></i></td>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+
+                        <!-- batch information -->
+                        <td>{{ virusbatch.passage_history }}</td>
+                        <td>{{ virusbatch.active }}</td>
+                        <td>{{ virusbatch.labeling }}</td>
+                        <td>{{ virusbatch.concentration }}</td>
+                        <td class="info"> {% if virusbatch.buffer.sid %}{{ virusbatch.buffer.sid }} {% else %} - {% endif %}</td>
+
+                        <td>{{ virusbatch.ph }}</td>
+                        <td>{{ virusbatch.purity }}</td>
+                        <td>{{ virusbatch.produced_by }}</td>
+                        <td>{{ virusbatch.production_date }}</td>
+                        <td>{{ virusbatch.comment }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        {% else %}
+            <p>No entries in database.</p>
+        {% endif %}

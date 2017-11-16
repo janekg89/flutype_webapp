@@ -12,65 +12,9 @@
         <span class="fa fa-plus-circle fa-3x text-success"></span></a>
         </h1>
 
-        {% if antibody_batches %}
-            <table id="batches" class="table table-striped">
-                <thead>
-                <tr>
-                     <th></th>
-                    <th>sid batch</th>
-                    <th>sid antibody</th>
-                    <th>target</th>
-                    <th>name</th>
-                    <th>db link</th>
-                    <th>concentration</th>
-                    <th>buffer</th>
-                    <th>pH</th>
-                    <th>purity</th>
-                    <th>labeling</th>
-                    <th>produced by</th>
-                    <th>production date</th>
-                    <th>comment</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for antibodybatch in antibody_batches.all() %}
-                    <tr>
-                        <td>{% if request.user.is_superuser %}
-                    <a href="{{ url('antibody_batch_edit', args=[antibodybatch.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
-                {%  endif %}</td>
-                        <td><b>{{ antibodybatch.sid }}</b></td>
-                        <!-- ligand information -->
-                        {% with a=antibodybatch.ligand %}
-                            <td class="info"> {{ a.sid }} </td>
-                            <td class="info">{{ a.target }}</td>
-                            <td class="info">{{ a.name }}</td>
-                            <td class="info">{{ a.link_db }}</td>
-
-                        {% endwith %}
-                        <!-- batch information -->
-                        <td>{{ antibodybatch.concentration }}</td>
-                        <td class="info"> {% if antibodybatch.buffer.sid %}{{ antibodybatch.buffer.sid }} {% else %} - {% endif %}</td>
-                        <td>{{ antibodybatch.ph }}</td>
-                        <td>{{ antibodybatch.purity }}</td>
-                        <td>{{ antibodybatch.labeling }}</td>
-                        <td>{{ antibodybatch.produced_by }}</td>
-                        <td>{{ antibodybatch.production_date }}</td>
-                        <td>{{ antibodybatch.comment }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-
-        {% else %}
-            <p>No entries in database.</p>
-        {% endif %}
+        {% with id_antibodybatches_table = "batches" %}
+            {% include "flutype/antibodybatches_table.html" %}
+        {% endwith %}
     </div>
 {% endblock %}
 
-{% block javascript %}
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#batches').DataTable();
-        });
-    </script>
-{% endblock %}
