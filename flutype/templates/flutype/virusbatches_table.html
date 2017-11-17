@@ -10,23 +10,23 @@
                 <tr>
                     {% if type == "gal_file" %}  <th data-field="state" data-checkbox="true"></th>{% endif %}
                     {% if request.user.is_superuser %}<th></th>{%  endif %}
-                    <th data-field="sid">sid batch</th>
-                    <th>sid virus</th>
-                    <th>tax id</th>
-                    <th>subgroup</th>
-                    <th>country</th>
-                    <th>appearance</th>
-                    <th>strain</th>
-                    <th title="passage history">passage</th>
-                    <th>active</th>
-                    <th>labeling</th>
-                    <th>concentration</th>
-                    <th>sid buffer</th>
-                    <th>pH</th>
-                    <th>purity</th>
-                    <th>produced by</th>
-                    <th>production date</th>
-                    <th>comment</th>
+                    <th  data-sortable="true" data-field="sid">sid batch</th>
+                    <th  data-sortable="true">sid virus</th>
+                    <th  data-sortable="true">tax id</th>
+                    <th  data-sortable="true">subgroup</th>
+                    <th  data-sortable="true">country</th>
+                    <th  data-sortable="true">appearance</th>
+                    <th  data-sortable="true">strain</th>
+                    <th  data-sortable="true" title="passage history">passage</th>
+                    <th  data-sortable="true">active</th>
+                    <th  data-sortable="true">labeling</th>
+                    <th  data-sortable="true">concentration</th>
+                    <th  data-sortable="true">sid buffer</th>
+                    <th  data-sortable="true">pH</th>
+                    <th  data-sortable="true">purity</th>
+                    <th  data-sortable="true">produced by</th>
+                    <th  data-sortable="true">production date</th>
+                    <th  data-sortable="true">comment</th>
                     {% if request.user.is_superuser %}<th></th>{%  endif %}
                 </tr>
                 </thead>

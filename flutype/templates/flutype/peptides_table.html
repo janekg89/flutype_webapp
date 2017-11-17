@@ -11,13 +11,13 @@
         <thead>
         <tr>
             {% if request.user.is_superuser %}<th></th>{% endif %}
-            <th>sid</th>
-            <th>name</th>
-            <th>linker</th>
-            <th>spacer</th>
-            <th>sequence</th>
-            <th>c-terminus</th>
-            <th>comment</th>
+            <th  data-sortable="true">sid</th>
+            <th  data-sortable="true">name</th>
+            <th  data-sortable="true">linker</th>
+            <th  data-sortable="true">spacer</th>
+            <th  data-sortable="true">sequence</th>
+            <th  data-sortable="true">c-terminus</th>
+            <th  data-sortable="true">comment</th>
             {% if request.user.is_superuser %}<th></th>{% endif %}
 
         </tr>
