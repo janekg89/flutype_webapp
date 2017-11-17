@@ -6,8 +6,14 @@ from __future__ import unicode_literals
 from django.contrib import admin
 from .models import Peptide, PeptideBatch, Virus, VirusBatch, Antibody, AntibodyBatch, Complex, ComplexBatch, \
     ProcessStep, Step, Spotting, Washing, Drying, Quenching, Blocking, Scanning, Incubating, \
-    Process, GalFile, Measurement, RawSpotCollection, RawSpot,SpotCollection, Spot
+    Process, GalFile, Measurement, RawSpotCollection, RawSpot, SpotCollection, Spot, \
+    Buffer, BufferBatch
 from .forms import ProcessAdminForm
+
+
+################################
+# Ligands
+################################
 
 
 ################################
@@ -15,11 +21,14 @@ from .forms import ProcessAdminForm
 ################################
 @admin.register(Peptide)
 class PeptideAdmin(admin.ModelAdmin):
-    fields = ['sid', 'linker', 'spacer', 'sequence', 'c_terminus', 'name', 'comment']
+    fields = ('sid', 'linker', 'spacer', 'sequence', 'c_terminus', 'name', 'comment')
+    list_display = ('sid', 'linker', 'spacer', 'sequence', 'c_terminus', 'name', 'comment')
+    list_filter = ('linker', 'spacer', 'sequence')
 
 @admin.register(Virus)
 class VirusAdmin(admin.ModelAdmin):
     fields = ['sid', 'tax_id', 'subtype', 'isolation_country', 'collection_date', 'strain', 'link_db', 'comment']
+    list_display = ['sid', 'tax_id', 'subtype', 'isolation_country', 'collection_date', 'strain', 'link_db', 'comment']
 
 @admin.register(Antibody)
 class AntibodyAdmin(admin.ModelAdmin):
@@ -28,6 +37,11 @@ class AntibodyAdmin(admin.ModelAdmin):
 @admin.register(Complex)
 class ComplexAdmin(admin.ModelAdmin):
     fields = ['sid', 'ligands', 'comment']
+
+
+@admin.register(Buffer)
+class BufferAdmin(admin.ModelAdmin):
+    fields = ['sid', 'name', 'comment']
 
 
 ################################
@@ -51,13 +65,9 @@ class AntibodyBatchAdmin(admin.ModelAdmin):
 class ComplexBatchAdmin(admin.ModelAdmin):
     fields = BATCH_FIELDS
 
-
-################################
-# Gal files
-################################
-@admin.register(GalFile)
-class GalFileAdmin(admin.ModelAdmin):
-    fields = ['sid', 'file']
+@admin.register(BufferBatch)
+class BufferBatchAdmin(admin.ModelAdmin):
+    fields = BATCH_FIELDS
 
 
 ################################
@@ -132,3 +142,10 @@ class BlockingAdmin(admin.ModelAdmin):
 class IncubatingAdmin(admin.ModelAdmin):
     model = Incubating
     fields = STEP_FIELDS
+
+################################
+# Gal files
+################################
+@admin.register(GalFile)
+class GalFileAdmin(admin.ModelAdmin):
+    fields = ['sid', 'file']
