@@ -164,7 +164,7 @@
                 </li>
                 {% if request.user.is_superuser %}
                     <li class="active">
-                        <a href="{{ url("admin:index") }}" title="Admin interface">
+                        <a href="{{ url("admin:index") }}" target="_blank" title="Admin interface">
                             <i class="fa fa-user fa-fw"></i> Admin</a>
                     </li>
                 {% endif %}
