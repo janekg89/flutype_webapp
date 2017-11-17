@@ -26,9 +26,7 @@
             <tr>
                 <td><b><a href="{{ url('study', args=[s.sid]) }}"> {{ s.sid }}</a></b></td>
                 <td>{{ macros.status(s.status) }}</td>
-                <td>{% for user in s.users() %}
-                    {{ macros.user(user) }}
-                    {% endfor %}
+                <td>{% for user in s.users() %}{{ macros.user(user) }}{% endfor %}<br />
                 </td>
                 <td>{{ s.description }}</td>
                 <td>
