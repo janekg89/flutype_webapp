@@ -83,6 +83,7 @@
 </div>
 
 {% endblock %}
+{% block javascript %}
 <script type="text/javascript" charset="utf-8">
         $(document).ready(function() {
     $('#batches').DataTable( {
@@ -106,3 +107,15 @@
     } );
 } );
 </script>
+<script>
+  $(function() {
+    $( ".datepicker" ).datepicker({
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "1900:2012",
+      // You can put more options here.
+
+    });
+  });
+  </script>
+{% endblock %}

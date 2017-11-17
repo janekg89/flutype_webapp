@@ -658,26 +658,24 @@ def buffer_view(request):
 
 @login_required
 def buffer_new(request):
+    form = BufferForm()
     if request.method == 'POST':
         form = BufferForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('buffers')
-    else:
-        form = BufferForm()
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer'})
 
 @login_required
 def buffer_edit(request, sid):
     instance = get_object_or_404(Buffer, sid=sid)
+    form = BufferForm(instance=instance)
     if request.method == 'POST':
         form = BufferForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
             return redirect('buffers')
-    else:
-        form = BufferForm(instance=instance)
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer'})
 
 
 @login_required
@@ -694,27 +692,25 @@ def buffer_batch_view(request):
 
 @login_required
 def buffer_batch_new(request):
+    form = BufferBatchForm(initial={'produced_by': request.user, 'production_date': localtime(now()).date()})
     if request.method == 'POST':
         form = BufferBatchForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('bufferbatches')
-    else:
-        form = BufferBatchForm(initial={'produced_by': request.user, 'production_date': localtime(now()).date()}
-)
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer_batch'})
+
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer_batch'})
 
 @login_required
 def buffer_batch_edit(request, sid):
     instance = get_object_or_404(BufferBatch, sid=sid)
+    form = BufferBatchForm(instance=instance)
     if request.method == 'POST':
         form = BufferBatchForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
             return redirect('bufferbatches')
-    else:
-        form = BufferBatchForm(instance=instance)
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer_batch'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer_batch'})
 
 
 @login_required
@@ -763,14 +759,13 @@ def change_password_view(request):
 
 @login_required
 def peptide_new(request):
+    form = PeptideForm()
     if request.method == 'POST':
         form = PeptideForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('peptides')
-    else:
-        form = PeptideForm()
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'peptide'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'peptide'})
 
 @login_required
 def complex_view(request):
@@ -807,14 +802,13 @@ def complex_fixed_view(request):
 
 @login_required
 def complex_new(request):
+    form = ComplexForm()
     if request.method == 'POST':
         form = ComplexForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('complexes')
-    else:
-        form = ComplexForm()
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'complex'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'complex'})
 
 @login_required
 def complex_delete(request, sisd):
@@ -828,14 +822,13 @@ def complex_delete(request, sisd):
 @login_required
 def complex_edit(request, sid):
     instance = get_object_or_404(Complex, sid=sid)
+    form = ComplexForm(instance=instance)
     if request.method == 'POST':
         form = ComplexForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
             return redirect('complexes')
-    else:
-        form = ComplexForm(instance=instance)
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'complex'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'complex'})
 
 @login_required
 def complex_batch_delete(request, sid):
@@ -902,69 +895,64 @@ def complex_batch_fixed_view(request):
 
 @login_required
 def virus_new(request):
+    form = VirusForm()
     if request.method == 'POST':
         form = VirusForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('viruses')
-    else:
-        form = VirusForm()
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'virus'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'virus'})
 
 
 @login_required
 def antibody_new(request):
-
+    form = AntibodyForm()
     if request.method == 'POST':
         form = AntibodyForm(request.POST)
         print(form.errors)
         if form.is_valid():
             form.save()
             return redirect('antibodies')
-
-    else:
-        form = AntibodyForm()
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'antibody'})
+    form = AntibodyForm()
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'antibody'})
 
 
 @login_required
 def peptide_edit(request, sid):
     instance = get_object_or_404(Peptide, sid=sid)
+    form = PeptideForm(instance=instance)
     if request.method == 'POST':
         form = PeptideForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
             return redirect('peptides')
-    else:
-        form = PeptideForm(instance=instance)
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'peptide'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'peptide'})
 
 
 @login_required
 def virus_edit(request, sid):
     instance = get_object_or_404(Virus, sid=sid)
+    form = VirusForm(instance=instance)
     if request.method == 'POST':
         form = VirusForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
             return redirect('viruses')
-    else:
-        form = VirusForm(instance=instance)
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'virus'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'virus'})
 
 
 @login_required
 def antibody_edit(request, sid):
+
     instance = get_object_or_404(Antibody, sid=sid)
+    form = AntibodyForm(instance=instance)
+
     if request.method == 'POST':
         form = AntibodyForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
             return redirect('antibodies')
-    else:
-
-        form = AntibodyForm(instance=instance)
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'antibody'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'antibody'})
 
 
 @login_required
