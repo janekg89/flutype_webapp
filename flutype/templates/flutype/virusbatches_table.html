@@ -63,7 +63,7 @@
                         <td>{{ virusbatch.passage_history }}</td>
                         <td>{{ virusbatch.active }}</td>
                         <td>{{ virusbatch.labeling }}</td>
-                        <td>{{ virusbatch.concentration }}</td>
+                        <td>{{ virusbatch.concentration }} {% if  virusbatch.concentration_unit %}[{{ virusbatch.concentration_unit }}]{% endif %}</td>
                         <td class="info"> {% if virusbatch.buffer.sid %}{{ virusbatch.buffer.sid }} {% else %} - {% endif %}</td>
 
                         <td>{{ virusbatch.ph }}</td>

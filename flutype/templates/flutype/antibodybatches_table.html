@@ -44,7 +44,7 @@
 
                         {% endwith %}
                         <!-- batch information -->
-                        <td>{{ antibodybatch.concentration }}</td>
+                        <td>{{ antibodybatch.concentration }} {% if  antibodybatch.concentration_unit %}[{{ antibodybatch.concentration_unit }}]{% endif %}</td>
                         <td class="info"> {% if antibodybatch.buffer.sid %}{{ antibodybatch.buffer.sid }} {% else %} - {% endif %}</td>
                         <td>{{ antibodybatch.ph }}</td>
                         <td>{{ antibodybatch.purity }}</td>
