@@ -6,7 +6,14 @@
         <h1><i class="fa fa-fw fa-magic"></i> Processes</h1>
         {% if processes %}
 
-            <table id="processes" class="table table-striped">
+            <table id="processes"
+                    data-toggle="table"
+                    data-pagination="true"
+                    data-search="true"
+                    data-show-toggle="true"
+                    data-show-columns="true"
+                    data-toolbar="#toolbar"
+                    class="table table-striped">
                 <thead>
                 <tr>
                     <th>sid</th>
@@ -37,9 +44,5 @@
 {% endblock %}
 
 {% block javascript %}
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#processes').DataTable();
-        });
-    </script>
+
 {% endblock %}

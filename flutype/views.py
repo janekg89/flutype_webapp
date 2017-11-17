@@ -676,6 +676,14 @@ def buffer_edit(request, sid):
             form.save()
             return redirect('buffers')
     return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer'})
+@login_required
+def buffer_delete(request, sid):
+    buffer = get_object_or_404(Buffer, sid=sid)
+    if request.method == 'POST':
+        buffer.delete()
+        return redirect('buffers')
+    return render(request, 'flutype/delete.html', {'buffer': buffer, 'type': 'buffer'})
+
 
 
 @login_required
@@ -712,6 +720,13 @@ def buffer_batch_edit(request, sid):
             return redirect('bufferbatches')
     return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer_batch'})
 
+@login_required
+def buffer_batch_delete(request, sid):
+    buffer_batch = get_object_or_404(BufferBatch, sid=sid)
+    if request.method == 'POST':
+        buffer_batch.delete()
+        return redirect('bufferbatches')
+    return render(request, 'flutype/delete.html', {'buffer_batch': buffer_batch, 'type': 'buffer_batch'})
 
 @login_required
 def highcharts_view(request, measurement_sid,sid):
@@ -815,7 +830,7 @@ def complex_delete(request, sisd):
     complex = get_object_or_404(Complex, sisd=sisd)
     if request.method == 'POST':
         complex.delete()
-        return redirect('peptides')
+        return redirect('complexes')
     return render(request, 'flutype/delete.html', {'complex': complex, 'type': 'complex'})
 
 

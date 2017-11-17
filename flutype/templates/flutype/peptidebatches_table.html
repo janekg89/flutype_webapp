@@ -27,6 +27,8 @@
                     <th>produced by</th>
                     <th>production date</th>
                     <th>comment</th>
+                    {% if request.user.is_superuser %}<th></th>{%  endif %}
+
                 </tr>
                 </thead>
                 <tbody>
@@ -55,6 +57,9 @@
                         <td>{{ peptidebatch.produced_by }}</td>
                         <td>{{ peptidebatch.production_date }}</td>
                         <td>{{ peptidebatch.comment }}</td>
+                        {% if request.user.is_superuser %}<td class="alert-danger">
+                        <a href="{{ url('peptide_batch_delete', args=[peptidebatch.sid]) }}"><i class="fa fa-fw fa-trash"></i></a>
+                     </td>{%  endif %}
                     </tr>
                 {% endfor %}
                 </tbody>
