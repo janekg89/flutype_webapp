@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-
-import numpy as np
+"""
+Forms
+"""
 from django import forms
 from django.urls import reverse
 from django.contrib import admin
@@ -14,8 +15,6 @@ from django_measurement.forms import MeasurementField
 from django.forms.utils import ErrorList
 
 
-
-
 class OrderedModelMultipleChoiceField(forms.ModelMultipleChoiceField):
     def clean(self, value):
         qs = super(OrderedModelMultipleChoiceField, self).clean(value)
@@ -25,15 +24,17 @@ class OrderedModelMultipleChoiceField(forms.ModelMultipleChoiceField):
             order_by=('ordering',)
         )
 
+
 class RawDocForm(forms.ModelForm):
     class Meta:
         model = RawDoc
         fields = '__all__'
 
+
 class GalFileForm(forms.ModelForm):
     class Meta:
         model = GalFile
-        fields = ['rows_in_tray','columns_in_tray','vertical_trays','horizontal_trays']
+        fields = ['rows_in_tray', 'columns_in_tray', 'vertical_trays', 'horizontal_trays']
 
 
 class StudyForm(forms.ModelForm):
@@ -47,15 +48,12 @@ class PeptideForm(forms.ModelForm):
         model = Peptide
         fields = ['sid', 'linker', 'spacer', 'sequence', 'c_terminus', 'name', 'comment']
 
+
 class BufferForm(forms.ModelForm):
     class Meta:
         model = Buffer
-        fields = ['sid','name','comment']
+        fields = ['sid', 'name', 'comment']
 
-class BufferBatchForm(forms.ModelForm):
-    class Meta:
-        model = BufferBatch
-        fields = ['sid', 'buffer', 'ph','produced_by','production_date', 'comment']
 
 
 class ComplexForm(forms.ModelForm):
@@ -66,12 +64,12 @@ class ComplexForm(forms.ModelForm):
 
 
 class VirusForm(forms.ModelForm):
-    '''
+    """
     collection_date = forms.DateField(widget=forms.TextInput(attrs=
     {
         'class': 'datepicker'
     }))
-    '''
+    """
     class Meta:
         model = Virus
         fields = ['sid', 'tax_id', 'subtype', "isolation_country", "collection_date", "strain", "link_db", "comment"]
@@ -82,7 +80,15 @@ class AntibodyForm(forms.ModelForm):
         model = Antibody
         fields = ['sid', 'target', 'name', 'link_db', 'comment']
 
-batch_fields = ['sid', 'ligand', 'concentration','concentration_unit', 'buffer', 'ph', 'purity', 'produced_by','production_date', 'comment']
+
+class BufferBatchForm(forms.ModelForm):
+    class Meta:
+        model = BufferBatch
+        fields = ['sid', 'buffer', 'ph', 'produced_by', 'production_date', 'comment']
+
+
+BATCH_FIELDS = ['sid', 'ligand', 'concentration', 'concentration_unit', 'buffer', 'ph', 'purity',
+                'produced_by', 'production_date', 'comment']
 
 
 class FormCleanMixin(forms.ModelForm):
@@ -97,7 +103,7 @@ class FormCleanMixin(forms.ModelForm):
 
 
 class PeptideBatchForm(FormCleanMixin):
-
+    """ Form for PeptideBatch. """
     def __init__(self, *args, **kwargs):
         super(PeptideBatchForm, self).__init__(*args, **kwargs)
         self.fields['ligand'].queryset = Peptide.objects.all()
@@ -107,13 +113,11 @@ class PeptideBatchForm(FormCleanMixin):
 
     class Meta:
         model = PeptideBatch
-        fields = batch_fields
-
-
+        fields = BATCH_FIELDS
 
 
 class ComplexBatchForm(FormCleanMixin):
-
+    """ Form for ComplexBatch. """
     def __init__(self, *args, **kwargs):
         super(ComplexBatchForm, self).__init__(*args, **kwargs)
         self.fields['ligand'].queryset = Complex.objects.all()
@@ -123,10 +127,11 @@ class ComplexBatchForm(FormCleanMixin):
 
     class Meta:
         model = ComplexBatch
-        fields = batch_fields
+        fields = BATCH_FIELDS
 
 
 class VirusBatchForm(FormCleanMixin):
+    """ Form for VirusBatch. """
     def __init__(self, *args, **kwargs):
         super(VirusBatchForm, self).__init__(*args, **kwargs)
         self.fields['ligand'].queryset = Virus.objects.all()
@@ -134,14 +139,13 @@ class VirusBatchForm(FormCleanMixin):
         self.fields['ligand'].help_text = "go to <a href='{}'>viruses list </a>.".format(reverse('viruses'))
         self.fields['ligand'].required = True
 
-
     class Meta:
         model = VirusBatch
-        fields = batch_fields
+        fields = BATCH_FIELDS
 
 
 class AntibodyBatchForm(FormCleanMixin):
-
+    """ Form for AntibodyBatch. """
     def __init__(self, *args, **kwargs):
         super(AntibodyBatchForm, self).__init__(*args, **kwargs)
         self.fields['ligand'].queryset = Antibody.objects.all()
@@ -149,31 +153,30 @@ class AntibodyBatchForm(FormCleanMixin):
         self.fields['ligand'].help_text = "go to <a href='{}'>antibodies list </a>.".format(reverse('antibodies'))
         self.fields['ligand'].required = True
 
-
-
     class Meta:
         model = AntibodyBatch
-        fields = batch_fields
+        fields = BATCH_FIELDS
 
-basic_step_fields= ['sid','method','temperature','comment']
+
+BASIC_STEP_FIELDS = ['sid', 'method', 'temperature', 'comment']
 
 
 class ProcessStepForm(forms.ModelForm):
+    """ Form for ProcessStep. """
     class Meta:
         model = ProcessStep
-        fields = ['step','index']
+        fields = ['step', 'index']
 
 
 class StepForm(forms.ModelForm):
+    """ Form for Step. """
     class Meta:
         model = Step
-        fields = basic_step_fields
+        fields = BASIC_STEP_FIELDS
         help_texts = {
-            'temperature': 'temeperature in °C',
+            'temperature': 'temperature in °C',
             'duration': 'duration in [hh:mm:ss]',
-
         }
-
 
 
 class SpottingForm(forms.ModelForm):
