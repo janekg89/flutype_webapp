@@ -1,14 +1,10 @@
-
 {% extends "flutype/base.html" %}
 {% import 'flutype/macros.html' as macros %}
-{% block head %}
-
-
-{% endblock %}
+{% block head %}{% endblock %}
 
 {% block content %}
     <div class="title">
-        <h1>Create new Gal File</h1>
+        <h1>Create gal file</h1>
     </div>
 
     <div class="a">
@@ -31,7 +27,7 @@
         </thead>
         </table>
 
-        <button class="btn btn-default "   id="remove_batch">
+        <button class="btn btn-default" id="remove_batch">
             <i class="fa fa-fw fa-share fa-rotate-90" aria-hidden="true"></i> remove last
         </button>
     </div>
@@ -45,14 +41,12 @@
                             {{ macros.ligand_type("Buffer Batch")}} <span class="sr-only">(current)</span>
                         </a>
                     </li>
-
                     <li>
                         <a  data-toggle="collapse" href="#antibodybatch_div">
                             {{ macros.ligand_type("Antibody Batch")}} <span class="sr-only">(current)</span>
                         </a>
 
                     </li>
-
                      <li>
                         <a data-toggle="collapse" href="#peptidebatch_div">
                             {{ macros.ligand_type("Peptide Batch")}} <span class="sr-only">(current)</span>
@@ -106,7 +100,6 @@
                 {% include "flutype/complexbatches_table.html" %}
         {% endwith %}
     </div>
-
 </div>
 
 {%endblock%}
@@ -167,7 +160,6 @@
         })});
 
 
-
 $("#add_batch").click(function() {
   $.each(checkedRows, function(index, value) {
       var json_row = {row:current_row(row_numbers),column:current_column(row_numbers),name:value.sid};
@@ -190,8 +182,5 @@ $("#add_batch").click(function() {
     });
 
   </script>
-
-
-
 
 {% endblock %}
