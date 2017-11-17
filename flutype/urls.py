@@ -1,9 +1,13 @@
 from django.conf.urls import url
+from django.contrib import admin
+from django.conf.urls import url, include
+
 
 from . import views
 
 urlpatterns = [
     url(r'^$', views.studies_view, name='index'),
+    url(r'^admin/', include(admin.site.urls), name='admin'),
     url(r'^mystudies/$', views.my_studies_view, name='my_studies'),
     url(r'^uploadfile_study/(?P<sid>.*)/$', views.upload_file_study, name='upload_file_study'),
 
@@ -132,4 +136,5 @@ urlpatterns = [
 
     url(r'^qspotcollection/(?P<sid>.*)/data$', views.barplot_data_view, name='barplot_plotly'),
     url(r'^qspotcollection/(?P<sid>.*)/barplot_p$', views.highcharts_view, name='heatmap_highchart'),
+
 ]

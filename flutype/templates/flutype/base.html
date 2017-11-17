@@ -162,6 +162,12 @@
                     <a href="{{ url('about') }}" title="Description of FluTypeDB and FluType">
                         <i class="fa fa-info fa-fw"></i> About</a>
                 </li>
+                {% if request.user.is_superuser %}
+                    <li class="active">
+                        <a href="{{ url("admin:index") }}" title="Admin interface">
+                            <i class="fa fa-user fa-fw"></i> Admin</a>
+                    </li>
+                {% endif %}
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
