@@ -102,7 +102,10 @@ class StudyManager(models.Manager):
             if "user" in kwargs["meta"] and isinstance(kwargs["meta"]["user"], basestring):
                 kwargs["meta"]["user"]=get_user_or_none(kwargs["meta"]["user"])
             if "status" in kwargs["meta"]:
-                test=Status.get_choice(kwargs["meta"]["status"])
+                status = kwargs["meta"]["status"]
+                if status:
+                    # check if in selections
+                    test = Status.get_choice(kwargs["meta"]["status"])
 
             this_study, created_s = super(StudyManager, self).get_or_create(*args, **kwargs["meta"])
 
