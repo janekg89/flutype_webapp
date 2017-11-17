@@ -32,6 +32,11 @@ fs = FileSystemStorage(location=MEDIA_ROOT)
 # Helper models, i.e., choices
 #############################################################
 
+import datetime
+YEAR_CHOICES = []
+for r in range(1900, (datetime.datetime.now().year+1)):
+    YEAR_CHOICES.append((r,r))
+
 class Concentration(BidimensionalMeasure):
     PRIMARY_DIMENSION = Mass
     REFERENCE_DIMENSION = Volume
@@ -109,7 +114,7 @@ class Virus(Ligand):
     link_db = models.URLField(blank=True, null=True)
     subtype = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     isolation_country = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
-    collection_date = models.DateField(blank=True, null=True)
+    collection_date = models.IntegerField( choices=YEAR_CHOICES,blank=True, null=True)
     strain = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     objects = LigandManager()
 
