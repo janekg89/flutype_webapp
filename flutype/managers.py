@@ -5,6 +5,7 @@ from django.core.files import File
 from django_pandas.io import read_frame
 from django.utils import timezone
 import datetime
+from .behaviours import Status
 
 
 
@@ -98,8 +99,11 @@ class StudyManager(models.Manager):
     def get_or_create(self, *args, **kwargs):
         if "meta" in kwargs:
             if "user" in kwargs["meta"] and isinstance(kwargs["meta"]["user"], basestring):
+                print("*** Creating Study <{}>***".format(kwargs["meta"]["sid"]))
                 kwargs["meta"]["user"]=get_user_or_none(kwargs["meta"]["user"])
-            print("*** Creating Study <{}>***".format(kwargs["meta"]["sid"]))
+                if "status" in kwargs["meta"]:
+                    kwargs["meta"]["status"]=Status.get_choice(kwargs["meta"]["status"])
+
             this_study, created_s = super(StudyManager, self).get_or_create(*args, **kwargs["meta"])
 
         if "raw_docs_fpaths" in kwargs:
@@ -136,6 +140,8 @@ class MeasurementManager(models.Manager):
     def get_or_create(self, *args, **kwargs):
         if "meta" in kwargs:
             print("*** Creating Measurement <{}>***".format(kwargs["meta"]["sid"]))
+            if "status" in kwargs["meta"]:
+                kwargs["meta"]["status"] = Status.get_choice(kwargs["meta"]["status"])
             this_measurement, created = super(MeasurementManager, self).get_or_create(*args, **kwargs["meta"])
             this_measurement.studies.add(kwargs["study"])
 
