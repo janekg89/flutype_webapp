@@ -43,9 +43,19 @@ class Concentration(BidimensionalMeasure):
 
 
 class UnitsType(DjangoChoices):
+    """
     kilogram__l = ChoiceItem("kilogram__l")
     milligram__l = ChoiceItem("milligram__l")
     microgram__l = ChoiceItem("microgram__l")
+    """
+
+    M = ChoiceItem("M (molar)")
+    mM = ChoiceItem("mM (milimolar)")
+    muM = ChoiceItem("µM (µmolar)")
+    nM = ChoiceItem("nM (nanomolar)")
+    mg_per_l = ChoiceItem("mg/L (miligram per liter)")
+    mug_per_l = ChoiceItem("µg/L (µgram per liter)")
+    ng_per_l = ChoiceItem("ng/L (nanogram per liter)")
     stock__1 = ChoiceItem("stock__1")
 
 
