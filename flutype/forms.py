@@ -50,7 +50,7 @@ class PeptideForm(forms.ModelForm):
 class BufferForm(forms.ModelForm):
     class Meta:
         model = Buffer
-        fields = '__all__'
+        fields = ['sid','name','comment']
 
 class BufferBatchForm(forms.ModelForm):
     class Meta:
