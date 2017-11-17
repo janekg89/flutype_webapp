@@ -10,13 +10,13 @@
         <thead>
         <tr>
             {% if request.user.is_superuser %}<th></th>{% endif %}
-            <th>sid</th>
-            <th title="taxonomy id">taxonomy</th>
-            <th>subtype</th>
-            <th title="isolation country">country</th>
-            <th>collected</th>
-            <th>strain</th>
-            <th>comment</th>
+            <th  data-sortable="true">sid</th>
+            <th  data-sortable="true" title="taxonomy id">taxonomy</th>
+            <th  data-sortable="true">subtype</th>
+            <th  data-sortable="true" title="isolation country">country</th>
+            <th  data-sortable="true">collected</th>
+            <th  data-sortable="true">strain</th>
+            <th  data-sortable="true">comment</th>
             {% if request.user.is_superuser %}<th></th>{% endif %}
 
         </tr>

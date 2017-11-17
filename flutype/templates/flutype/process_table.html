@@ -13,19 +13,19 @@
     {% with prosteps = process.processstep_set.filter(raw_spot_collection=process.rawspotcollection_set.first())%}
         <thead>
         <tr>
-            <th>step</th>
-            <th>type</th>
-            <th>sid</th>
-            <th>method</th>
-            <th>substance</th>
-            <th>duration</th>
-            <th>temperature</th>
-            <th>comment</th>
+            <th data-sortable="true">step</th>
+            <th data-sortable="true">type</th>
+            <th data-sortable="true">sid</th>
+            <th data-sortable="true">method</th>
+            <th data-sortable="true">substance</th>
+            <th data-sortable="true">duration</th>
+            <th data-sortable="true">temperature</th>
+            <th data-sortable="true">comment</th>
             {% if type and type == "process" %}
-            <th>user</th>
-            <th>started</th>
-            <th>intensites</th>
-            <th>images</th>
+            <th data-sortable="true">user</th>
+            <th data-sortable="true">started</th>
+            <th data-sortable="true">intensites</th>
+            <th data-sortable="true">images</th>
             {% endif %}
         </tr>
         </thead>

@@ -10,11 +10,11 @@
         <thead>
         <tr>
             {% if request.user.is_superuser %}<th></th>{% endif %}
-            <th>sid</th>
-            <th>target</th>
-            <th>name</th>
-            <th>database link</th>
-            <th>comment</th>
+            <th  data-sortable="true">sid</th>
+            <th  data-sortable="true">target</th>
+            <th  data-sortable="true">name</th>
+            <th  data-sortable="true">database link</th>
+            <th  data-sortable="true">comment</th>
             {% if request.user.is_superuser %}<th></th>{% endif %}
 
         </tr>
