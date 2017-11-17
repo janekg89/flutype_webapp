@@ -5,6 +5,7 @@ from django.core.files import File
 from django_pandas.io import read_frame
 from django.utils import timezone
 import datetime
+from .behaviours import Status
 
 
 
@@ -42,7 +43,12 @@ class LigandManager(PolymorphicManager):
 
     def to_df(self):
         df = read_frame(self.all())
-        return df
+
+    def get_or_create(self, *args, **kwargs):
+        if "collection_date" in kwargs and isinstance(kwargs['collection_date'], basestring):
+            kwargs['collection_date'] = int(kwargs['collection_date'])
+        object, created = super(LigandManager, self).get_or_create(*args, **kwargs)
+        return object, created
 
 
 
@@ -92,9 +98,15 @@ class StepManager(models.Manager):
 class StudyManager(models.Manager):
     def get_or_create(self, *args, **kwargs):
         if "meta" in kwargs:
+            print("*** Creating Study <{}>***".format(kwargs["meta"]["sid"]))
             if "user" in kwargs["meta"] and isinstance(kwargs["meta"]["user"], basestring):
                 kwargs["meta"]["user"]=get_user_or_none(kwargs["meta"]["user"])
-            print("*** Creating Study <{}>***".format(kwargs["meta"]["sid"]))
+            if "status" in kwargs["meta"]:
+                status = kwargs["meta"]["status"]
+                if status:
+                    # check if in selections
+                    test = Status.get_choice(kwargs["meta"]["status"])
+
             this_study, created_s = super(StudyManager, self).get_or_create(*args, **kwargs["meta"])
 
         if "raw_docs_fpaths" in kwargs:
@@ -131,6 +143,7 @@ class MeasurementManager(models.Manager):
     def get_or_create(self, *args, **kwargs):
         if "meta" in kwargs:
             print("*** Creating Measurement <{}>***".format(kwargs["meta"]["sid"]))
+
             this_measurement, created = super(MeasurementManager, self).get_or_create(*args, **kwargs["meta"])
             this_measurement.studies.add(kwargs["study"])
 

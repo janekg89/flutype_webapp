@@ -17,7 +17,7 @@ body {
         ". . . . ."
         ". navbar2 navbar2 navbar2 ."
         ". tables2 tables2 tables2 ."
-        ". table table heat ." ;
+        ". table table heat ."
     }
 
     .box {
@@ -28,6 +28,8 @@ body {
         grid-area: heat;
          align-self: stretch;
     }
+    .copyright {
+         grid-area: copyright;}
 
     .toggle{
         justify-self: end;
@@ -42,7 +44,8 @@ body {
     .standard {
         grid-column-start: 2;
         grid-column-end: 5;
-        grid-row: 1;
+        grid-row-start: 1;
+        grid-row-end: 7;
     }
 
     .filebox {
