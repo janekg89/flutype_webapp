@@ -38,33 +38,35 @@ class GalFileForm(forms.ModelForm):
 
 
 class StudyForm(forms.ModelForm):
+    """ Form for Study. """
     class Meta:
         model = Study
         fields = '__all__'
 
 
 class PeptideForm(forms.ModelForm):
+    """ Form for Peptide. """
     class Meta:
         model = Peptide
         fields = ['sid', 'linker', 'spacer', 'sequence', 'c_terminus', 'name', 'comment']
 
 
 class BufferForm(forms.ModelForm):
+    """ Form for Buffer. """
     class Meta:
         model = Buffer
         fields = ['sid', 'name', 'comment']
 
 
-
 class ComplexForm(forms.ModelForm):
-
+    """ Form for Complex. """
     class Meta:
         model = Complex
         fields = ['sid', 'complex_ligands', 'comment']
 
 
 class VirusForm(forms.ModelForm):
-    """
+    """ Form for virus.
     collection_date = forms.DateField(widget=forms.TextInput(attrs=
     {
         'class': 'datepicker'
@@ -180,39 +182,41 @@ class StepForm(forms.ModelForm):
 
 
 class SpottingForm(forms.ModelForm):
+    """ Form for Spotting. """
     class Meta(StepForm.Meta):
         model = Spotting
 
 
 class WashingForm(forms.ModelForm):
+    """ Form for Washing. """
     class Meta(StepForm.Meta):
         model = Washing
-        fields  = ['sid', 'method', 'substance', 'temperature','duration', 'comment']
-
+        fields = ['sid', 'method', 'substance', 'temperature', 'duration', 'comment']
 
 
 class DryingForm(forms.ModelForm):
+    """ Form for Drying. """
     class Meta(StepForm.Meta):
         model = Drying
-        fields = ['sid', 'method', 'substance', 'temperature','duration', 'comment']
+        fields = ['sid', 'method', 'substance', 'temperature', 'duration', 'comment']
 
 
 class QuenchingForm(forms.ModelForm):
     class Meta(StepForm.Meta):
         model = Quenching
-        fields = ['sid', 'method', 'substance', 'temperature','duration', 'comment']
+        fields = ['sid', 'method', 'substance', 'temperature', 'duration', 'comment']
 
 
 class BlockingForm(forms.ModelForm):
     class Meta(StepForm.Meta):
         model = Blocking
-        fields = ['sid', 'method', 'substance', 'temperature','duration', 'comment']
+        fields = ['sid', 'method', 'substance', 'temperature', 'duration', 'comment']
 
 
 class IncubatingForm(forms.ModelForm):
     class Meta(StepForm.Meta):
         model = Incubating
-        fields = ['sid', 'method', 'temperature','duration', 'comment']
+        fields = ['sid', 'method', 'temperature', 'duration', 'comment']
 
 
 
@@ -221,7 +225,6 @@ class IncubatingAnalytForm(forms.ModelForm):
     class Meta(StepForm.Meta):
         model = IncubatingAnalyt
         fields = ['sid', 'method', 'temperature','duration', 'comment']
-
 
 
 class ScanningForm(forms.ModelForm):
@@ -310,6 +313,7 @@ class ProcessAdminForm(forms.models.ModelForm):
         # This is known as a lexical closure, which means that if we store
         # this function and execute it later on, it will execute in the same
         # context (i.e. it will have access to the current instance and self).
+
         def save_m2m():
             # This is really naive code and should be improved upon,
             # especially in terms of validation, but the basic gist is to make
@@ -332,7 +336,3 @@ class ProcessAdminForm(forms.models.ModelForm):
             self.save_m2m = func_concat(self.save_m2m, save_m2m)
             # Return the instance like a good save() method.
         return instance
-
-
-
-
