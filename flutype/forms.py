@@ -15,6 +15,7 @@ from django.forms.utils import ErrorList
 
 
 
+
 class OrderedModelMultipleChoiceField(forms.ModelMultipleChoiceField):
     def clean(self, value):
         qs = super(OrderedModelMultipleChoiceField, self).clean(value)
@@ -163,6 +164,8 @@ class StepForm(forms.ModelForm):
         fields = basic_step_fields
         help_texts = {
             'temperature': 'temeperature in °C',
+            'duration': 'duration in [hh:mm:ss]',
+
         }
 
 
@@ -175,31 +178,32 @@ class SpottingForm(forms.ModelForm):
 class WashingForm(forms.ModelForm):
     class Meta(StepForm.Meta):
         model = Washing
-        fields  = ['sid', 'method', 'substance', 'temperature', 'comment']
+        fields  = ['sid', 'method', 'substance', 'temperature','duration', 'comment']
+
 
 
 class DryingForm(forms.ModelForm):
     class Meta(StepForm.Meta):
         model = Drying
-        fields = ['sid', 'method', 'substance', 'temperature', 'comment']
+        fields = ['sid', 'method', 'substance', 'temperature','duration', 'comment']
 
 
 class QuenchingForm(forms.ModelForm):
     class Meta(StepForm.Meta):
         model = Quenching
-        fields = ['sid', 'method', 'substance', 'temperature', 'comment']
+        fields = ['sid', 'method', 'substance', 'temperature','duration', 'comment']
 
 
 class BlockingForm(forms.ModelForm):
     class Meta(StepForm.Meta):
         model = Blocking
-        fields = ['sid', 'method', 'substance', 'temperature', 'comment']
+        fields = ['sid', 'method', 'substance', 'temperature','duration', 'comment']
 
 
 class IncubatingForm(forms.ModelForm):
     class Meta(StepForm.Meta):
         model = Incubating
-        fields = ['sid', 'method', 'temperature', 'comment']
+        fields = ['sid', 'method', 'temperature','duration', 'comment']
 
 
 
@@ -207,7 +211,7 @@ class IncubatingForm(forms.ModelForm):
 class IncubatingAnalytForm(forms.ModelForm):
     class Meta(StepForm.Meta):
         model = IncubatingAnalyt
-        fields = ['sid', 'method', 'temperature', 'comment']
+        fields = ['sid', 'method', 'temperature','duration', 'comment']
 
 
 

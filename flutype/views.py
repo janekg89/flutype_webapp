@@ -1109,29 +1109,28 @@ def steps_view(request):
 
 @login_required
 def step_new(request, class_name):
+    form = eval("{}Form()".format(class_name))
     if request.method == 'POST':
 
         form = eval("{}Form(request.POST)".format(class_name))
         if form.is_valid():
             form.save()
             return redirect('steps')
-    else:
-        form = eval("{}Form()".format(class_name))
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'step', "class": class_name})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'step', "class": class_name})
 
 
 @login_required
 def step_edit(request, sid):
     instance = get_object_or_404(Step, sid=sid)
     instance = instance.get_step_type
+    form = eval("{}Form(instance=instance)".format(instance.__class__.__name__))
     if request.method == 'POST':
         form = eval("{}Form(request.POST,instance=instance)".format(instance.__class__.__name__))
         if form.is_valid():
             form.save()
             return redirect('steps')
-    else:
-        form = eval("{}Form(instance=instance)".format(instance.__class__.__name__))
-        return render(request, 'flutype/create.html',
+
+    return render(request, 'flutype/create.html',
                       {'form': form, 'type': 'step', 'class': instance.__class__.__name__})
 
 
