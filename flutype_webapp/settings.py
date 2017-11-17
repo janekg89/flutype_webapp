@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'polymorphic',
     'imagekit',
     'rest_framework',
+    'dbbackup',  # django-dbbackup
     ]
 
 MIDDLEWARE = [
@@ -153,6 +154,16 @@ INTERNAL_IPS = ['127.0.0.1', ]
 
 LOGIN_REDIRECT_URL = '/index'
 LOGIN_URL = '/login/'
+
+# Database backup
+# sudo mkdir -p /var/backups/flutypedb
+# sudo chown -R mkoenig:mkoenig /var/backups/flutypedb
+# python manage.py dbbackup
+
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': '/var/backups/flutypedb'}
+
+
 ######################################################################################
 # Overwrite settings for the deployment
 ######################################################################################
@@ -169,3 +180,5 @@ except ImportError as e:
     print("*" * 40)
     print("RUNNING IN DEVELOP")
     print("*" * 40)
+
+
