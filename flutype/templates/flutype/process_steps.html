@@ -49,13 +49,13 @@
                 <thead>
                 <tr>
                     {% if request.user.is_superuser %}<th></th>{% endif %}
-                    <th>sid</th>
-                    <th>type</th>
-                    <th>method</th>
-                     <th>substance</th>
-                    <th>duration</th>
-                    <th>temperature</th>
-                    <th>comment</th>
+                    <th  data-sortable="true">sid</th>
+                    <th  data-sortable="true">type</th>
+                    <th  data-sortable="true">method</th>
+                     <th  data-sortable="true">substance</th>
+                    <th  data-sortable="true">duration</th>
+                    <th  data-sortable="true">temperature</th>
+                    <th  data-sortable="true">comment</th>
                     {% if request.user.is_superuser %}<th></th>{% endif %}
 
                 </tr>

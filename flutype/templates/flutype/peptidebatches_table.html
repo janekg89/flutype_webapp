@@ -10,23 +10,23 @@
                 <tr>
                     {% if type == "gal_file" %}  <th data-field="state" data-checkbox="true"></th>{% endif %}
                     {% if request.user.is_superuser %}<th></th>{%  endif %}
-                    <th data-field="sid">sid batch</th>
+                    <th  data-sortable="true" data-field="sid">sid batch</th>
                     <!-- ligand information -->
-                    <th>sid peptide</th>
-                    <th>name</th>
-                    <th>linker</th>
-                    <th>spacer</th>
-                    <th>sequence</th>
-                    <th>c-terminus</th>
+                    <th  data-sortable="true">sid peptide</th>
+                    <th  data-sortable="true">name</th>
+                    <th  data-sortable="true">linker</th>
+                    <th  data-sortable="true">spacer</th>
+                    <th  data-sortable="true">sequence</th>
+                    <th  data-sortable="true">c-terminus</th>
                     <!-- batch information -->
-                    <th>concentration</th>
-                    <th>buffer</th>
-                    <th>pH</th>
-                    <th>purity</th>
-                    <th>labeling</th>
-                    <th>produced by</th>
-                    <th>production date</th>
-                    <th>comment</th>
+                    <th  data-sortable="true">concentration</th>
+                    <th  data-sortable="true">buffer</th>
+                    <th  data-sortable="true">pH</th>
+                    <th  data-sortable="true">purity</th>
+                    <th  data-sortable="true">labeling</th>
+                    <th  data-sortable="true">produced by</th>
+                    <th  data-sortable="true">production date</th>
+                    <th  data-sortable="true">comment</th>
                     {% if request.user.is_superuser %}<th></th>{%  endif %}
 
                 </tr>

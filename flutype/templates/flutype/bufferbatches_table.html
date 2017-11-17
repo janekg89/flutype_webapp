@@ -11,14 +11,14 @@
                 <tr>
                     {% if type == "gal_file" %}  <th data-field="state" data-checkbox="true"></th>{% endif %}
                     {% if request.user.is_superuser %}<th></th>{%  endif %}
-                    <th data-field="sid">sid batch</th>
-                    <th>sid buffer</th>
-                    <th>name buffer</th>
-                    <th>comment buffer</th>
-                    <th>pH</th>
-                    <th>produced by</th>
-                    <th>production date</th>
-                    <th>comment</th>
+                    <th  data-sortable="true" data-field="sid">sid batch</th>
+                    <th  data-sortable="true">sid buffer</th>
+                    <th  data-sortable="true">name buffer</th>
+                    <th  data-sortable="true">comment buffer</th>
+                    <th  data-sortable="true">pH</th>
+                    <th  data-sortable="true">produced by</th>
+                    <th  data-sortable="true">production date</th>
+                    <th  data-sortable="true">comment</th>
                     {% if request.user.is_superuser %}<th></th>{%  endif %}
 
                 </tr>
