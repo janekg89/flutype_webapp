@@ -19,6 +19,8 @@
                     <th>produced by</th>
                     <th>production date</th>
                     <th>comment</th>
+                    {% if request.user.is_superuser %}<th></th>{%  endif %}
+
                 </tr>
                 </thead>
                 <tbody>
@@ -45,6 +47,9 @@
                         <td>{{ bufferbatch.produced_by }}</td>
                         <td>{{ bufferbatch.production_date }}</td>
                         <td>{{ bufferbatch.comment }}</td>
+                    {% if request.user.is_superuser %}<td class="alert-danger">
+                        <a href="{{ url('buffer_batch_delete', args=[bufferbatch.sid]) }}"><i class="fa fa-fw fa-trash"></i></a>
+                     </td>{%  endif %}
                     </tr>
                 {% endfor %}
                 </tbody>

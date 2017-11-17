@@ -1,7 +1,15 @@
 {% import 'flutype/macros.html' as macros %}
 
 {% if process.is_step_in_process() %}
-<table id="process" class="table table-striped">
+<table id="process"
+        data-toggle="table"
+        data-pagination="true"
+        data-search="true"
+        data-show-toggle="true"
+        data-show-columns="true"
+        data-toolbar="#toolbar"
+        class="table table-striped">
+
     {% with prosteps = process.processstep_set.filter(raw_spot_collection=process.rawspotcollection_set.first())%}
         <thead>
         <tr>

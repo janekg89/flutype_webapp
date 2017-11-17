@@ -1,7 +1,15 @@
 {% import 'flutype/macros.html' as macros %}
 
 {% if collections %}
-    <table id="measurements" class="table table-striped">
+    <table id="measurements"
+            data-toggle="table"
+            data-pagination="true"
+            data-search="true"
+            data-show-toggle="true"
+            data-show-columns="true"
+            data-toolbar="#toolbar"
+            data-show-export="true"
+            class="table table-striped">
         <thead>
         <tr>
             <th>sid</th>

@@ -24,6 +24,8 @@
                     <th data-field="produced by">produced by</th>
                     <th data-field="production date">production date</th>
                     <th data-field="comment">comment</th>
+                    {% if request.user.is_superuser %}<th></th>{% endif %}
+
                 </tr>
                 </thead>
                 <tbody>
@@ -52,6 +54,9 @@
                         <td>{{ antibodybatch.produced_by }}</td>
                         <td>{{ antibodybatch.production_date }}</td>
                         <td>{{ antibodybatch.comment }}</td>
+                        {% if request.user.is_superuser %}<td class="alert-danger">
+                        <a href="{{ url('antibody_batch_delete', args=[antibodybatch.sid]) }}"><i class="fa fa-fw fa-trash"></i></a>
+                     </td>{%  endif %}
                     </tr>
                 {% endfor %}
                 </tbody>

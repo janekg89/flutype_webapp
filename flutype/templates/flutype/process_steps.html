@@ -38,9 +38,17 @@
         </h1>
 
         {% if steps %}
-            <table id="steps" class="table table-striped">
+            <table id="steps"
+                    data-toggle="table"
+                    data-pagination="true"
+                    data-search="true"
+                    data-show-toggle="true"
+                    data-show-columns="true"
+                    data-toolbar="#toolbar"
+                    class="table table-striped">
                 <thead>
-                <tr><th></th>
+                <tr>
+                    {% if request.user.is_superuser %}<th></th>{% endif %}
                     <th>sid</th>
                     <th>type</th>
                     <th>method</th>
@@ -48,6 +56,8 @@
                     <th>duration</th>
                     <th>temperature</th>
                     <th>comment</th>
+                    {% if request.user.is_superuser %}<th></th>{% endif %}
+
                 </tr>
                 </thead>
                 <tbody>
@@ -78,6 +88,9 @@
                                 </td>
                                 <td>{{ sg.temperature }}</td>
                                 <td>{{ sg.comment }}</td>
+                            {% if request.user.is_superuser %}<td class="alert-danger">
+                    <a href="{{ url('step_delete', args=[sg.sid]) }}"><i class="fa fa-fw fa-trash"></i></a>
+                 </td>{% endif %}
                             </tr>
                         {% endwith %}
                     {% endwith %}
@@ -91,10 +104,5 @@
 {% endblock %}
 
 {% block javascript %}
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#steps').DataTable({});
-        });
 
-    </script>
 {% endblock %}
