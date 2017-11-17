@@ -51,6 +51,7 @@ this release
 - Admin interface & superuser administration via edit/delete
 - Improved URL schema
 - Better documentation
+- Improved Database Backup
 
 **v0.1.3** 
 
