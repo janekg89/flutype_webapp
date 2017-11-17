@@ -8,6 +8,7 @@ django-imagekit>=4.0.1
 django-measurement>=2.4.0
 djangorestframework>=3.7.3
 django-debug-toolbar>=1.9.1
+django-dbbackup>=3.2.0
 
 psycopg2>=2.7.3.2
 jinja2>=2.10
