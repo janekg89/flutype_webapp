@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-
-import numpy as np
+"""
+Forms
+"""
 from django import forms
 from django.urls import reverse
 from django.contrib import admin
@@ -14,8 +15,6 @@ from django_measurement.forms import MeasurementField
 from django.forms.utils import ErrorList
 
 
-
-
 class OrderedModelMultipleChoiceField(forms.ModelMultipleChoiceField):
     def clean(self, value):
         qs = super(OrderedModelMultipleChoiceField, self).clean(value)
@@ -25,53 +24,54 @@ class OrderedModelMultipleChoiceField(forms.ModelMultipleChoiceField):
             order_by=('ordering',)
         )
 
+
 class RawDocForm(forms.ModelForm):
     class Meta:
         model = RawDoc
         fields = '__all__'
 
+
 class GalFileForm(forms.ModelForm):
     class Meta:
         model = GalFile
-        fields = ['rows_in_tray','columns_in_tray','vertical_trays','horizontal_trays']
+        fields = ['rows_in_tray', 'columns_in_tray', 'vertical_trays', 'horizontal_trays']
 
 
 class StudyForm(forms.ModelForm):
+    """ Form for Study. """
     class Meta:
         model = Study
         fields = '__all__'
 
 
 class PeptideForm(forms.ModelForm):
+    """ Form for Peptide. """
     class Meta:
         model = Peptide
         fields = ['sid', 'linker', 'spacer', 'sequence', 'c_terminus', 'name', 'comment']
 
+
 class BufferForm(forms.ModelForm):
+    """ Form for Buffer. """
     class Meta:
         model = Buffer
-        fields = ['sid','name','comment']
-
-class BufferBatchForm(forms.ModelForm):
-    class Meta:
-        model = BufferBatch
-        fields = ['sid', 'buffer', 'ph','produced_by','production_date', 'comment']
+        fields = ['sid', 'name', 'comment']
 
 
 class ComplexForm(forms.ModelForm):
-
+    """ Form for Complex. """
     class Meta:
         model = Complex
         fields = ['sid', 'complex_ligands', 'comment']
 
 
 class VirusForm(forms.ModelForm):
-    '''
+    """ Form for virus.
     collection_date = forms.DateField(widget=forms.TextInput(attrs=
     {
         'class': 'datepicker'
     }))
-    '''
+    """
     class Meta:
         model = Virus
         fields = ['sid', 'tax_id', 'subtype', "isolation_country", "collection_date", "strain", "link_db", "comment"]
@@ -82,7 +82,15 @@ class AntibodyForm(forms.ModelForm):
         model = Antibody
         fields = ['sid', 'target', 'name', 'link_db', 'comment']
 
-batch_fields = ['sid', 'ligand', 'concentration','concentration_unit', 'buffer', 'ph', 'purity', 'produced_by','production_date', 'comment']
+
+class BufferBatchForm(forms.ModelForm):
+    class Meta:
+        model = BufferBatch
+        fields = ['sid', 'buffer', 'ph', 'produced_by', 'production_date', 'comment']
+
+
+BATCH_FIELDS = ['sid', 'ligand', 'concentration', 'concentration_unit', 'buffer', 'ph', 'purity',
+                'produced_by', 'production_date', 'comment']
 
 
 class FormCleanMixin(forms.ModelForm):
@@ -97,7 +105,7 @@ class FormCleanMixin(forms.ModelForm):
 
 
 class PeptideBatchForm(FormCleanMixin):
-
+    """ Form for PeptideBatch. """
     def __init__(self, *args, **kwargs):
         super(PeptideBatchForm, self).__init__(*args, **kwargs)
         self.fields['ligand'].queryset = Peptide.objects.all()
@@ -107,13 +115,11 @@ class PeptideBatchForm(FormCleanMixin):
 
     class Meta:
         model = PeptideBatch
-        fields = batch_fields
-
-
+        fields = BATCH_FIELDS
 
 
 class ComplexBatchForm(FormCleanMixin):
-
+    """ Form for ComplexBatch. """
     def __init__(self, *args, **kwargs):
         super(ComplexBatchForm, self).__init__(*args, **kwargs)
         self.fields['ligand'].queryset = Complex.objects.all()
@@ -123,10 +129,11 @@ class ComplexBatchForm(FormCleanMixin):
 
     class Meta:
         model = ComplexBatch
-        fields = batch_fields
+        fields = BATCH_FIELDS
 
 
 class VirusBatchForm(FormCleanMixin):
+    """ Form for VirusBatch. """
     def __init__(self, *args, **kwargs):
         super(VirusBatchForm, self).__init__(*args, **kwargs)
         self.fields['ligand'].queryset = Virus.objects.all()
@@ -134,14 +141,13 @@ class VirusBatchForm(FormCleanMixin):
         self.fields['ligand'].help_text = "go to <a href='{}'>viruses list </a>.".format(reverse('viruses'))
         self.fields['ligand'].required = True
 
-
     class Meta:
         model = VirusBatch
-        fields = batch_fields
+        fields = BATCH_FIELDS
 
 
 class AntibodyBatchForm(FormCleanMixin):
-
+    """ Form for AntibodyBatch. """
     def __init__(self, *args, **kwargs):
         super(AntibodyBatchForm, self).__init__(*args, **kwargs)
         self.fields['ligand'].queryset = Antibody.objects.all()
@@ -149,67 +155,68 @@ class AntibodyBatchForm(FormCleanMixin):
         self.fields['ligand'].help_text = "go to <a href='{}'>antibodies list </a>.".format(reverse('antibodies'))
         self.fields['ligand'].required = True
 
-
-
     class Meta:
         model = AntibodyBatch
-        fields = batch_fields
+        fields = BATCH_FIELDS
 
-basic_step_fields= ['sid','method','temperature','comment']
+
+BASIC_STEP_FIELDS = ['sid', 'method', 'temperature', 'comment']
 
 
 class ProcessStepForm(forms.ModelForm):
+    """ Form for ProcessStep. """
     class Meta:
         model = ProcessStep
-        fields = ['step','index']
+        fields = ['step', 'index']
 
 
 class StepForm(forms.ModelForm):
+    """ Form for Step. """
     class Meta:
         model = Step
-        fields = basic_step_fields
+        fields = BASIC_STEP_FIELDS
         help_texts = {
-            'temperature': 'temeperature in °C',
+            'temperature': 'temperature in °C',
             'duration': 'duration in [hh:mm:ss]',
-
         }
 
 
-
 class SpottingForm(forms.ModelForm):
+    """ Form for Spotting. """
     class Meta(StepForm.Meta):
         model = Spotting
 
 
 class WashingForm(forms.ModelForm):
+    """ Form for Washing. """
     class Meta(StepForm.Meta):
         model = Washing
-        fields  = ['sid', 'method', 'substance', 'temperature','duration', 'comment']
-
+        fields = ['sid', 'method', 'substance', 'temperature', 'duration', 'comment']
 
 
 class DryingForm(forms.ModelForm):
+    """ Form for Drying. """
     class Meta(StepForm.Meta):
         model = Drying
-        fields = ['sid', 'method', 'substance', 'temperature','duration', 'comment']
+        fields = ['sid', 'method', 'substance', 'temperature', 'duration', 'comment']
 
 
 class QuenchingForm(forms.ModelForm):
     class Meta(StepForm.Meta):
         model = Quenching
-        fields = ['sid', 'method', 'substance', 'temperature','duration', 'comment']
+        fields = ['sid', 'method', 'substance', 'temperature', 'duration', 'comment']
 
 
 class BlockingForm(forms.ModelForm):
     class Meta(StepForm.Meta):
         model = Blocking
-        fields = ['sid', 'method', 'substance', 'temperature','duration', 'comment']
+        fields = ['sid', 'method', 'substance', 'temperature', 'duration', 'comment']
 
 
 class IncubatingForm(forms.ModelForm):
     class Meta(StepForm.Meta):
         model = Incubating
-        fields = ['sid', 'method', 'temperature','duration', 'comment']
+        fields = ['sid', 'method', 'temperature', 'duration', 'comment']
 
 
 
@@ -218,7 +225,6 @@ class IncubatingAnalytForm(forms.ModelForm):
     class Meta(StepForm.Meta):
         model = IncubatingAnalyt
         fields = ['sid', 'method', 'temperature','duration', 'comment']
-
 
 
 class ScanningForm(forms.ModelForm):
@@ -307,6 +313,7 @@ class ProcessAdminForm(forms.models.ModelForm):
         # This is known as a lexical closure, which means that if we store
         # this function and execute it later on, it will execute in the same
         # context (i.e. it will have access to the current instance and self).
+
         def save_m2m():
             # This is really naive code and should be improved upon,
             # especially in terms of validation, but the basic gist is to make
@@ -329,7 +336,3 @@ class ProcessAdminForm(forms.models.ModelForm):
             self.save_m2m = func_concat(self.save_m2m, save_m2m)
             # Return the instance like a good save() method.
         return instance
-
-
-
-
