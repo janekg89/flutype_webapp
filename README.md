@@ -5,6 +5,9 @@
 [![Coverage Status](https://coveralls.io/repos/github/janekg89/flutype_webapp/badge.svg?branch=develop)](https://coveralls.io/github/janekg89/flutype_webapp?branch=develop)
 [![GitHub version](https://badge.fury.io/gh/janekg89%2Fflutype_webapp.svg)](https://badge.fury.io/gh/janekg89%2Fflutype_webapp)
 
+<b><a href="https://orcid.org/0000-0002-4588-4925" title="orcid id"><img src="./docs/images/orcid.png" height="15"/></a> Janek Grzegorzewski</b>
+and 
+<b><a href="https://orcid.org/0000-0003-1725-179X" title="orcid id"><img src="./docs/images/orcid.png" height="15"/></a> Matthias König</b>
 ## Overview
 
 The FluTypeDB project is a web application for the data management of binding assays 
@@ -34,20 +37,35 @@ The production version is available at
 FluTypeDB is funded via the German FluType project.
 
 ### Changelog
-*v0.1.3*
+**v0.1.4** [2017-11-17]
+
+In this release a multitude of bug fixes and improvements in the FluTypeDB 
+interface have been implemented. In addition new features are available with
+this release
+
+**New features**
+- Gal file generator from database 
+- New table design
+- Create/edit ligands (virus, peptides, antibodies), buffers and the respective batches
+- Simplified user interface and improved forms with validation
+- Admin interface & superuser administration via edit/delete
+- Improved URL schema
+- Better documentation
+
+**v0.1.3** 
 
 - bug fixes and small improvements
 - reusable macros
 - improved UI
 
-*v0.1.2*
+**v0.1.2**
 
 - new grid system for layout
 - more intuitive layout
 - tutorial and about pages updated
 - bug fixes
 
-*v0.1.0*
+**v0.1.0** [2017-10-15]
 
 - updated web interface
 - data models updated
