@@ -208,8 +208,8 @@ class GalFile(Sidable, models.Model):
     file = models.FileField(upload_to="gal_file", null=True, blank=True, storage=OverwriteStorage())
     rows_in_tray = models.IntegerField(null=True,blank=True)
     columns_in_tray = models.IntegerField(null=True,blank=True)
-    vertical_trays =  models.IntegerField(null=True,blank=True)
-    horizontal_trays =  models.IntegerField(null=True,blank=True)
+    vertical_trays = models.IntegerField(null=True,blank=True)
+    horizontal_trays = models.IntegerField(null=True,blank=True)
     identical_trays = models.NullBooleanField(blank=True, null=True)
     ligand_batches = models.ManyToManyField(LigandBatch, blank=True)
 
