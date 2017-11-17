@@ -1121,8 +1121,8 @@ def step_new(request, class_name):
 
 
 @login_required
-def step_edit(request, pk):
-    instance = get_object_or_404(Step, pk=pk)
+def step_edit(request, sid):
+    instance = get_object_or_404(Step, sid=sid)
     instance = instance.get_step_type
     if request.method == 'POST':
         form = eval("{}Form(request.POST,instance=instance)".format(instance.__class__.__name__))

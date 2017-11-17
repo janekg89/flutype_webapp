@@ -40,7 +40,7 @@
         {% if steps %}
             <table id="steps" class="table table-striped">
                 <thead>
-                <tr>
+                <tr><th></th>
                     <th>sid</th>
                     <th>type</th>
                     <th>method</th>
@@ -55,6 +55,10 @@
                     {% with sg = s.get_step_type %}
                         {% with class = sg.__class__.__name__ %}
                             <tr>
+                                 <td>{% if request.user.is_superuser %}
+                                    <a href="{{ url('step_edit', args=[s.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                                    {% endif %}
+                                 </td>
                                 <td><b> {{ sg.sid }}</b></td>
                                 <td>{{ macros.step_type(sg) }}</td>
                                 <td>{{ sg.method }}</td>
