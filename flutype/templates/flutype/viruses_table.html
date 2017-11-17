@@ -32,7 +32,7 @@
                 {% if virus.tax_id == "NO" %}
                     {{ virus.tax_id }}
                 {% else %}
-                    <a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ virus.tax_id }}">{{ virus.tax_id }}</a>
+                    <a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ virus.tax_id }}" target="_blank">{{ virus.tax_id }}</a>
                 {% endif %}
                 </td>
                 <td>{{ virus.subtype }}</td>
