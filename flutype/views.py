@@ -711,7 +711,7 @@ def buffer_batch_edit(request, sid):
         form = BufferBatchForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
-            return redirect('buffer_batches')
+            return redirect('bufferbatches')
     else:
         form = BufferBatchForm(instance=instance)
         return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer_batch'})
