@@ -2,6 +2,7 @@ import pandas as pd
 import os
 # -*- coding: utf-8 -*-
 from flutype.data_management.fill_master import Master
+import numpy as np
 
 def print_full(x):
     pd.set_option('display.max_rows', len(x))
@@ -114,6 +115,8 @@ def three_viruses_gal(gal_file):
     for key in virus_map.keys():
         gal_file.loc[gal_file["Block"]== key , "Name"] =virus_map[key]
     return gal_file
+
+
 
 
 ####################################################################

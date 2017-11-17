@@ -24,7 +24,7 @@ SECRET_KEY = 'f$h*w&tw*vqk=sg306mc0t(kd*cuhgu57_xfo=t@4h4a0&no+8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', 'flutype.de', 'www.flutype.de','testserver']
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', 'localhost', 'flutype.de', 'www.flutype.de', 'testserver']
 
 # SECURITY WARNING: don't run create users with default password in production !
 DEFAULT_USER_PASSWORD = 'flutype_db'

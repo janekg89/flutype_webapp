@@ -11,12 +11,12 @@ from .helper import generate_tree, tar_tree, empty_list
 from .forms import PeptideForm, VirusForm, AntibodyForm, AntibodyBatchForm, \
     PeptideBatchForm, VirusBatchForm, ProcessStepForm, ComplexBatchForm, ComplexForm, StudyForm, \
     WashingForm,DryingForm,SpottingForm, QuenchingForm,BlockingForm,IncubatingForm, \
-    ScanningForm, IncubatingAnalytForm, RawDocForm, BufferForm, BufferBatchForm
+    ScanningForm, IncubatingAnalytForm, RawDocForm, BufferForm, BufferBatchForm, GalFileForm
 from .models import RawSpotCollection, SpotCollection, Process, PeptideBatch, \
     Peptide, VirusBatch, Virus, AntibodyBatch, Antibody, Step, ProcessStep, Complex, ComplexBatch, Study, \
     RawDoc , Buffer, BufferBatch
 from django.forms import formset_factory, inlineformset_factory
-from django.shortcuts import get_object_or_404, render, redirect, render_to_response
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
@@ -45,8 +45,50 @@ def upload_file_study(request,pk):
 
 @login_required
 def gal_file_view(request):
+    type="start"
+    form = GalFileForm()
+    context = {
+        "type":type,
+        "form":form,
+    }
+    if request.method == 'POST':
+        form = GalFileForm(request.POST, request.FILES)
+        context["form"] =form
+        if "exisiting_gal" in request.POST:
+            context["type"] ="edit"
+        elif "new_gal" in request.POST:
+            context["type"]="detail"
+        elif "update" in request.POST:
+            context["type"] = "detail"
+            if form.is_valid():
+                model_instance = form.save(commit=False)
+                context["gal_file"]=model_instance
+                context["grid"]= json.dumps(model_instance.create_gal_file_base().tolist())
+                context["tray"]= json.dumps(model_instance.create_tray_base().tolist())
+                context["form"]= form
 
-    return render(request, 'flutype/create_gal.html')
+
+
+    return render(request, 'flutype/create_gal.html', context)
+
+def raw_gal_file_view(request):
+    antibody_batches = AntibodyBatch.objects.all()
+    peptide_batches = PeptideBatch.objects.all()
+    virus_batches = VirusBatch.objects.all()
+    complex_batches = ComplexBatch.objects.all()
+    buffer_batches = BufferBatch.objects.all()
+
+    context = {
+        'type':"gal_file",
+        'antibody_batches': antibody_batches,
+        'peptide_batches': peptide_batches,
+        'virus_batches': virus_batches,
+        'complex_batches': complex_batches,
+        'buffer_batches': buffer_batches,
+
+    }
+    return render(request,
+                  'flutype/create_raw_gal.html', context)
 
 
 @login_required
@@ -230,7 +272,10 @@ def tutorial_db_view(request):
     return study_view(request, study.sid)
 
 
+@login_required
+def glossary_view(request):
 
+    return render(request, "flutype/glossary.html", {"language": "en"})
 
 
 @login_required
@@ -613,26 +658,32 @@ def buffer_view(request):
 
 @login_required
 def buffer_new(request):
+    form = BufferForm()
     if request.method == 'POST':
         form = BufferForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('buffers')
-    else:
-        form = BufferForm()
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer'})
 
 @login_required
 def buffer_edit(request, sid):
     instance = get_object_or_404(Buffer, sid=sid)
+    form = BufferForm(instance=instance)
     if request.method == 'POST':
         form = BufferForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
             return redirect('buffers')
-    else:
-        form = BufferForm(instance=instance)
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer'})
+@login_required
+def buffer_delete(request, sid):
+    buffer = get_object_or_404(Buffer, sid=sid)
+    if request.method == 'POST':
+        buffer.delete()
+        return redirect('buffers')
+    return render(request, 'flutype/delete.html', {'buffer': buffer, 'type': 'buffer'})
+
 
 
 @login_required
@@ -649,28 +700,33 @@ def buffer_batch_view(request):
 
 @login_required
 def buffer_batch_new(request):
+    form = BufferBatchForm(initial={'produced_by': request.user, 'production_date': localtime(now()).date()})
     if request.method == 'POST':
         form = BufferBatchForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('bufferbatches')
-    else:
-        form = BufferBatchForm(initial={'produced_by': request.user, 'production_date': localtime(now()).date()}
-)
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer_batch'})
+
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer_batch'})
 
 @login_required
 def buffer_batch_edit(request, sid):
     instance = get_object_or_404(BufferBatch, sid=sid)
+    form = BufferBatchForm(instance=instance)
     if request.method == 'POST':
         form = BufferBatchForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
-            return redirect('buffer_batches')
-    else:
-        form = BufferBatchForm(instance=instance)
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer_batch'})
+            return redirect('bufferbatches')
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer_batch'})
 
+@login_required
+def buffer_batch_delete(request, sid):
+    buffer_batch = get_object_or_404(BufferBatch, sid=sid)
+    if request.method == 'POST':
+        buffer_batch.delete()
+        return redirect('bufferbatches')
+    return render(request, 'flutype/delete.html', {'buffer_batch': buffer_batch, 'type': 'buffer_batch'})
 
 @login_required
 def highcharts_view(request, measurement_sid,sid):
@@ -718,14 +774,13 @@ def change_password_view(request):
 
 @login_required
 def peptide_new(request):
+    form = PeptideForm()
     if request.method == 'POST':
         form = PeptideForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('peptides')
-    else:
-        form = PeptideForm()
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'peptide'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'peptide'})
 
 @login_required
 def complex_view(request):
@@ -762,35 +817,33 @@ def complex_fixed_view(request):
 
 @login_required
 def complex_new(request):
+    form = ComplexForm()
     if request.method == 'POST':
         form = ComplexForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('complexes')
-    else:
-        form = ComplexForm()
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'complex'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'complex'})
 
 @login_required
 def complex_delete(request, sisd):
     complex = get_object_or_404(Complex, sisd=sisd)
     if request.method == 'POST':
         complex.delete()
-        return redirect('peptides')
+        return redirect('complexes')
     return render(request, 'flutype/delete.html', {'complex': complex, 'type': 'complex'})
 
 
 @login_required
 def complex_edit(request, sid):
     instance = get_object_or_404(Complex, sid=sid)
+    form = ComplexForm(instance=instance)
     if request.method == 'POST':
         form = ComplexForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
             return redirect('complexes')
-    else:
-        form = ComplexForm(instance=instance)
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'complex'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'complex'})
 
 @login_required
 def complex_batch_delete(request, sid):
@@ -857,69 +910,64 @@ def complex_batch_fixed_view(request):
 
 @login_required
 def virus_new(request):
+    form = VirusForm()
     if request.method == 'POST':
         form = VirusForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('viruses')
-    else:
-        form = VirusForm()
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'virus'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'virus'})
 
 
 @login_required
 def antibody_new(request):
-
+    form = AntibodyForm()
     if request.method == 'POST':
         form = AntibodyForm(request.POST)
         print(form.errors)
         if form.is_valid():
             form.save()
             return redirect('antibodies')
-
-    else:
-        form = AntibodyForm()
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'antibody'})
+    form = AntibodyForm()
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'antibody'})
 
 
 @login_required
 def peptide_edit(request, sid):
     instance = get_object_or_404(Peptide, sid=sid)
+    form = PeptideForm(instance=instance)
     if request.method == 'POST':
         form = PeptideForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
             return redirect('peptides')
-    else:
-        form = PeptideForm(instance=instance)
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'peptide'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'peptide'})
 
 
 @login_required
 def virus_edit(request, sid):
     instance = get_object_or_404(Virus, sid=sid)
+    form = VirusForm(instance=instance)
     if request.method == 'POST':
         form = VirusForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
             return redirect('viruses')
-    else:
-        form = VirusForm(instance=instance)
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'virus'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'virus'})
 
 
 @login_required
 def antibody_edit(request, sid):
+
     instance = get_object_or_404(Antibody, sid=sid)
+    form = AntibodyForm(instance=instance)
+
     if request.method == 'POST':
         form = AntibodyForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
             return redirect('antibodies')
-    else:
-
-        form = AntibodyForm(instance=instance)
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'antibody'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'antibody'})
 
 
 @login_required
@@ -1064,29 +1112,28 @@ def steps_view(request):
 
 @login_required
 def step_new(request, class_name):
+    form = eval("{}Form()".format(class_name))
     if request.method == 'POST':
 
         form = eval("{}Form(request.POST)".format(class_name))
         if form.is_valid():
             form.save()
             return redirect('steps')
-    else:
-        form = eval("{}Form()".format(class_name))
-        return render(request, 'flutype/create.html', {'form': form, 'type': 'step', "class": class_name})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'step', "class": class_name})
 
 
 @login_required
-def step_edit(request, pk):
-    instance = get_object_or_404(Step, pk=pk)
+def step_edit(request, sid):
+    instance = get_object_or_404(Step, sid=sid)
     instance = instance.get_step_type
+    form = eval("{}Form(instance=instance)".format(instance.__class__.__name__))
     if request.method == 'POST':
         form = eval("{}Form(request.POST,instance=instance)".format(instance.__class__.__name__))
         if form.is_valid():
             form.save()
             return redirect('steps')
-    else:
-        form = eval("{}Form(instance=instance)".format(instance.__class__.__name__))
-        return render(request, 'flutype/create.html',
+
+    return render(request, 'flutype/create.html',
                       {'form': form, 'type': 'step', 'class': instance.__class__.__name__})
 
 

@@ -1,15 +1,25 @@
 {% if peptides %}
-    <table id="{{ id_peptides_table }}" class="table table-striped">
+    <table id="{{ id_peptides_table }}"
+           class="table table-striped"
+           data-toggle="table"
+            data-pagination="true"
+            data-search="true"
+            data-show-toggle="true"
+            data-show-columns="true"
+            data-toolbar="#toolbar"
+            class="table table-striped">
         <thead>
         <tr>
-            <th></th>
-            <th>sid</th>
-            <th>name</th>
-            <th>linker</th>
-            <th>spacer</th>
-            <th>sequence</th>
-            <th>c-terminus</th>
-            <th>comment</th>
+            {% if request.user.is_superuser %}<th></th>{% endif %}
+            <th  data-sortable="true">sid</th>
+            <th  data-sortable="true">name</th>
+            <th  data-sortable="true">linker</th>
+            <th  data-sortable="true">spacer</th>
+            <th  data-sortable="true">sequence</th>
+            <th  data-sortable="true">c-terminus</th>
+            <th  data-sortable="true">comment</th>
+            {% if request.user.is_superuser %}<th></th>{% endif %}
+
         </tr>
         </thead>
         <tbody>
@@ -25,6 +35,9 @@
                 <td>{{ p.sequence }}</td>
                 <td>{{ p.c_terminus }}</td>
                 <td>{{ p.comment }}</td>
+                {% if request.user.is_superuser %}<td class="alert-danger">
+                    <a href="{{ url('peptide_delete', args=[p.sid]) }}"><i class="fa fa-fw fa-trash"></i></a>
+                 </td>{% endif %}
             </tr>
         {% endfor %}
         </tbody>

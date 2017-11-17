@@ -22,7 +22,6 @@
     {% include "flutype/studies_table.html" %}
     {% endwith %}
     </div>
-
     <div class="filebox">
         <div class="box" style="overflow-y:auto;">
             <table class="table table-condensed">
@@ -156,52 +155,6 @@
                 form.submit();
             }
         }
-    </script>
-
-
-    <!-- DataTables -->
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#measurements').DataTable({
-                pageLength: 25,
-            });
-        });
-    </script>
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#fixed_peptides').DataTable();
-        });
-    </script>
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#mobile_peptides').DataTable();
-        });
-    </script>
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#fixed_viruses').DataTable();
-        });
-    </script>
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#mobile_viruses').DataTable();
-        });
-    </script>
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#fixed_antibodies').DataTable();
-        });
-    </script>
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#mobile_antibodies').DataTable();
-        });
     </script>
 
 

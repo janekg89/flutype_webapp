@@ -5,6 +5,7 @@ Django models for the flutype webapp.
 from __future__ import absolute_import, print_function, unicode_literals
 
 import os
+import numpy as np
 from django.core.validators import MaxValueValidator, MinValueValidator
 from djchoices import DjangoChoices, ChoiceItem
 from django.core.files.storage import FileSystemStorage
@@ -31,15 +32,30 @@ fs = FileSystemStorage(location=MEDIA_ROOT)
 # Helper models, i.e., choices
 #############################################################
 
+import datetime
+YEAR_CHOICES = []
+for r in range(1900, (datetime.datetime.now().year+1)):
+    YEAR_CHOICES.append((r,r))
+
 class Concentration(BidimensionalMeasure):
     PRIMARY_DIMENSION = Mass
     REFERENCE_DIMENSION = Volume
 
 
 class UnitsType(DjangoChoices):
+    """
     kilogram__l = ChoiceItem("kilogram__l")
     milligram__l = ChoiceItem("milligram__l")
     microgram__l = ChoiceItem("microgram__l")
+    """
+
+    M = ChoiceItem("M (molar)")
+    mM = ChoiceItem("mM (milimolar)")
+    muM = ChoiceItem("µM (µmolar)")
+    nM = ChoiceItem("nM (nanomolar)")
+    mg_per_l = ChoiceItem("mg/L (miligram per liter)")
+    mug_per_l = ChoiceItem("µg/L (µgram per liter)")
+    ng_per_l = ChoiceItem("ng/L (nanogram per liter)")
     stock__1 = ChoiceItem("stock__1")
 
 
@@ -71,12 +87,14 @@ class ManufacturerModel(DjangoChoices):
 class ProcessingType(DjangoChoices):
     substract_buffer = ChoiceItem("substract_buffer")
 
-class Buffer(Sidable,Commentable,models.Model):
+
+class Buffer(Sidable, Commentable, models.Model):
     """ Buffer model """
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.sid
+
 
 ########################################
 # Ligand
@@ -85,7 +103,7 @@ class Ligand(PolymorphicModel):
     """ Generic ligand.
     E.g, a peptide, virus or antibody.
     """
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True, unique=True)
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH, unique=True)
     comment = models.TextField(blank=True, null=True)
 
     def __str__(self):
@@ -104,14 +122,16 @@ class Peptide(Ligand):
 
 class Virus(Ligand):
     """ Virus ligand. """
-    tax_id = models.CharField(max_length=CHAR_MAX_LENGTH, null=True)
+    tax_id = models.CharField(max_length=CHAR_MAX_LENGTH, null=True,blank=True, unique=True)
     link_db = models.URLField(blank=True, null=True)
     subtype = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     isolation_country = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
-    collection_date = models.CharField(max_length=10, blank=True, null=True)
+    collection_date = models.IntegerField( choices=YEAR_CHOICES,blank=True, null=True)
     strain = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     objects = LigandManager()
 
+    class Meta:
+        verbose_name_plural = "viruses"
 
 class Antibody(Ligand):
     """ Antibody ligand. """
@@ -120,11 +140,17 @@ class Antibody(Ligand):
     link_db = models.URLField(blank=True, null=True)
     objects = LigandManager()
 
+    class Meta:
+        verbose_name_plural = "antibodies"
+
 
 class Complex(Ligand):
     """ Complex ligand. """
     complex_ligands = models.ManyToManyField(Ligand, related_name="complex_ligands")
     objects = ComplexManager()
+
+    class Meta:
+        verbose_name_plural = "complexes"
 
     @property
     def ligands_str(self):
@@ -157,6 +183,7 @@ class Batch(Sidable, Commentable, models.Model):
 
     class Meta:
         abstract = True
+        verbose_name_plural = "batches"
 
     def __str__(self):
         return self.sid
@@ -169,6 +196,9 @@ class LigandBatch(Batch):
     ligand = models.ForeignKey(Ligand, blank=True ,null= True)
     objects = LigandBatchManager()
 
+    class Meta:
+        verbose_name_plural = "ligand batches"
+
 
 class VirusBatch(LigandBatch):
     """ Virus batch model. """
@@ -176,25 +206,40 @@ class VirusBatch(LigandBatch):
     active = models.NullBooleanField(blank=True, null=True)
     objects = LigandBatchManager()
 
+    class Meta:
+        verbose_name_plural = "virus batches"
+
 
 class PeptideBatch(LigandBatch):
     """ Peptide batch model. """
     objects = LigandBatchManager()
+
+    class Meta:
+        verbose_name_plural = "peptide batches"
 
 
 class AntibodyBatch(LigandBatch):
     """ Antibody batch model. """
     objects = LigandBatchManager()
 
+    class Meta:
+        verbose_name_plural = "antibody batches"
+
 
 class ComplexBatch(LigandBatch):
     """ Complex batch model. """
     objects = LigandBatchManager()
 
+    class Meta:
+        verbose_name_plural = "complex batches"
+
 
 class BufferBatch(LigandBatch):
     """ Buffer batch model. """
     objects = LigandBatchManager()
+
+    class Meta:
+        verbose_name_plural = "buffer batches"
 
 
 
@@ -205,7 +250,47 @@ class BufferBatch(LigandBatch):
 class GalFile(Sidable, models.Model):
     type = models.CharField(max_length=CHAR_MAX_LENGTH, choices=GalType.choices)
     file = models.FileField(upload_to="gal_file", null=True, blank=True, storage=OverwriteStorage())
+    rows_in_tray = models.IntegerField(null=True,blank=True)
+    columns_in_tray = models.IntegerField(null=True,blank=True)
+    vertical_trays = models.IntegerField(null=True,blank=True)
+    horizontal_trays = models.IntegerField(null=True,blank=True)
+    identical_trays = models.NullBooleanField(blank=True, null=True)
+    ligand_batches = models.ManyToManyField(LigandBatch, blank=True)
+
+
     objects = GalFileManager()
+
+    def create_gal_file_base(self):
+        tray_x = np.array(range(self.rows_in_tray))
+        tray_y = np.array(range(self.columns_in_tray))
+
+        space_between_trays_x = tray_x.max() / 2
+        space_between_trays_y = tray_y.max() / 2
+
+        matrix_x = np.array(tray_x)
+        matrix_y = np.array(tray_y)
+
+        for _ in range(self.horizontal_trays - 1):
+            matrix_x = np.append(matrix_x, tray_x + matrix_x.max() + space_between_trays_x)
+
+        for _ in range(self.vertical_trays - 1):
+            matrix_y = np.append(matrix_y, tray_y + matrix_y.max() + space_between_trays_y)
+
+        xx, yy = np.meshgrid(matrix_x, matrix_y)
+
+        positions = np.vstack([xx.ravel(), yy.ravel()])
+
+        return positions.T
+
+    def create_tray_base(self):
+        tray_x = np.array(range(self.rows_in_tray))
+        tray_y = np.array(range(self.columns_in_tray))
+
+        xx, yy = np.meshgrid(tray_x, tray_y)
+
+        positions = np.vstack([xx.ravel(), yy.ravel()])
+
+        return positions.T
 
     def __str__(self):
         return self.sid
@@ -290,6 +375,9 @@ class Process(Sidable, models.Model):
     unique_ordering = models.CharField(max_length=CHAR_MAX_LENGTH)
     objects = ProcessManager()
 
+    class Meta:
+        verbose_name_plural = "processes"
+
     def users(self):
         user_ids = self.processstep_set.values_list("user", flat="True").distinct()
         return User.objects.filter(id__in=user_ids)
@@ -368,6 +456,9 @@ class Study(Commentable, Sidable, Dateable, Userable, Statusable, FileAttachable
     """
     description = models.TextField(blank=True, null=True)
     objects = StudyManager()
+
+    class Meta:
+        verbose_name_plural = "studies"
 
     def users(self):
         user_ids = self.rawspotcollection_set.values_list("processstep__user", flat="True").distinct()
@@ -550,7 +641,6 @@ class SpotCollection(Commentable, FileAttachable, models.Model):
 
     class Meta:
         unique_together = ('raw_spot_collection', 'sid')
-
 
 
 class Spot(models.Model):

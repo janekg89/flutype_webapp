@@ -38,16 +38,26 @@
         </h1>
 
         {% if steps %}
-            <table id="steps" class="table table-striped">
+            <table id="steps"
+                    data-toggle="table"
+                    data-pagination="true"
+                    data-search="true"
+                    data-show-toggle="true"
+                    data-show-columns="true"
+                    data-toolbar="#toolbar"
+                    class="table table-striped">
                 <thead>
                 <tr>
-                    <th>sid</th>
-                    <th>type</th>
-                    <th>method</th>
-                     <th>substance</th>
-                    <th>duration</th>
-                    <th>temperature</th>
-                    <th>comment</th>
+                    {% if request.user.is_superuser %}<th></th>{% endif %}
+                    <th  data-sortable="true">sid</th>
+                    <th  data-sortable="true">type</th>
+                    <th  data-sortable="true">method</th>
+                     <th  data-sortable="true">substance</th>
+                    <th  data-sortable="true">duration</th>
+                    <th  data-sortable="true">temperature</th>
+                    <th  data-sortable="true">comment</th>
+                    {% if request.user.is_superuser %}<th></th>{% endif %}
+
                 </tr>
                 </thead>
                 <tbody>
@@ -55,6 +65,10 @@
                     {% with sg = s.get_step_type %}
                         {% with class = sg.__class__.__name__ %}
                             <tr>
+                                 <td>{% if request.user.is_superuser %}
+                                    <a href="{{ url('step_edit', args=[s.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                                    {% endif %}
+                                 </td>
                                 <td><b> {{ sg.sid }}</b></td>
                                 <td>{{ macros.step_type(sg) }}</td>
                                 <td>{{ sg.method }}</td>
@@ -74,6 +88,9 @@
                                 </td>
                                 <td>{{ sg.temperature }}</td>
                                 <td>{{ sg.comment }}</td>
+                            {% if request.user.is_superuser %}<td class="alert-danger">
+                    <a href="{{ url('step_delete', args=[sg.sid]) }}"><i class="fa fa-fw fa-trash"></i></a>
+                 </td>{% endif %}
                             </tr>
                         {% endwith %}
                     {% endwith %}
@@ -87,10 +104,5 @@
 {% endblock %}
 
 {% block javascript %}
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#steps').DataTable({});
-        });
 
-    </script>
 {% endblock %}

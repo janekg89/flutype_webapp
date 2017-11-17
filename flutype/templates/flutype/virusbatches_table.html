@@ -1,0 +1,85 @@
+ {% if virus_batches %}
+             <table id="{{ id_virusbatches_table }}"
+                    data-toggle="table"
+                    data-pagination="true"
+                    data-search="true"
+                    data-show-toggle="true"
+                    data-show-columns="true"
+                    data-toolbar="#toolbar">
+                <thead>
+                <tr>
+                    {% if type == "gal_file" %}  <th data-field="state" data-checkbox="true"></th>{% endif %}
+                    {% if request.user.is_superuser %}<th></th>{%  endif %}
+                    <th  data-sortable="true" data-field="sid">sid batch</th>
+                    <th  data-sortable="true">sid virus</th>
+                    <th  data-sortable="true">tax id</th>
+                    <th  data-sortable="true">subgroup</th>
+                    <th  data-sortable="true">country</th>
+                    <th  data-sortable="true">appearance</th>
+                    <th  data-sortable="true">strain</th>
+                    <th  data-sortable="true" title="passage history">passage</th>
+                    <th  data-sortable="true">active</th>
+                    <th  data-sortable="true">labeling</th>
+                    <th  data-sortable="true">concentration</th>
+                    <th  data-sortable="true">sid buffer</th>
+                    <th  data-sortable="true">pH</th>
+                    <th  data-sortable="true">purity</th>
+                    <th  data-sortable="true">produced by</th>
+                    <th  data-sortable="true">production date</th>
+                    <th  data-sortable="true">comment</th>
+                    {% if request.user.is_superuser %}<th></th>{%  endif %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for virusbatch in virus_batches %}
+                    <tr>
+                        {% if type == "gal_file" %}  <td></td>{% endif %}
+                        {% if request.user.is_superuser %}<td>
+                    <a href="{{ url('virus_batch_edit', args=[virusbatch.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                </td>{%  endif %}
+                        <td><b>{{ virusbatch.sid }}</b></td>
+                        <!-- virus information -->
+                        {% with v=virusbatch.ligand %}
+                            {% if v %}
+                                <td class="info">{{ v.sid }}</td>
+                                <td class="info">
+                                    {% if v.sid == "NO" %}
+                                        {{ v.tax_id }}
+                                    {% else %}
+                                        <a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={{ v.sid }}">{{ v.sid }}</a>
+                                    {% endif %}
+                                </td>
+                                <td class="info">{{ v.subtype }}</td>
+                                <td class="info">{{ v.isolation_country }}</td>
+                                <td class="info">{{ v.collection_date }}</td>
+                                <td class="info">{{ v.strain }}</td>
+                            {% else %}
+                                {% for k in range(6) %}
+                                    <td><i class="fa fa-fw fa-ban"></i></td>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+
+                        <!-- batch information -->
+                        <td>{{ virusbatch.passage_history }}</td>
+                        <td>{{ virusbatch.active }}</td>
+                        <td>{{ virusbatch.labeling }}</td>
+                        <td>{{ virusbatch.concentration }} {% if  virusbatch.concentration_unit %}[{{ virusbatch.concentration_unit }}]{% endif %}</td>
+                        <td class="info"> {% if virusbatch.buffer.sid %}{{ virusbatch.buffer.sid }} {% else %} - {% endif %}</td>
+
+                        <td>{{ virusbatch.ph }}</td>
+                        <td>{{ virusbatch.purity }}</td>
+                        <td>{{ virusbatch.produced_by }}</td>
+                        <td>{{ virusbatch.production_date }}</td>
+                        <td>{{ virusbatch.comment }}</td>
+                        {% if request.user.is_superuser %}<td class="alert-danger">
+                        <a href="{{ url('virus_batch_delete', args=[virusbatch.sid]) }}"><i class="fa fa-fw fa-trash"></i></a>
+                     </td>{% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        {% else %}
+            <p>No entries in database.</p>
+        {% endif %}
