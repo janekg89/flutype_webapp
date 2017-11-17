@@ -19,6 +19,7 @@ this release
 - Admin interface & superuser administration via edit/delete
 - Improved URL schema
 - Better documentation
+- Improved Database Backup 
 
 If you find any issues or things are unclear please let us know via
 https://github.com/janekg89/flutype_webapp/issues/new
@@ -26,4 +27,4 @@ We very much value your feedback!
 
 Best regards,
 (on behalf of everyone) 
-Matthias König & Janek Grzegorzewski
+Janek Grzegorzewski & Matthias König
