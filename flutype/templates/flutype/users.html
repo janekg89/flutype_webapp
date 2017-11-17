@@ -4,7 +4,11 @@
         <div class="standard">
             <h1><i class="fa fa-fw fa-group"></i> Users</h1>
             {% if users %}
-            <table id="users" class="table table-striped">
+            <table id="users" class="table table-striped"
+                   data-toggle="table"
+                   data-pagination="true"
+                   data-search="true"
+                   data-show-toggle="true">
                 <thead>
                 <tr>
                     <th>username</th>
@@ -32,9 +36,5 @@
 {% endblock %}
 
 {% block javascript %}
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#users').DataTable();
-        });
-    </script>
+
 {% endblock %}

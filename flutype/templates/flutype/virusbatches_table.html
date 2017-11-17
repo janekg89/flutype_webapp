@@ -27,6 +27,7 @@
                     <th>produced by</th>
                     <th>production date</th>
                     <th>comment</th>
+                    {% if request.user.is_superuser %}<th></th>{%  endif %}
                 </tr>
                 </thead>
                 <tbody>
@@ -71,6 +72,9 @@
                         <td>{{ virusbatch.produced_by }}</td>
                         <td>{{ virusbatch.production_date }}</td>
                         <td>{{ virusbatch.comment }}</td>
+                        {% if request.user.is_superuser %}<td class="alert-danger">
+                        <a href="{{ url('virus_batch_delete', args=[virusbatch.sid]) }}"><i class="fa fa-fw fa-trash"></i></a>
+                     </td>{% endif %}
                     </tr>
                 {% endfor %}
                 </tbody>
