@@ -14,11 +14,6 @@ from .forms import ProcessAdminForm
 ################################
 # Ligands
 ################################
-
-
-################################
-# Ligands
-################################
 @admin.register(Peptide)
 class PeptideAdmin(admin.ModelAdmin):
     fields = ('sid', 'linker', 'spacer', 'sequence', 'c_terminus', 'name', 'comment')
@@ -27,21 +22,25 @@ class PeptideAdmin(admin.ModelAdmin):
 
 @admin.register(Virus)
 class VirusAdmin(admin.ModelAdmin):
-    fields = ['sid', 'tax_id', 'subtype', 'isolation_country', 'collection_date', 'strain', 'link_db', 'comment']
-    list_display = ['sid', 'tax_id', 'subtype', 'isolation_country', 'collection_date', 'strain', 'link_db', 'comment']
+    fields = ('sid', 'tax_id', 'subtype', 'isolation_country', 'collection_date', 'strain', 'link_db', 'comment')
+    list_display = ('sid', 'tax_id', 'subtype', 'isolation_country', 'collection_date', 'strain', 'link_db', 'comment')
+    list_filter = ('subtype',)
 
 @admin.register(Antibody)
 class AntibodyAdmin(admin.ModelAdmin):
-    fields = ['sid', 'target', 'name', 'link_db', 'comment']
+    fields = ('sid', 'target', 'name', 'link_db', 'comment')
+    list_display = ('sid', 'target', 'name', 'link_db', 'comment')
+    list_filter = ('target',)
 
 @admin.register(Complex)
 class ComplexAdmin(admin.ModelAdmin):
-    fields = ['sid', 'ligands', 'comment']
-
+    fields = ('sid', 'ligands', 'comment')
+    list_display = ('sid', 'comment')
 
 @admin.register(Buffer)
 class BufferAdmin(admin.ModelAdmin):
-    fields = ['sid', 'name', 'comment']
+    fields = ('sid', 'name', 'comment')
+    list_display = ('sid', 'name', 'comment')
 
 
 ################################
@@ -52,27 +51,35 @@ BATCH_FIELDS = ['sid', 'ligand', 'concentration', 'buffer', 'ph', 'purity', 'pro
 @admin.register(PeptideBatch)
 class PeptideBatchAdmin(admin.ModelAdmin):
     fields = BATCH_FIELDS
+    list_display = BATCH_FIELDS
 
 @admin.register(VirusBatch)
 class VirusBatchAdmin(admin.ModelAdmin):
     fields = BATCH_FIELDS
+    list_display = BATCH_FIELDS
 
 @admin.register(AntibodyBatch)
 class AntibodyBatchAdmin(admin.ModelAdmin):
     fields = BATCH_FIELDS
+    list_display = BATCH_FIELDS
 
 @admin.register(ComplexBatch)
 class ComplexBatchAdmin(admin.ModelAdmin):
     fields = BATCH_FIELDS
+    list_display = BATCH_FIELDS
 
 @admin.register(BufferBatch)
 class BufferBatchAdmin(admin.ModelAdmin):
     fields = BATCH_FIELDS
+    list_display = BATCH_FIELDS
 
 
 ################################
 # Spot & Spot Collections
 ################################
+'''
+# uncommented for now
+
 @admin.register(RawSpotCollection)
 class RawSpotCollectionAdmin(admin.ModelAdmin):
     fields = ['sid', 'experiment_type', 'batch', 'functionalization', 'manufacturer', 'process', 'comment',
@@ -89,7 +96,7 @@ class SpotCollectionAdmin(admin.ModelAdmin):
 @admin.register(Spot)
 class SpotAdmin(admin.ModelAdmin):
     fields = ['raw_spot', 'intensity', 'std', 'spot_collection']
-
+'''
 
 ################################
 # Process & Process Steps
@@ -107,45 +114,62 @@ class ProcessAdmin(admin.ModelAdmin):
 class StepAdmin(admin.ModelAdmin):
     model = Step
     fields = STEP_FIELDS
+    list_display = STEP_FIELDS
+    list_filter = ('method',)
 
 @admin.register(Spotting)
 class SpottingAdmin(admin.ModelAdmin):
     model = Spotting
     fields = STEP_FIELDS
+    list_display = STEP_FIELDS
+    list_filter = ('method',)
 
 @admin.register(Scanning)
 class ScanningAdmin(admin.ModelAdmin):
     model = Scanning
     fields = STEP_FIELDS
+    list_display = STEP_FIELDS
+    list_filter = ('method',)
 
 @admin.register(Washing)
 class WashingAdmin(admin.ModelAdmin):
     model = Washing
     fields = STEP_FIELDS + ['substance']
+    list_display = STEP_FIELDS + ['substance']
+    list_filter = ('method',)
 
 @admin.register(Drying)
 class DryingAdmin(admin.ModelAdmin):
     model = Drying
     fields = STEP_FIELDS + ['substance']
+    list_display = STEP_FIELDS + ['substance']
+    list_filter = ('method',)
 
 @admin.register(Quenching)
 class QuenchingAdmin(admin.ModelAdmin):
     model = Quenching
     fields = STEP_FIELDS + ['substance']
+    list_display = STEP_FIELDS + ['substance']
+    list_filter = ('method',)
 
 @admin.register(Blocking)
 class BlockingAdmin(admin.ModelAdmin):
     model = Blocking
     fields = STEP_FIELDS + ['substance']
+    list_display = STEP_FIELDS + ['substance']
+    list_filter = ('method',)
 
 @admin.register(Incubating)
 class IncubatingAdmin(admin.ModelAdmin):
     model = Incubating
     fields = STEP_FIELDS
+    list_display = STEP_FIELDS
+    list_filter = ('method',)
 
 ################################
 # Gal files
 ################################
 @admin.register(GalFile)
 class GalFileAdmin(admin.ModelAdmin):
-    fields = ['sid', 'file']
+    fields = ('sid', 'file')
+    list_display = ('sid', 'file')
