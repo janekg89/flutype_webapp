@@ -1,6 +1,5 @@
-{% import 'flutype/macros.html' as macros %}
-
 {% extends "flutype/base.html" %}
+{% import 'flutype/macros.html' as macros %}
 {% block head %}
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/heatmap.js"></script>
@@ -192,7 +191,7 @@
     <!-- DataTables -->
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
-            $('#process').DataTable({
+            $('#process').bootstrapTable({
                 searching: false,
                 paging: false,
                 info: false,
@@ -203,57 +202,12 @@
 
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
-            $('#measurement').DataTable({
+            $('#measurement').bootstrapTable({
                 searching: false,
                 paging: false,
                 info: false,
                 "order": []
             });
-        });
-    </script>
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#collections').DataTable({
-                pageLength: 25,
-
-            });
-        });
-    </script>
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#fixed_peptides').DataTable();
-        });
-    </script>
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#mobile_peptides').DataTable();
-        });
-    </script>
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#fixed_viruses').DataTable();
-        });
-    </script>
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#mobile_viruses').DataTable();
-        });
-    </script>
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#fixed_antibodies').DataTable();
-        });
-    </script>
-
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#mobile_antibodies').DataTable();
         });
     </script>
 

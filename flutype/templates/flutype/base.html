@@ -14,9 +14,13 @@
     <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/dropzone.min.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/Butler_Stencil_Webfont/stylesheet.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/bootstrap-toggle.min.css')}}" rel="stylesheet">
-
+    <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/custom.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/basic.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/basic.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/bootstrap-table.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/jquery-ui.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/bootstrap-table-filter-control.css')}}">
+
 
     <link rel="stylesheet" type="text/css" href="{{ static('flutype/css/bootstrap.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ static('flutype/js/datatables.min.css') }}"/>
@@ -30,10 +34,19 @@
     <script type="text/javascript" src="{{ static('flutype/js/tether-1.4.0.min.js') }}"></script>
     <script type="text/javascript" src="{{ static('flutype/js/bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ static('flutype/js/datatables-1.10.15.min.js') }}"></script>
+    <script type="text/javascript" src="{{ static('flutype/js/bootstrap-table.js') }}"></script>
+
     <script type="text/javascript" src="{{ static('flutype/js/jquery.formset.js') }}"></script>
     <script type="text/javascript" src="{{ static('flutype/js/dropzone.js')}}"></script>
     <script type="text/javascript"
             src="{{ static('winmarkltd-BootstrapFormHelpers-d4201db/dist/js/bootstrap-formhelpers.min.js') }}"></script>
+    <script type="text/javascript" src="{{ static('flutype/js/libs/FileSaver/FileSaver.min.js') }}"></script>
+    <script type="text/javascript" src="{{ static('flutype/js/libs/js-xlsx/xlsx.core.min.js') }}"></script>
+    <script type="text/javascript" src="{{ static('flutype/js/tableExport.min.js') }}"></script>
+    <script type="text/javascript" src="{{ static('flutype/js/bootstrap-table-export.js') }}"></script>
+    <script type="text/javascript" src="{{ static('flutype/js/bootstrap-table-cookie.js') }}"></script>
+    <script type="text/javascript" src="{{ static('flutype/js/jquery-ui.min.js') }}"></script>
+    <script src="{{ static('flutype/js/bootstrap-table-filter-control.js') }}"></script>
 
     <!-- HEAD -->
     {% block head %}{% endblock %}
@@ -103,6 +116,9 @@
                             <li><a href="{{ url('virusbatches') }}" title="All virus batches"><i
                                     class="fa fa-fw fa-asterisk"></i> Virus Batches</a></li>
                             <li><a href="{{ url('complexbatches') }}" title="All complex batches">Complex Batches</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{{ url('raw_gal_file') }}" title="Create a new gal file"><i
+                                    class="fa fa-fw fa-building"></i> Create gal file</a></li>
                         </ul>
                     </li>
 
@@ -130,10 +146,13 @@
                             <i class="fa fa-fw fa-question"></i> Help<span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
                             <li>
-                                <a href="{{ url('tutorial') }}" title="Tutorial on how to upload data">Tutorial
+                                <a href="{{ url('tutorial') }}" title="Tutorial on how to upload data">Tutorial</a>
                             </li>
                             <li>
                                 <a href="{{ url("tutorial_db")}}" title="Tutorial dataset in database">Tutorial Data</a>
+                            </li>
+                            <li>
+                                <a href="{{ url("glossary")}}" title="Glossary of objects in database">Glossary</a>
                             </li>
                         </ul>
                     </li>
@@ -143,6 +162,12 @@
                     <a href="{{ url('about') }}" title="Description of FluTypeDB and FluType">
                         <i class="fa fa-info fa-fw"></i> About</a>
                 </li>
+                {% if request.user.is_superuser %}
+                    <li class="active">
+                        <a href="{{ url("admin:index") }}" title="Admin interface">
+                            <i class="fa fa-user fa-fw"></i> Admin</a>
+                    </li>
+                {% endif %}
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
@@ -179,7 +204,7 @@
                         <i class="fa fa-fw fa-cloud"></i> Cloud</a>
                 </li>
                 <li class="active">
-                    <a href="https://github.com/janekg89/flutype_webapp" title="Code on GitHub">
+                    <a href="https://github.com/janekg89/flutype_webapp" title="Code on GitHub" target="_blank">
                     <i class="fa fa-fw fa-github"></i> Github</a>
                 </li>
             </ul>

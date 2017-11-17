@@ -1,9 +1,13 @@
 from django.conf.urls import url
+from django.contrib import admin
+from django.conf.urls import url, include
+
 
 from . import views
 
 urlpatterns = [
     url(r'^$', views.studies_view, name='index'),
+    url(r'^admin/', include(admin.site.urls), name='admin'),
     url(r'^mystudies/$', views.my_studies_view, name='my_studies'),
     url(r'^uploadfile_study/(?P<sid>.*)/$', views.upload_file_study, name='upload_file_study'),
 
@@ -12,6 +16,7 @@ urlpatterns = [
     url(r'^study_ligands/(?P<sid>.*)/$', views.study_ligands_view, name='study_ligands'),
 
     url(r'^tutorial_db/$', views.tutorial_db_view, name='tutorial_db'),
+    url(r'^glossary/$', views.glossary_view, name='glossary'),
 
     url(r'^measurements/$', views.measurements_view, name='measurements'),
     url(r'^mymeasurements/$', views.my_measurements_view, name='my_measurements'),
@@ -32,6 +37,7 @@ urlpatterns = [
     url(r'^database_scheme_de/$', views.database_scheme_de_view, name='database_scheme_de'),
 
     url(r'^gal_file/$', views.gal_file_view, name='gal_file'),
+    url(r'^raw_gal_file/$', views.raw_gal_file_view, name='raw_gal_file'),
 
     url(r'^tutorial/$', views.tutorial_en_view, name='tutorial'),
     url(r'^tree/$', views.tutorial_tree_view, name='tutorial_tree'),
@@ -53,10 +59,12 @@ urlpatterns = [
     url(r'^buffers/$', views.buffer_view, name='buffers'),
     url(r'^buffers/new/$', views.buffer_new, name='buffer_new'),
     url(r'^buffers/edit/(?P<sid>.*)/$', views.buffer_edit, name='buffer_edit'),
+    url(r'^buffer/delete/(?P<sid>.*)/$', views.buffer_delete, name='buffer_delete'),
 
     url(r'^bufferbatches/$', views.buffer_batch_view, name='bufferbatches'),
     url(r'^bufferbatches/new/$', views.buffer_batch_new, name='buffer_batch_new'),
     url(r'^bufferbatches/edit/(?P<sid>.*)/$', views.buffer_batch_edit, name='buffer_batch_edit'),
+    url(r'^bufferbatches/delete/(?P<sid>.*)/$', views.buffer_batch_delete, name='buffer_batch_delete'),
 
     url(r'^peptidebatches/$', views.peptide_batch_view, name='peptidebatches'),
     url(r'^peptidebatches/new/$', views.peptide_batch_new, name='peptide_batch_new'),
@@ -128,4 +136,5 @@ urlpatterns = [
 
     url(r'^qspotcollection/(?P<sid>.*)/data$', views.barplot_data_view, name='barplot_plotly'),
     url(r'^qspotcollection/(?P<sid>.*)/barplot_p$', views.highcharts_view, name='heatmap_highchart'),
+
 ]

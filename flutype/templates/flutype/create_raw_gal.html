@@ -1,0 +1,186 @@
+{% extends "flutype/base.html" %}
+{% import 'flutype/macros.html' as macros %}
+{% block head %}{% endblock %}
+
+{% block content %}
+    <div class="title">
+        <h1>Create gal file</h1>
+    </div>
+
+    <div class="a">
+        <table id="output"
+               data-expire="1m"
+               data-show-export="true"
+               data-toggle="table"
+               data-pagination="true"
+               data-height="400"
+               data-cookie="true"
+               data-cookie-id-table="saveId"
+               data-show-refresh="true">
+
+        <thead>
+            <tr>
+                <th data-field="row">Row</th>
+                <th data-field="column">Column</th>
+                <th data-field="name">Name</th>
+            </tr>
+        </thead>
+        </table>
+
+        <button class="btn btn-default" id="remove_batch">
+            <i class="fa fa-fw fa-share fa-rotate-90" aria-hidden="true"></i> remove last
+        </button>
+    </div>
+    <div class="c">
+        <!-- internal navbar -->
+        <nav id="navbar-2" class="navbar navbar-inverse">
+            <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a data-toggle="collapse" href="#bufferbatch_div">
+                            {{ macros.ligand_type("Buffer Batch")}} <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a  data-toggle="collapse" href="#antibodybatch_div">
+                            {{ macros.ligand_type("Antibody Batch")}} <span class="sr-only">(current)</span>
+                        </a>
+
+                    </li>
+                     <li>
+                        <a data-toggle="collapse" href="#peptidebatch_div">
+                            {{ macros.ligand_type("Peptide Batch")}} <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                     <li>
+                        <a data-toggle="collapse" href="#virusbatch_div">
+                            {{ macros.ligand_type("Virus Batch")}} <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a data-toggle="collapse" href="#complexbatch_div">
+                            {{ macros.ligand_type("Complex Batch")}} <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+
+<div class="tables2">
+    <button class="btn btn-default" id="add_batch"><i class="fa fa-fw fa-share fa-rotate-270" aria-hidden="true"></i>
+        Add </button>
+
+    <div id="antibodybatch_div" class="collapse">
+        {% with id_antibodybatches_table = "batches_a" %}
+                {% include "flutype/antibodybatches_table.html" %}
+        {% endwith %}
+    </div>
+
+    <div id="virusbatch_div" class="collapse">
+         {% with id_virusbatches_table = "batches_v" %}
+                {% include "flutype/virusbatches_table.html" %}
+            {% endwith %}
+    </div>
+
+    <div id="peptidebatch_div" class="collapse">
+         {% with id_peptidebatches_table = "batches_p" %}
+                {% include "flutype/peptidebatches_table.html" %}
+        {% endwith %}
+    </div>
+
+    <div id="bufferbatch_div" class="collapse">
+        {% with id_bufferbatches_table = "batches_b" %}
+                {% include "flutype/bufferbatches_table.html" %}
+        {% endwith %}
+    </div>
+    <div id="complexbatch_div" class="collapse">
+         {% with id_complexbatches_table = "batches_c" %}
+                {% include "flutype/complexbatches_table.html" %}
+        {% endwith %}
+    </div>
+</div>
+
+{%endblock%}
+
+{% block javascript %}
+    <script>
+    $(document).ready(function () {
+    $('#navbar-2 li a').click(function(e) {
+
+        var $parent = $(this).parent();
+        if($parent.hasClass('active')){
+           $parent.removeClass('active').addClass('inactive')
+         }else{
+           $parent.removeClass('inactive').addClass('active');
+         }
+        e.preventDefault();
+    });
+});
+    </script>
+
+<script>
+    var checkedRows = [];
+    var row_numbers = 0;
+    var new_gal_file =[];
+
+    function current_row(row_number){
+        row = Math.ceil((row_number+1)/12)
+         return row ;
+    };
+
+    function current_column(row_number){
+        column = row_number % 12;
+         return column+1;
+    };
+
+    function load(new_gal_file) {
+    $('#output').bootstrapTable("load",new_gal_file)
+    }
+
+
+    $('#batches_a, #batches_b, #batches_c, #batches_p, #batches_v').on('check.bs.table', function (e, row) {
+  checkedRows.push({id: row.id, sid: row.sid });
+    });
+
+    $('#batches_a, #batches_b, #batches_c, #batches_p, #batches_v').on('uncheck.bs.table', function (e, row) {
+  $.each(checkedRows, function(index, value) {
+    if (value.id === row.id) {
+      checkedRows.splice(index,1);
+    }});});
+
+    $('#batches_a, #batches_b, #batches_c, #batches_p, #batches_v').on('uncheck-all.bs.table', function (e) {
+            checkedRows = [];
+        }
+    );
+    $('#batches_a, #batches_b, #batches_c, #batches_p, #batches_v').on('check-all.bs.table', function(e, rows) {
+         $.each(rows, function(index, value) {
+           checkedRows.push({id: value.id, sid: value.sid });
+        })});
+
+
+$("#add_batch").click(function() {
+  $.each(checkedRows, function(index, value) {
+      var json_row = {row:current_row(row_numbers),column:current_column(row_numbers),name:value.sid};
+      new_gal_file.push(json_row)
+
+      load(new_gal_file);
+      row_numbers++;
+  })});
+
+  $("#remove_batch").click(function() {
+      var table = document.getElementById('output');
+      var rowCount = table.rows.length;
+      if (rowCount > 1) {
+          table.deleteRow(rowCount -1)
+          new_gal_file.splice(-1)
+
+          row_numbers--;
+      }
+
+    });
+
+  </script>
+
+{% endblock %}

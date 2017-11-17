@@ -1,0 +1,70 @@
+{% if peptide_batches %}
+            <table id="{{ id_peptidebatches_table }}"
+                    data-toggle="table"
+                    data-pagination="true"
+                    data-search="true"
+                    data-show-toggle="true"
+                    data-show-columns="true"
+                    data-toolbar="#toolbar">
+                <thead>
+                <tr>
+                    {% if type == "gal_file" %}  <th data-field="state" data-checkbox="true"></th>{% endif %}
+                    {% if request.user.is_superuser %}<th></th>{%  endif %}
+                    <th  data-sortable="true" data-field="sid">sid batch</th>
+                    <!-- ligand information -->
+                    <th  data-sortable="true">sid peptide</th>
+                    <th  data-sortable="true">name</th>
+                    <th  data-sortable="true">linker</th>
+                    <th  data-sortable="true">spacer</th>
+                    <th  data-sortable="true">sequence</th>
+                    <th  data-sortable="true">c-terminus</th>
+                    <!-- batch information -->
+                    <th  data-sortable="true">concentration</th>
+                    <th  data-sortable="true">buffer</th>
+                    <th  data-sortable="true">pH</th>
+                    <th  data-sortable="true">purity</th>
+                    <th  data-sortable="true">labeling</th>
+                    <th  data-sortable="true">produced by</th>
+                    <th  data-sortable="true">production date</th>
+                    <th  data-sortable="true">comment</th>
+                    {% if request.user.is_superuser %}<th></th>{%  endif %}
+
+                </tr>
+                </thead>
+                <tbody>
+                {% for peptidebatch in peptide_batches.all() %}
+                    <tr>
+                        {% if type == "gal_file" %}  <td></td>{% endif %}
+                        {% if request.user.is_superuser %}<td>
+                    <a href="{{ url('peptide_batch_edit', args=[peptidebatch.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                        </td>{%  endif %}
+                        <td><b>{{ peptidebatch.sid }}</b></td>
+                        <!-- ligand information -->
+                        {% with p=peptidebatch.ligand %}
+                            <td class="info">{{ p.sid }}</td>
+                            <td class="info">{{ p.name }}</td>
+                            <td class="info">{{ p.linker }}</td>
+                            <td class="info">{{ p.spacer }}</td>
+                            <td class="info">{{ p.sequence }}</td>
+                            <td class="info">{{ p.c_terminus }}</td>
+                        {% endwith %}
+                        <!-- batch information -->
+                        <td>{{ peptidebatch.concentration }} {% if  peptidebatch.concentration_unit %}[{{ peptidebatch.concentration_unit }}]{% endif %}</td>
+                        <td class="info"> {% if peptidebatch.buffer.sid %}{{ peptidebatch.buffer.sid }} {% else %} - {% endif %}</td>
+                        <td>{{ peptidebatch.ph }}</td>
+                        <td>{{ peptidebatch.purity }}</td>
+                        <td>{{ peptidebatch.labeling }}</td>
+                        <td>{{ peptidebatch.produced_by }}</td>
+                        <td>{{ peptidebatch.production_date }}</td>
+                        <td>{{ peptidebatch.comment }}</td>
+                        {% if request.user.is_superuser %}<td class="alert-danger">
+                        <a href="{{ url('peptide_batch_delete', args=[peptidebatch.sid]) }}"><i class="fa fa-fw fa-trash"></i></a>
+                     </td>{%  endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        {% else %}
+            <p>No entries in database.</p>
+        {% endif %}

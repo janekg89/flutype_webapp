@@ -33,10 +33,10 @@ class DatabaseDJ(object):
     def update_ligands_or_batches(self,ligands):
         fill_multiple_models_from_dict(ligands)
 
-    def update_steps(self,steps):
+    def update_steps(self, steps):
         fill_multiple_models_from_dict(steps)
 
-    def update_studies(self,study_dics):
+    def update_studies(self, study_dics):
         Study = apps.get_model("flutype", model_name="Study")
         for study_sid in study_dics:
             Study.objects.get_or_create(**study_dics[study_sid])

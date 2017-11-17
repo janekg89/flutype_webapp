@@ -1,27 +1,38 @@
 {% if antibodies %}
-    <table id="{{ id_antibodies_table }}" class="table table-striped">
+    <table id="{{ id_antibodies_table }}"
+            data-toggle="table"
+            data-pagination="true"
+            data-search="true"
+            data-show-toggle="true"
+            data-show-columns="true"
+            data-toolbar="#toolbar"
+            class="table table-striped">
         <thead>
         <tr>
-            <th></th>
-            <th>sid</th>
-            <th>target</th>
-            <th>name</th>
-            <th>database link</th>
-            <th>comment</th>
+            {% if request.user.is_superuser %}<th></th>{% endif %}
+            <th  data-sortable="true">sid</th>
+            <th  data-sortable="true">target</th>
+            <th  data-sortable="true">name</th>
+            <th  data-sortable="true">database link</th>
+            <th  data-sortable="true">comment</th>
+            {% if request.user.is_superuser %}<th></th>{% endif %}
+
         </tr>
         </thead>
         <tbody>
         {% for antibody in antibodies %}
             <tr>
-                <td>{% if request.user.is_superuser %}
+                {% if request.user.is_superuser %}<td>
                     <a href="{{ url('antibody_edit', args=[antibody.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
-                {%  endif %}
-                </td>
+                 </td>{%  endif %}
                 <td><b>{{ antibody.sid }}</b></td>
                 <td>{{ antibody.target }}</td>
                 <td>{{ antibody.name }}</td>
                 <td>{{ antibody.link_db }}</td>
                 <td>{{ antibody.comment }}</td>
+                {% if request.user.is_superuser %}<td class="alert-danger">
+                    <a href="{{ url('antibody_delete', args=[antibody.sid]) }}"><i class="fa fa-fw fa-trash"></i></a>
+                 </td>{% endif %}
             </tr>
         {% endfor %}
         </tbody>

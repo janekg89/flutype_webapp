@@ -1,16 +1,26 @@
 {% import 'flutype/macros.html' as macros %}
 
 {% if studies %}
-    <table id="studies" class="table table-striped">
+    <table id="studies"
+           data-toggle="table"
+           data-pagination="true"
+           data-search="true"
+           data-show-toggle="true"
+           data-show-columns="true"
+           data-toolbar="#toolbar"
+           data-show-export="true"
+           data-filter-control="true"
+
+           class="table table-striped">
         <thead>
         <tr>
-            <th>sid</th>
-            <th>status</th>
-            <th>users</th>
-            <th>description</th>
-            <th>measurements</th>
-            <th>created</th>
-            <th>comment</th>
+            <th data-sortable="true">sid</th>
+            <th data-sortable="true">status</th>
+            <th data-sortable="true">users</th>
+            <th data-sortable="true">description</th>
+            <th data-sortable="true">measurements</th>
+            <th data-sortable="true">created</th>
+            <th data-sortable="true">comment</th>
         </tr>
         </thead>
         <tbody>
@@ -18,9 +28,7 @@
             <tr>
                 <td><b><a href="{{ url('study', args=[s.sid]) }}"> {{ s.sid }}</a></b></td>
                 <td>{{ macros.status(s.status) }}</td>
-                <td>{% for user in s.users() %}
-                    {{ macros.user(user) }}
-                    {% endfor %}
+                <td>{% for user in s.users() %}{{ macros.user(user) }}{% endfor %}<br />
                 </td>
                 <td>{{ s.description }}</td>
                 <td>
