@@ -42,7 +42,12 @@ class LigandManager(PolymorphicManager):
 
     def to_df(self):
         df = read_frame(self.all())
-        return df
+
+    def get_or_create(self, *args, **kwargs):
+        if "collection_date" in kwargs and isinstance(kwargs['collection_date'], basestring):
+            kwargs['collection_date'] = int(kwargs['collection_date'])
+        object, created = super(LigandManager, self).get_or_create(*args, **kwargs)
+        return object, created
 
 
 
