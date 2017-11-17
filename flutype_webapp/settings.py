@@ -159,7 +159,6 @@ LOGIN_URL = '/login/'
 # sudo mkdir -p /var/backups/flutypedb
 # sudo chown -R mkoenig:mkoenig /var/backups/flutypedb
 # python manage.py dbbackup
-
 DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
 DBBACKUP_STORAGE_OPTIONS = {'location': '/var/backups/flutypedb'}
 
