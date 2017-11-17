@@ -43,7 +43,7 @@
                             </td>
                         {% endwith %}
                         <!-- batch information -->
-                        <td>{{ complexbatch.concentration }}</td>
+                        <td>{{complexbatch.concentration }} {% if complexbatch.concentration_unit %}[{{complexbatch.concentration_unit }}]{% endif %}</td>
                         <td>{{ complexbatch.buffer }}</td>
                         <td>{{ complexbatch.ph }}</td>
                         <td>{{ complexbatch.purity }}</td>
