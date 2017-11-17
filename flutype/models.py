@@ -77,12 +77,14 @@ class ManufacturerModel(DjangoChoices):
 class ProcessingType(DjangoChoices):
     substract_buffer = ChoiceItem("substract_buffer")
 
-class Buffer(Sidable,Commentable,models.Model):
+
+class Buffer(Sidable, Commentable, models.Model):
     """ Buffer model """
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.sid
+
 
 ########################################
 # Ligand
@@ -118,6 +120,8 @@ class Virus(Ligand):
     strain = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     objects = LigandManager()
 
+    class Meta:
+        verbose_name_plural = "viruses"
 
 class Antibody(Ligand):
     """ Antibody ligand. """
@@ -126,11 +130,17 @@ class Antibody(Ligand):
     link_db = models.URLField(blank=True, null=True)
     objects = LigandManager()
 
+    class Meta:
+        verbose_name_plural = "antibodies"
+
 
 class Complex(Ligand):
     """ Complex ligand. """
     complex_ligands = models.ManyToManyField(Ligand, related_name="complex_ligands")
     objects = ComplexManager()
+
+    class Meta:
+        verbose_name_plural = "complexes"
 
     @property
     def ligands_str(self):
@@ -163,6 +173,7 @@ class Batch(Sidable, Commentable, models.Model):
 
     class Meta:
         abstract = True
+        verbose_name_plural = "batches"
 
     def __str__(self):
         return self.sid
@@ -175,6 +186,9 @@ class LigandBatch(Batch):
     ligand = models.ForeignKey(Ligand, blank=True ,null= True)
     objects = LigandBatchManager()
 
+    class Meta:
+        verbose_name_plural = "ligand batches"
+
 
 class VirusBatch(LigandBatch):
     """ Virus batch model. """
@@ -182,25 +196,40 @@ class VirusBatch(LigandBatch):
     active = models.NullBooleanField(blank=True, null=True)
     objects = LigandBatchManager()
 
+    class Meta:
+        verbose_name_plural = "virus batches"
+
 
 class PeptideBatch(LigandBatch):
     """ Peptide batch model. """
     objects = LigandBatchManager()
+
+    class Meta:
+        verbose_name_plural = "peptide batches"
 
 
 class AntibodyBatch(LigandBatch):
     """ Antibody batch model. """
     objects = LigandBatchManager()
 
+    class Meta:
+        verbose_name_plural = "antibody batches"
+
 
 class ComplexBatch(LigandBatch):
     """ Complex batch model. """
     objects = LigandBatchManager()
 
+    class Meta:
+        verbose_name_plural = "complex batches"
+
 
 class BufferBatch(LigandBatch):
     """ Buffer batch model. """
     objects = LigandBatchManager()
+
+    class Meta:
+        verbose_name_plural = "buffer batches"
 
 
 
@@ -255,8 +284,6 @@ class GalFile(Sidable, models.Model):
 
     def __str__(self):
         return self.sid
-
-
 
 
 ########################################
@@ -338,6 +365,9 @@ class Process(Sidable, models.Model):
     unique_ordering = models.CharField(max_length=CHAR_MAX_LENGTH)
     objects = ProcessManager()
 
+    class Meta:
+        verbose_name_plural = "processes"
+
     def users(self):
         user_ids = self.processstep_set.values_list("user", flat="True").distinct()
         return User.objects.filter(id__in=user_ids)
@@ -416,6 +446,9 @@ class Study(Commentable, Sidable, Dateable, Userable, Statusable, FileAttachable
     """
     description = models.TextField(blank=True, null=True)
     objects = StudyManager()
+
+    class Meta:
+        verbose_name_plural = "studies"
 
     def users(self):
         user_ids = self.rawspotcollection_set.values_list("processstep__user", flat="True").distinct()
@@ -598,7 +631,6 @@ class SpotCollection(Commentable, FileAttachable, models.Model):
 
     class Meta:
         unique_together = ('raw_spot_collection', 'sid')
-
 
 
 class Spot(models.Model):
