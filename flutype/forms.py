@@ -66,6 +66,10 @@ class ComplexForm(forms.ModelForm):
 
 
 class VirusForm(forms.ModelForm):
+    collection_date = forms.DateField(widget=forms.TextInput(attrs=
+    {
+        'class': 'datepicker'
+    }))
     class Meta:
         model = Virus
         fields = ['sid', 'tax_id', 'subtype', "isolation_country", "collection_date", "strain", "link_db", "comment"]

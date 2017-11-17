@@ -86,7 +86,7 @@ class Ligand(PolymorphicModel):
     """ Generic ligand.
     E.g, a peptide, virus or antibody.
     """
-    sid = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True, unique=True)
+    sid = models.CharField(max_length=CHAR_MAX_LENGTH, unique=True)
     comment = models.TextField(blank=True, null=True)
 
     def __str__(self):
@@ -105,11 +105,11 @@ class Peptide(Ligand):
 
 class Virus(Ligand):
     """ Virus ligand. """
-    tax_id = models.CharField(max_length=CHAR_MAX_LENGTH, null=True)
+    tax_id = models.CharField(max_length=CHAR_MAX_LENGTH, null=True,blank=True, unique=True)
     link_db = models.URLField(blank=True, null=True)
     subtype = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     isolation_country = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
-    collection_date = models.CharField(max_length=10, blank=True, null=True)
+    collection_date = models.DateField(blank=True, null=True)
     strain = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     objects = LigandManager()
 
