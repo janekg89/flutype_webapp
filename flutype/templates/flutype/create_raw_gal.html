@@ -88,7 +88,7 @@
          {% with id_peptidebatches_table = "batches_p" %}
                 {% include "flutype/peptidebatches_table.html" %}
         {% endwith %}
-    </div>
+      </div>
 
     <div id="bufferbatch_div" class="collapse">
         {% with id_bufferbatches_table = "batches_b" %}
@@ -106,7 +106,6 @@
 
 {% block javascript %}
     <script>
-    $(document).ready(function () {
     $('#navbar-2 li a').click(function(e) {
 
         var $parent = $(this).parent();
@@ -117,64 +116,65 @@
          }
         e.preventDefault();
     });
-});
+
     </script>
 
 <script>
-    var checkedRows = [];
-    var row_numbers = 0;
-    var new_gal_file =[];
+    $(document).ready(function(){
+        var row_numbers = 0;
+        var stored = localStorage['new_gal_file'];
+        if (stored) new_gal_file = JSON.parse(stored);
+        else new_gal_file = [];
+        load(new_gal_file);
+    });
+
+
 
     function current_row(row_number){
-        row = Math.ceil((row_number+1)/12)
-         return row ;
-    };
+        row = Math.ceil((row_number+1)/12);
+        return row ;
+    }
 
     function current_column(row_number){
         column = row_number % 12;
          return column+1;
-    };
+    }
 
     function load(new_gal_file) {
     $('#output').bootstrapTable("load",new_gal_file)
     }
 
-
-    $('#batches_a, #batches_b, #batches_c, #batches_p, #batches_v').on('check.bs.table', function (e, row) {
-  checkedRows.push({id: row.id, sid: row.sid });
-    });
-
-    $('#batches_a, #batches_b, #batches_c, #batches_p, #batches_v').on('uncheck.bs.table', function (e, row) {
-  $.each(checkedRows, function(index, value) {
-    if (value.id === row.id) {
-      checkedRows.splice(index,1);
-    }});});
-
-    $('#batches_a, #batches_b, #batches_c, #batches_p, #batches_v').on('uncheck-all.bs.table', function (e) {
-            checkedRows = [];
-        }
-    );
-    $('#batches_a, #batches_b, #batches_c, #batches_p, #batches_v').on('check-all.bs.table', function(e, rows) {
-         $.each(rows, function(index, value) {
-           checkedRows.push({id: value.id, sid: value.sid });
-        })});
-
+    function add_checks(checkeddata){
+     $.each(checkeddata,function(key ,value){
+               var json_row = {row:current_row(row_numbers),column:current_column(row_numbers),name:value.sid};
+               new_gal_file.push(json_row);
+               row_numbers++;});}
 
 $("#add_batch").click(function() {
-  $.each(checkedRows, function(index, value) {
-      var json_row = {row:current_row(row_numbers),column:current_column(row_numbers),name:value.sid};
-      new_gal_file.push(json_row)
+     checkeddata_a = $('#batches_a').bootstrapTable('getAllSelections');
+     checkeddata_b = $('#batches_b').bootstrapTable('getAllSelections');
+     checkeddata_c = $('#batches_c').bootstrapTable('getAllSelections');
+     checkeddata_p = $('#batches_p').bootstrapTable('getAllSelections');
+     checkeddata_v = $('#batches_v').bootstrapTable('getAllSelections');
 
-      load(new_gal_file);
-      row_numbers++;
-  })});
+     add_checks(checkeddata_a);
+     add_checks(checkeddata_b);
+     add_checks(checkeddata_c);
+     add_checks(checkeddata_p);
+     add_checks(checkeddata_v);
+
+     load(new_gal_file);
+     localStorage['new_gal_file'] = JSON.stringify(new_gal_file);
+
+    });
+
 
   $("#remove_batch").click(function() {
       var table = document.getElementById('output');
       var rowCount = table.rows.length;
       if (rowCount > 1) {
-          table.deleteRow(rowCount -1)
-          new_gal_file.splice(-1)
+          table.deleteRow(rowCount -1);
+          new_gal_file.splice(-1);
 
           row_numbers--;
       }
@@ -182,5 +182,7 @@ $("#add_batch").click(function() {
     });
 
   </script>
+
+
 
 {% endblock %}
