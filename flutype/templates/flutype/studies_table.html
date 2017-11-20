@@ -6,14 +6,14 @@
            data-pagination="true"
            data-show-toggle="true"
            data-show-columns="true"
-           data-toolbar="#toolbar"
            data-show-export="true"
+           data-advanced-search="true"
            data-search="true"
            class="table table-striped">
 
         <thead>
         <tr>
-            <th data-sortable="true">sid</th>
+            <th data-formatter="sidFormatter" data-field="sid" data-sortable="true">sid</th>
             <th data-field="status" data-sortable="true">status</th>
             <th data-field="users" data-sortable="true">users</th>
             <th data-field="description" data-sortable="true">description</th>
@@ -25,7 +25,7 @@
         <tbody>
         {% for s in studies %}
             <tr>
-                <td><b><a href="{{ url('study', args=[s.sid]) }}"> {{ s.sid }}</a></b></td>
+                <td><a href="{{ url("study", args=[s.sid]) }}"> {{ s.sid }}</a> </td>
                 <td>{{ macros.status(s.status) }}</td>
                 <td>{% for user in s.users() %}{{ macros.user(user) }}{% endfor %}<br />
                 </td>
@@ -45,3 +45,12 @@
 {% else %}
     <p>No entries in database.</p>
 {% endif %}
+{% block javascript %}
+    <script>
+     function sidFormatter(value) {
+         var url = "{{ url("study", args=[value]) }}";
+    return '<b>'+value+'</b>';
+}
+    </script>
+
+{% endblock %}
