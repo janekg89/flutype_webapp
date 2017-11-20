@@ -6,16 +6,17 @@
             Measurements
             {% if type == "my" %}(<i class="fa fa-fw fa-user"></i> {{ request.user }}){% endif %}
         </h1>
-
+        {% with measurement_table_id = "measurement" %}
         {% include "flutype/measurements_table.html" %}
+        {% endwith %}
     </div>
 {% endblock %}
 
 {% block javascript %}
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
-            $('#measurements').bootstrapTable({
-                pageLength: 25,
+            $('#measurement').bootstrapTable("refreshOptions",{
+                pageSize:20
             });
         });
     </script>

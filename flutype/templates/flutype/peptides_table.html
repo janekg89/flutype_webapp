@@ -25,9 +25,9 @@
         <tbody>
         {% for p in peptides.all() %}
             <tr>
-                <td>{% if request.user.is_superuser %}
+                {% if request.user.is_superuser %}<td>
                     <a href="{{ url('peptide_edit', args=[p.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
-                {% endif %}</td>
+                </td>{% endif %}
                 <td><b>{{ p.sid }}</b></td>
                 <td>{{ p.name }}</td>
                 <td>{{ p.linker }}</td>

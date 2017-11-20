@@ -18,9 +18,10 @@
     <h1><i class="fa fa-fw fa-braille"></i> Study: {{ study.sid }}</h1>
 
     <div class="a">
-    {% with studies = [study] %}
+    {% with studies = [study] %}{% with studies_table_id = "study" %}
     {% include "flutype/studies_table.html" %}
-    {% endwith %}
+    {% endwith %}   {% endwith %}
+
     </div>
     <div class="filebox">
         <div class="box" style="overflow-y:auto;">
@@ -156,6 +157,18 @@
             }
         }
     </script>
+
+     <script type="text/javascript" charset="utf-8">
+        $(document).ready(function(){
+            $('#study').bootstrapTable("refreshOptions", {
+    	    search: false,
+            showExport: false,
+            showToggle:false,
+            showColumns:false,
+            pagination:false,
+            })
+            ;})
+       </script>
 
 
 {% endblock %}
