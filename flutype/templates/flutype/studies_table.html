@@ -2,7 +2,7 @@
 
 {% if studies %}
     <table id="{{ studies_table_id}}"
-            data-toggle="table"
+           data-toggle="table"
            data-pagination="true"
            data-show-toggle="true"
            data-show-columns="true"
@@ -13,13 +13,13 @@
 
         <thead>
         <tr>
-            <th data-field="sid" data-filter-control="input" data-sortable="true">sid</th>
-            <th data-field="status" data-filter-control="select" data-sortable="true">status</th>
-            <th data-field="users" data-filter-control="input" data-sortable="true">users</th>
-            <th data-field="description" data-filter-control="input" data-sortable="true">description</th>
-            <th data-field="measurements" data-filter-control="input" data-sortable="true">measurements</th>
-            <th data-field="created" data-filter-control="datepicker"  data-filter-datepicker-options='{"autoclose":true, "clearBtn": true, "todayHighlight": true, "orientation": "top","format":"yyyy-mm-dd"}' data-sortable="true">created</th>
-            <th data-field="comment" data-filter-control="input" data-sortable="true">comment</th>
+            <th data-sortable="true">sid</th>
+            <th data-field="status" data-sortable="true">status</th>
+            <th data-field="users" data-sortable="true">users</th>
+            <th data-field="description" data-sortable="true">description</th>
+            <th data-field="measurements" data-sortable="true">measurements</th>
+            <th data-field="created"  data-sortable="true">created</th>
+            <th data-field="comment" data-sortable="true">comment</th>
         </tr>
         </thead>
         <tbody>
