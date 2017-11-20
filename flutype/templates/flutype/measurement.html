@@ -13,8 +13,12 @@
     </div>
     <div class="a">
         {% with collections = [collection] %}
+        {% with measurement_table_id = "measurement" %}
+
         {% include "flutype/measurements_table.html" %}
         {% endwith %}
+        {% endwith %}
+
     </div>
 
     <div class="filebox">
@@ -379,5 +383,15 @@
 
         });
     </script>
+     <script type="text/javascript" charset="utf-8">
+        $(document).ready(function(){
+            $('#measurement').bootstrapTable("refreshOptions", {
+    	    search: false,
+            showExport: false,
+            showToggle:false,
+            showColumns:false,
+            pagination:false})
+            ;})
+       </script>
 
 {% endblock %}
