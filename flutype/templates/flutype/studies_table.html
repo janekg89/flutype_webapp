@@ -1,7 +1,7 @@
 {% import 'flutype/macros.html' as macros %}
 
 {% if studies %}
-    <table id="studies"
+    <table id="{{ studies_table_id}}"
            data-toggle="table"
            data-pagination="true"
            data-search="true"
@@ -10,17 +10,17 @@
            data-toolbar="#toolbar"
            data-show-export="true"
            data-filter-control="true"
-
+           data-filter-show-clear="true"
            class="table table-striped">
         <thead>
         <tr>
-            <th data-sortable="true">sid</th>
-            <th data-sortable="true">status</th>
-            <th data-sortable="true">users</th>
-            <th data-sortable="true">description</th>
-            <th data-sortable="true">measurements</th>
-            <th data-sortable="true">created</th>
-            <th data-sortable="true">comment</th>
+            <th data-field="sid" data-sortable="true" data-filter-control="input">sid</th>
+            <th data-field="status" data-filter-control="select" data-sortable="true">status</th>
+            <th data-field="users" data-filter-control="input" data-sortable="true">users</th>
+            <th data-field="description" data-filter-control="input" data-sortable="true">description</th>
+            <th data-field="measurements" data-filter-control="input" data-sortable="true">measurements</th>
+            <th data-field="created" data-filter-control="input" data-sortable="true">created</th>
+            <th data-field="comment" data-filter-control="input" data-sortable="true">comment</th>
         </tr>
         </thead>
         <tbody>
