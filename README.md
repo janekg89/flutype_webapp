@@ -37,6 +37,10 @@ The production version is available at
 FluTypeDB is funded via the German FluType project.
 
 ### Changelog
+**v0.1.5** [2017-11-23] 
+
+- bug fixes and small improvements
+
 **v0.1.4** [2017-11-17]
 
 In this release a multitude of bug fixes and improvements in the FluTypeDB 
