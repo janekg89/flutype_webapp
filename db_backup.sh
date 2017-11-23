@@ -5,8 +5,13 @@
 # TODO: run via cron job
 # TODO: differential backup
 # TODO: check that backup can be restored
+#
+# usage:
+#	./db_backup.sh
 ##################################
-
+echo "-------------------------------"
+echo "FluTypeDB database backup"
+echo "-------------------------------"
 cd /var/git/flutype_webapp
 
 # create directory for backup
@@ -16,7 +21,7 @@ sudo chown -R mkoenig:mkoenig $DIR
 echo "Backup to" $DIR
 
 # backup media
-sudo cp -Rv /var/git/flutype_webapp/media $DIR
+sudo cp -R /var/git/flutype_webapp/media $DIR
 
 # backup database
 echo "---------------"
