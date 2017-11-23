@@ -18,8 +18,7 @@
     <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/basic.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/basic.min.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/bootstrap-table.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/jquery-ui.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/bootstrap-table-filter-control.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ static ('flutype/css/bootstrap-datepicker3.min.css') }}"/>
 
 
     <link rel="stylesheet" type="text/css" href="{{ static('flutype/css/bootstrap.css') }}"/>
@@ -44,9 +43,10 @@
     <script type="text/javascript" src="{{ static('flutype/js/libs/js-xlsx/xlsx.core.min.js') }}"></script>
     <script type="text/javascript" src="{{ static('flutype/js/tableExport.min.js') }}"></script>
     <script type="text/javascript" src="{{ static('flutype/js/bootstrap-table-export.js') }}"></script>
+    <script type="text/javascript" src="{{ static('flutype/js/bootstrap-table-toolbar.js') }}"></script>
+
     <script type="text/javascript" src="{{ static('flutype/js/bootstrap-table-cookie.js') }}"></script>
-    <script type="text/javascript" src="{{ static('flutype/js/jquery-ui.min.js') }}"></script>
-    <script src="{{ static('flutype/js/bootstrap-table-filter-control.js') }}"></script>
+    <script type="text/javascript" src="{{ static('flutype/js/bootstrap-datepicker.min.js') }}"></script>
 
     <!-- HEAD -->
     {% block head %}{% endblock %}
@@ -164,7 +164,7 @@
                 </li>
                 {% if request.user.is_superuser %}
                     <li class="active">
-                        <a href="{{ url("admin:index") }}" title="Admin interface">
+                        <a href="{{ url("admin:index") }}" target="_blank" title="Admin interface">
                             <i class="fa fa-user fa-fw"></i> Admin</a>
                     </li>
                 {% endif %}

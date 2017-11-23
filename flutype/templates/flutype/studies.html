@@ -9,18 +9,20 @@
             Studies
             {% if type == "my" %}(<i class="fa fa-fw fa-user"></i> {{ request.user }}){% endif %}
         </h1>
-
+        {% with studies_table_id="studies" %}
         {% include "flutype/studies_table.html" %}
+        {% endwith %}
 
     </div>
+
 {% endblock %}
 
 {% block javascript %}
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function () {
-            $('#studies').bootstrapTable({
-                pageLength: 25,
-            });
-        });
-    </script>
+
+
+
 {% endblock %}
+
+
+
+
