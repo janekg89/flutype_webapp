@@ -5,9 +5,9 @@
 [![Coverage Status](https://coveralls.io/repos/github/janekg89/flutype_webapp/badge.svg?branch=develop)](https://coveralls.io/github/janekg89/flutype_webapp?branch=develop)
 [![GitHub version](https://badge.fury.io/gh/janekg89%2Fflutype_webapp.svg)](https://badge.fury.io/gh/janekg89%2Fflutype_webapp)
 
-<b><a href="https://orcid.org/0000-0002-4588-4925" title="orcid id"><img src="./docs/images/orcid.png" height="15"/></a> Janek Grzegorzewski</b>
+<b><a href="https://orcid.org/0000-0002-4588-4925" title="0000-0002-4588-4925"><img src="./docs/images/orcid.png" height="15"/></a> Janek Grzegorzewski</b>
 and 
-<b><a href="https://orcid.org/0000-0003-1725-179X" title="orcid id"><img src="./docs/images/orcid.png" height="15"/></a> Matthias König</b>
+<b><a href="https://orcid.org/0000-0003-1725-179X" title="0000-0003-1725-179X"><img src="./docs/images/orcid.png" height="15"/></a> Matthias König</b>
 ## Overview
 
 The FluTypeDB project is a web application for the data management of binding assays 
@@ -37,6 +37,10 @@ The production version is available at
 FluTypeDB is funded via the German FluType project.
 
 ### Changelog
+**v0.1.5** [2017-11-23] 
+
+- bug fixes and small improvements
+
 **v0.1.4** [2017-11-17]
 
 In this release a multitude of bug fixes and improvements in the FluTypeDB 
