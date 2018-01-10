@@ -1,0 +1,276 @@
+{% extends "flutype/base.html" %}
+{% block content %}
+    <!-- Main Content -->
+     <div class="title1">
+        <h1><input type="text" placeholder="Measurement Type">  Measurement: <input type="text" placeholder="Measurement Sid"></h1>
+    </div>
+    <div class="a">
+
+    </div>
+
+     <div class="c">
+        <!-- internal navbar -->
+        <nav id="navbar-2" class="navbar navbar-inverse">
+            <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+
+                    <li>
+                        <a href="#"><i class="fa fa-magic" aria-hidden="true"></i> Process <span
+                            class="sr-only">(current)</span></a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-certificate"></i> Ligands <span
+                            class="sr-only">(current)</span></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+
+    <div class="microwell_plate">
+        <div >
+
+            <h3> Ligands </h3>
+            <div class="text-right">
+            <button name="save_ligands" id="save_ligands" class="btn btn-default "> Save </button>
+            </div>
+            <div id="microwell_plate_ligands"></div>
+        </div>
+
+
+        <div >
+            <h3> Analyts </h3>
+            <div class="text-right">
+            <button name="save_analyts" id="save_analyts" class="btn btn-default"> Save </button>
+            </div>
+            <div id="microwell_plate_analyts"></div>
+        </div>
+
+
+    </div>
+{% endblock %}
+{% block javascript %}
+
+<script>
+var d_microwell_plate = [
+  ["", "", "","" ," ", "", "","" ,"","","","","",""],
+  [""],
+  [""],
+  [""],
+  [""],
+  [""],
+  [""],
+  [""],
+  [""],
+  [""]
+];
+
+var microwell_analyts = document.getElementById('microwell_plate_analyts'),
+    microwell_ligands = document.getElementById('microwell_plate_ligands'),
+    ligands_sids = {{ ligands_sid|tojson }},
+    ligands_table_setup = {
+  data: d_microwell_plate,
+
+  colHeaders: ["A", "B", "C","D" ,"E", "F", "G","H" ,"I","J","K","L","","Concentration"],
+    columns: [
+       {
+           data:"a",
+        type: 'autocomplete',
+        source: ligands_sids,
+        strict: true
+      },
+        {
+            data:"b",
+        type: 'autocomplete',
+        source: ligands_sids,
+        strict: true
+      },
+        {
+            data:"c",
+        type: 'autocomplete',
+        source: ligands_sids,
+        strict: true
+      },
+        {
+            data:"d",
+        type: 'autocomplete',
+        source: ligands_sids,
+        strict: true
+      },
+        {
+            data:"e",
+        type: 'autocomplete',
+        source: ligands_sids,
+        strict: true
+      },
+        {
+            data:"f",
+        type: 'autocomplete',
+        source: ligands_sids,
+        strict: true
+      },
+          {
+              data:"g",
+        type: 'autocomplete',
+        source: ligands_sids,
+        strict: true
+      },
+          {
+              data:"h",
+        type: 'autocomplete',
+        source: ligands_sids,
+        strict: true
+      },
+          {
+              data:"i",
+        type: 'autocomplete',
+        source: ligands_sids,
+        strict: true
+      },
+          {
+              data:"j",
+        type: 'autocomplete',
+        source: ligands_sids,
+        strict: true
+      },
+          {
+              data:"k",
+        type: 'autocomplete',
+        source: ligands_sids,
+        strict: true
+      },
+        {
+            data:"l",
+
+        type: 'autocomplete',
+        source: ligands_sids,
+        strict: true
+      },
+          {     data:"",
+              readOnly: true
+
+      },
+          {
+            data:"concentration",
+            editor: 'numeric',
+            validator: 'numeric'
+
+      }
+
+
+    ],
+
+  rowHeaders: ["1", "2", "3","4" ,"5", "6", "7","8" ,"","Concentration"],
+    mergeCells: [
+      {row: 1, col: 12, rowspan: 10, colspan: 1},
+      {row: 8, col: 0, rowspan: 1, colspan: 13}
+    ],
+    allowEmpty: true,
+    allowInsertRow:false,
+    maxCols:14,
+    maxRows:10,
+    allowInsertColumn: false,
+    cells: function (row, col, prop) {
+    var cellProperties = {};
+    var visualRowIndex = this.instance.toVisualRow(row);
+    var visualColIndex = this.instance.toVisualColumn(col);
+
+    if (visualRowIndex === 9 || visualColIndex === 13) {
+        if (visualRowIndex === 9 && visualColIndex === 13){
+        cellProperties.type = 'dropdown';
+        cellProperties.source = {{ concentration_units|tojson }};
+        cellProperties.strict = true
+
+    }
+
+    else {
+        cellProperties.editor = 'numeric';
+        cellProperties.validator = 'numeric';
+        cellProperties.type = 'numeric';
+
+        }
+
+
+
+    }
+    if (visualRowIndex === 8 || visualColIndex === 12 ) {
+        cellProperties.renderer = firstRowRenderer;
+        cellProperties.readOnly = true;
+
+
+
+    }
+
+
+
+    return cellProperties;
+}
+};
+
+var hot_ligand = new Handsontable(microwell_ligands,ligands_table_setup );
+var hot_analyt = new Handsontable(microwell_analyts,ligands_table_setup );
+function firstRowRenderer(instance, td, row, col, prop, value, cellProperties) { Handsontable.renderers.TextRenderer.apply(this, arguments); td.style.background = '#dcdcdc'; };
+
+$('#save_ligands').click( function(){
+        var data = hot_ligand.getData() ;
+        console.log(hot_ligand.getData());
+
+        $.ajax({
+            type:"POST",
+            data: JSON.stringify({"data_ligands": data }),
+            success: function (data) {
+                console.log("success"); // another sanity check
+            }
+        })
+}
+);
+
+$('#save_analyts').click( function(){
+        var data = hot_analyt.getData() ;
+        console.log(hot_analyt.getData());
+
+        $.ajax({
+            type:"POST",
+            data: JSON.stringify({"data_analyts": data }),
+            success: function (data) {
+                console.log("success"); // another sanity check
+            }
+        })
+}
+);
+
+var csrftoken = Cookies.get('csrftoken');
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+</script>
+<!--
+<script>
+
+var concentration_x_container = document.getElementById('concentration_x');
+var hot = new Handsontable(concentration_x_container, {
+  data: d_concentration_x,
+  rowHeaders: false,
+  colHeaders: false
+});
+
+var concentration_y_container = document.getElementById('concentration_y');
+var hot = new Handsontable(concentration_y_container, {
+  data: d_concentration_y,
+  rowHeaders: false,
+  colHeaders: false
+});
+</script>
+-->
+
+{% endblock %}
