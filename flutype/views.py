@@ -14,7 +14,7 @@ from .forms import PeptideForm, VirusForm, AntibodyForm, AntibodyBatchForm, \
     ScanningForm, IncubatingAnalytForm, RawDocForm, BufferForm, BufferBatchForm, GalFileForm
 from .models import RawSpotCollection, SpotCollection, Process, PeptideBatch, \
     Peptide, VirusBatch, Virus, AntibodyBatch, Antibody, Step, ProcessStep, Complex, ComplexBatch, Study, \
-    RawDoc , Buffer, BufferBatch
+    RawDoc , Buffer, BufferBatch, Ligand, UnitsType
 from django.forms import formset_factory, inlineformset_factory
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
@@ -129,6 +129,35 @@ def study_view(request,sid):
         }
 
     return render(request, 'flutype/study.html', context)
+
+@login_required
+def import_measurement_view(request,sid):
+    study = get_object_or_404(Study, sid=sid)
+    ligands_sid =  list(Ligand.objects.values_list("sid",flat=True).all())
+    concentration_units = UnitsType.labels.values()
+    print(concentration_units)
+    if request.method == 'POST':
+        json_data = json.loads(request.body)
+        print("ligands",json_data.get("data_ligands"))
+        print("analyts",json_data.get("data_analyts"))
+
+
+        return redirect(request.META['HTTP_REFERER'])
+
+    else:
+
+        collections = study.rawspotcollection_set.all()
+
+        context = {
+            'collections': collections,
+            'study': study,
+            'type': "measurement",
+            'ligands_sid':ligands_sid,
+            'concentration_units': concentration_units
+        }
+
+    return render(request, 'flutype/import_measurement.html', context)
+
 
 
 @login_required
