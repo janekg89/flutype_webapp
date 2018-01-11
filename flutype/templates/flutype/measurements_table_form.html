@@ -1,0 +1,30 @@
+{% import 'flutype/macros.html' as macros %}
+
+<table id={{ measurement_table_id }}
+        data-toggle="table"
+        class="table table-striped">
+    <thead>
+    <tr>
+        <th>sid</th>
+        <th>type</th>
+        <th>user</th>
+        <th>batch</th>
+        <th>functionalization</th>
+        <th>manufacturer</th>
+        <th>comment</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b> {{ mf.sid }}</b></td>
+            <td> {{ mf.measurement_type }}</td>
+            <!-- user -->
+            <td><b> {{ mf.user }}</b></td>
+            <td>{{ mf.batch_sid }}</td>
+            <td>{{ mf.functionalization }}</td>
+            <td>{{ mf.manufacturer }}</td>
+            <td>{{ mf.comment }}</td>
+        </tr>
+    </tbody>
+</table>
+

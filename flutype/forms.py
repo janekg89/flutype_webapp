@@ -10,7 +10,7 @@ from measurement.measures import Volume, Mass
 from .models import Peptide, PeptideBatch, Virus, VirusBatch, Antibody, AntibodyBatch, Complex, \
     ProcessStep, Step, Spotting, Washing, Drying, Quenching, Blocking, Scanning, Incubating, \
     Process, GalFile, Measurement, RawSpotCollection, RawSpot,SpotCollection, Spot, ComplexBatch, Study, \
-    IncubatingAnalyt, RawDoc, Buffer, BufferBatch, Concentration
+    IncubatingAnalyt, RawDoc, Buffer, BufferBatch, Concentration, MeasurementType
 from django_measurement.forms import MeasurementField
 from django.forms.utils import ErrorList
 
@@ -24,6 +24,28 @@ class OrderedModelMultipleChoiceField(forms.ModelMultipleChoiceField):
             order_by=('ordering',)
         )
 
+
+class MeasurementForm(forms.ModelForm):
+    #sid = forms.CharField(label='sid', widget=forms.TextInput(attrs={'placeholder': 'Sid', 'class':'form-control'}))
+    #batch_sid = forms.CharField(label='batch_sid', widget=forms.TextInput(attrs={'placeholder': 'Batch Sid','class':'form-control'}))
+    #measurement_type = forms.ChoiceField(label='measurement_type',widget=forms.Select(attrs={'class':'form-control'}),
+                                    #choices = MeasurementType.choices,)
+    #user = forms.ChoiceField(label='user', widget=forms.Select(attrs={'class': 'form-control'}),
+                                          #)
+
+    class Meta:
+        model = RawSpotCollection
+        fields = ["sid",'batch_sid','user','measurement_type','functionalization','manufacturer',"comment"]
+        widgets = {
+            'sid': forms.TextInput(attrs={'placeholder': 'Sid', 'class':'form-control'}),
+            'batch_sid': forms.TextInput(attrs={'placeholder': 'Batch Sid', 'class': 'form-control'}),
+            'measurement_type': forms.Select(attrs={'class':'form-control'}),
+            'user': forms.Select(attrs={'class':'form-control'}),
+            'manufacturer': forms.Select(attrs={'class': 'form-control'}),
+            'functionalization': forms.Select(attrs={'class': 'form-control'}),
+            'Comment': forms.Textarea(attrs={'class': 'form-control'}),
+
+        }
 
 class RawDocForm(forms.ModelForm):
     class Meta:

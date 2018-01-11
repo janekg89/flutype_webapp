@@ -2,9 +2,25 @@
 {% block content %}
     <!-- Main Content -->
      <div class="title1">
-        <h1><input type="text" placeholder="Measurement Type">  Measurement: <input type="text" placeholder="Measurement Sid"></h1>
+        <h1>Create New Measurement</h1>
     </div>
     <div class="a">
+     <span class="pull-right">
+                    <button type="button" id="submit_measurement" class="btn btn-default btn-success" name="update">check if input valid</button>
+     </span>
+
+    <div id="response_div"></div>
+
+        <form method="post" class="post-form" id="measurement_form">
+                {% with measurement_table_id = "measurement" %}
+                {% with mf =measurement_form %}
+                {% include "flutype/measurements_table_form.html" %}
+                {% endwith %}
+                {% endwith %}
+
+
+        </form>
+
 
     </div>
 
@@ -33,7 +49,7 @@
 
             <h3> Ligands </h3>
             <div class="text-right">
-            <button name="save_ligands" id="save_ligands" class="btn btn-default "> Save </button>
+            <button name="save_ligands" id="save_ligands" class="btn btn-default "> add Ligands </button>
             </div>
             <div id="microwell_plate_ligands"></div>
         </div>
@@ -42,15 +58,24 @@
         <div >
             <h3> Analyts </h3>
             <div class="text-right">
-            <button name="save_analyts" id="save_analyts" class="btn btn-default"> Save </button>
+            <button name="save_analyts" id="save_analyts" class="btn btn-default"> add Analyts </button>
             </div>
             <div id="microwell_plate_analyts"></div>
+        </div>
+
+        <div >
+            <h3> Intensities </h3>
+            <div class="text-right">
+            <button name="save_results" id="save_results" class="btn btn-default"> add Intensities </button>
+            </div>
+            <div id="microwell_plate_results"></div>
         </div>
 
 
     </div>
 {% endblock %}
 {% block javascript %}
+
 
 <script>
 var d_microwell_plate = [
@@ -68,12 +93,14 @@ var d_microwell_plate = [
 
 var microwell_analyts = document.getElementById('microwell_plate_analyts'),
     microwell_ligands = document.getElementById('microwell_plate_ligands'),
+    microwell_results = document.getElementById('microwell_plate_results'),
+
     ligands_sids = {{ ligands_sid|tojson }},
     ligands_table_setup = {
-  data: d_microwell_plate,
 
+  data: d_microwell_plate,
   colHeaders: ["A", "B", "C","D" ,"E", "F", "G","H" ,"I","J","K","L","","Concentration"],
-    columns: [
+  columns: [
        {
            data:"a",
         type: 'autocomplete',
@@ -185,9 +212,13 @@ var microwell_analyts = document.getElementById('microwell_plate_analyts'),
     }
 
     else {
-        cellProperties.editor = 'numeric';
+        //cellProperties.editor = 'numeric';
         cellProperties.validator = 'numeric';
-        cellProperties.type = 'numeric';
+        //cellProperties.type = 'numeric';
+        //cellProperties.roundFloat = 2;
+        //cellProperties.format = '0.00';
+
+
 
         }
 
@@ -210,6 +241,25 @@ var microwell_analyts = document.getElementById('microwell_plate_analyts'),
 
 var hot_ligand = new Handsontable(microwell_ligands,ligands_table_setup );
 var hot_analyt = new Handsontable(microwell_analyts,ligands_table_setup );
+var hot_result = new Handsontable(microwell_results,{
+        data:[[]],
+        minRows: 8,
+        minCols: 12,
+        rowHeaders: ["1", "2", "3","4" ,"5", "6", "7","8"],
+        colHeaders: ["A", "B", "C","D" ,"E", "F", "G","H" ,"I","J","K","L"],
+        cells: function (row, col, prop) {
+            var cellProperties = {};
+            var visualRowIndex = this.instance.toVisualRow(row);
+            var visualColIndex = this.instance.toVisualColumn(col);
+            cellProperties.editor = 'numeric';
+            cellProperties.validator = 'numeric';
+            //cellProperties.type = 'numeric';
+            return cellProperties;
+
+        }
+
+} );
+
 function firstRowRenderer(instance, td, row, col, prop, value, cellProperties) { Handsontable.renderers.TextRenderer.apply(this, arguments); td.style.background = '#dcdcdc'; };
 
 $('#save_ligands').click( function(){
@@ -240,6 +290,20 @@ $('#save_analyts').click( function(){
 }
 );
 
+$('#save_results').click( function(){
+        var data = hot_result.getData() ;
+        console.log(hot_result.getData());
+
+        $.ajax({
+            type:"POST",
+            data: JSON.stringify({"data_results": data }),
+            success: function (data) {
+                console.log("success"); // another sanity check
+            }
+        })
+}
+);
+
 var csrftoken = Cookies.get('csrftoken');
 
 function csrfSafeMethod(method) {
@@ -253,24 +317,44 @@ $.ajaxSetup({
         }
     }
 });
-</script>
-<!--
-<script>
 
-var concentration_x_container = document.getElementById('concentration_x');
-var hot = new Handsontable(concentration_x_container, {
-  data: d_concentration_x,
-  rowHeaders: false,
-  colHeaders: false
-});
+function submit_form(){
+        var frm = $('#measurement_form');
+        console.log(frm.val());
+        $.ajax({
+            type: frm.attr('method'),
+            url: frm.attr('action'),
+            data: frm.serializeJSON(),
+            success: function (data) {
 
-var concentration_y_container = document.getElementById('concentration_y');
-var hot = new Handsontable(concentration_y_container, {
-  data: d_concentration_y,
-  rowHeaders: false,
-  colHeaders: false
-});
+                // if data is not valid
+                if(data.is_error){
+                    var html;
+                    for (var error in data.errors){
+                        html += "<div class='alert alert-danger' data-alert>"+error+":"+data.errors[error]+"</div>"
+                    }
+                    $("#response_div").html(html)
+
+                }
+                // if data valid
+                else{
+                    html = "<div class='alert alert-success' data-alert> Your input is valid</div>"
+                $("#response_div").html(html); // another sanity check
+            }},
+
+            error: function(data) {
+                console.log(data.status + ": " + data.responseText);
+            }
+        });
+        return false;
+    }
+
+$(document).on('click','#submit_measurement',function(){
+        var frm = $('#measurement_form');
+        frm.submit(submit_form());
+    });
+
+
 </script>
--->
 
 {% endblock %}
