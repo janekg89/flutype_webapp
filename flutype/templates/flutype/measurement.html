@@ -11,14 +11,13 @@
     <div class="title1">
         <h1>{{ macros.measurement_type(collection.measurement_type) }} Measurement: {{ collection.sid }}</h1>
     </div>
-    <div class="a">
-        {% with collections = [collection] %}
+    <div class="a form-group">
+        {% with collection_number = [collection] %}
         {% with measurement_table_id = "measurement" %}
 
         {% include "flutype/measurements_table.html" %}
         {% endwith %}
         {% endwith %}
-
     </div>
 
     <div class="filebox">
