@@ -6,12 +6,12 @@ import os
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth.models import User
-
+from django.http import JsonResponse
 from .helper import generate_tree, tar_tree, empty_list
 from .forms import PeptideForm, VirusForm, AntibodyForm, AntibodyBatchForm, \
     PeptideBatchForm, VirusBatchForm, ProcessStepForm, ComplexBatchForm, ComplexForm, StudyForm, \
     WashingForm,DryingForm,SpottingForm, QuenchingForm,BlockingForm,IncubatingForm, \
-    ScanningForm, IncubatingAnalytForm, RawDocForm, BufferForm, BufferBatchForm, GalFileForm
+    ScanningForm, IncubatingAnalytForm, RawDocForm, BufferForm, BufferBatchForm, GalFileForm, MeasurementForm
 from .models import RawSpotCollection, SpotCollection, Process, PeptideBatch, \
     Peptide, VirusBatch, Virus, AntibodyBatch, Antibody, Step, ProcessStep, Complex, ComplexBatch, Study, \
     RawDoc , Buffer, BufferBatch, Ligand, UnitsType
@@ -135,14 +135,27 @@ def import_measurement_view(request,sid):
     study = get_object_or_404(Study, sid=sid)
     ligands_sid =  list(Ligand.objects.values_list("sid",flat=True).all())
     concentration_units = UnitsType.labels.values()
-    print(concentration_units)
+    measurement_form = MeasurementForm()
     if request.method == 'POST':
-        json_data = json.loads(request.body)
-        print("ligands",json_data.get("data_ligands"))
-        print("analyts",json_data.get("data_analyts"))
+        print(request.POST)
+        if "measurement_type" in request.POST:
+            measurement_form = MeasurementForm(request.POST)
+            if measurement_form.errors:
+                response = {"errors":measurement_form.errors, "is_error": True}
+                return JsonResponse(response)
 
 
-        return redirect(request.META['HTTP_REFERER'])
+        else:
+            json_data = json.loads(request.body)
+
+            if bool(json_data.get("data_ligands")):
+                print("ligands",json_data.get("data_ligands"))
+            elif bool(json_data.get("data_analyts")):
+                print("analyts",json_data.get("data_analyts"))
+            elif bool(json_data.get("data_results")):
+                print("results",json_data.get("data_results"))
+
+        return JsonResponse({"is_error": False})
 
     else:
 
@@ -153,7 +166,9 @@ def import_measurement_view(request,sid):
             'study': study,
             'type': "measurement",
             'ligands_sid':ligands_sid,
-            'concentration_units': concentration_units
+            'concentration_units': concentration_units,
+            'measurement_form':measurement_form
+
         }
 
     return render(request, 'flutype/import_measurement.html', context)
