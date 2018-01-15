@@ -255,7 +255,7 @@ def read_gal_file(fpath):
 
     except:
         this_gal = pd.read_csv(fpath, sep='\t', index_col = 0,  dtype=str)
-        this_gal = raws_and_cols_to_gal_file(this_gal)
+        this_gal = rows_and_cols_to_gal_file(this_gal)
         this_gal.replace([np.NaN], [None], inplace=True)
 
     return this_gal
@@ -277,7 +277,7 @@ def gal_file_to_rows_and_cols(this_gal):
     pass
 
 
-def raws_and_cols_to_gal_file(this_gal):
+def rows_and_cols_to_gal_file(this_gal):
     this_gal = this_gal.stack()
     id = range(1, 1 + len(this_gal.values))
     data = {"ID":id ,

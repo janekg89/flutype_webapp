@@ -1,0 +1,436 @@
+{% extends "flutype/base.html" %}
+{% block content %}
+ <div class="standard">
+<div class="stepwizard col-md-offset-3">
+    <div class="stepwizard-row setup-panel">
+        <div class="stepwizard-step">
+            <a href="#step-1" type="button" class="btn btn-primary btn-circle">1</a>
+            <p>Measurement</p>
+        </div>
+        <div class="stepwizard-step">
+            <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled">2</a>
+            <p>Ligands </p>
+        </div>
+        <div class="stepwizard-step">
+            <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled">3</a>
+            <p>Analyts </p>
+        </div>
+        <div class="stepwizard-step">
+            <a href="#step-4" type="button" class="btn btn-default btn-circle" disabled="disabled">4</a>
+            <p>Intensities </p>
+        </div>
+    </div>
+</div>
+
+  <form role="form" action="" method="post">
+    <div class="row setup-content" id="step-1">
+      <div class="col-xs-6 col-md-offset-3">
+        <div class="col-md-12">
+          <h3> Measurement</h3>
+          {% with mf =measurement_form %}
+                <div class="form-group">
+                    <label class="control-label">Sid</label>
+                    {{ mf.sid }}
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Batch Sid</label>
+                    {{ mf.batch_sid }}
+                </div>
+              <div class="form-group">
+                    <label class="control-label"> User </label>
+                    {{ mf.user }}
+              </div>
+
+              <div class="form-group">
+                    <label class="control-label"> Measurement Type </label>
+                    {{ mf.measurement_type }}
+              </div>
+
+              <div class="form-group">
+                    <label class="control-label"> Functionalization </label>
+                    {{ mf.functionalization }}
+              </div>
+
+              <div class="form-group">
+                    <label class="control-label"> Manufacturer </label>
+                    {{ mf.manufacturer }}
+              </div>
+
+               <div class="form-group">
+                    <label class="control-label"> Comment </label>
+                    <div >{{ mf.comment }} </div>
+              </div>
+          {% endwith %}
+          <button class="btn btn-primary nextBtn btn-lg pull-right" id="submit_measurement" type="button">Next</button>
+        </div>
+      </div>
+    </div>
+    <div class="row setup-content" id="step-2">
+      <div class="col-xs-6 col-md-offset-3">
+        <div class="col-md-12">
+          <h3> Ligands</h3>
+          <div class="form-group">
+              <div id="microwell_plate_ligands"></div>
+          </div>
+          <button class="btn btn-primary prevBtn btn-lg pull-left" type="button">Previous</button>
+          <button class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
+        </div>
+      </div>
+    </div>
+    <div class="row setup-content" id="step-3">
+      <div class="col-xs-6 col-md-offset-3">
+        <div class="col-md-12">
+          <h3> Analyts</h3>
+          <div id="microwell_plate_analyts"></div>
+          <button class="btn btn-primary prevBtn btn-lg pull-left" type="button">Previous</button>
+          <button class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row setup-content" id="step-4">
+      <div class="col-xs-6 col-md-offset-3">
+        <div class="col-md-12">
+          <h3> Results</h3>
+          <div id="microwell_plate_results"></div>
+          <button class="btn btn-primary prevBtn btn-lg pull-left" type="button">Previous</button>
+          <button class="btn btn-success btn-lg pull-right submitBtn" type="button">Submit</button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+</div>
+{% endblock %}
+{% block javascript %}
+
+<script>
+$(document).ready(function () {
+    var comment = document.getElementById('id_comment');
+    comment.setAttribute("class", "form-control");
+
+  var navListItems = $('div.setup-panel div a'),
+      allWells = $('.setup-content'),
+      allNextBtn = $('.nextBtn'),
+      allPrevBtn = $('.prevBtn'),
+      submitBtn = $('.submitBtn');
+
+
+  allWells.hide();
+
+  navListItems.click(function (e) {
+      e.preventDefault();
+      var $target = $($(this).attr('href')),
+              $item = $(this);
+
+      if (!$item.hasClass('disabled')) {
+          navListItems.removeClass('btn-primary').addClass('btn-default');
+          $item.addClass('btn-primary');
+          allWells.hide();
+          $target.show();
+          $target.find('input:eq(0)').focus();
+      }
+  });
+
+  allPrevBtn.click(function(){
+      var curStep = $(this).closest(".setup-content"),
+          curStepBtn = curStep.attr("id"),
+          prevStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().prev().children("a");
+          prevStepWizard.removeAttr('disabled').trigger('click');
+  });
+
+  allNextBtn.click(function(){
+      var curStep = $(this).closest(".setup-content"),
+          curStepBtn = curStep.attr("id"),
+          nextStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().next().children("a"),
+          ///////////////////////////////////
+          // for Measurement step
+
+          curInputs = curStep.find("#id_sid," +
+              "#id_batch_sid,#id_user," +
+              "#id_functionalization," +
+              "#id_manufacturer," +
+              "#id_comment," +
+              "#id_measurement_type");
+      $(".form-group").removeClass("has-error");
+      $(".help-block").remove();
+      if (curInputs.length){
+                validateData(curInputs.serializeJSON(),nextStepWizard);
+      }
+      ///////////////////////////////////////////
+      // for Ligands
+      else{
+          nextStepWizard.trigger('click');
+      }
+
+  });
+  submitBtn.click(function(){
+                curInputs = $("#id_sid," +
+              "#id_batch_sid,#id_user," +
+              "#id_functionalization," +
+              "#id_manufacturer," +
+              "#id_comment," +
+              "#id_measurement_type");
+      var data = {
+          "measurement":curInputs.serializeJSON(),
+          "ligands": hot_ligand.getData(),
+          "analyts" : hot_analyt.getData(),
+          "intensities" : hot_result.getData()};
+      data = JSON.stringify(data);
+      validateData(data,"submit");
+   });
+
+  $('div.setup-panel div a.btn-primary').trigger('click');
+});
+
+var csrftoken = Cookies.get('csrftoken');
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+function validateData(curInputs_serialized, nextStepWizard){
+        return $.ajax({
+            type: 'POST',
+            data:curInputs_serialized,
+            success: function (data) {
+                // if data is not valid
+                if (data.is_error) {
+                    for (var error in data.errors){
+                        var errorInput = $('#id_'+error);
+                        errorInput.closest(".form-group").addClass("has-error");
+                        errorInput.closest(".form-group").append('<span class="help-block">'+data.errors[error]+'</span>')
+                    }
+                    return false
+                }
+                else{
+                    if (nextStepWizard == "submit"){
+
+                    }
+                    else{
+                        nextStepWizard.removeAttr('disabled').trigger('click');
+                    }
+                }},
+
+            error: function(data) {
+                console.log(data.status + ": " + data.responseText);
+                return false
+            }
+
+        });
+    }
+
+</script>
+<script>
+    var d_microwell_plate = [
+      ["", "", "","" ," ", "", "","" ,"","","","","",""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""]
+    ];
+    var d_microwell_plate_2 = [
+      ["", "", "","" ," ", "", "","" ,"","","","","",""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""]
+    ];
+
+    var microwell_analyts = document.getElementById('microwell_plate_analyts'),
+        microwell_ligands = document.getElementById('microwell_plate_ligands'),
+        microwell_results = document.getElementById('microwell_plate_results'),
+
+        ligands_sids = {{ ligands_sid|tojson }},
+        ligands_table_setup = function(setup_data){
+            return{
+      data: JSON.parse(JSON.stringify(setup_data)),
+      colHeaders: ["A", "B", "C","D" ,"E", "F", "G","H" ,"I","J","K","L","","Concentration"],
+      columns: [
+           {
+               data:"a",
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+            {
+                data:"b",
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+            {
+                data:"c",
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+            {
+                data:"d",
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+            {
+                data:"e",
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+            {
+                data:"f",
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+              {
+                  data:"g",
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+              {
+                  data:"h",
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+              {
+                  data:"i",
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+              {
+                  data:"j",
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+              {
+                  data:"k",
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+            {
+                data:"l",
+
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+              {     data:"",
+                  readOnly: true
+
+          },
+              {
+                data:"concentration",
+                editor: 'numeric',
+                validator: 'numeric'
+
+          }
+
+
+        ],
+
+      rowHeaders: ["1", "2", "3","4" ,"5", "6", "7","8" ,"","Concentration"],
+        mergeCells: [
+          {row: 1, col: 12, rowspan: 10, colspan: 1},
+          {row: 8, col: 0, rowspan: 1, colspan: 13}
+        ],
+        allowEmpty: true,
+        allowInsertRow:false,
+        maxCols:14,
+        maxRows:10,
+        allowInsertColumn: false,
+        afterChange: function () {
+      var tmpData = JSON.parse(JSON.stringify(d_microwell_plate));
+      // now tmpData has a copy of data3 that can be manipulated
+      // without breaking the Handsontable data source object
+    },
+        cells: function (row, col, prop) {
+        var cellProperties = {};
+        var visualRowIndex = this.instance.toVisualRow(row);
+        var visualColIndex = this.instance.toVisualColumn(col);
+
+        if (visualRowIndex === 9 || visualColIndex === 13) {
+            if (visualRowIndex === 9 && visualColIndex === 13){
+            cellProperties.type = 'dropdown';
+            cellProperties.source = {{ concentration_units|tojson }};
+            cellProperties.strict = true
+
+        }
+
+        else {
+            //cellProperties.editor = 'numeric';
+            cellProperties.validator = 'numeric';
+            //cellProperties.type = 'numeric';
+            //cellProperties.roundFloat = 2;
+            //cellProperties.format = '0.00';
+
+
+
+            }
+
+
+
+        }
+        if (visualRowIndex === 8 || visualColIndex === 12 ) {
+            cellProperties.renderer = firstRowRenderer;
+            cellProperties.readOnly = true;
+
+
+
+        }
+
+
+
+        return cellProperties;
+    },
+    afterValidate: function(isValid, value, row, prop){
+    console.log(isValid);
+    }
+    };};
+    var hot_ligand = new Handsontable(microwell_ligands,ligands_table_setup(d_microwell_plate) );
+    var hot_analyt = new Handsontable(microwell_analyts,ligands_table_setup(d_microwell_plate_2) );
+    var hot_result = new Handsontable(microwell_results,{
+            data:[[]],
+            minRows: 8,
+            minCols: 12,
+            rowHeaders: ["1", "2", "3","4" ,"5", "6", "7","8"],
+            colHeaders: ["A", "B", "C","D" ,"E", "F", "G","H" ,"I","J","K","L"],
+            cells: function (row, col, prop) {
+                var cellProperties = {};
+                var visualRowIndex = this.instance.toVisualRow(row);
+                var visualColIndex = this.instance.toVisualColumn(col);
+                cellProperties.editor = 'numeric';
+                cellProperties.validator = 'numeric';
+                //cellProperties.type = 'numeric';
+                return cellProperties;
+
+            }
+
+    } );
+
+    function firstRowRenderer(instance, td, row, col, prop, value, cellProperties) { Handsontable.renderers.TextRenderer.apply(this, arguments); td.style.background = '#dcdcdc'; };
+</script>
+{% endblock %}
