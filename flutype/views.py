@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from .helper import generate_tree, tar_tree, empty_list
+from .helper import generate_tree, tar_tree, empty_list,rows_and_cols_to_gal_file
 from .forms import PeptideForm, VirusForm, AntibodyForm, AntibodyBatchForm, \
     PeptideBatchForm, VirusBatchForm, ProcessStepForm, ComplexBatchForm, ComplexForm, StudyForm, \
     WashingForm,DryingForm,SpottingForm, QuenchingForm,BlockingForm,IncubatingForm, \
@@ -24,7 +24,9 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.utils.timezone import localtime, now
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-
+import pandas as pd
+import numpy as np
+from pprint import pprint
 from django.db.models import Max
 import json
 from flutype import __version__
@@ -137,23 +139,38 @@ def import_measurement_view(request,sid):
     concentration_units = UnitsType.labels.values()
     measurement_form = MeasurementForm()
     if request.method == 'POST':
-        print(request.POST)
-        if "measurement_type" in request.POST:
+        if "measurement_type" in request.POST and not "ligands" in request.POST:
             measurement_form = MeasurementForm(request.POST)
             if measurement_form.errors:
                 response = {"errors":measurement_form.errors, "is_error": True}
                 return JsonResponse(response)
 
-
         else:
             json_data = json.loads(request.body)
+            data_ligands = json_data.get("ligands")
+            data_ligands = pd.DataFrame(data_ligands, columns=range(1, 15))
+            lig_fix = rows_and_cols_to_gal_file(data_ligands.loc[:'8',:'L'])
+            lig_fix.rename(columns={"Name": "lig_fix"} ,inplace=True)
+            data_analyts = json_data.get("analyts")
+            data_analyts = pd.DataFrame(data_analyts, columns=range(1, 15))
+            lig_mob = rows_and_cols_to_gal_file(data_analyts.loc[:'8',:'L'])
+            lig_mob.rename(columns={"Name": "lig_mob"},inplace=True)
 
-            if bool(json_data.get("data_ligands")):
-                print("ligands",json_data.get("data_ligands"))
-            elif bool(json_data.get("data_analyts")):
-                print("analyts",json_data.get("data_analyts"))
-            elif bool(json_data.get("data_results")):
-                print("results",json_data.get("data_results"))
+            data_results = json_data.get("intensities")
+            data_results = pd.DataFrame(data_results, columns=range(1, 13))
+
+            intensities = rows_and_cols_to_gal_file(data_results)
+            intensities = intensities.rename(columns={"Name": "intensities"})
+
+            spots = pd.merge(lig_fix, lig_mob, how='outer',  on=['Row', 'Column'])
+            spots = pd.merge( spots, intensities, how='outer', on=['Row', 'Column'])
+            spots.rename(columns={"Row": "row","Column":"column"},inplace=True)
+            pprint(spots)
+
+
+
+
+
 
         return JsonResponse({"is_error": False})
 
@@ -171,7 +188,7 @@ def import_measurement_view(request,sid):
 
         }
 
-    return render(request, 'flutype/import_measurement.html', context)
+    return render(request, 'flutype/import_measurement2.html', context)
 
 
 
