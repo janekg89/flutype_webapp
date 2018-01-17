@@ -155,14 +155,14 @@ def import_measurement_view(request,sid):
             ligand_batches = auto_get_or_create_ligand_batches(data_ligands)
 
             fix_gal_file = ligand_batches[['Row', 'Column', 'sid']]
-            #fix_gal_file["Block"] = 1
+            fix_gal_file["Block"] = 1
             fix_gal_file.rename(columns={"sid": "Name"}, inplace=True)
             fix_gal_file.index.names = ['ID']
 
             data_analyts = json_data.get("analyts")
             analyt_batches = auto_get_or_create_ligand_batches(data_analyts)
             mob_gal_file = analyt_batches[['Row', 'Column', 'sid']]
-            #mob_gal_file["Block"] = 1
+            mob_gal_file["Block"] = 1
             mob_gal_file.rename(columns={"sid": "Name"}, inplace=True)
             mob_gal_file.index.names = ['ID']
 
