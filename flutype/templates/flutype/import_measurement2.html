@@ -345,7 +345,7 @@ function validateData(curInputs_serialized, nextStepWizard){
               {
                 data:"concentration",
                 editor: 'numeric',
-                validator: 'numeric'
+                validator: 'numeric',
 
           }
 
@@ -377,29 +377,19 @@ function validateData(curInputs_serialized, nextStepWizard){
             cellProperties.type = 'dropdown';
             cellProperties.source = {{ concentration_units|tojson }};
             cellProperties.strict = true
-
         }
 
         else {
             //cellProperties.editor = 'numeric';
             cellProperties.validator = 'numeric';
-            //cellProperties.type = 'numeric';
+            cellProperties.type = 'text';
             //cellProperties.roundFloat = 2;
-            //cellProperties.format = '0.00';
-
-
-
             }
-
-
 
         }
         if (visualRowIndex === 8 || visualColIndex === 12 ) {
             cellProperties.renderer = firstRowRenderer;
             cellProperties.readOnly = true;
-
-
-
         }
 
 
@@ -414,8 +404,10 @@ function validateData(curInputs_serialized, nextStepWizard){
     var hot_analyt = new Handsontable(microwell_analyts,ligands_table_setup(d_microwell_plate_2) );
     var hot_result = new Handsontable(microwell_results,{
             data:[[]],
-            minRows: 8,
-            minCols: 12,
+            minRows:8,
+            minCols:12,
+            maxCols:12,
+            maxRows:8,
             rowHeaders: ["1", "2", "3","4" ,"5", "6", "7","8"],
             colHeaders: ["A", "B", "C","D" ,"E", "F", "G","H" ,"I","J","K","L"],
             cells: function (row, col, prop) {

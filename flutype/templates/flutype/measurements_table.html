@@ -36,10 +36,12 @@
                 </td>
                 <!-- user -->
                 <td>
+                {% if c.process %}
                 {% if c.process.users() %}
                     {% for user in c.process.users() %}
                     {{ macros.user(user) }}
                     {% endfor %}
+                {% endif %}
                 {% endif %}
                 </td>
                 <td>{{ c.batch_sid }}</td>
@@ -67,10 +69,17 @@
                         {% endif %}
                     {% endfor %}
                 </td>
-                <td><a href="{{ c.lig_mob.file.url }}" target="_blank" title="{{ c.lig_mob.file.url }}">
-                    <i class="fa fa-fw fa-file"></i></a></td>
-                <td><a href="{{ c.lig_fix.file.url }}" target="_blank" title="{{ c.lig_mob.file.url }}">
-                    <i class="fa fa-fw fa-file"></i></a></td>
+                <td> {% if c.lig_mob %}
+                    <a href="{{ c.lig_mob.file.url }}" target="_blank" title="{{ c.lig_mob.file.url }}">
+                    <i class="fa fa-fw fa-file"></i></a>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if c.lig_fix %}
+                    <a href="{{ c.lig_fix.file.url }}" target="_blank" title="{{ c.lig_mob.file.url }}">
+                    <i class="fa fa-fw fa-file"></i></a>
+                    {% endif %}
+                </td>
 
                 <!-- process -->
                 <td>
