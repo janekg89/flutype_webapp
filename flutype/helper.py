@@ -67,8 +67,8 @@ def outer_product(df1, df2):
     #return rows
     #return np.dot(df1.values().T,df2.values())
     print(df1.values)
-    x = map(float,df1.values)
-    y = map(float,df2.values)
+    x = list(map(float,df1.values))
+    y = list(map(float,df2.values))
     return np.outer(y,x)
 
 

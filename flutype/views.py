@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 import os
-
+import sys
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth.models import User
@@ -139,7 +139,7 @@ def study_view(request,sid):
 def import_measurement_view(request,sid):
     study = get_object_or_404(Study, sid=sid)
     ligands_sid =  list(Ligand.objects.values_list("sid",flat=True).all())
-    concentration_units = UnitsType.labels.values()
+    concentration_units = list(UnitsType.labels.values())
     measurement_form = MeasurementForm()
     if request.method == 'POST':
         if "measurement_type" in request.POST and not "ligands" in request.POST:
@@ -149,7 +149,12 @@ def import_measurement_view(request,sid):
                 return JsonResponse(response)
 
         else:
-            json_data = json.loads(request.body)
+            python_version = sys.version_info.major
+            if python_version == 3:
+                body_unicode = request.body.decode('utf-8')
+            else:
+                body_unicode = request.body
+            json_data = json.loads(body_unicode)
             #ligands related data
             data_ligands = json_data.get("ligands")
             ligand_batches = auto_get_or_create_ligand_batches(data_ligands)
