@@ -7,14 +7,15 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from .helper import generate_tree, tar_tree, empty_list,rows_and_cols_to_gal_file
+from .helper import generate_tree, tar_tree, empty_list,rows_and_cols_to_gal_file, auto_get_or_create_ligand_batches, \
+    get_or_create_galfile
 from .forms import PeptideForm, VirusForm, AntibodyForm, AntibodyBatchForm, \
     PeptideBatchForm, VirusBatchForm, ProcessStepForm, ComplexBatchForm, ComplexForm, StudyForm, \
     WashingForm,DryingForm,SpottingForm, QuenchingForm,BlockingForm,IncubatingForm, \
     ScanningForm, IncubatingAnalytForm, RawDocForm, BufferForm, BufferBatchForm, GalFileForm, MeasurementForm
 from .models import RawSpotCollection, SpotCollection, Process, PeptideBatch, \
     Peptide, VirusBatch, Virus, AntibodyBatch, Antibody, Step, ProcessStep, Complex, ComplexBatch, Study, \
-    RawDoc , Buffer, BufferBatch, Ligand, UnitsType
+    RawDoc , Buffer, BufferBatch, Ligand, UnitsType, LigandBatch, GalFile
 from django.forms import formset_factory, inlineformset_factory
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
@@ -22,6 +23,8 @@ from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.utils.timezone import localtime, now
+from tempfile import NamedTemporaryFile
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 import pandas as pd
@@ -147,27 +150,46 @@ def import_measurement_view(request,sid):
 
         else:
             json_data = json.loads(request.body)
+            #ligands related data
             data_ligands = json_data.get("ligands")
-            data_ligands = pd.DataFrame(data_ligands, columns=range(1, 15))
-            lig_fix = rows_and_cols_to_gal_file(data_ligands.loc[:'8',:'L'])
-            lig_fix.rename(columns={"Name": "lig_fix"} ,inplace=True)
+            ligand_batches = auto_get_or_create_ligand_batches(data_ligands)
+
+            fix_gal_file = ligand_batches[['Row', 'Column', 'sid']]
+            #fix_gal_file["Block"] = 1
+            fix_gal_file.rename(columns={"sid": "Name"}, inplace=True)
+            fix_gal_file.index.names = ['ID']
+
             data_analyts = json_data.get("analyts")
-            data_analyts = pd.DataFrame(data_analyts, columns=range(1, 15))
-            lig_mob = rows_and_cols_to_gal_file(data_analyts.loc[:'8',:'L'])
-            lig_mob.rename(columns={"Name": "lig_mob"},inplace=True)
+            analyt_batches = auto_get_or_create_ligand_batches(data_analyts)
+            mob_gal_file = analyt_batches[['Row', 'Column', 'sid']]
+            #mob_gal_file["Block"] = 1
+            mob_gal_file.rename(columns={"sid": "Name"}, inplace=True)
+            mob_gal_file.index.names = ['ID']
 
             data_results = json_data.get("intensities")
-            data_results = pd.DataFrame(data_results, columns=range(1, 13))
+            data_results = pd.DataFrame(data_results, columns=range(1, 13), index=range(1, 9))
 
-            intensities = rows_and_cols_to_gal_file(data_results)
-            intensities = intensities.rename(columns={"Name": "intensities"})
+            raw_spot_collection_dict = json_data.get("measurement")
+            raw_spot_collection_dict["user"] = User.objects.get(pk=raw_spot_collection_dict["user"])
+            with NamedTemporaryFile() as temp_intensities:
+                data_results.to_csv(temp_intensities.name, sep=str('\t'), index="True", encoding='utf-8')
+                results_dic= {"raw":{"meta":{"sid":"raw"},"intensities":temp_intensities.name}}
+                with NamedTemporaryFile() as temp_lig_fix:
+                    fix_gal_file.to_csv(temp_lig_fix.name, sep=str('\t'), index="True", encoding='utf-8')
+                    with NamedTemporaryFile() as temp_lig_mob:
+                        mob_gal_file.to_csv(temp_lig_mob.name, sep=str('\t'), index="True", encoding='utf-8')
+                        #rawspotcollection #fixme: no process data, no raw_docs
+                        rsc,_ = RawSpotCollection.objects.get_or_create(results=results_dic,
+                                                                        lig_mob_path=temp_lig_mob.name,
+                                                                        lig_fix_path=temp_lig_fix.name,
+                                                                        meta = raw_spot_collection_dict,
+                                                                        study=study)
 
-            spots = pd.merge(lig_fix, lig_mob, how='outer',  on=['Row', 'Column'])
-            spots = pd.merge( spots, intensities, how='outer', on=['Row', 'Column'])
-            spots.rename(columns={"Row": "row","Column":"column"},inplace=True)
-            pprint(spots)
 
-
+            #spot related operations #fixme add in frontend validations of intensities, that a rawspot has to exisit before creating a spot !
+            #intensity related data
+            data_results = json_data.get("intensities")
+            data_results = pd.DataFrame(data_results, columns=range(1, 13),index=range(1, 9))
 
 
 

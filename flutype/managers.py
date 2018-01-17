@@ -171,10 +171,6 @@ class MeasurementManager(models.Manager):
                 except:
                     pass
 
-
-
-
-
         if "steps_path" in kwargs:
             if kwargs["steps_path"]!= None:
                 kwargs["raw_spot_collection"]= this_measurement
