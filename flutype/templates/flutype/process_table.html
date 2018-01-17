@@ -1,5 +1,5 @@
 {% import 'flutype/macros.html' as macros %}
-
+{% if process %}
 {% if process.is_step_in_process() %}
 <table id="process"
         data-toggle="table"
@@ -74,4 +74,7 @@
 </table>
 {% else %}
     No process steps exist for process:{{ process.sid }}.
+{% endif %}
+{% else %}
+    No process .
 {% endif %}

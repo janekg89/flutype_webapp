@@ -6,18 +6,71 @@ from django.contrib.auth.models import User
 from django_pandas.io import read_frame
 import os
 import hashlib
-import pandas as pd
 from django.apps import apps
-import numpy as np
 import datetime
 import re
 import tempfile
 import sys
 import io
+import numpy as np
+import pandas as pd
+
+
+
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 CHAR_MAX_LENGTH = 100
+def auto_get_or_create_ligand_batches(browser_input):
+    data_ligands = pd.DataFrame(browser_input, columns=range(1, 15), index=range(1, 11))
+
+    ligand = rows_and_cols_to_gal_file(data_ligands.loc[:8, :12])
+    ligand["Name"].replace('', np.nan, inplace=True)
+    ligand.dropna(subset=['Name'], inplace=True)
+
+    ligand_concentration_y = data_ligands.loc[:8, 14]
+    ligand_concentration_y = ligand_concentration_y.replace([None,""], "1")
+
+    ligand_concentration_x = data_ligands.loc[10, :12]
+    ligand_concentration_x = ligand_concentration_x.replace([None,""], "1")
+
+    c = outer_product(ligand_concentration_x, ligand_concentration_y)
+    ligand_concentration = rows_and_cols_to_gal_file(pd.DataFrame(c, columns=range(1, 13), index=range(1, 9)))
+    ligand_concentration.rename(columns={"Name": "concentration"}, inplace=True)
+
+    ligand.rename(columns={"Name": "ligand"}, inplace=True)
+    ligand_batches = pd.merge(ligand, ligand_concentration, how='left', on=['Row', 'Column'])
+
+    ligand_batches["sid"] = "*" + ligand_batches["ligand"] + "-" + ligand_batches["concentration"] + "*"
+    Ligand = apps.get_model("flutype", model_name="Ligand")
+    ligands = [Ligand.objects.get(sid=ligand) for ligand in ligand_batches["ligand"].values]
+    ligand_batches["ligand"] = ligands
+    classes = [ligand.__class__.__name__ + "Batch" for ligand in ligands]
+
+    ligand_batches["class"] = classes
+    ligand_batches["ligand_batch"] = ""
+    for index, ligandbatch in ligand_batches.iterrows():
+        model = apps.get_model("flutype", model_name=ligandbatch["class"])
+        instance,_ = model.objects.get_or_create(sid=ligandbatch["sid"], concentration=ligandbatch["concentration"],
+                                    ligand=ligandbatch["ligand"], comment="auto generated")
+        ligandbatch["ligand_batch"] = instance
+
+    return ligand_batches
+
+
+def outer_product(df1, df2):
+    #rows = itertools.product(df1.values(), df2.values())
+
+    #df = pd.DataFrame(left.append(right) for (_, left), (_, right) in rows)
+    #return df.reset_index(drop=True)
+    #return rows
+    #return np.dot(df1.values().T,df2.values())
+    print(df1.values)
+    x = map(float,df1.values)
+    y = map(float,df2.values)
+    return np.outer(y,x)
+
 
 def empty_list(max):
     list = []
@@ -187,9 +240,17 @@ def get_or_create_raw_spots(**kwargs):
     RawSpot = apps.get_model("flutype","RawSpot")
     lig_mob = read_gal_file(kwargs["lig_mob_path"])
     lig_fix = read_gal_file(kwargs["lig_fix_path"])
-    spots = pd.DataFrame(lig_fix[["Name","Row","Column"]], columns=["Name","Row","Column"])
-    spots = spots.rename(columns={"Name":"lig_fix_batch", "Row":"row","Column":"column"})
-    spots["lig_mob_batch"]= lig_mob["Name"].values
+    lig_fix.rename(columns={"Name":"lig_fix_batch"}, inplace=True)
+
+
+    spots = pd.merge(lig_fix,lig_mob,how='outer',on=['Row', 'Column'])
+    spots.replace([np.NaN], [None], inplace=True)
+
+    spots.rename(columns={"Name":"lig_mob_batch", "Row":"row","Column":"column"}, inplace=True)
+    print(spots)
+    #spots["lig_mob_batch"]= lig_mob["Name"].values
+
+
     spots["raw_spot_collection"]=kwargs["raw_spot_collection"]
     for k, spot in spots.iterrows():
         raw_spot, created = RawSpot.objects.get_or_create(**spot)
@@ -243,6 +304,15 @@ def get_unique_galfile(type, **kwargs):
             return gal_file, max_name
 
     return None, max_name
+
+def get_or_create_galfile(ligand_batches):
+    gal_file = ligand_batches[['Row', 'Column', 'sid']]
+    gal_file.rename(columns={"sid": "Name"}, inplace=True)
+    with tempfile.NamedTemporaryFile() as temp:
+        GalFile = apps.get_model("flutype", model_name="GalFile")
+        this_galfile, created = GalFile.objects.get_or_create(lig_path=temp.name)
+    return  this_galfile, created
+
 
 def read_gal_file(fpath):
     try:
