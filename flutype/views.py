@@ -189,14 +189,11 @@ def import_measurement_view(request,sid):
                                                                         lig_fix_path=temp_lig_fix.name,
                                                                         meta = raw_spot_collection_dict,
                                                                         study=study)
+            return JsonResponse({"is_error": False, "rsc_sid":rsc.sid})
 
+            #return redirect("/measurement/"+rsc.sid)
 
             #spot related operations #fixme add in frontend validations of intensities, that a rawspot has to exisit before creating a spot !
-            #intensity related data
-            data_results = json_data.get("intensities")
-            data_results = pd.DataFrame(data_results, columns=range(1, 13),index=range(1, 9))
-
-
 
 
         return JsonResponse({"is_error": False})
