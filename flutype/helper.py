@@ -247,7 +247,8 @@ def get_or_create_raw_spots(**kwargs):
     spots.replace([np.NaN], [None], inplace=True)
 
     spots.rename(columns={"Name":"lig_mob_batch", "Row":"row","Column":"column"}, inplace=True)
-    print(spots)
+    spots = spots[["row","column","lig_mob_batch","lig_fix_batch"]]
+
     #spots["lig_mob_batch"]= lig_mob["Name"].values
 
 
