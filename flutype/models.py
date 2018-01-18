@@ -180,6 +180,7 @@ class Batch(Sidable, Commentable, models.Model):
     buffer = models.ForeignKey(Buffer, blank=True, null=True)
     produced_by = models.ForeignKey(User, blank=True, null=True)
     production_date = models.DateField(blank=True, null=True)
+    stock = models.BooleanField(default=False)
 
     class Meta:
         abstract = True
@@ -198,6 +199,14 @@ class LigandBatch(Batch):
 
     class Meta:
         verbose_name_plural = "ligand batches"
+    """
+    def save(self):
+        instance = super(LigandBatch, self).save(commit=False)
+
+        if self.concentration == 1 and self.concentration_unit. ==  stock__1:
+            instance.stock = True
+    """
+
 
 
 class VirusBatch(LigandBatch):
