@@ -54,6 +54,10 @@ class LigandManager(PolymorphicManager):
 
 class LigandBatchManager(models.Manager):
     def get_or_create(self, *args, **kwargs):
+        if "stock" in kwargs and kwargs["stock"] in [1, True]:
+            kwargs["stock"] = True
+        else:
+            kwargs["stock"] = False
         if "buffer" in kwargs and isinstance(kwargs['buffer'], basestring):
             kwargs['buffer'] =  get_buffer_or_none(kwargs['buffer'])
         if "ligand" in kwargs and isinstance(kwargs['ligand'], basestring):
@@ -72,6 +76,8 @@ class LigandBatchManager(models.Manager):
     def to_df(self):
         df = read_frame(self.all())
         return df
+
+
 
 
 class ComplexManager(PolymorphicManager):

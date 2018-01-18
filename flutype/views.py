@@ -139,6 +139,8 @@ def study_view(request,sid):
 def import_measurement_view(request,sid):
     study = get_object_or_404(Study, sid=sid)
     ligands_sid =  list(Ligand.objects.values_list("sid",flat=True).all())
+    step_sid =  list(Step.objects.values_list("sid",flat=True).all())
+
     concentration_units = list(UnitsType.labels.values())
     measurement_form = MeasurementForm()
     if request.method == 'POST':
@@ -207,6 +209,7 @@ def import_measurement_view(request,sid):
             'study': study,
             'type': "measurement",
             'ligands_sid':ligands_sid,
+            'step_sid': step_sid,
             'concentration_units': concentration_units,
             'measurement_form':measurement_form
 
