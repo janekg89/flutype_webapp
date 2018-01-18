@@ -138,7 +138,7 @@ def study_view(request,sid):
 @login_required
 def import_measurement_view(request,sid):
     study = get_object_or_404(Study, sid=sid)
-    ligands_sid =  list(Ligand.objects.values_list("sid",flat=True).all())
+    ligands_sid =  list(LigandBatch.objects.filter(stock=True).values_list("sid",flat=True).all())
     step_sid =  list(Step.objects.values_list("sid",flat=True).all())
 
     concentration_units = list(UnitsType.labels.values())
@@ -538,7 +538,7 @@ def tutorial_tree_view(request):
 
 @login_required
 def peptide_batch_view(request):
-    peptide_batches = PeptideBatch.objects.all()
+    peptide_batches = PeptideBatch.objects.filter(stock=True)
     context = {
         'peptide_batches': peptide_batches,
     }
@@ -548,7 +548,7 @@ def peptide_batch_view(request):
 
 @login_required
 def peptide_batch_mobile_view(request):
-    peptide_batches = PeptideBatch.objects.filter(lig_mob_batch__isnull=False).distinct()
+    peptide_batches = PeptideBatch.objects.filter(stock=True, lig_mob_batch__isnull=False).distinct()
     context = {
         'type': "mobile",
         'peptide_batches': peptide_batches,
@@ -559,7 +559,7 @@ def peptide_batch_mobile_view(request):
 
 @login_required
 def peptide_batch_fixed_view(request):
-    peptide_batches = PeptideBatch.objects.filter(lig_fix_batch__isnull=False).distinct()
+    peptide_batches = PeptideBatch.objects.filter(stock=True, lig_fix_batch__isnull=False).distinct()
     context = {
         'type': "fixed",
         'peptide_batches': peptide_batches,
@@ -603,7 +603,7 @@ def peptide_fixed_view(request):
 
 @login_required
 def virus_batch_view(request):
-    virus_batches = VirusBatch.objects.all()
+    virus_batches = VirusBatch.objects.filter(stock=True)
     context = {
         'virus_batches': virus_batches,
     }
@@ -636,7 +636,7 @@ def virus_batch_fixed_view(request):
 
 @login_required
 def antibody_batch_view(request):
-    antibody_batches = AntibodyBatch.objects.all()
+    antibody_batches = AntibodyBatch.objects.filter(stock=True)
     context = {
         'antibody_batches': antibody_batches,
     }
@@ -776,7 +776,7 @@ def buffer_delete(request, sid):
 
 @login_required
 def buffer_batch_view(request):
-    buffer_batches = BufferBatch.objects.all()
+    buffer_batches = BufferBatch.objects.filter(stock=True)
     context = {
 
         'buffer_batches': buffer_batches,
