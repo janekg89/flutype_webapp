@@ -80,13 +80,19 @@ this release
 In this section technical information for setup and testing with FluTypeDB is provided.
 
 ### Setup
-To test the webapp with sqlite3 backend just clone the repository
-and run the django development server
+To test the webapp with the sqlite3 backend clone the repository
+and run the django development server in a virtual environment
 ```
 git clone https://github.com/janekg89/flutype_webapp.git
 mkvirtualenv flutype_webapp
 (flutype_webapp) pip install -r requirements.txt
 (flutype_webapp) python manage.py runserver
+```
+
+To fill the database with test data run the following script.
+This applies all migrations and writes the database content.
+```
+(flutype_webapp) ./create_db.sh
 ```
 
 ### Testing
@@ -106,14 +112,6 @@ sudo ln -s /usr/local/share/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/loca
 phantomjs --version
 ```
 
-### Recreating database
-```
-cd flutype_webapp
-python manage.py flush
-python flutype/data_management/fill_users.py
-python flutype/data_management/fill_database.py
-```
-
 ### Coverage
 
 Coverage of Test are run via
@@ -129,4 +127,4 @@ a html report is saved via:
 coverage html
 ```
 
-&copy; 2017 FluType
+&copy; 2017-2018 FluType
