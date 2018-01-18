@@ -47,7 +47,9 @@ def auto_get_or_create_ligand_batches(browser_input):
     ligand_batches_stock = [LigandBatch.objects.get(sid=ligandbatches)  for ligandbatches in ligand_batches["ligandbatch"].values]
     ligand_batches["ligandbatch_stock"] = ligand_batches_stock
     for index, ligandbatch in ligand_batches.iterrows():
-        if not LigandBatch.objects.filter(sid = ligandbatch["sid"]).exists():
+        try:
+            LigandBatch.objects.get(sid=ligandbatch["sid"])
+        except:
             ligandbatch["ligandbatch_stock"].pk = None
             ligandbatch["ligandbatch_stock"].sid =  ligandbatch["sid"]
             ligandbatch["ligandbatch_stock"].concentration = ligandbatch["concentration"]
