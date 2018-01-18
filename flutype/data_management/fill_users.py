@@ -31,7 +31,7 @@ user_defs = [
     UserDef("thofmeister", "Theresa", "Hofmeister", "theresa.hofmeister@uni-potsdam.de", False),
     UserDef("pbecker", "Paul", "Becker", "pc-becker@gmx.de", False),
     UserDef("fbier", "Frank", "Bier", "Frank.Bier@izi-bb.fraunhofer.de", False),
-    UserDef("herzigk", "Katjana", "Herzig", None, False),
+    UserDef("kherzig", "Katjana", "Herzig", None, False),
     UserDef("janekg89", "Jan", "Grzegorzewski", "janekg89@hotmail.de", True),
     UserDef("mkoenig", "Matthias", "König", "konigmatt@googlemail.com", True),
 ]
