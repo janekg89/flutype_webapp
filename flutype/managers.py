@@ -54,7 +54,7 @@ class LigandManager(PolymorphicManager):
 
 class LigandBatchManager(models.Manager):
     def get_or_create(self, *args, **kwargs):
-        if "stock" in kwargs and kwargs["stock"] in [1, True]:
+        if "stock" in kwargs and kwargs["stock"] in [1, True,"1"]:
             kwargs["stock"] = True
         else:
             kwargs["stock"] = False

@@ -23,31 +23,39 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 CHAR_MAX_LENGTH = 100
 def auto_get_or_create_ligand_batches(browser_input):
-    data_ligands = pd.DataFrame(browser_input, columns=range(1, 15), index=range(1, 11))
+    data_ligandbatches = pd.DataFrame(browser_input, columns=range(1, 15), index=range(1, 11))
 
-    ligand = rows_and_cols_to_gal_file(data_ligands.loc[:8, :12])
-    ligand["Name"].replace('', np.nan, inplace=True)
-    ligand.dropna(subset=['Name'], inplace=True)
+    ligandbatches = rows_and_cols_to_gal_file(data_ligandbatches.loc[:8, :12])
+    ligandbatches["Name"].replace('', np.nan, inplace=True)
+    ligandbatches.dropna(subset=['Name'], inplace=True)
 
-    ligand_concentration_y = data_ligands.loc[:8, 14]
+    ligand_concentration_y = data_ligandbatches.loc[:8, 14]
     ligand_concentration_y = ligand_concentration_y.replace([None,""], "1")
 
-    ligand_concentration_x = data_ligands.loc[10, :12]
+    ligand_concentration_x = data_ligandbatches.loc[10, :12]
     ligand_concentration_x = ligand_concentration_x.replace([None,""], "1")
 
     c = outer_product(ligand_concentration_x, ligand_concentration_y)
     ligand_concentration = rows_and_cols_to_gal_file(pd.DataFrame(c, columns=range(1, 13), index=range(1, 9)))
     ligand_concentration.rename(columns={"Name": "concentration"}, inplace=True)
 
-    ligand.rename(columns={"Name": "ligand"}, inplace=True)
-    ligand_batches = pd.merge(ligand, ligand_concentration, how='left', on=['Row', 'Column'])
+    ligandbatches.rename(columns={"Name": "ligandbatch"}, inplace=True)
+    ligand_batches = pd.merge(ligandbatches, ligand_concentration, how='left', on=['Row', 'Column'])
 
-    ligand_batches["sid"] = "*" + ligand_batches["ligand"] + "-" + ligand_batches["concentration"] + "*"
-    Ligand = apps.get_model("flutype", model_name="Ligand")
-    ligands = [Ligand.objects.get(sid=ligand) for ligand in ligand_batches["ligand"].values]
-    ligand_batches["ligand"] = ligands
-    classes = [ligand.__class__.__name__ + "Batch" for ligand in ligands]
+    ligand_batches["sid"] = "*" + ligand_batches["ligandbatch"] + "-" + ligand_batches["concentration"] + "*"
+    LigandBatch = apps.get_model("flutype", model_name="LigandBatch")
+    ligand_batches_stock = [LigandBatch.objects.get(sid=ligandbatches)  for ligandbatches in ligand_batches["ligandbatch"].values]
+    ligand_batches["ligandbatch_stock"] = ligand_batches_stock
+    for index, ligandbatch in ligand_batches.iterrows():
+        if not LigandBatch.objects.filter(sid = ligandbatch["sid"]).exists():
+            ligandbatch["ligandbatch_stock"].pk = None
+            ligandbatch["ligandbatch_stock"].sid =  ligandbatch["sid"]
+            ligandbatch["ligandbatch_stock"].concentration = ligandbatch["concentration"]
+            ligandbatch["ligandbatch_stock"].save()
 
+
+    """
+    classes = [ligandbatches.__class__.__name__ + "Batch" for ligandbatches in ligands]
     ligand_batches["class"] = classes
     ligand_batches["ligand_batch"] = ""
     for index, ligandbatch in ligand_batches.iterrows():
@@ -55,6 +63,9 @@ def auto_get_or_create_ligand_batches(browser_input):
         instance,_ = model.objects.get_or_create(sid=ligandbatch["sid"], concentration=ligandbatch["concentration"],
                                     ligand=ligandbatch["ligand"], comment="auto generated")
         ligandbatch["ligand_batch"] = instance
+    """
+
+
 
     return ligand_batches
 
@@ -373,7 +384,6 @@ def get_model_by_name(name):
     return Model
 
 def get_user_or_none(user):
-
     if user is None:
             user = None
     else:
