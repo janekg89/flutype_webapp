@@ -7,22 +7,29 @@
             <a href="#step-1" type="button" class="btn btn-primary btn-circle">1</a>
             <p>Measurement</p>
         </div>
-        <div class="stepwizard-step">
+
+       <div class="stepwizard-step">
             <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled">2</a>
+            <p>Process</p>
+        </div>
+
+        <div class="stepwizard-step">
+            <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled">3</a>
             <p>Ligands </p>
         </div>
         <div class="stepwizard-step">
-            <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled">3</a>
+            <a href="#step-4" type="button" class="btn btn-default btn-circle" disabled="disabled">4</a>
             <p>Analyts </p>
         </div>
         <div class="stepwizard-step">
-            <a href="#step-4" type="button" class="btn btn-default btn-circle" disabled="disabled">4</a>
+            <a href="#step-5" type="button" class="btn btn-default btn-circle" disabled="disabled">5</a>
             <p>Intensities </p>
         </div>
     </div>
 </div>
 
   <form role="form" action="" method="post">
+
     <div class="row setup-content" id="step-1">
       <div class="col-xs-6 col-md-offset-3">
         <div class="col-md-12">
@@ -65,7 +72,22 @@
         </div>
       </div>
     </div>
+
     <div class="row setup-content" id="step-2">
+      <div class="col-xs-6 col-md-offset-3">
+        <div class="col-md-12">
+          <h3> Process</h3>
+          <div class="form-group">
+            <button class="btn btn-default del">delete selected</button>
+            <div id="process"></div></div>
+            <button class="btn btn-primary prevBtn btn-lg pull-left" type="button">Previous</button>
+            <button class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row setup-content" id="step-3">
+
       <div class="col-xs-6 col-md-offset-3">
         <div class="col-md-12">
           <h3> Ligands</h3>
@@ -77,7 +99,7 @@
         </div>
       </div>
     </div>
-    <div class="row setup-content" id="step-3">
+    <div class="row setup-content" id="step-4">
       <div class="col-xs-6 col-md-offset-3">
         <div class="col-md-12">
           <h3> Analyts</h3>
@@ -87,8 +109,7 @@
         </div>
       </div>
     </div>
-
-    <div class="row setup-content" id="step-4">
+    <div class="row setup-content" id="step-5">
       <div class="col-xs-6 col-md-offset-3">
         <div class="col-md-12">
           <h3> Results</h3>
@@ -259,6 +280,8 @@ function validateData(curInputs_serialized, nextStepWizard){
     var microwell_analyts = document.getElementById('microwell_plate_analyts'),
         microwell_ligands = document.getElementById('microwell_plate_ligands'),
         microwell_results = document.getElementById('microwell_plate_results'),
+        process = document.getElementById('process'),
+
 
         ligands_sids = {{ ligands_sid|tojson }},
         ligands_table_setup = function(setup_data){
@@ -346,7 +369,7 @@ function validateData(curInputs_serialized, nextStepWizard){
               {
                 data:"concentration",
                 editor: 'numeric',
-                validator: 'numeric',
+                validator: 'numeric'
 
           }
 
@@ -401,8 +424,32 @@ function validateData(curInputs_serialized, nextStepWizard){
     console.log(isValid);
     }
     };};
-    var hot_ligand = new Handsontable(microwell_ligands,ligands_table_setup(d_microwell_plate) );
-    var hot_analyt = new Handsontable(microwell_analyts,ligands_table_setup(d_microwell_plate_2) );
+    var setup_process = {
+     data: [[]],
+     colHeaders: ["step", "user","start"],
+     rowHeaders: true,
+     minRows:1,
+     maxCols:3,
+     minCols:3,
+     outsideClickDeselects: false
+
+    };
+    var del = document.querySelector('.del');
+    del.addEventListener('click', function(){
+        var sel = hot_process.getSelected();
+      console.log(sel);
+          if(sel[0] === sel[2] && sel[1] === 0 && sel[3] === hot_process.countCols() - 1){
+            hot_process.alter('remove_row', sel[0], 1);
+            //delete row
+          } else {
+            //
+          }
+    });
+
+
+    var hot_process = new Handsontable(process,setup_process);
+    var hot_ligand = new Handsontable(microwell_ligands,ligands_table_setup(d_microwell_plate));
+    var hot_analyt = new Handsontable(microwell_analyts,ligands_table_setup(d_microwell_plate_2));
     var hot_result = new Handsontable(microwell_results,{
             data:[[]],
             minRows:8,
