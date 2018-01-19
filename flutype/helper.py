@@ -23,11 +23,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 CHAR_MAX_LENGTH = 100
 def auto_get_or_create_ligand_batches(browser_input):
-    data_ligandbatches = pd.DataFrame(browser_input, columns=range(1, 15), index=range(1, 11))
-
+    data_ligandbatches = pd.DataFrame(browser_input, columns=range(1, 17), index=range(1, 13))
+    concentration_unit = data_ligandbatches.loc[10, 14]
     ligandbatches = rows_and_cols_to_gal_file(data_ligandbatches.loc[:8, :12])
+
     ligandbatches["Name"].replace('', np.nan, inplace=True)
     ligandbatches.dropna(subset=['Name'], inplace=True)
+
+    if ligandbatches.empty:
+        ligandbatches["sid"] = ""
+
+        return ligandbatches
 
     ligand_concentration_y = data_ligandbatches.loc[:8, 14]
     ligand_concentration_y = ligand_concentration_y.replace([None,""], "1")
@@ -42,6 +48,7 @@ def auto_get_or_create_ligand_batches(browser_input):
     ligandbatches.rename(columns={"Name": "ligandbatch"}, inplace=True)
     ligand_batches = pd.merge(ligandbatches, ligand_concentration, how='left', on=['Row', 'Column'])
 
+
     ligand_batches["sid"] = "*" + ligand_batches["ligandbatch"] + "-" + ligand_batches["concentration"] + "*"
     LigandBatch = apps.get_model("flutype", model_name="LigandBatch")
     ligand_batches_stock = [LigandBatch.objects.get(sid=ligandbatches)  for ligandbatches in ligand_batches["ligandbatch"].values]
@@ -53,6 +60,9 @@ def auto_get_or_create_ligand_batches(browser_input):
             ligandbatch["ligandbatch_stock"].pk = None
             ligandbatch["ligandbatch_stock"].sid =  ligandbatch["sid"]
             ligandbatch["ligandbatch_stock"].concentration = ligandbatch["concentration"]
+            ligandbatch["ligandbatch_stock"].stock = False
+            ligandbatch["ligandbatch_stock"].concentration_unit = concentration_unit
+
             ligandbatch["ligandbatch_stock"].save()
 
 
