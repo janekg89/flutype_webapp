@@ -11,9 +11,7 @@ from flutype.data_management.fill_users import create_users, user_defs
 from flutype.data_management.fill_database import DatabaseDJ
 
 from flutype.models import RawSpotCollection, SpotCollection, Process
-from flutype.tests.test_fill_database import MASTERPATH
 from flutype.data_management.master import Master, BASEPATH, Study
-from django.db import transaction
 import os
 
 class ViewTestCaseNoDataLogOut(TestCase):
@@ -388,7 +386,7 @@ class ViewTestCaseOneCollectionLogedIn(TransactionTestCase):
         response = self.c.post('/peptidebatches/', {})
         status = response.status_code
         self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "L002")
+        self.assertContains(response, "P001")
 
         response = self.c.post('/peptidebatches_mobile/', {})
         status = response.status_code
@@ -398,7 +396,6 @@ class ViewTestCaseOneCollectionLogedIn(TransactionTestCase):
         response = self.c.post('/peptidebatches_fixed/', {})
         status = response.status_code
         self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "L002")
 
     def test_processes_view_200(self):
         response = self.c.post('/processes/', {})
