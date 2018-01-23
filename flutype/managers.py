@@ -6,7 +6,7 @@ from django_pandas.io import read_frame
 from django.utils import timezone
 import datetime
 from .behaviours import Status
-
+from model_utils.managers import InheritanceManager
 
 
 
@@ -52,7 +52,7 @@ class LigandManager(PolymorphicManager):
 
 
 
-class LigandBatchManager(models.Manager):
+class LigandBatchManager(InheritanceManager):
     def get_or_create(self, *args, **kwargs):
         if "stock" in kwargs and kwargs["stock"] in [1, True,"1"]:
             kwargs["stock"] = True
@@ -340,13 +340,13 @@ class RawSpotManager(models.Manager):
 
         if "lig_fix_batch" in kwargs and isinstance(kwargs['lig_fix_batch'], basestring):
             LigandBatch = apps.get_model("flutype","LigandBatch")
-            ligand_object = LigandBatch.objects.get(sid=kwargs['lig_fix_batch'])
+            ligand_object = LigandBatch.objects.get_subclass(sid=kwargs['lig_fix_batch'])
             kwargs["lig_fix_batch"] = ligand_object
 
 
         if "lig_mob_batch" in kwargs and isinstance(kwargs['lig_mob_batch'], basestring):
             LigandBatch = apps.get_model("flutype","LigandBatch")
-            ligand_object = LigandBatch.objects.get(sid=kwargs["lig_mob_batch"])
+            ligand_object = LigandBatch.objects.get_subclass(sid=kwargs["lig_mob_batch"])
             kwargs["lig_mob_batch"] = ligand_object
 
         object, created = super(RawSpotManager, self).get_or_create(**kwargs)
