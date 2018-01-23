@@ -327,7 +327,7 @@ class ViewTestCaseOneCollectionLogedIn(TransactionTestCase):
         response = self.c.post('/antibodybatches/', {})
         status = response.status_code
         self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "AK025")
+        self.assertContains(response, "AK100")
 
         response = self.c.post('/antibodybatches_mobile/', {})
         status = response.status_code

@@ -51,45 +51,27 @@ def auto_get_or_create_ligand_batches(browser_input):
 
     ligand_batches["sid"] = "*" + ligand_batches["ligandbatch"] + "-" + ligand_batches["concentration"] + "*"
     LigandBatch = apps.get_model("flutype", model_name="LigandBatch")
-    ligand_batches_stock = [LigandBatch.objects.get(sid=ligandbatches)  for ligandbatches in ligand_batches["ligandbatch"].values]
+    for ligandbatch in ligand_batches["ligandbatch"].values:
+        LigandBatch.objects.get_subclass(sid=ligandbatch)
+    ligand_batches_stock = [LigandBatch.objects.get_subclass(sid=ligandbatch) for ligandbatch in ligand_batches["ligandbatch"].values]
     ligand_batches["ligandbatch_stock"] = ligand_batches_stock
     for index, ligandbatch in ligand_batches.iterrows():
         try:
-            LigandBatch.objects.get(sid=ligandbatch["sid"])
+            LigandBatch.objects.get_subclass(sid=ligandbatch["sid"])
         except:
             ligandbatch["ligandbatch_stock"].pk = None
+            ligandbatch["ligandbatch_stock"].id = None
+            ligandbatch["ligandbatch_stock"].ligandbatch_ptr_id = None
             ligandbatch["ligandbatch_stock"].sid =  ligandbatch["sid"]
             ligandbatch["ligandbatch_stock"].concentration = ligandbatch["concentration"]
             ligandbatch["ligandbatch_stock"].stock = False
             ligandbatch["ligandbatch_stock"].concentration_unit = concentration_unit
-
             ligandbatch["ligandbatch_stock"].save()
-
-
-    """
-    classes = [ligandbatches.__class__.__name__ + "Batch" for ligandbatches in ligands]
-    ligand_batches["class"] = classes
-    ligand_batches["ligand_batch"] = ""
-    for index, ligandbatch in ligand_batches.iterrows():
-        model = apps.get_model("flutype", model_name=ligandbatch["class"])
-        instance,_ = model.objects.get_or_create(sid=ligandbatch["sid"], concentration=ligandbatch["concentration"],
-                                    ligand=ligandbatch["ligand"], comment="auto generated")
-        ligandbatch["ligand_batch"] = instance
-    """
-
-
 
     return ligand_batches
 
 
 def outer_product(df1, df2):
-    #rows = itertools.product(df1.values(), df2.values())
-
-    #df = pd.DataFrame(left.append(right) for (_, left), (_, right) in rows)
-    #return df.reset_index(drop=True)
-    #return rows
-    #return np.dot(df1.values().T,df2.values())
-    print(df1.values)
     x = list(map(float,df1.values))
     y = list(map(float,df2.values))
     return np.outer(y,x)
@@ -164,6 +146,7 @@ def read_tsv_diconary(fpath):
 
 def read_tsv_table(fpath):
     table = pd.read_csv(fpath, sep="\t", encoding='utf-8', dtype=str)
+    table.dropna(axis=0, subset = ['step'], how='all', inplace=True)
     table.replace([np.NaN], [None], inplace=True)
     return table
 

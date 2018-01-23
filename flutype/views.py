@@ -15,7 +15,7 @@ from .forms import PeptideForm, VirusForm, AntibodyForm, AntibodyBatchForm, \
     ScanningForm, IncubatingAnalytForm, RawDocForm, BufferForm, BufferBatchForm, GalFileForm, MeasurementForm
 from .models import RawSpotCollection, SpotCollection, Process, PeptideBatch, \
     Peptide, VirusBatch, Virus, AntibodyBatch, Antibody, Step, ProcessStep, Complex, ComplexBatch, Study, \
-    RawDoc , Buffer, BufferBatch, Ligand, UnitsType, LigandBatch, GalFile
+    RawDoc , Buffer, BufferBatch, Ligand, UnitsType, LigandBatch, GalFile, Scanning
 from django.forms import formset_factory, inlineformset_factory
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
@@ -139,7 +139,10 @@ def study_view(request,sid):
 def import_measurement_view(request,sid):
     study = get_object_or_404(Study, sid=sid)
     ligands_sid =  list(LigandBatch.objects.filter(stock=True).values_list("sid",flat=True).all())
-    step_sid =  list(Step.objects.values_list("sid",flat=True).all())
+    steps_sid =  list(Step.objects.values_list("sid",flat=True).all())
+    scanning_sid =  list(Scanning.objects.values_list("sid",flat=True).all())
+    user_names =  list(User.objects.values_list("username",flat=True).all())
+
 
     concentration_units = list(UnitsType.labels.values())
     measurement_form = MeasurementForm()
@@ -176,8 +179,19 @@ def import_measurement_view(request,sid):
             data_results = json_data.get("intensities")
             data_results = pd.DataFrame(data_results, columns=range(1, 13), index=range(1, 9))
 
+            data_process = json_data.get("process")
+
+            data_process = pd.DataFrame(data_process,columns=["step","user","start date","start time","intensities","comment"])
+            data_process["start"] = data_process["start date"]+" "+data_process["start time"]
+            data_process["index"] = data_process.index
+            data_process["image"] = None
+
+
             raw_spot_collection_dict = json_data.get("measurement")
-            raw_spot_collection_dict["user"] = User.objects.get(pk=raw_spot_collection_dict["user"])
+            if raw_spot_collection_dict["user"] in ["",]:
+                raw_spot_collection_dict["user"] = None
+            else:
+                raw_spot_collection_dict["user"] = User.objects.get(pk=raw_spot_collection_dict["user"])
             with NamedTemporaryFile() as temp_intensities:
                 data_results.to_csv(temp_intensities.name, sep=str('\t'), index="True", encoding='utf-8')
                 results_dic= {"raw":{"meta":{"sid":"raw"},"intensities":temp_intensities.name}}
@@ -185,12 +199,20 @@ def import_measurement_view(request,sid):
                     fix_gal_file.to_csv(temp_lig_fix.name, sep=str('\t'), index="True", encoding='utf-8')
                     with NamedTemporaryFile() as temp_lig_mob:
                         mob_gal_file.to_csv(temp_lig_mob.name, sep=str('\t'), index="True", encoding='utf-8')
-                        #rawspotcollection #fixme: no process data, no raw_docs
-                        rsc,_ = RawSpotCollection.objects.get_or_create(results=results_dic,
-                                                                        lig_mob_path=temp_lig_mob.name,
-                                                                        lig_fix_path=temp_lig_fix.name,
-                                                                        meta = raw_spot_collection_dict,
-                                                                        study=study)
+                        with NamedTemporaryFile() as temp_steps:
+                            data_process["intensities"] = [None if step in ["", False, None] else temp_intensities.name for step in data_process["intensities"]]
+                            data_process[["step","user","start","index","comment","intensities","image"]].to_csv(temp_steps.name, sep=str('\t'), encoding='utf-8')
+
+                            #fixme: no process data, no raw_docs
+                            # fixme: for edit this should be just the way around
+                            if RawSpotCollection.objects.filter(sid=raw_spot_collection_dict["sid"]).exists():
+                                return JsonResponse({"is_error":True, "msg":"measurement sid allready exists!"})
+                            rsc,_ = RawSpotCollection.objects.get_or_create(results=results_dic,
+                                                                            lig_mob_path=temp_lig_mob.name,
+                                                                            lig_fix_path=temp_lig_fix.name,
+                                                                            steps_path = temp_steps.name,
+                                                                            meta = raw_spot_collection_dict,
+                                                                            study=study)
             return JsonResponse({"is_error": False, "rsc_sid":rsc.sid})
 
             #return redirect("/measurement/"+rsc.sid)
@@ -209,7 +231,9 @@ def import_measurement_view(request,sid):
             'study': study,
             'type': "measurement",
             'ligands_sid':ligands_sid,
-            'step_sid': step_sid,
+            'steps_sid': steps_sid,
+            'scanning_sid': scanning_sid,
+            'user_names': user_names,
             'concentration_units': concentration_units,
             'measurement_form':measurement_form
 
