@@ -146,7 +146,8 @@ def read_tsv_diconary(fpath):
 
 def read_tsv_table(fpath):
     table = pd.read_csv(fpath, sep="\t", encoding='utf-8', dtype=str)
-    table.dropna(axis=0, subset = ['step'], how='all', inplace=True)
+    if "step" in table:
+        table.dropna(axis=0, subset = ['step'], how='all', inplace=True)
     table.replace([np.NaN], [None], inplace=True)
     return table
 
