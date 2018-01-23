@@ -24,6 +24,7 @@ from django.views.generic import RedirectView
 
 
 urlpatterns = [
+    url('^', include('django.contrib.auth.urls')),
     url(r'^', include('flutype.urls')),
     url(r'^$', RedirectView.as_view(pattern_name='index', permanent=False)),
     url(r'^login/$', auth_views.login, name='login'),

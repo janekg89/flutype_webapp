@@ -83,6 +83,8 @@ class GalType(DjangoChoices):
 class ManufacturerModel(DjangoChoices):
     """ Manufacturer type """
     polyan = ChoiceItem("PolyAn")
+    ThermoF96Maxisorp = ChoiceItem("Thermo F96 Maxisorp")
+
 
 class ProcessingType(DjangoChoices):
     substract_buffer = ChoiceItem("substract_buffer")
