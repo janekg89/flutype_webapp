@@ -844,7 +844,7 @@ def study_edit(request,sid):
     #print(perm)
     form = StudyForm(instance=instance)
     if request.method == 'POST':
-        form =  StudyForm(request.POST)
+        form =  StudyForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
             return redirect('index')
