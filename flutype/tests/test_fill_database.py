@@ -9,7 +9,7 @@ from flutype.data_management.fill_users import create_users, user_defs
 from django.apps import apps
 from django.test import tag
 from flutype.helper import  read_ligands ,read_complex, read_ligand_batches, get_model_by_name, read_steps, read_buffer \
-    ,get_duration_or_none, duration_to_string
+    ,get_duration_or_none, duration_to_string, cap_and_read
 from django_pandas.io import read_frame
 
 
@@ -123,7 +123,7 @@ class DatabaseDJTestCase(TransactionTestCase):
 
         ligands1 = self.ma.ligands
         for ligand in ligands1:
-            df = read_ligands(ligand)
+            df = cap_and_read(ligand)
             self.assertTrue(ligands[ligand].equals(df))
         self.assertTrue(complex["complex"].equals(read_complex()))
         print(read_buffer())
