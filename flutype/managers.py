@@ -7,13 +7,14 @@ from django.utils import timezone
 import datetime
 from .behaviours import Status
 from model_utils.managers import InheritanceManager
-
+#from guardian.shortcuts import assign_perm
 
 
 
 from flutype.helper import get_ligand_or_none, get_buffer_or_none,get_user_or_none, get_duration_or_none,\
-     unique_ordering, read_tsv_table, get_unique_galfile,\
-     create_spots, get_or_create_raw_spots, md5, read_gal_file, read_gal_file_to_temporaray_file
+    unique_ordering, read_tsv_table, get_unique_galfile,\
+    create_spots, get_or_create_raw_spots, md5, read_gal_file, read_gal_file_to_temporaray_file, clean_step_table,\
+    nan_to_none_in_pdtable
 
 from polymorphic.manager import PolymorphicManager
 import os
@@ -114,6 +115,8 @@ class StudyManager(models.Manager):
                     test = Status.get_choice(kwargs["meta"]["status"])
 
             this_study, created_s = super(StudyManager, self).get_or_create(*args, **kwargs["meta"])
+            #assign_perm("change_study",this_study.user, this_study)
+            #assign_perm("delete_study", this_study.user, this_study)
 
         if "raw_docs_fpaths" in kwargs:
             for fpath in kwargs["raw_docs_fpaths"]:
@@ -200,9 +203,11 @@ class ProcessManager(models.Manager):
 
     def get_or_create(self,*args,**kwargs):
 
-        intensity_path = kwargs["steps_path"]
-        steps = read_tsv_table(intensity_path)
-        sid= unique_ordering(steps)
+        steps_path = kwargs["steps_path"]
+        steps = read_tsv_table(steps_path)
+        steps = clean_step_table(steps)
+        steps = nan_to_none_in_pdtable(steps)
+        sid = unique_ordering(steps)
         this_process, created = super(ProcessManager, self).get_or_create(sid=sid)
         steps["start"]=steps["start"].str.replace('.', '-')
         for _ , step in steps.iterrows():
@@ -223,7 +228,7 @@ class ProcessManager(models.Manager):
                                                                       user = get_user_or_none(step["user"])
                                                                       )
             if step["intensities"] is not None:
-                intensity_fpath = os.path.join(os.path.dirname(intensity_path),step["intensities"])
+                intensity_fpath = os.path.join(os.path.dirname(steps_path),step["intensities"])
                 intensities_path_dic = {"intensities" :intensity_fpath}
                 GalFile = apps.get_model("flutype", "GalFile")
                 this_gal_file, _ = GalFile.objects.get_or_create(**intensities_path_dic)
@@ -231,7 +236,7 @@ class ProcessManager(models.Manager):
                 this_process_step.save()
 
             if step["image"] is not None:
-                image_fpath = os.path.join(os.path.dirname(intensity_path),step["image"])
+                image_fpath = os.path.join(os.path.dirname(steps_path),step["image"])
                 with open(image_fpath, "rb") as f:
                     this_process_step.hash = md5(f)
                     this_process_step.save()
