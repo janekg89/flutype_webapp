@@ -25,6 +25,12 @@ Definition of reusable macro function in templates
     <i class="fa fa-fw fa-building text-info" title="{{ measurement_type }}"></i>&nbsp;
 {% endif %}
 {% endmacro %}
+<!-- Study -->
+{% macro study_type(type) %}
+{% if type == "Study" %}
+            <i class="fa fa-fw fa-braille"title="{{ type }}"> </i> {{ type }}&nbsp;
+{% endif %}
+{% endmacro %}
 
 <!-- User -->
 {% macro user(user) %}
@@ -45,25 +51,31 @@ Definition of reusable macro function in templates
 {{ status }}
 {% endmacro %}
 
-<!-- Step type -->
+<!-- Step type by name -->
+
+{%  macro step_name_type(step_name) %}
+{% if step_name == "Washing" %}
+    <i class="fa fa-fw fa-shower text-primary"></i> {{ step_name }}
+{% elif step_name == "Drying" %}
+    <i class="fa fa-fw fa-bullhorn text-warning"></i> {{ step_name }}
+{% elif step_name == "Spotting" %}
+    <i class="fa fa-fw fa-anchor"></i> {{ step_name }} / Immobilization
+{% elif step_name == "Quenching" %}
+    <i class="fa fa-fw fa-chain-broken text-danger"></i> {{ step_name }}
+{% elif step_name == "Incubating" %}
+    <i class="fa fa-fw fa-tint"></i> {{ step_name }}
+{% elif step_name == "IncubatingAnalyt" %}
+    <i class="fa fa-fw fa-tint" aria-hidden="true"></i>Incubating Analyte
+{% elif step_name == "Blocking" %}
+    <i class="fa fa-fw fa-pause text-danger" aria-hidden="true"></i> {{ step_name }}
+{% elif step_name == "Scanning" %}
+    <i class="fa fa-fw fa-camera text-success" aria-hidden="true"></i> {{ step_name }}
+{% endif %}
+{% endmacro %}
+
+<!-- Step type by class instance -->
 {%  macro step_type(step) %}
 {% with name = step.__class__.__name__ %}
-{% if name == "Washing" %}
-    <i class="fa fa-fw fa-shower text-primary"></i> {{ name }}
-{% elif name == "Drying" %}
-    <i class="fa fa-fw fa-bullhorn text-warning"></i> {{ name }}
-{% elif name == "Spotting" %}
-    <i class="fa fa-fw fa-anchor"></i> {{ name }} / Immobilization
-{% elif name == "Quenching" %}
-    <i class="fa fa-fw fa-chain-broken text-danger"></i> {{ name }}
-{% elif name == "Incubating" %}
-    <i class="fa fa-fw fa-tint"></i> {{ name }}
-{% elif name == "IncubatingAnalyt" %}
-    <i class="fa fa-fw fa-tint" aria-hidden="true"></i>Incubating Analyte
-{% elif name == "Blocking" %}
-    <i class="fa fa-fw fa-pause text-danger" aria-hidden="true"></i> {{ name }}
-{% elif name == "Scanning" %}
-    <i class="fa fa-fw fa-camera text-success" aria-hidden="true"></i> {{ name }}
-{% endif %}
+    {{ step_name_type(name) }}
 {% endwith %}
 {% endmacro %}

@@ -13,7 +13,7 @@ from .models import Peptide, PeptideBatch, Virus, VirusBatch, Antibody, Antibody
     IncubatingAnalyt, RawDoc, Buffer, BufferBatch, Concentration, MeasurementType
 from django_measurement.forms import MeasurementField
 from django.forms.utils import ErrorList
-
+from .helper import camel_case_split
 
 class OrderedModelMultipleChoiceField(forms.ModelMultipleChoiceField):
     def clean(self, value):
@@ -24,15 +24,21 @@ class OrderedModelMultipleChoiceField(forms.ModelMultipleChoiceField):
             order_by=('ordering',)
         )
 
+class BaseForm(forms.ModelForm):
 
-class MeasurementForm(forms.ModelForm):
-    #sid = forms.CharField(label='sid', widget=forms.TextInput(attrs={'placeholder': 'Sid', 'class':'form-control'}))
-    #batch_sid = forms.CharField(label='batch_sid', widget=forms.TextInput(attrs={'placeholder': 'Batch Sid','class':'form-control'}))
-    #measurement_type = forms.ChoiceField(label='measurement_type',widget=forms.Select(attrs={'class':'form-control'}),
-                                    #choices = MeasurementType.choices,)
-    #user = forms.ChoiceField(label='user', widget=forms.Select(attrs={'class': 'form-control'}),
-                                          #)
+    @property
+    def hr_classname(self):
+        form_name = self.Meta.model.__name__
+        return camel_case_split(form_name)
 
+class URLRedirectBaseForm(BaseForm):
+
+    @property
+    def url_redirect(self):
+        return self.Meta.model.url()
+
+
+class MeasurementForm(BaseForm):
     class Meta:
         model = RawSpotCollection
         fields = ["sid",'batch_sid','user','measurement_type','functionalization','manufacturer',"comment"]
@@ -43,51 +49,63 @@ class MeasurementForm(forms.ModelForm):
             'user': forms.Select(attrs={'class':'form-control'}),
             'manufacturer': forms.Select(attrs={'class': 'form-control'}),
             'functionalization': forms.Select(attrs={'class': 'form-control'}),
-            'Comment': forms.Textarea(attrs={'class': 'form-control'}),
-
+            'comment': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
-class RawDocForm(forms.ModelForm):
+class RawDocForm(BaseForm):
     class Meta:
         model = RawDoc
         fields = '__all__'
 
 
-class GalFileForm(forms.ModelForm):
+class GalFileForm(BaseForm):
     class Meta:
         model = GalFile
         fields = ['rows_in_tray', 'columns_in_tray', 'vertical_trays', 'horizontal_trays']
 
 
-class StudyForm(forms.ModelForm):
+class StudyForm(URLRedirectBaseForm):
     """ Form for Study. """
+    date = forms.DateField(required=True, widget=forms.TextInput(attrs=
+    {
+        'data-provide': 'datepicker'
+    }))
+
     class Meta:
         model = Study
-        fields = '__all__'
+        fields = ["sid","description","status","user","comment", "date"]
+        widgets = {
+            'sid': forms.TextInput(attrs={'placeholder': 'Sid', 'class': 'form-control'}),
+            'user': forms.Select(attrs={'class': 'form-control'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
+            'comment': forms.Textarea(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+            #'date': forms.TextInput(attrs={'data-provide': 'datepicker'}),
+        }
 
 
-class PeptideForm(forms.ModelForm):
+class PeptideForm(URLRedirectBaseForm):
     """ Form for Peptide. """
     class Meta:
         model = Peptide
         fields = ['sid', 'linker', 'spacer', 'sequence', 'c_terminus', 'name', 'comment']
 
 
-class BufferForm(forms.ModelForm):
+class BufferForm(URLRedirectBaseForm):
     """ Form for Buffer. """
     class Meta:
         model = Buffer
         fields = ['sid', 'name', 'comment']
 
 
-class ComplexForm(forms.ModelForm):
+class ComplexForm(URLRedirectBaseForm):
     """ Form for Complex. """
     class Meta:
         model = Complex
         fields = ['sid', 'complex_ligands', 'comment']
 
 
-class VirusForm(forms.ModelForm):
+class VirusForm(URLRedirectBaseForm):
     """ Form for virus.
     collection_date = forms.DateField(widget=forms.TextInput(attrs=
     {
@@ -99,13 +117,13 @@ class VirusForm(forms.ModelForm):
         fields = ['sid', 'tax_id', 'subtype', "isolation_country", "collection_date", "strain", "link_db", "comment"]
 
 
-class AntibodyForm(forms.ModelForm):
+class AntibodyForm(URLRedirectBaseForm):
     class Meta:
         model = Antibody
         fields = ['sid', 'target', 'name', 'link_db', 'comment']
 
 
-class BufferBatchForm(forms.ModelForm):
+class BufferBatchForm(URLRedirectBaseForm):
     class Meta:
         model = BufferBatch
         fields = ['sid', 'buffer', 'ph', 'produced_by', 'production_date', 'comment']
@@ -115,7 +133,7 @@ BATCH_FIELDS = ['sid', 'ligand', 'concentration', 'concentration_unit', 'buffer'
                 'produced_by', 'production_date', 'comment']
 
 
-class FormCleanMixin(forms.ModelForm):
+class FormCleanMixin(URLRedirectBaseForm):
 
     def clean(self):
         if self.cleaned_data.get('concentration') and not self.cleaned_data.get('concentration_unit'):
@@ -185,14 +203,14 @@ class AntibodyBatchForm(FormCleanMixin):
 BASIC_STEP_FIELDS = ['sid', 'method', 'temperature', 'comment']
 
 
-class ProcessStepForm(forms.ModelForm):
+class ProcessStepForm(URLRedirectBaseForm):
     """ Form for ProcessStep. """
     class Meta:
         model = ProcessStep
         fields = ['step', 'index']
 
 
-class StepForm(forms.ModelForm):
+class StepForm(URLRedirectBaseForm):
     """ Form for Step. """
     class Meta:
         model = Step
@@ -203,39 +221,39 @@ class StepForm(forms.ModelForm):
         }
 
 
-class SpottingForm(forms.ModelForm):
+class SpottingForm(URLRedirectBaseForm):
     """ Form for Spotting. """
     class Meta(StepForm.Meta):
         model = Spotting
 
 
-class WashingForm(forms.ModelForm):
+class WashingForm(URLRedirectBaseForm):
     """ Form for Washing. """
     class Meta(StepForm.Meta):
         model = Washing
         fields = ['sid', 'method', 'substance', 'temperature', 'duration', 'comment']
 
 
-class DryingForm(forms.ModelForm):
+class DryingForm(URLRedirectBaseForm):
     """ Form for Drying. """
     class Meta(StepForm.Meta):
         model = Drying
         fields = ['sid', 'method', 'substance', 'temperature', 'duration', 'comment']
 
 
-class QuenchingForm(forms.ModelForm):
+class QuenchingForm(URLRedirectBaseForm):
     class Meta(StepForm.Meta):
         model = Quenching
         fields = ['sid', 'method', 'substance', 'temperature', 'duration', 'comment']
 
 
-class BlockingForm(forms.ModelForm):
+class BlockingForm(URLRedirectBaseForm):
     class Meta(StepForm.Meta):
         model = Blocking
         fields = ['sid', 'method', 'substance', 'temperature', 'duration', 'comment']
 
 
-class IncubatingForm(forms.ModelForm):
+class IncubatingForm(URLRedirectBaseForm):
     class Meta(StepForm.Meta):
         model = Incubating
         fields = ['sid', 'method', 'temperature', 'duration', 'comment']
@@ -243,25 +261,25 @@ class IncubatingForm(forms.ModelForm):
 
 
 # FIXME: naming analyt -> analyte
-class IncubatingAnalytForm(forms.ModelForm):
+class IncubatingAnalytForm(URLRedirectBaseForm):
     class Meta(StepForm.Meta):
         model = IncubatingAnalyt
         fields = ['sid', 'method', 'temperature','duration', 'comment']
 
 
-class ScanningForm(forms.ModelForm):
+class ScanningForm(URLRedirectBaseForm):
     class Meta(StepForm.Meta):
         model = Scanning
         fields = '__all__'
 
 
-class ProcessForm(forms.ModelForm):
+class ProcessForm(URLRedirectBaseForm):
     class Meta:
         model = Process
         fields = ['sid', 'unique_ordering']
 
 
-class ProcessFormUpdate(forms.ModelForm):
+class ProcessFormUpdate(URLRedirectBaseForm):
     orderer_steps = OrderedModelMultipleChoiceField(Step.objects.all())
     class Meta:
         model = Process

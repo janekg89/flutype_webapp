@@ -76,6 +76,10 @@ def outer_product(df1, df2):
     y = list(map(float,df2.values))
     return np.outer(y,x)
 
+def camel_case_split(identifier):
+    matches = re.finditer('.+?(?:(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|$)', identifier)
+    return " ".join([m.group(0) for m in matches])
+
 
 def empty_list(max):
     list = []
@@ -146,21 +150,39 @@ def read_tsv_diconary(fpath):
 
 def read_tsv_table(fpath):
     table = pd.read_csv(fpath, sep="\t", encoding='utf-8', dtype=str)
-    if "step" in table:
-        table.dropna(axis=0, subset = ['step'], how='all', inplace=True)
+    return table
+
+def clean_step_table(table):
+    table.dropna(axis=0, subset=['step'], how='all', inplace=True)
+    return table
+
+def read_and_dropnan(fpath):
+    table = read_tsv_table(fpath)
+    return nan_to_none_in_pdtable(table)
+
+def nan_to_none_in_pdtable(table):
     table.replace([np.NaN], [None], inplace=True)
     return table
+
 
 def write_tsv_table(df,fpath):
     df.replace([None], [np.NaN], inplace=True)
     df.to_csv(fpath,sep=str("\t"), encoding='utf-8', index=False)
 
 def read_ligands(ligand):
-    object_capitalized = ligand.capitalize()
-    model = get_model_by_name(object_capitalized)
+    model = get_model_by_name(ligand)
     df = read_frame(model.objects.all())
     df.drop(["polymorphic_ctype", "id", "ligand_ptr"], axis=1, inplace=True)
     return df
+
+def cap_and_read(ligand):
+    """
+
+    :param ligand: zb. "peptide", as string
+    :return: returns pd with ligand_ptr, id, poly
+    """
+    return read_ligands(ligand.capitalize())
+
 
 def read_buffer():
     model = get_model_by_name("Buffer")

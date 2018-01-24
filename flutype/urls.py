@@ -14,6 +14,9 @@ urlpatterns = [
 
     url(r'^study/(?P<sid>.*)/$', views.study_view, name='study'),
     url(r'^study/(?P<sid>.*)/import_measurement$', views.import_measurement_view, name='import_measurement'),
+    url(r'^study/(?P<sid>.*)/edit$', views.study_edit, name='study_edit'),
+
+    url(r'^studies/new/$', views.study_new, name='study_new'),
 
     url(r'^study_ligands/(?P<sid>.*)/$', views.study_ligands_view, name='study_ligands'),
 

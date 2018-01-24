@@ -94,8 +94,14 @@ class Buffer(Sidable, Commentable, models.Model):
     """ Buffer model """
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
 
+
+
     def __str__(self):
         return self.sid
+
+    @classmethod
+    def url(cls):
+        return "buffers"
 
 
 ########################################
@@ -121,6 +127,10 @@ class Peptide(Ligand):
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     objects = LigandManager()
 
+    @classmethod
+    def url(cls):
+        return "peptides"
+
 
 class Virus(Ligand):
     """ Virus ligand. """
@@ -135,6 +145,10 @@ class Virus(Ligand):
     class Meta:
         verbose_name_plural = "viruses"
 
+    @classmethod
+    def url(cls):
+        return "viruses"
+
 class Antibody(Ligand):
     """ Antibody ligand. """
     target = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
@@ -145,6 +159,10 @@ class Antibody(Ligand):
     class Meta:
         verbose_name_plural = "antibodies"
 
+    @classmethod
+    def url(cls):
+        return "antibodies"
+
 
 class Complex(Ligand):
     """ Complex ligand. """
@@ -153,6 +171,11 @@ class Complex(Ligand):
 
     class Meta:
         verbose_name_plural = "complexes"
+
+
+    @classmethod
+    def url(cls):
+        return "complexes"
 
     @property
     def ligands_str(self):
@@ -201,13 +224,7 @@ class LigandBatch(Batch):
 
     class Meta:
         verbose_name_plural = "ligand batches"
-    """
-    def save(self):
-        instance = super(LigandBatch, self).save(commit=False)
 
-        if self.concentration == 1 and self.concentration_unit. ==  stock__1:
-            instance.stock = True
-    """
 
 
 
@@ -220,6 +237,10 @@ class VirusBatch(LigandBatch):
     class Meta:
         verbose_name_plural = "virus batches"
 
+    @classmethod
+    def url(cls):
+        return "virusbatches"
+
 
 class PeptideBatch(LigandBatch):
     """ Peptide batch model. """
@@ -228,6 +249,9 @@ class PeptideBatch(LigandBatch):
     class Meta:
         verbose_name_plural = "peptide batches"
 
+    @classmethod
+    def url(cls):
+        return "peptidebatches"
 
 class AntibodyBatch(LigandBatch):
     """ Antibody batch model. """
@@ -236,6 +260,9 @@ class AntibodyBatch(LigandBatch):
     class Meta:
         verbose_name_plural = "antibody batches"
 
+    @classmethod
+    def url(cls):
+        return "antibodybatches"
 
 class ComplexBatch(LigandBatch):
     """ Complex batch model. """
@@ -243,6 +270,10 @@ class ComplexBatch(LigandBatch):
 
     class Meta:
         verbose_name_plural = "complex batches"
+
+    @classmethod
+    def url(cls):
+        return "complexbatches"
 
 
 class BufferBatch(LigandBatch):
@@ -252,7 +283,9 @@ class BufferBatch(LigandBatch):
     class Meta:
         verbose_name_plural = "buffer batches"
 
-
+    @classmethod
+    def url(cls):
+        return "bufferbatches"
 
 
 ########################################
@@ -324,6 +357,10 @@ class Step(Sidable, Commentable, models.Model):
         """ Type of step."""
         subclass_object = Step.objects.get_subclass(id=self.id)
         return subclass_object
+
+    @classmethod
+    def url(cls):
+        return "steps"
 
     def __str__(self):
         return self.sid
@@ -470,6 +507,10 @@ class Study(Commentable, Sidable, Dateable, Userable, Statusable, FileAttachable
 
     class Meta:
         verbose_name_plural = "studies"
+
+    @classmethod
+    def url(cls):
+        return "index"
 
     def users(self):
         user_ids = self.rawspotcollection_set.values_list("processstep__user", flat="True").distinct()

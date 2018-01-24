@@ -7,8 +7,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from .helper import generate_tree, tar_tree, empty_list,rows_and_cols_to_gal_file, auto_get_or_create_ligand_batches, \
-    get_or_create_galfile
+from .helper import generate_tree,  empty_list, auto_get_or_create_ligand_batches, \
+    camel_case_split
 from .forms import PeptideForm, VirusForm, AntibodyForm, AntibodyBatchForm, \
     PeptideBatchForm, VirusBatchForm, ProcessStepForm, ComplexBatchForm, ComplexForm, StudyForm, \
     WashingForm,DryingForm,SpottingForm, QuenchingForm,BlockingForm,IncubatingForm, \
@@ -18,12 +18,14 @@ from .models import RawSpotCollection, SpotCollection, Process, PeptideBatch, \
     RawDoc , Buffer, BufferBatch, Ligand, UnitsType, LigandBatch, GalFile, Scanning
 from django.forms import formset_factory, inlineformset_factory
 from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.utils.timezone import localtime, now
 from tempfile import NamedTemporaryFile
+
+#from guardian.decorators import permission_required_or_403
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -145,7 +147,7 @@ def import_measurement_view(request,sid):
 
 
     concentration_units = list(UnitsType.labels.values())
-    measurement_form = MeasurementForm()
+    measurement_form = MeasurementForm(initial={'user': request.user})
     if request.method == 'POST':
         if "measurement_type" in request.POST and not "ligands" in request.POST:
             measurement_form = MeasurementForm(request.POST)
@@ -207,6 +209,9 @@ def import_measurement_view(request,sid):
                             # fixme: for edit this should be just the way around
                             if RawSpotCollection.objects.filter(sid=raw_spot_collection_dict["sid"]).exists():
                                 return JsonResponse({"is_error":True, "msg":"measurement sid allready exists!"})
+
+
+
                             rsc,_ = RawSpotCollection.objects.get_or_create(results=results_dic,
                                                                             lig_mob_path=temp_lig_mob.name,
                                                                             lig_fix_path=temp_lig_fix.name,
@@ -819,7 +824,32 @@ def buffer_batch_new(request):
             form.save()
             return redirect('bufferbatches')
 
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer_batch'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'bufferBatch'})
+
+@login_required
+def study_new(request):
+    form = StudyForm(initial={'user': request.user,})
+    if request.method == 'POST':
+        form =  StudyForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    return render(request, 'flutype/create.html', {'form': form,})
+
+
+@login_required
+def study_edit(request,sid):
+    instance = get_object_or_404(Study, sid=sid)
+    p#erm = request.user.has_perm('change_study',instance)
+    #print(perm)
+    form = StudyForm(instance=instance)
+    if request.method == 'POST':
+        form =  StudyForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    return render(request, 'flutype/create.html', {'form': form,})
+
 
 @login_required
 def buffer_batch_edit(request, sid):
@@ -830,7 +860,7 @@ def buffer_batch_edit(request, sid):
         if form.is_valid():
             form.save()
             return redirect('bufferbatches')
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer_batch'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'bufferBatch'})
 
 @login_required
 def buffer_batch_delete(request, sid):
@@ -838,7 +868,7 @@ def buffer_batch_delete(request, sid):
     if request.method == 'POST':
         buffer_batch.delete()
         return redirect('bufferbatches')
-    return render(request, 'flutype/delete.html', {'buffer_batch': buffer_batch, 'type': 'buffer_batch'})
+    return render(request, 'flutype/delete.html', {'buffer_batch': buffer_batch, 'type': 'bufferBatch'})
 
 @login_required
 def highcharts_view(request, measurement_sid,sid):
@@ -963,7 +993,7 @@ def complex_batch_delete(request, sid):
     if request.method == 'POST':
         complex_batch.delete()
         return redirect('complexbatches')
-    return render(request, 'flutype/delete.html', {'complex_batch': complex_batch, 'type': 'complex_batch'})
+    return render(request, 'flutype/delete.html', {'complex_batch': complex_batch, 'type': 'complexBatch'})
 
 @login_required
 def complex_batch_edit(request, sid):
@@ -975,7 +1005,7 @@ def complex_batch_edit(request, sid):
         if form.is_valid():
             form.save()
             return redirect('complexbatches')
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'complex_batch'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'complexBatch'})
 
 @login_required
 def complex_batch_new(request):
@@ -986,7 +1016,7 @@ def complex_batch_new(request):
         if form.is_valid():
             form.save()
             return redirect('complexbatches')
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'complex_batch'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'complexBatch'})
 
 @login_required
 def complex_batch_view(request):
@@ -1115,7 +1145,7 @@ def antibody_batch_delete(request, sid):
     if request.method == 'POST':
         antibody_batch.delete()
         return redirect('antibodybatches')
-    return render(request, 'flutype/delete.html', {'antibody_batch': antibody_batch, 'type': 'antibody_batch'})
+    return render(request, 'flutype/delete.html', {'antibody_batch': antibody_batch, 'type': 'antibodyBatch'})
 
 
 @login_required
@@ -1124,7 +1154,7 @@ def peptide_batch_delete(request, sid):
     if request.method == 'POST':
         peptide_batch.delete()
         return redirect('peptidebatches')
-    return render(request, 'flutype/delete.html', {'peptide_batch': peptide_batch, 'type': 'peptide_batch'})
+    return render(request, 'flutype/delete.html', {'peptide_batch': peptide_batch, 'type': 'peptideBatch'})
 
 
 @login_required
@@ -1133,7 +1163,7 @@ def virus_batch_delete(request, sid):
     if request.method == 'POST':
         virus_batch.delete()
         return redirect('virusbatches')
-    return render(request, 'flutype/delete.html', {'virus_batch': virus_batch, 'type': 'virus_batch'})
+    return render(request, 'flutype/delete.html', {'virus_batch': virus_batch, 'type': 'virusBatch'})
 
 
 @login_required
@@ -1147,7 +1177,7 @@ def antibody_batch_edit(request, sid):
             form.save()
             return redirect('antibodybatches')
 
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'antibody_batch'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'antibodyBatch'})
 
 
 @login_required
@@ -1161,7 +1191,7 @@ def virus_batch_edit(request, sid):
             form.save()
             return redirect('virusbatches')
 
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'virus_batch'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'virusBatch'})
 
 
 @login_required
@@ -1173,7 +1203,7 @@ def peptide_batch_edit(request, sid):
         if form.is_valid():
             form.save()
             return redirect('peptidebatches')
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'peptide_batch'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'peptideBatch'})
 
 
 @login_required
@@ -1185,7 +1215,7 @@ def peptide_batch_new(request):
             form.save()
             return redirect('peptidebatches')
 
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'peptide_batch'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': form.hr_classname})
 
 
 @login_required
@@ -1196,7 +1226,7 @@ def virus_batch_new(request):
         if form.is_valid():
             form.save()
             return redirect('virusbatches')
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'virus_batch'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'virusBatch'})
 
 
 
@@ -1209,7 +1239,7 @@ def antibody_batch_new(request):
         if form.is_valid():
             form.save()
             return redirect('antibodybatches')
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'antibody_batch'})
+    return render(request, 'flutype/create.html', {'form': form, 'type': 'antibodyBatch'})
 
 
 @login_required
