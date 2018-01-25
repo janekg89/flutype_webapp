@@ -4,7 +4,7 @@
         <h1><i class="fa fa-fw fa-server"></i> Peptide Batches
         {% if type == "fixed" %}(Fixed){% elif type == "mobile" %}(Mobile){% endif %}
         <i class="fa fa-fw fa-flask"></i>
-        <a href="{{ url('peptide_batch_new') }}" class="btn btn-default" title="Add new peptide batch">
+        <a href="{{ url('new_ligandbatch', args=["PeptideBatch"]) }}" class="btn btn-default" title="Add new peptide batch">
             <span class="fa fa-plus-circle fa-3x text-success"></span>
         </a>
         </h1>

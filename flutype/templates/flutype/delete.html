@@ -1,44 +1,10 @@
 {% extends "flutype/base.html" %}
 {% block content %}
 <div class="standard">
-{% if type == "peptide" %}
-    <h1>Delete Peptide</h1>
-    <p>Are you sure you want to delete the peptide [{{ peptide.sid }}]?</p>
-{%elif type == "virus"  %}
-    <h1>Delete Virus</h1>
-    <p>Are you sure you want to delete the virus [{{ virus.sid }}]?</p>
-{%elif type == "antibody"  %}
-    <h1>Delete Antibody</h1>
-    <p>Are you sure you want to delete the antibody [{{ antibody.sid }}]?</p>
-{%elif type == "complex"  %}
-<h1>Delete complex</h1>
-    <p>Are you sure you want to delete the complex [{{ complex.sid }}]?</p>
-{%elif type == "buffer"  %}
-<h1>Delete Buffer</h1>
-    <p>Are you sure you want to delete the buffer [{{ buffer.sid }}]?</p>
-{%elif type == "peptide_batch"  %}
-    <h1>Delete Peptide Batch</h1>
-    <p>Are you sure you want to delete the peptide_batch [{{ peptide_batch.sid }}]?</p>
-{%elif type == "antibody_batch"  %}
-    <h1>Delete Antibody Batch</h1>
-    <p>Are you sure you want to delete the antibody_batch [{{ antibody_batch.sid }}]?</p>
-{%elif type == "complex_batch"  %}
-    <h1>Delete Complex Batch</h1>
-    <p>Are you sure you want to delete the complex_batch [{{ complex_batch.sid }}]?</p>
-{%elif type == "virus_batch"  %}
-    <h1>Delete Virus Batch</h1>
-    <p>Are you sure you want to delete the virus_batch [{{ virus_batch.sid }}]?</p>
-{%elif type == "buffer_batch"  %}
-<h1>Delete Buffer Batch</h1>
-    <p>Are you sure you want to delete the buffer_batch [{{ buffer_batch.sid }}]?</p>
-{%elif type == "step"  %}
-    <h1>Delete Step</h1>
-    <p>Are you sure you want to delete the {{ step.get_step_type.__class__.__name__ }} step [{{ step.sid }}]?</p>
-{%elif type == "process"  %}
-    <h1>Delete Process</h1>
-    <p>Are you sure you want to delete the process [{{ process.sid }}]?</p>
+    <h1>Delete {{ instance.__class__.__name__ }}</h1>
+    <p>Are you sure you want to delete the {{ instance.__class__.__name__ }} [{{ instance.sid }}]?</p>
 
-{% endif %}
+
 
 <form method="post">
     <span style="float:left;">
@@ -46,31 +12,8 @@
         <input class="btn btn-default"  type="submit" value="Yes, delete." />
     </span>
 </form>
-    {% if type == "peptide" %}
-       <form action={{url('peptides')}}>
-    {%elif type == "virus"  %}
-       <form action={{url('viruses')}}>
-    {%elif type == "antibody"  %}
-       <form action={{url('antibodies')}}>
-    {%elif type == "peptide_batch"  %}
-       <form action={{url('peptidebatches')}}>
-    {%elif type == "complex" %}
-       <form action={{url('complexes')}}>
-    {%elif type == "buffer" %}
-       <form action={{url('buffers')}}>
-    {%elif type == "complex_batch" %}
-       <form action={{url('complexbatches')}}>
-    {%elif type == "antibody_batch"  %}
-       <form action={{url('antibodybatches')}}>
-    {%elif type == "virus_batch"  %}
-       <form action={{url('virusbatches')}}>
-    {%elif type == "buffer_batch" %}
-       <form action={{url('bufferbatches')}}>
-    {%elif type == "step"  %}
-       <form action={{url('steps')}}>
-    {%elif type == "process"  %}
-       <form action={{url('processes')}}>
-    {% endif %}
+
+    <form action={{url(instance.__class__.url())}}>
         <span style="float:left;">
             <button class="btn btn-default"> No, cancel.</button>
         </span>
@@ -78,3 +21,4 @@
 
     </div>
 {% endblock %}
+

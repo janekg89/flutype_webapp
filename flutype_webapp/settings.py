@@ -29,10 +29,10 @@ ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', 'localhost', 'flutype.de', 'www.flutype
 # SECURITY WARNING: don't run create users with default password in production !
 DEFAULT_USER_PASSWORD = 'flutype_db'
 
-#AUTHENTICATION_BACKENDS = (
-#    'django.contrib.auth.backends.ModelBackend', # this is default
-#    'guardian.backends.ObjectPermissionBackend',
-#)
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend', # this is default
+    'guardian.backends.ObjectPermissionBackend',
+)
 
 # Application definition
 INSTALLED_APPS = [
@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'polymorphic',
     'imagekit',
     'rest_framework',
-    #'guardian',
+    'guardian',
     'dbbackup',  # django-dbbackup
     ]
 

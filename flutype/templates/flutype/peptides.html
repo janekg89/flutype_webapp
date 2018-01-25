@@ -8,7 +8,7 @@
         {% elif type == "mobile" %}
             (Mobile)
         {% endif %}
-        <a href="{{ url('peptide_new') }}" class="btn btn-default" title="Add new peptide">
+        <a href="{{ url('new', args=["Peptide"]) }}" class="btn btn-default" title="Add new peptide">
         <span class="fa fa-plus-circle fa-3x text-success"></span></a>
         </h1>
         {% with id_peptides_table = "peptides" %}

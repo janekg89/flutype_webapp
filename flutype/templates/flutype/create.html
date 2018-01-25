@@ -13,12 +13,10 @@
       <form method="post" class="post-form">
           <table id="edit">
               <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-
        {{ form.as_table() }}
            </table>
                   <span style="float:left;">
-
-              <button class="btn btn-default btn-success">Save Changes</button>
+                        <button class="btn btn-default btn-success">Save Changes</button>
                   </span>
       </form>
       <form action={{url(form.url_redirect)}}>
