@@ -26,7 +26,7 @@
         {% for p in peptides.all() %}
             <tr>
                 {% if request.user.is_superuser %}<td>
-                    <a href="{{ url('peptide_edit', args=[p.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                    <a href="{{ url('edit', args=[p.__class__.__name__,p.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
                 </td>{% endif %}
                 <td><b>{{ p.sid }}</b></td>
                 <td>{{ p.name }}</td>
@@ -36,7 +36,7 @@
                 <td>{{ p.c_terminus }}</td>
                 <td>{{ p.comment }}</td>
                 {% if request.user.is_superuser %}<td class="alert-danger">
-                    <a href="{{ url('peptide_delete', args=[p.sid]) }}"><i class="fa fa-fw fa-trash"></i></a>
+                    <a href="{{ url('delete', args=[p.__class__.__name__,p.sid]) }}"><i class="fa fa-fw fa-trash"></i></a>
                  </td>{% endif %}
             </tr>
         {% endfor %}
