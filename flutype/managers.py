@@ -7,7 +7,7 @@ from django.utils import timezone
 import datetime
 from .behaviours import Status
 from model_utils.managers import InheritanceManager
-#from guardian.shortcuts import assign_perm
+from guardian.shortcuts import assign_perm
 
 
 
@@ -115,8 +115,9 @@ class StudyManager(models.Manager):
                     test = Status.get_choice(kwargs["meta"]["status"])
 
             this_study, created_s = super(StudyManager, self).get_or_create(*args, **kwargs["meta"])
-            #assign_perm("change_study",this_study.user, this_study)
-            #assign_perm("delete_study", this_study.user, this_study)
+            if bool(this_study.user):
+                assign_perm("change_study",this_study.user, this_study)
+                assign_perm("delete_study", this_study.user, this_study)
 
         if "raw_docs_fpaths" in kwargs:
             for fpath in kwargs["raw_docs_fpaths"]:
@@ -154,7 +155,11 @@ class MeasurementManager(models.Manager):
             print("*** Creating Measurement <{}>***".format(kwargs["meta"]["sid"]))
 
             this_measurement, created = super(MeasurementManager, self).get_or_create(*args, **kwargs["meta"])
+            if bool(this_measurement.user):
+                assign_perm("change_measurement",this_measurement.user, this_measurement)
+                assign_perm("delete_measurement", this_measurement.user, this_measurement)
             this_measurement.studies.add(kwargs["study"])
+
 
         if "raw_docs_fpaths" in kwargs:
             for fpath in kwargs["raw_docs_fpaths"]:
@@ -308,6 +313,9 @@ class SpotcollectionManager(models.Manager):
             meta = kwargs["meta"]
             print("*** Creating Result <{}>***".format(kwargs["meta"]["sid"]))
             this_spot_collection, created = super(SpotcollectionManager, self).get_or_create(*args, **meta)
+            if bool(this_spot_collection.raw_spot_collection.user):
+                assign_perm("change_spot_collection", this_spot_collection.raw_spot_collection.user, this_spot_collection)
+                assign_perm("delete_spot_collection", this_spot_collection.raw_spot_collection.user, this_spot_collection)
 
         if "raw_docs_fpaths" in kwargs:
             for fpath in kwargs["raw_docs_fpaths"]:

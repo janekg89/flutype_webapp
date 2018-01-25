@@ -33,7 +33,7 @@
                     <tr>
                         {% if type == "gal_file" %}  <td></td>{% endif %}
                         {% if request.user.is_superuser %}<td>
-                    <a href="{{ url('antibody_batch_edit', args=[antibodybatch.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                    <a href="{{  url('edit', args=[antibodybatch.__class__.__name__, antibodybatch.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
                 </td>{%  endif %}
 
                         <td><b>{{ antibodybatch.sid }}</b></td>
@@ -55,7 +55,7 @@
                         <td>{{ antibodybatch.production_date }}</td>
                         <td>{{ antibodybatch.comment }}</td>
                         {% if request.user.is_superuser %}<td class="alert-danger">
-                        <a href="{{ url('antibody_batch_delete', args=[antibodybatch.sid]) }}"><i class="fa fa-fw fa-trash"></i></a>
+                        <a href="{{ url('delete', args=[antibodybatch.__class__.__name__, antibodybatch.sid]) }}"><i class="fa fa-fw fa-trash"></i></a>
                      </td>{%  endif %}
                     </tr>
                 {% endfor %}
