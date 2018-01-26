@@ -23,3 +23,33 @@
     color: #333;
 }
 
+.margin-left {
+    margin-left: 10px;
+}
+
+.margin-right {
+    margin-right: 10px;
+}
+
+.margin-top {
+    margin-right: 10px;
+}
+
+.margin-bottum {margin-bottom: 10px}
+
+.microwell-plate {
+    width : 100% ;
+    height: 320px;
+    overflow: hidden ;
+}
+
+
+
+
+.handsontable th { background: #dcdcdc !important; }
+
+#process{
+    min-height:80px;
+}
+
+

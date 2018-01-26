@@ -766,6 +766,7 @@ def delete_view(request, model_name, sid):
         return delete_posted_and_redirect(instance)
     return render(request, 'flutype/delete.html', {'instance':instance})
 
+
 @login_required
 def steps_view(request):
     steps = Step.objects.all()

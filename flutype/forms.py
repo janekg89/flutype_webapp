@@ -53,6 +53,11 @@ class MeasurementForm(BaseForm):
             'comment': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
+    @property
+    def url_redirect(self):
+        return self.Meta.model.url()
+
+
 class RawDocForm(BaseForm):
     class Meta:
         model = RawDoc
@@ -82,6 +87,10 @@ class StudyForm(URLRedirectBaseForm):
             'comment': forms.Textarea(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
         }
+
+    @property
+    def url_redirect(self):
+        return self.Meta.model.url()
 
 
 class PeptideForm(URLRedirectBaseForm):

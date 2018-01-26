@@ -101,6 +101,8 @@ class Buffer(Sidable, Commentable, models.Model):
 
     @classmethod
     def url(cls):
+
+
         return "buffers"
 
     @classmethod
@@ -121,6 +123,9 @@ class Ligand(PolymorphicModel):
 
     def __str__(self):
         return self.sid
+
+
+
 
 
 class Peptide(Ligand):
@@ -707,6 +712,11 @@ class RawSpotCollection(Measurement):
     @property
     def peptides2(self):
         return self.ligands2.instance_of(Peptide)
+
+    @classmethod
+    def url(cls, *args):
+        url = 'measurements'
+        return url
 
     def is_spot_collection(self):
         result = True
