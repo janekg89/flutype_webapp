@@ -156,8 +156,8 @@ class MeasurementManager(models.Manager):
 
             this_measurement, created = super(MeasurementManager, self).get_or_create(*args, **kwargs["meta"])
             if bool(this_measurement.user):
-                assign_perm("change_measurement",this_measurement.user, this_measurement)
-                assign_perm("delete_measurement", this_measurement.user, this_measurement)
+                assign_perm("change_rawspotcollection",this_measurement.user, this_measurement)
+                assign_perm("delete_rawspotcollection", this_measurement.user, this_measurement)
             this_measurement.studies.add(kwargs["study"])
 
 
@@ -314,8 +314,8 @@ class SpotcollectionManager(models.Manager):
             print("*** Creating Result <{}>***".format(kwargs["meta"]["sid"]))
             this_spot_collection, created = super(SpotcollectionManager, self).get_or_create(*args, **meta)
             if bool(this_spot_collection.raw_spot_collection.user):
-                assign_perm("change_spot_collection", this_spot_collection.raw_spot_collection.user, this_spot_collection)
-                assign_perm("delete_spot_collection", this_spot_collection.raw_spot_collection.user, this_spot_collection)
+                assign_perm("change_spotcollection", this_spot_collection.raw_spot_collection.user, this_spot_collection)
+                assign_perm("delete_spotcollection", this_spot_collection.raw_spot_collection.user, this_spot_collection)
 
         if "raw_docs_fpaths" in kwargs:
             for fpath in kwargs["raw_docs_fpaths"]:

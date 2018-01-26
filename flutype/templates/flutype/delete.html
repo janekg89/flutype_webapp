@@ -1,24 +1,24 @@
 {% extends "flutype/base.html" %}
 {% block content %}
 <div class="standard">
-    <h1>Delete {{ instance.__class__.__name__ }}</h1>
-    <p>Are you sure you want to delete the {{ instance.__class__.__name__ }} [{{ instance.sid }}]?</p>
+    {% with class =  instance.__class__  %}
+        <h1>Delete {{ class.__name__ }}</h1>
+        <p>Are you sure you want to delete the {{ class.__name__ }} [{{ instance.sid }}]?</p>
 
+        <form method="post">
+            <span style="float:left;">
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                <input class="btn btn-default"  type="submit" value="Yes, delete." />
+            </span>
+        </form>
 
+        <form action={{url(class.url())}}>
 
-<form method="post">
-    <span style="float:left;">
-        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-        <input class="btn btn-default"  type="submit" value="Yes, delete." />
-    </span>
-</form>
-
-    <form action={{url(instance.__class__.url())}}>
-        <span style="float:left;">
-            <button class="btn btn-default"> No, cancel.</button>
-        </span>
-    </form>
-
-    </div>
+            <span style="float:left;">
+                <button class="btn btn-default"> No, cancel.</button>
+            </span>
+        </form>
+    {% endwith %}
+</div>
 {% endblock %}
 

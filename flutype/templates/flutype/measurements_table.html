@@ -14,7 +14,8 @@
         <tr>
             <th data-sortable="true">sid</th>
             <th data-sortable="true">type</th>
-            <th data-sortable="true">users</th>
+            <th data-sortable="true">responsible</th>
+            <th data-sortable="true">involved</th>
             <th data-sortable="true">batch</th>
             <th data-sortable="true">functionalization</th>
             <th data-sortable="true">manufacturer</th>
@@ -31,10 +32,14 @@
         <tbody>
         {% for c in collections %}
             <tr>
-                <td><b><a href="{{ url('rawspotcollectionview', args=[c.sid]) }}"> {{ c.sid }}</a></b></td>
+                <td><b><a href="{{ url('rawspotcollectionview', args=[c.sid]) }}"> {{ c.sid }}</a></b>
+                {% if request.user.has_perm('change_rawspotcollection', c) %}
+                        <a title="delete Measurement" href="{{ url('delete', args=[c.__class__.__name__, c.sid]) }}"><i  class="fa fa-fw fa-trash text-danger"></i></a>
+                    {% endif %}</td>
                 <td>{{ macros.measurement_type(c.measurement_type) }} {{ c.measurement_type }}
                 </td>
                 <!-- user -->
+                <td>{{ macros.user(c.user) }}</td>
                 <td>
                 {% if c.process %}
                 {% if c.process.users() %}
