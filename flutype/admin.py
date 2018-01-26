@@ -16,6 +16,12 @@ from .forms import ProcessAdminForm
 class StudyAdmin(admin.ModelAdmin):
     fields = ('sid', 'comment')
     list_display = ('sid',  'comment')
+
+@admin.register(RawSpotCollection)
+class RawSpotCollectionAdmin(admin.ModelAdmin):
+    fields = ('sid', 'comment')
+    list_display = ('sid',  'comment')
+
 ################################
 # Ligands
 ################################
