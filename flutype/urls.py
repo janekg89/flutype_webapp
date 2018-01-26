@@ -53,8 +53,6 @@ urlpatterns = [
     url(r'^g/(?P<model_name>.*)/(?P<sid>.*)/delete$', views.delete_view, name='delete'),
     url(r'^g/(?P<model_name>.*)/(?P<sid>.*)/edit$', views.edit_view, name='edit'),
 
-
-
     url(r'^buffers/$', views.buffer_view, name='buffers'),
     url(r'^peptides/$', views.peptide_view, name='peptides'),
     url(r'^complexes/$', views.complex_view, name='complexes'),
