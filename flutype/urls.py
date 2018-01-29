@@ -52,8 +52,8 @@ urlpatterns = [
     url(r'^ligandbatch/(?P<model_name>.*)/new/$', views.ligandbatch_new, name='new_ligandbatch'),
     url(r'^studies/new/$', views.study_new, name='study_new'),
 
-    url(r'^g/(?P<model_name>.*)/(?P<sid>.*)/delete$', views.delete_view, name='delete'),
-    url(r'^g/(?P<model_name>.*)/(?P<sid>.*)/edit$', views.edit_view, name='edit'),
+    url(r'^g/(?P<model_name>.*)/(?P<pk>.*)/delete$', views.delete_view, name='delete'),
+    url(r'^g/(?P<model_name>.*)/(?P<pk>.*)/edit$', views.edit_view, name='edit'),
 
     url(r'^buffers/$', views.buffer_view, name='buffers'),
     url(r'^peptides/$', views.peptide_view, name='peptides'),

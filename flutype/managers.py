@@ -55,7 +55,7 @@ class LigandManager(PolymorphicManager):
 
 class LigandBatchManager(InheritanceManager):
     def get_or_create(self, *args, **kwargs):
-        if "stock" in kwargs and kwargs["stock"] in [1, True,"1"]:
+        if "stock" in kwargs and kwargs["stock"] in [1, True,"1","True","true"]:
             kwargs["stock"] = True
         else:
             kwargs["stock"] = False
@@ -153,7 +153,8 @@ class MeasurementManager(models.Manager):
     def get_or_create(self, *args, **kwargs):
         if "meta" in kwargs:
             print("*** Creating Measurement <{}>***".format(kwargs["meta"]["sid"]))
-
+            if "user" in kwargs["meta"] and isinstance(kwargs["meta"]["user"], basestring):
+                kwargs["meta"]["user"] = get_user_or_none(kwargs["meta"]["user"])
             this_measurement, created = super(MeasurementManager, self).get_or_create(*args, **kwargs["meta"])
             if bool(this_measurement.user):
                 assign_perm("change_rawspotcollection",this_measurement.user, this_measurement)

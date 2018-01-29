@@ -26,6 +26,8 @@ from django.contrib.auth.forms import PasswordChangeForm
 from tempfile import NamedTemporaryFile
 from django.apps import apps
 from django.db import transaction
+from guardian.shortcuts import assign_perm
+
 
 
 #from guardian.decorators import permission_required_or_403
@@ -139,7 +141,6 @@ def study_view(request,sid):
 
     return render(request, 'flutype/study.html', context)
 
-@transaction.atomic
 @login_required
 def import_measurement_view(request,sid):
     study = get_object_or_404(Study, sid=sid)
@@ -755,22 +756,31 @@ def new_view(request,model_name,**kwargs):
     Form = Model.get_form()
     form_instance = Form(**kwargs)
     if request.method == 'POST':
-        form_instance = Form(request.POST,**kwargs)
+        form_instance = Form(request.POST)
         if form_instance.is_valid():
-            save_posted_and_redirect(form_instance)
+            return save_posted_and_redirect(form_instance)
     return render(request, 'flutype/create.html', {'form': form_instance})
 
 @login_required
-def edit_view(request, model_name, sid):
+def edit_view(request, model_name, pk):
     Model = apps.get_model("flutype", model_name)
-    instance = get_object_or_404(Model, sid=sid)
+    instance = get_object_or_404(Model, pk=pk)
     forms_dict = {"instance": instance}
     return new_view(request, model_name, **forms_dict)
 
 @login_required
 def study_new(request):
-    forms_dict = {"initial":{"user":request.user}}
-    return new_view(request,"Study",**forms_dict)
+    Model = apps.get_model("flutype", "Study")
+    Form = Model.get_form()
+    form_instance = Form(initial={"user":request.user})
+    if request.method == 'POST':
+        form_instance = Form(request.POST)
+        if form_instance.is_valid():
+            study_instance = form_instance.save()
+            assign_perm("change_study", study_instance.user, study_instance)
+            assign_perm("delete_study", study_instance.user, study_instance)
+            return redirect(form_instance.url_redirect)
+    return render(request, 'flutype/create.html', {'form': form_instance})
 
 @login_required
 def ligandbatch_new(request, model_name):
@@ -778,9 +788,9 @@ def ligandbatch_new(request, model_name):
     return new_view(request,model_name,**forms_dict)
 
 @login_required
-def delete_view(request, model_name, sid):
+def delete_view(request, model_name, pk):
     Model = apps.get_model("flutype", model_name)
-    instance = get_object_or_404(Model, sid=sid)
+    instance = get_object_or_404(Model, pk=pk)
     if request.method == 'POST':
         return delete_posted_and_redirect(instance)
     return render(request, 'flutype/delete.html', {'instance':instance})

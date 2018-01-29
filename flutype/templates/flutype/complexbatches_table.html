@@ -32,7 +32,7 @@
                     <tr>
                         {% if type == "gal_file" %}  <td></td>{% endif %}
                        {% if request.user.is_superuser %}  <td>
-                    <a href="{{ url('edit', args=[ complexbatch.__class__.__name__, complexbatch.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                    <a href="{{ url('edit', args=[ complexbatch.__class__.__name__, complexbatch.pk]) }}"><i class="fa fa-fw fa-edit"></i></a>
                         </td>{%  endif %}
                         <td><b>{{ complexbatch.sid }}</b></td>
                         <!-- complex information -->
@@ -54,7 +54,7 @@
                         <td>{{ complexbatch.production_date }}</td>
                         <td>{{ complexbatch.comment }}</td>
                     {% if request.user.is_superuser %}<td class="alert-danger">
-                        <a href="{{ url('delete', args=[ complexbatch.__class__.__name__, complexbatch.sid]) }}"><i class="fa fa-fw fa-trash"></i></a>
+                        <a href="{{ url('delete', args=[ complexbatch.__class__.__name__, complexbatch.pk]) }}"><i class="fa fa-fw fa-trash"></i></a>
                      </td>{%  endif %}
                     </tr>
                 {% endfor %}

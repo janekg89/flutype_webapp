@@ -11,4 +11,4 @@ def delete_posted_and_redirect(instance):
 
 def save_posted_and_redirect(instance):
     instance.save()
-    return redirect(instance.__class__.url())
+    return redirect(instance.url_redirect)

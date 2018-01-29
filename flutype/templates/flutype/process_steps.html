@@ -65,10 +65,11 @@
                     {% with sg = s.get_step_type %}
                         {% with class = sg.__class__.__name__ %}
                             <tr>
-                                 <td>{% if request.user.is_superuser %}
-                                    <a href="{{ url('edit', args=[class, sg.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                                 {% if request.user.is_superuser %}<td>
+                                    <a href="{{ url('edit', args=[class, sg.pk]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                                     </td>
                                     {% endif %}
-                                 </td>
+
                                 <td><b> {{ sg.sid }}</b></td>
                                 <td>{{ macros.step_type(sg) }}</td>
                                 <td>{{ sg.method }}</td>
@@ -89,7 +90,7 @@
                                 <td>{{ sg.temperature }}</td>
                                 <td>{{ sg.comment }}</td>
                             {% if request.user.is_superuser %}<td class="alert-danger">
-                    <a href="{{ url('delete', args=[class, sg.sid]) }}"><i class="fa fa-fw fa-trash"></i></a>
+                    <a href="{{ url('delete', args=[class, sg.pk]) }}"><i class="fa fa-fw fa-trash"></i></a>
                  </td>{% endif %}
                             </tr>
                         {% endwith %}
