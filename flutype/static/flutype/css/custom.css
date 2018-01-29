@@ -23,3 +23,55 @@
     color: #333;
 }
 
+.margin-left {
+    margin-left: 10px;
+}
+
+.margin-right {
+    margin-right: 10px;
+}
+
+.margin-top {
+    margin-right: 10px;
+}
+
+.margin-bottum {margin-bottom: 10px}
+
+.microwell-plate {
+    width : 100% ;
+    height: 320px;
+    overflow: hidden ;
+}
+
+
+
+
+.handsontable th { background: #dcdcdc !important; }
+
+#process{
+    min-height:80px;
+}
+
+.step1{
+    background-color: #c47196;
+}
+.step2{
+    background-color: #c3c471;
+}
+.step3{
+    background-color: #76c471;
+}
+
+.step4 {
+    background-color: #7ca8cf
+;
+}
+
+.step5 {
+    background-color: #c49c71;
+}
+
+.multi-collapse{
+    height: 1000px;
+    width: 1200px;
+}

@@ -9,28 +9,28 @@
             <button class="btn dropdown-toggle glyphicon glyphicon-triangle-bottom" title="Add process step" data-toggle="dropdown">
                 <span class="fa fa-plus-circle fa-3x text-success"></span></button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-                <li><a href="{{ url('step_new' , args=["Washing"]) }}">
+                <li><a href="{{ url('new' , args=["Washing"]) }}">
                     <i class="fa fa-fw fa-shower" aria-hidden="true"></i> Washing</a>
                 </li>
-                <li><a href="{{ url('step_new' , args=["Drying"]) }}">
+                <li><a href="{{ url('new' , args=["Drying"]) }}">
                     <i class="fa fa-fw fa-bullhorn" aria-hidden="true"></i> Drying</a>
                 </li>
-                <li><a href="{{ url('step_new' , args=["Spotting"]) }}">
+                <li><a href="{{ url('new' , args=["Spotting"]) }}">
                     <i class="fa fa-fw fa-anchor" aria-hidden="true"></i> Spotting</a>
                 </li>
-                <li><a href="{{ url('step_new' , args=["Quenching"]) }}">
+                <li><a href="{{ url('new' , args=["Quenching"]) }}">
                     <i class="fa fa-fw fa-chain-broken" aria-hidden="true"></i> Quenching</a>
                 </li>
-                <li><a href="{{ url('step_new' , args=["Blocking"]) }}">
+                <li><a href="{{ url('new' , args=["Blocking"]) }}">
                     <i class="fa fa-fw fa-pause" aria-hidden="true"></i> Blocking</a>
                 </li>
-                <li><a href="{{ url('step_new' , args=["Incubating"]) }}">
+                <li><a href="{{ url('new' , args=["Incubating"]) }}">
                     <i class="fa fa-fw fa-tint" aria-hidden="true"></i> Incubating</a>
                 </li>
-                <li><a href="{{ url('step_new' , args=["IncubatingAnalyt"]) }}">
+                <li><a href="{{ url('new' , args=["IncubatingAnalyt"]) }}">
                     <i class="fa fa-fw fa-tint" aria-hidden="true"></i> Incubating Analyte</a>
                 </li>
-                <li><a href="{{ url('step_new' , args=["Scanning"]) }}">
+                <li><a href="{{ url('new' , args=["Scanning"]) }}">
                     <i class="fa fa-fw fa-camera" aria-hidden="true"></i> Scanning</a>
                 </li>
             </ul>
@@ -65,10 +65,11 @@
                     {% with sg = s.get_step_type %}
                         {% with class = sg.__class__.__name__ %}
                             <tr>
-                                 <td>{% if request.user.is_superuser %}
-                                    <a href="{{ url('step_edit', args=[s.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                                 {% if request.user.is_superuser %}<td>
+                                    <a href="{{ url('edit', args=[class, sg.pk]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                                     </td>
                                     {% endif %}
-                                 </td>
+
                                 <td><b> {{ sg.sid }}</b></td>
                                 <td>{{ macros.step_type(sg) }}</td>
                                 <td>{{ sg.method }}</td>
@@ -89,7 +90,7 @@
                                 <td>{{ sg.temperature }}</td>
                                 <td>{{ sg.comment }}</td>
                             {% if request.user.is_superuser %}<td class="alert-danger">
-                    <a href="{{ url('step_delete', args=[sg.sid]) }}"><i class="fa fa-fw fa-trash"></i></a>
+                    <a href="{{ url('delete', args=[class, sg.pk]) }}"><i class="fa fa-fw fa-trash"></i></a>
                  </td>{% endif %}
                             </tr>
                         {% endwith %}

@@ -24,7 +24,7 @@ class DatabaseDJTestCase(TransactionTestCase):
 
 
     def test_update_ligands(self):
-        Ligand_count = {"Antibody":4, "Complex":1, "Virus":7, "Peptide":66}
+        Ligand_count = {"Antibody":4, "Complex":1, "Virus":10, "Peptide":66}
         #read ligands from master
         ligands = self.ma.read_ligands()
         complex = self.ma.read_complex()
@@ -42,7 +42,7 @@ class DatabaseDJTestCase(TransactionTestCase):
 
 
     def test_update_batches(self):
-        Ligand_batch_count = {"AntibodyBatch":12,"BufferBatch":3, "ComplexBatch":1, "VirusBatch":66, "PeptideBatch":242}
+        Ligand_batch_count = {"AntibodyBatch":14,"BufferBatch":6, "ComplexBatch":1, "VirusBatch":154, "PeptideBatch":242}
 
         ligands = self.ma.read_ligands()
         complex = self.ma.read_complex()
@@ -126,8 +126,6 @@ class DatabaseDJTestCase(TransactionTestCase):
             df = cap_and_read(ligand)
             self.assertTrue(ligands[ligand].equals(df))
         self.assertTrue(complex["complex"].equals(read_complex()))
-        print(read_buffer())
-        print(buffer["buffer"])
         self.assertTrue(buffer["buffer"].equals(read_buffer()))
 
 
