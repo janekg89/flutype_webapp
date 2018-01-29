@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.http import JsonResponse,HttpResponseForbidden,Http404
 from .helper import generate_tree,  empty_list, auto_get_or_create_ligand_batches, \
-    camel_case_split
+    camel_case_split, filter_for_class
 from .utils.utils_views import delete_posted_and_redirect, save_posted_and_redirect
 from .forms import PeptideForm, VirusForm, AntibodyForm, AntibodyBatchForm, \
     PeptideBatchForm, VirusBatchForm, ProcessStepForm, ComplexBatchForm, ComplexForm, StudyForm, \
@@ -25,6 +25,8 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from tempfile import NamedTemporaryFile
 from django.apps import apps
+from django.db import transaction
+
 
 #from guardian.decorators import permission_required_or_403
 
@@ -137,6 +139,7 @@ def study_view(request,sid):
 
     return render(request, 'flutype/study.html', context)
 
+@transaction.atomic
 @login_required
 def import_measurement_view(request,sid):
     study = get_object_or_404(Study, sid=sid)
@@ -339,7 +342,22 @@ def measurement_view(request, sid):
 def measurement_ligands_view(request, sid):
     """ Renders detailed RawSpotCollection View. """
     collection = get_object_or_404(RawSpotCollection, sid=sid)
+    ligandbatch_types = ["AntibodyBatch","BufferBatch","ComplexBatch","PeptideBatch","VirusBatch"]
+
+
+    fixed_ligandbatch_pks =collection.rawspot_set.values_list('lig_fix_batch', flat=True).distinct()
+    fixed_ligandbatches = LigandBatch.objects.filter(pk__in = fixed_ligandbatch_pks).select_subclasses()
+    #fixed_lig_batch = {ligand_batch_type:filter_for_class(fixed_ligandbatches,ligand_batch_type) for ligand_batch_type in ligandbatch_types}
+
+    mobile_ligandbatch_pks = collection.rawspot_set.values_list('lig_mob_batch', flat=True).distinct()
+    mobile_ligandbatches = LigandBatch.objects.filter(pk__in=mobile_ligandbatch_pks).select_subclasses()
+    print(mobile_ligandbatches)
+    #mobile_lig_batch = {ligand_batch_type:filter_for_class(mobile_ligandbatches,ligand_batch_type) for ligand_batch_type in ligandbatch_types}
+
+
     context = {
+        'mobile_lig_batch': mobile_ligandbatches,
+        'fixed_lig_batch': fixed_ligandbatches,
         'type': 'ligands',
         'collection': collection,
     }
@@ -375,6 +393,7 @@ def measurement_result_view(request, measurement_sid ,sid):
         'data': json.dumps(data),
         'row_list': json.dumps(row_list),
         'column_list': json.dumps(column_list),
+
         }
     return render(request,
                       'flutype/measurement.html', context)
@@ -818,9 +837,33 @@ def barplot_data_view(request,measurement_sid, sid):
         a = {}
         a["intensity"] = all_spots.filter(raw_spot__lig_fix_batch__sid=lig).values_list("intensity", flat=True)
         a["lig2"] = all_spots.filter(raw_spot__lig_fix_batch__sid=lig).values_list("raw_spot__lig_mob_batch__sid", flat=True)
-        a["lig1"] = all_spots.filter(raw_spot__lig_fix_batch__sid=lig).values_list("raw_spot__lig_fix_batch__ligand__sid").first()
+        a["lig1"] = lig
         a["lig1_con"] = all_spots.filter(raw_spot__lig_fix_batch__sid=lig).values_list(
             "raw_spot__lig_fix_batch__concentration").first()
+        box_list.append(a)
+    data = {
+        "box_list": box_list,
+        "lig1": lig1,
+    }
+    return Response(data)
+
+@login_required
+@api_view(['GET'])
+def barplot2_data_view(request,measurement_sid, sid):
+    collection = get_object_or_404(RawSpotCollection, sid=measurement_sid)
+    sc = collection.spotcollection_set.get(sid=sid)
+    all_spots = sc.spot_set.all()
+    spot_lig1 = all_spots.values_list("raw_spot__lig_mob_batch__sid", flat=True)
+    lig1 = spot_lig1.distinct()
+    box_list = []
+    print(lig1)
+    for lig in lig1:
+        a = {}
+        a["intensity"] = all_spots.filter(raw_spot__lig_mob_batch__sid=lig).values_list("intensity", flat=True)
+        a["lig2"] = all_spots.filter(raw_spot__lig_mob_batch__sid=lig).values_list("raw_spot__lig_fix_batch__sid", flat=True)
+        a["lig1"] = lig
+        a["lig1_con"] = all_spots.filter(raw_spot__lig_mob_batch__sid=lig).values_list(
+            "raw_spot__lig_mob_batch__concentration").first()
         box_list.append(a)
     data = {
         "box_list": box_list,

@@ -280,7 +280,7 @@ def get_or_create_raw_spots(**kwargs):
 
     #spots["lig_mob_batch"]= lig_mob["Name"].values
 
-
+    created = False
     spots["raw_spot_collection"]=kwargs["raw_spot_collection"]
     for k, spot in spots.iterrows():
         raw_spot, created = RawSpot.objects.get_or_create(**spot)
@@ -288,7 +288,9 @@ def get_or_create_raw_spots(**kwargs):
     return raw_spots, created
 
 
-
+def  filter_for_class(list,class_name):
+    Class = apps.get_model("flutype",class_name)
+    return [x for x in list if isinstance(x, Class)]
 
 
 def create_spots(**kwargs):
