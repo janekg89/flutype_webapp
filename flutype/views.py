@@ -756,7 +756,7 @@ def new_view(request,model_name,**kwargs):
     Form = Model.get_form()
     form_instance = Form(**kwargs)
     if request.method == 'POST':
-        form_instance = Form(request.POST)
+        form_instance = Form(request.POST,**kwargs)
         if form_instance.is_valid():
             return save_posted_and_redirect(form_instance)
     return render(request, 'flutype/create.html', {'form': form_instance})

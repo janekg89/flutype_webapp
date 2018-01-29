@@ -1,7 +1,8 @@
 sid	comment	name
-PBST		
 Na		
 Natriumhydrogencarbonat		
 H20		
 NaHCO3/Na2CO3	100mM	NaHCO3/Na2CO3
 NaHCO3		
+Coating Buffer	Buffer for virus dilution experiments.	Coating Buffer
+PBST		Phosphate buffer saline
