@@ -125,9 +125,6 @@ class Ligand(PolymorphicModel):
         return self.sid
 
 
-
-
-
 class Peptide(Ligand):
     """ Pepide ligand. """
     linker = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
