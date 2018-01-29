@@ -33,10 +33,12 @@
                 </tbody>
             </table>
         </div>
+
         <form id="dropzone" class="dropzone" action="{{ url('upload_file_measurement', args=[collection.sid])}}"
               method="post" enctype="multipart/form-data">
             <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
         </form>
+
     </div>
 
     <div class="c">
@@ -88,73 +90,112 @@
         <div class="tables1" style="overflow-x:auto;">
 
             <div class="col-lg-6 img-rounded img-thumbnail">
-                <!-- Fixed Antibodies -->
-                {% with antibodies = collection.antibodies1 %}
-                    {% if antibodies %}
-                        <h3><i class="fa fa-fw fa-hand-spock-o"></i> Antibodies (Fixed)</h3>
+                <!-- Fixed Antibody Batches -->
+                {% with antibody_batches = fixed_lig_batch.filter(antibodybatch__isnull=False, stock=True) %}
+                    {% if antibody_batches %}
+                        <h3>{{macros.ligand_type("Antibody Batch")}}  (Fixed)</h3>
                         {% with id_antibodies_table="fixed_antibodies" %}
-                            {% include "flutype/antibodies_table.html" %}
+                            {% include "flutype/antibodybatches_table.html" %}
                         {% endwith %}
                     {% endif %}
                 {% endwith %}
 
-                <!-- Fixed Peptides -->
-                {% with peptides = collection.peptides1 %}
-                    {% if peptides %}
-                        <h3><i class="fa fa-fw fa-server"></i> Peptides (Fixed)</h3>
+                <!-- Fixed Complex Batches -->
+                {% with complex_batches = fixed_lig_batch.filter(complexbatch__isnull=False, stock=True) %}
+                    {% if complex_batches %}
+                        <h3>{{macros.ligand_type("Complex Batch")}} (Fixed)</h3>
+                        {% with id_antibodies_table="fixed_antibodies" %}
+                            {% include "flutype/complexbatches_table.html" %}
+                        {% endwith %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Fixed Buffer Batches -->
+                {% with buffer_batches = fixed_lig_batch.filter(bufferbatch__isnull=False, stock=True) %}
+                    {% if buffer_batches %}
+                        <h3> {{macros.ligand_type("Buffer Batch")}} (Fixed)</h3>
+                        {% with id_antibodies_table="fixed_antibodies" %}
+                            {% include "flutype/bufferbatches_table.html" %}
+                        {% endwith %}
+                    {% endif %}
+                {% endwith %}
+
+
+
+                <!-- Fixed Peptide Batches  -->
+                {% with peptide_batches = fixed_lig_batch.filter(peptidebatch__isnull=False , stock=True) %}
+                    {% if peptide_batches %}
+                        <h3>{{macros.ligand_type("Peptide Batch")}} (Fixed)</h3>
                         {% with id_peptides_table="fixed_peptides" %}
-                            {% include "flutype/peptides_table.html" %}
+                            {% include "flutype/peptidebatches_table.html" %}
                         {% endwith %}
                     {% endif %}
                 {% endwith %}
 
-                <!-- Fixed Viruses -->
-                {% with viruses = collection.viruses1 %}
-                    {% if viruses %}
-                        <h3><i class="fa fa-fw fa-asterisk"></i> Viruses (Fixed)</h3>
+                <!-- Fixed Virus Batches-->
+                {% with virus_batches = fixed_lig_batch.filter(virusbatch__isnull=False , stock=True) %}
+                    {% if virus_batches %}
+                        <h3>{{macros.ligand_type("Viruses Batch")}} (Fixed)</h3>
                         {% with id_viruses_table="fixed_viruses" %}
-                            {% include "flutype/viruses_table.html" %}
+                            {% include "flutype/virusbatches_table.html" %}
                         {% endwith %}
                     {% endif %}
                 {% endwith %}
 
-                <!-- Fixed Complexes -->
-                <!-- FIXME: missing -->
             </div>
 
             <div class="col-lg-6 img-rounded img-thumbnail">
-                <!-- Fixed Antibodies -->
-                {% with antibodies = collection.antibodies2 %}
-                    {% if antibodies %}
-                        <h3><i class="fa fa-fw fa-hand-spock-o"></i> Antibodies (Mobile)</h3>
+                <!-- Mobile Antibody Batches -->
+                {% with antibody_batches = mobile_lig_batch.filter(antibodybatch__isnull=False , stock=True) %}
+                    {% if antibody_batches %}
+                        <h3>{{macros.ligand_type("Antibody Batch")}} (Mobile)</h3>
                         {% with id_antibodies_table="mobile_antibodies" %}
-                            {% include "flutype/antibodies_table.html" %}
+                            {% include "flutype/antibodybatches_table.html" %}
                         {% endwith %}
                     {% endif %}
                 {% endwith %}
 
-                <!-- Fixed Peptides -->
-                {% with peptides = collection.peptides2 %}
-                    {% if peptides %}
-                        <h3><i class="fa fa-fw fa-server"></i> Peptides (Mobile)</h3>
+                <!-- Mobile Complex Batches -->
+                {% with complex_batches = mobile_lig_batch.filter(complexbatch__isnull=False, stock=True) %}
+                    {% if complex_batches %}
+                        <h3>{{macros.ligand_type("Complex Batch")}} (Mobile)</h3>
+                        {% with id_antibodies_table="mobile_antibodies" %}
+                            {% include "flutype/complexbatches_table.html" %}
+                        {% endwith %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Mobile Buffer Batches -->
+                {% with buffer_batches = mobile_lig_batch.filter(bufferbatch__isnull=False, stock=True) %}
+                    {% if buffer_batches %}
+                        <h3> {{macros.ligand_type("Buffer Batch")}} (Mobile)</h3>
+                        {% with id_antibodies_table="fixed_antibodies" %}
+                            {% include "flutype/bufferbatches_table.html" %}
+                        {% endwith %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Mobile Peptide Batches -->
+                {% with peptide_batches = mobile_lig_batch.filter(peptidebatch__isnull=False , stock=True) %}
+                    {% if peptide_batches %}
+                        <h3>{{macros.ligand_type("Peptide Batch")}} (Mobile)</h3>
                         {% with id_peptides_table="mobile_peptides" %}
-                            {% include "flutype/peptides_table.html" %}
+                            {% include "flutype/peptidebatches_table.html" %}
                         {% endwith %}
                     {% endif %}
                 {% endwith %}
 
-                <!-- Fixed Viruses -->
-                {% with viruses = collection.viruses2 %}
-                    {% if viruses %}
-                        <h3><i class="fa fa-fw fa-asterisk"></i> Viruses (Mobile)</h3>
+                <!-- Fixed Virus Batches -->
+                {% with virus_batches = mobile_lig_batch.filter(virusbatch__isnull=False , stock=True) %}
+                    {% if virus_batches %}
+                        <h3>{{macros.ligand_type("Virus Batch")}} (Mobile)</h3>
                         {% with id_viruses_table="fixed_viruses" %}
-                            {% include "flutype/viruses_table.html" %}
+                            {% include "flutype/virusbatches_table.html" %}
                         {% endwith %}
                     {% endif %}
                 {% endwith %}
 
-                <!-- Fixed Complexes -->
-                <!-- FIXME: missing -->
+
             </div>
         </div>
     {% endif %}
@@ -177,14 +218,18 @@
         </div>
 
         <div id="container1" class="heat"></div>
-        <div class="d " style="overflow-x:auto;">
-        <div>
-            <div class="row" id="myDiv" style="height: 1000px; min-width: 50px; max-width: 1500px; margin: 0 auto"></div>
-            <div class="row" id="top" style="margin:0 auto">
+        <div class="d" style="overflow-x:auto;">
+
+            <div >
+                <div class=" row collapse in multi-collapse" id="myDiv"></div>
+                <div class=" row collapse multi-collapse" id="myDiv2"></div>
+            </div>
+
+            <div>
                 <button id="lin" class="btn btn-info"> lin</button>
                 <button id="log" class="btn btn-info"> log</button>
+                <button type="button" id="rearrange" class="btn btn-info" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="myDiv myDiv2"> rearrange </button>
             </div>
-        </div>
         </div>
 
     {% endif %}
@@ -218,6 +263,8 @@
 
     <script type="text/javascript" charset="utf-8">
         var endpoint = './data';
+        var endpoint2 = './data2';
+
 
         $.ajax({
             method: "GET",
@@ -232,14 +279,29 @@
             }
         });
 
+        $.ajax({
+            method: "GET",
+            url: endpoint2,
+            success: function (data) {
+                dataPlot = data;
+                Plotly.newPlot('myDiv2', Chart(dataPlot));
+            },
+            error: function (error_data) {
+                console.log("error");
+                console.log(error_data)
+            }
+        });
+
         $('#lin').click(function () {
             var update = {
                 "layout.yaxis.type": "lin"
             };
             var myDiv = document.getElementById("myDiv");
             myDiv.layout.yaxis.type = "lin";
-
             Plotly.restyle("myDiv", update);
+            var myDiv2 = document.getElementById("myDiv2");
+            myDiv2.layout.yaxis.type = "lin";
+            Plotly.restyle("myDiv2", update);
         });
 
         $('#log').click(function () {
@@ -248,7 +310,9 @@
             };
             var myDiv = document.getElementById("myDiv");
             myDiv.layout.yaxis.type = "log";
-
+            var myDiv2 = document.getElementById("myDiv2");
+            myDiv2.layout.yaxis.type = "log";
+            Plotly.restyle("myDiv2", update);
             Plotly.restyle("myDiv", update);
         });
 
