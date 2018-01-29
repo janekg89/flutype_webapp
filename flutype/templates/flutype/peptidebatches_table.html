@@ -36,7 +36,7 @@
                     <tr>
                         {% if type == "gal_file" %}  <td></td>{% endif %}
                         {% if request.user.is_superuser %}<td>
-                    <a href="{{ url('edit', args=[peptidebatch.__class__.__name__,peptidebatch.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                    <a href="{{ url('edit', args=[peptidebatch.__class__.__name__,peptidebatch.pk]) }}"><i class="fa fa-fw fa-edit"></i></a>
                         </td>{%  endif %}
                         <td><b>{{ peptidebatch.sid }}</b></td>
                         <!-- ligand information -->
@@ -58,7 +58,7 @@
                         <td>{{ peptidebatch.production_date }}</td>
                         <td>{{ peptidebatch.comment }}</td>
                         {% if request.user.is_superuser %}<td class="alert-danger">
-                        <a href="{{ url('delete', args=[peptidebatch.__class__.__name__, peptidebatch.sid]) }}"><i class="fa fa-fw fa-trash"></i></a>
+                        <a href="{{ url('delete', args=[peptidebatch.__class__.__name__, peptidebatch.pk]) }}"><i class="fa fa-fw fa-trash"></i></a>
                      </td>{%  endif %}
                     </tr>
                 {% endfor %}

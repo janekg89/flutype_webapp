@@ -39,7 +39,7 @@ class URLRedirectBaseForm(BaseForm):
         return self.Meta.model.url()
 
 
-class MeasurementForm(BaseForm):
+class MeasurementForm(URLRedirectBaseForm):
     class Meta:
         model = RawSpotCollection
         fields = ["sid",'batch_sid','user','measurement_type','functionalization','manufacturer',"comment"]
@@ -53,9 +53,7 @@ class MeasurementForm(BaseForm):
             'comment': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
-    @property
-    def url_redirect(self):
-        return self.Meta.model.url()
+
 
 
 class RawDocForm(BaseForm):
@@ -88,9 +86,7 @@ class StudyForm(URLRedirectBaseForm):
             'description': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
-    @property
-    def url_redirect(self):
-        return self.Meta.model.url()
+
 
 
 class PeptideForm(URLRedirectBaseForm):
@@ -204,7 +200,7 @@ class VirusBatchForm(FormCleanMixin):
 
     class Meta:
         model = VirusBatch
-        fields = BATCH_FIELDS
+        fields = BATCH_FIELDS +['passage_history','active']
 
 
 class AntibodyBatchForm(FormCleanMixin):
