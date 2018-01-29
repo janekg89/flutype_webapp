@@ -57,13 +57,7 @@ class ViewTestCaseNoDataLogOut(TestCase):
         self.assertRedirects(response, '/login/?next=/')
 
     def test_antibody_view_302(self):
-        response = self.c.post('/antibodies_mobile/', {})
-        status = response.status_code
-        self.assertEqual(status, 302, "view 302")
 
-        response = self.c.post('/antibodies_fixed/', {})
-        status = response.status_code
-        self.assertEqual(status, 302, "view 302")
 
         response = self.c.post('/antibodies/', {})
         status = response.status_code
@@ -74,65 +68,32 @@ class ViewTestCaseNoDataLogOut(TestCase):
         status = response.status_code
         self.assertEqual(status, 302, "view 302")
 
-        response = self.c.post('/antibodybatches_mobile/', {})
-        status = response.status_code
-        self.assertEqual(status, 302, "view 302")
 
-        response = self.c.post('/antibodybatches_fixed/', {})
-        status = response.status_code
-        self.assertEqual(status, 302, "view 302")
 
     def test_viruses_view_302(self):
         response = self.c.post('/viruses/', {})
         status = response.status_code
         self.assertEqual(status, 302, "view 302")
 
-        response = self.c.post('/viruses_mobile/', {})
-        status = response.status_code
-        self.assertEqual(status, 302, "view 302")
 
-        response = self.c.post('/viruses_fixed/', {})
-        status = response.status_code
-        self.assertEqual(status, 302, "view 302")
 
     def test_virusbatches_view_302(self):
         response = self.c.post('/virusbatches/', {})
         status = response.status_code
         self.assertEqual(status, 302, "view 302")
 
-        response = self.c.post('/virusbatches_mobile/', {})
-        status = response.status_code
-        self.assertEqual(status, 302, "view 302")
-
-        response = self.c.post('/virusbatches_fixed/', {})
-        status = response.status_code
-        self.assertEqual(status, 302, "view 302")
 
     def test_peptides_view_302(self):
         response = self.c.post('/peptides/', {})
         status = response.status_code
         self.assertEqual(status, 302, "view 302")
 
-        response = self.c.post('/peptides_mobile/', {})
-        status = response.status_code
-        self.assertEqual(status, 302, "view 302")
-
-        response = self.c.post('/peptides_fixed/', {})
-        status = response.status_code
-        self.assertEqual(status, 302, "view 302")
 
     def test_peptidebatches_view_302(self):
         response = self.c.post('/peptidebatches/', {})
         status = response.status_code
         self.assertEqual(status, 302, "view 302")
 
-        response = self.c.post('/peptidebatches_mobile/', {})
-        status = response.status_code
-        self.assertEqual(status, 302, "view 302")
-
-        response = self.c.post('/peptidebatches_fixed/', {})
-        status = response.status_code
-        self.assertEqual(status, 302, "view 302")
 
     def test_processes_view_302(self):
         response = self.c.post('/processes/', {})
@@ -175,13 +136,7 @@ class ViewTestCaseNoDataLogedIn(TestCase):
         self.assertContains(response, "Studies")
 
     def test_antibody_view_200(self):
-        response = self.c.post('/antibodies_mobile/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
 
-        response = self.c.post('/antibodies_fixed/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
 
         response = self.c.post('/antibodies/', {})
         status = response.status_code
@@ -192,65 +147,35 @@ class ViewTestCaseNoDataLogedIn(TestCase):
         status = response.status_code
         self.assertEqual(status, 200, "view 200")
 
-        response = self.c.post('/antibodybatches_mobile/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
 
-        response = self.c.post('/antibodybatches_fixed/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
 
     def test_viruses_view_200(self):
         response = self.c.post('/viruses/', {})
         status = response.status_code
         self.assertEqual(status, 200, "view 200")
 
-        response = self.c.post('/viruses_mobile/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
 
-        response = self.c.post('/viruses_fixed/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
 
     def test_virusbatches_view_200(self):
         response = self.c.post('/virusbatches/', {})
         status = response.status_code
         self.assertEqual(status, 200, "view 200")
 
-        response = self.c.post('/virusbatches_mobile/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
 
-        response = self.c.post('/virusbatches_fixed/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
 
     def test_peptides_view_200(self):
         response = self.c.post('/peptides/', {})
         status = response.status_code
         self.assertEqual(status, 200, "view 200")
 
-        response = self.c.post('/peptides_mobile/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
 
-        response = self.c.post('/peptides_fixed/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
 
     def test_peptidebatches_view_200(self):
         response = self.c.post('/peptidebatches/', {})
         status = response.status_code
         self.assertEqual(status, 200, "view 200")
 
-        response = self.c.post('/peptidebatches_mobile/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
 
-        response = self.c.post('/peptidebatches_fixed/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
 
     def test_processes_view_200(self):
         response = self.c.post('/processes/', {})
@@ -308,13 +233,7 @@ class ViewTestCaseOneCollectionLogedIn(TransactionTestCase):
         self.assertContains(response, "tutorial")
 
     def test_antibody_view_200(self):
-        response = self.c.post('/antibodies_mobile/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
 
-        response = self.c.post('/antibodies_fixed/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
 
         response = self.c.post('/antibodies/', {})
         status = response.status_code
@@ -327,13 +246,7 @@ class ViewTestCaseOneCollectionLogedIn(TransactionTestCase):
         self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "AK100")
 
-        response = self.c.post('/antibodybatches_mobile/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
 
-        response = self.c.post('/antibodybatches_fixed/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
 
     def test_viruses_view_200(self):
         response = self.c.post('/viruses/', {})
@@ -341,14 +254,7 @@ class ViewTestCaseOneCollectionLogedIn(TransactionTestCase):
         self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "A/Aichi/2/68")
 
-        response = self.c.post('/viruses_mobile/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "A/Aichi/2/68")
 
-        response = self.c.post('/viruses_fixed/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
 
     def test_virusbatches_view_200(self):
         response = self.c.post('/virusbatches/', {})
@@ -356,15 +262,7 @@ class ViewTestCaseOneCollectionLogedIn(TransactionTestCase):
         self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "X31")
 
-        response = self.c.post('/virusbatches_mobile/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "X31")
 
-        response = self.c.post('/virusbatches_fixed/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "No entries in database")
 
     def test_peptides_view_200(self):
         response = self.c.post('/peptides/', {})
@@ -372,15 +270,7 @@ class ViewTestCaseOneCollectionLogedIn(TransactionTestCase):
         self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "P001")
 
-        response = self.c.post('/peptides_mobile/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "No entries in database")
 
-        response = self.c.post('/peptides_fixed/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "P001")
 
     def test_peptidebatches_view_200(self):
         response = self.c.post('/peptidebatches/', {})
@@ -388,14 +278,6 @@ class ViewTestCaseOneCollectionLogedIn(TransactionTestCase):
         self.assertEqual(status, 200, "view 200")
         self.assertContains(response, "P001")
 
-        response = self.c.post('/peptidebatches_mobile/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "No entries in database")
-
-        response = self.c.post('/peptidebatches_fixed/', {})
-        status = response.status_code
-        self.assertEqual(status, 200, "view 200")
 
     def test_processes_view_200(self):
         response = self.c.post('/processes/', {})

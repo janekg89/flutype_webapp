@@ -6,9 +6,10 @@ import sys
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponseForbidden,Http404
 from .helper import generate_tree,  empty_list, auto_get_or_create_ligand_batches, \
-    camel_case_split
+    camel_case_split, filter_for_class
+from .utils.utils_views import delete_posted_and_redirect, save_posted_and_redirect
 from .forms import PeptideForm, VirusForm, AntibodyForm, AntibodyBatchForm, \
     PeptideBatchForm, VirusBatchForm, ProcessStepForm, ComplexBatchForm, ComplexForm, StudyForm, \
     WashingForm,DryingForm,SpottingForm, QuenchingForm,BlockingForm,IncubatingForm, \
@@ -18,20 +19,23 @@ from .models import RawSpotCollection, SpotCollection, Process, PeptideBatch, \
     RawDoc , Buffer, BufferBatch, Ligand, UnitsType, LigandBatch, GalFile, Scanning
 from django.forms import formset_factory, inlineformset_factory
 from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
-from django.utils.timezone import localtime, now
 from tempfile import NamedTemporaryFile
+from django.apps import apps
+from django.db import transaction
+from guardian.shortcuts import assign_perm
+
+
 
 #from guardian.decorators import permission_required_or_403
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 import pandas as pd
-import numpy as np
-from pprint import pprint
+
 from django.db.models import Max
 import json
 from flutype import __version__
@@ -241,11 +245,9 @@ def import_measurement_view(request,sid):
             'user_names': user_names,
             'concentration_units': concentration_units,
             'measurement_form':measurement_form
-
         }
 
-    return render(request, 'flutype/import_measurement2.html', context)
-
+    return render(request, 'flutype/import_measurement.html', context)
 
 
 @login_required
@@ -302,7 +304,6 @@ def study_ligands_view(request,sid):
 
 @login_required
 def studies_view(request):
-    #
     #studies = Study.objects.filter(hidden=False)
     studies = Study.objects.all()
 
@@ -321,6 +322,7 @@ def my_studies_view(request):
         'type': 'my',
         'studies': studies,
     }
+
     return render(request,
                   'flutype/studies.html', context)
 
@@ -341,7 +343,22 @@ def measurement_view(request, sid):
 def measurement_ligands_view(request, sid):
     """ Renders detailed RawSpotCollection View. """
     collection = get_object_or_404(RawSpotCollection, sid=sid)
+    ligandbatch_types = ["AntibodyBatch","BufferBatch","ComplexBatch","PeptideBatch","VirusBatch"]
+
+
+    fixed_ligandbatch_pks =collection.rawspot_set.values_list('lig_fix_batch', flat=True).distinct()
+    fixed_ligandbatches = LigandBatch.objects.filter(pk__in = fixed_ligandbatch_pks).select_subclasses()
+    #fixed_lig_batch = {ligand_batch_type:filter_for_class(fixed_ligandbatches,ligand_batch_type) for ligand_batch_type in ligandbatch_types}
+
+    mobile_ligandbatch_pks = collection.rawspot_set.values_list('lig_mob_batch', flat=True).distinct()
+    mobile_ligandbatches = LigandBatch.objects.filter(pk__in=mobile_ligandbatch_pks).select_subclasses()
+    print(mobile_ligandbatches)
+    #mobile_lig_batch = {ligand_batch_type:filter_for_class(mobile_ligandbatches,ligand_batch_type) for ligand_batch_type in ligandbatch_types}
+
+
     context = {
+        'mobile_lig_batch': mobile_ligandbatches,
+        'fixed_lig_batch': fixed_ligandbatches,
         'type': 'ligands',
         'collection': collection,
     }
@@ -377,6 +394,7 @@ def measurement_result_view(request, measurement_sid ,sid):
         'data': json.dumps(data),
         'row_list': json.dumps(row_list),
         'column_list': json.dumps(column_list),
+
         }
     return render(request,
                       'flutype/measurement.html', context)
@@ -574,56 +592,10 @@ def peptide_batch_view(request):
     return render(request,
                   'flutype/peptidebatches.html', context)
 
-
-@login_required
-def peptide_batch_mobile_view(request):
-    peptide_batches = PeptideBatch.objects.filter(stock=True, lig_mob_batch__isnull=False).distinct()
-    context = {
-        'type': "mobile",
-        'peptide_batches': peptide_batches,
-    }
-    return render(request,
-                  'flutype/peptidebatches.html', context)
-
-
-@login_required
-def peptide_batch_fixed_view(request):
-    peptide_batches = PeptideBatch.objects.filter(stock=True, lig_fix_batch__isnull=False).distinct()
-    context = {
-        'type': "fixed",
-        'peptide_batches': peptide_batches,
-    }
-    return render(request,
-                  'flutype/peptidebatches.html', context)
-
-
 @login_required
 def peptide_view(request):
     peptides = Peptide.objects.all()
     context = {
-        'peptides': peptides,
-    }
-    return render(request,
-                  'flutype/peptides.html', context)
-
-
-@login_required
-def peptide_mobile_view(request):
-    peptides = Peptide.objects.filter(ligands2__isnull=False).distinct()
-    context = {
-        'type': "mobile",
-        'peptides': peptides,
-    }
-    return render(request,
-                  'flutype/peptides.html', context)
-
-
-@login_required
-def peptide_fixed_view(request):
-    peptides = Peptide.objects.filter(ligands1__isnull=False).distinct()
-
-    context = {
-        'type': "fixed",
         'peptides': peptides,
     }
     return render(request,
@@ -641,29 +613,6 @@ def virus_batch_view(request):
 
 
 @login_required
-def virus_batch_mobile_view(request):
-    virus_batches = VirusBatch.objects.filter(lig_mob_batch__isnull=False).distinct()
-    context = {
-
-        'type': "mobile",
-        'virus_batches': virus_batches,
-    }
-    return render(request,
-                  'flutype/virusbatches.html', context)
-
-
-@login_required
-def virus_batch_fixed_view(request):
-    virus_batches = VirusBatch.objects.filter(lig_fix_batch__isnull=False).distinct()
-    context = {
-        'type': "fixed",
-        'virus_batches': virus_batches,
-    }
-    return render(request,
-                  'flutype/virusbatches.html', context)
-
-
-@login_required
 def antibody_batch_view(request):
     antibody_batches = AntibodyBatch.objects.filter(stock=True)
     context = {
@@ -673,56 +622,11 @@ def antibody_batch_view(request):
                   'flutype/antibodybatches.html', context)
 
 
-@login_required
-def antibody_batch_mobile_view(request):
-    antibody_batches = AntibodyBatch.objects.filter(lig_mob_batch__isnull=False).distinct()
-    context = {
-        'type': "mobile",
-
-        'antibody_batches': antibody_batches,
-    }
-    return render(request,
-                  'flutype/antibodybatches.html', context)
-
-
-@login_required
-def antibody_batch_fixed_view(request):
-    antibody_batches = AntibodyBatch.objects.filter(lig_fix_batch__isnull=False).distinct()
-    context = {
-        'type': "fixed",
-        'antibody_batches': antibody_batches,
-    }
-    return render(request,
-                  'flutype/antibodybatches.html', context)
-
 
 @login_required
 def antibody_view(request):
     antibodies = Antibody.objects.all()
     context = {
-        'antibodies': antibodies,
-    }
-    return render(request,
-                  'flutype/antibodies.html', context)
-
-
-@login_required
-def antibody_mobile_view(request):
-    antibodies = Antibody.objects.filter(ligands2__isnull=False).distinct()
-    context = {
-        'type': "mobile",
-        'antibodies': antibodies,
-    }
-    return render(request,
-                  'flutype/antibodies.html', context)
-
-
-@login_required
-def antibody_fixed_view(request):
-    antibodies = Antibody.objects.filter(ligands1__isnull=False).distinct()
-    context = {
-        'type': "fixed",
-
         'antibodies': antibodies,
     }
     return render(request,
@@ -741,29 +645,6 @@ def virus_view(request):
 
 
 @login_required
-def virus_mobile_view(request):
-    viruses = Virus.objects.filter(ligands2__isnull=False).distinct()
-    context = {
-        'type': "mobile",
-        'viruses': viruses,
-    }
-    return render(request,
-                  'flutype/viruses.html', context)
-
-
-@login_required
-def virus_fixed_view(request):
-    viruses = Virus.objects.filter(ligands1__isnull=False).distinct()
-
-    context = {
-        'type': "fixed",
-        'viruses': viruses,
-    }
-    return render(request,
-                  'flutype/viruses.html', context)
-
-
-@login_required
 def buffer_view(request):
     buffers = Buffer.objects.all()
     context = {
@@ -772,35 +653,6 @@ def buffer_view(request):
     }
     return render(request,
                   'flutype/buffers.html', context)
-
-@login_required
-def buffer_new(request):
-    form = BufferForm()
-    if request.method == 'POST':
-        form = BufferForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('buffers')
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer'})
-
-@login_required
-def buffer_edit(request, sid):
-    instance = get_object_or_404(Buffer, sid=sid)
-    form = BufferForm(instance=instance)
-    if request.method == 'POST':
-        form = BufferForm(request.POST, instance=instance)
-        if form.is_valid():
-            form.save()
-            return redirect('buffers')
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'buffer'})
-@login_required
-def buffer_delete(request, sid):
-    buffer = get_object_or_404(Buffer, sid=sid)
-    if request.method == 'POST':
-        buffer.delete()
-        return redirect('buffers')
-    return render(request, 'flutype/delete.html', {'buffer': buffer, 'type': 'buffer'})
-
 
 
 @login_required
@@ -815,33 +667,15 @@ def buffer_batch_view(request):
 
 # TODO: create one ligand create and edit view
 
-@login_required
-def buffer_batch_new(request):
-    form = BufferBatchForm(initial={'produced_by': request.user, 'production_date': localtime(now()).date()})
-    if request.method == 'POST':
-        form = BufferBatchForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('bufferbatches')
-
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'bufferBatch'})
-
-@login_required
-def study_new(request):
-    form = StudyForm(initial={'user': request.user,})
-    if request.method == 'POST':
-        form =  StudyForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('index')
-    return render(request, 'flutype/create.html', {'form': form,})
 
 
 @login_required
 def study_edit(request,sid):
     instance = get_object_or_404(Study, sid=sid)
-    p#erm = request.user.has_perm('change_study',instance)
-    #print(perm)
+    perm = request.user.has_perm('change_study',instance)
+    if not perm:
+        return HttpResponseForbidden()
+
     form = StudyForm(instance=instance)
     if request.method == 'POST':
         form =  StudyForm(request.POST, instance=instance)
@@ -849,26 +683,6 @@ def study_edit(request,sid):
             form.save()
             return redirect('index')
     return render(request, 'flutype/create.html', {'form': form,})
-
-
-@login_required
-def buffer_batch_edit(request, sid):
-    instance = get_object_or_404(BufferBatch, sid=sid)
-    form = BufferBatchForm(instance=instance)
-    if request.method == 'POST':
-        form = BufferBatchForm(request.POST, instance=instance)
-        if form.is_valid():
-            form.save()
-            return redirect('bufferbatches')
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'bufferBatch'})
-
-@login_required
-def buffer_batch_delete(request, sid):
-    buffer_batch = get_object_or_404(BufferBatch, sid=sid)
-    if request.method == 'POST':
-        buffer_batch.delete()
-        return redirect('bufferbatches')
-    return render(request, 'flutype/delete.html', {'buffer_batch': buffer_batch, 'type': 'bufferBatch'})
 
 @login_required
 def highcharts_view(request, measurement_sid,sid):
@@ -914,15 +728,7 @@ def change_password_view(request):
     })
 
 
-@login_required
-def peptide_new(request):
-    form = PeptideForm()
-    if request.method == 'POST':
-        form = PeptideForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('peptides')
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'peptide'})
+
 
 @login_required
 def complex_view(request):
@@ -934,89 +740,6 @@ def complex_view(request):
                   'flutype/complexes.html', context)
 
 
-@login_required
-def complex_mobile_view(request):
-    complexes = Complex.objects.filter(ligands2__isnull=False).distinct()
-    context = {
-        'type': "mobile",
-        'complexes': complexes,
-    }
-    return render(request,
-                  'flutype/complexes.html', context)
-
-
-@login_required
-def complex_fixed_view(request):
-    complexes = Complex.objects.filter(ligands1__isnull=False).distinct()
-
-    context = {
-        'type': "fixed",
-        'complexes': complexes,
-    }
-    return render(request,
-                  'flutype/complexes.html', context)
-
-
-@login_required
-def complex_new(request):
-    form = ComplexForm()
-    if request.method == 'POST':
-        form = ComplexForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('complexes')
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'complex'})
-
-@login_required
-def complex_delete(request, sisd):
-    complex = get_object_or_404(Complex, sisd=sisd)
-    if request.method == 'POST':
-        complex.delete()
-        return redirect('complexes')
-    return render(request, 'flutype/delete.html', {'complex': complex, 'type': 'complex'})
-
-
-@login_required
-def complex_edit(request, sid):
-    instance = get_object_or_404(Complex, sid=sid)
-    form = ComplexForm(instance=instance)
-    if request.method == 'POST':
-        form = ComplexForm(request.POST, instance=instance)
-        if form.is_valid():
-            form.save()
-            return redirect('complexes')
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'complex'})
-
-@login_required
-def complex_batch_delete(request, sid):
-    complex_batch = get_object_or_404(ComplexBatch, sid=sid)
-    if request.method == 'POST':
-        complex_batch.delete()
-        return redirect('complexbatches')
-    return render(request, 'flutype/delete.html', {'complex_batch': complex_batch, 'type': 'complexBatch'})
-
-@login_required
-def complex_batch_edit(request, sid):
-    instance = get_object_or_404(ComplexBatch, sid=sid)
-    form = ComplexBatchForm(instance=instance)
-
-    if request.method == 'POST':
-        form = ComplexBatchForm(request.POST, instance=instance)
-        if form.is_valid():
-            form.save()
-            return redirect('complexbatches')
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'complexBatch'})
-
-@login_required
-def complex_batch_new(request):
-    form = ComplexBatchForm(initial={'produced_by': request.user, 'production_date': localtime(now()).date()}
-                            )
-    if request.method == 'POST':
-        form = ComplexBatchForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('complexbatches')
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'complexBatch'})
 
 @login_required
 def complex_batch_view(request):
@@ -1027,219 +750,50 @@ def complex_batch_view(request):
     return render(request,
                   'flutype/complexbatches.html', context)
 
-
 @login_required
-def complex_batch_mobile_view(request):
-    complex_batches = ComplexBatch.objects.filter(lig_mob_batch__isnull=False).distinct()
-    context = {
-        'type': "mobile",
-        'complex_batches': complex_batches,
-    }
-    return render(request,
-                  'flutype/complexbatches.html', context)
-
-
-@login_required
-def complex_batch_fixed_view(request):
-    complex_batches = ComplexBatch.objects.filter(lig_fix_batch__isnull=False).distinct()
-    context = {
-        'type': "fixed",
-        'complex_batches': complex_batches,
-    }
-    return render(request,
-                  'flutype/complexbatches.html', context)
-
-
-@login_required
-def virus_new(request):
-    form = VirusForm()
+def new_view(request,model_name,**kwargs):
+    Model = apps.get_model("flutype",model_name)
+    Form = Model.get_form()
+    form_instance = Form(**kwargs)
     if request.method == 'POST':
-        form = VirusForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('viruses')
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'virus'})
-
+        form_instance = Form(request.POST,**kwargs)
+        if form_instance.is_valid():
+            return save_posted_and_redirect(form_instance)
+    return render(request, 'flutype/create.html', {'form': form_instance})
 
 @login_required
-def antibody_new(request):
-    form = AntibodyForm()
-    if request.method == 'POST':
-        form = AntibodyForm(request.POST)
-        print(form.errors)
-        if form.is_valid():
-            form.save()
-            return redirect('antibodies')
-    form = AntibodyForm()
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'antibody'})
-
+def edit_view(request, model_name, pk):
+    Model = apps.get_model("flutype", model_name)
+    instance = get_object_or_404(Model, pk=pk)
+    forms_dict = {"instance": instance}
+    return new_view(request, model_name, **forms_dict)
 
 @login_required
-def peptide_edit(request, sid):
-    instance = get_object_or_404(Peptide, sid=sid)
-    form = PeptideForm(instance=instance)
+def study_new(request):
+    Model = apps.get_model("flutype", "Study")
+    Form = Model.get_form()
+    form_instance = Form(initial={"user":request.user})
     if request.method == 'POST':
-        form = PeptideForm(request.POST, instance=instance)
-        if form.is_valid():
-            form.save()
-            return redirect('peptides')
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'peptide'})
-
+        form_instance = Form(request.POST)
+        if form_instance.is_valid():
+            study_instance = form_instance.save()
+            assign_perm("change_study", study_instance.user, study_instance)
+            assign_perm("delete_study", study_instance.user, study_instance)
+            return redirect(form_instance.url_redirect)
+    return render(request, 'flutype/create.html', {'form': form_instance})
 
 @login_required
-def virus_edit(request, sid):
-    instance = get_object_or_404(Virus, sid=sid)
-    form = VirusForm(instance=instance)
-    if request.method == 'POST':
-        form = VirusForm(request.POST, instance=instance)
-        if form.is_valid():
-            form.save()
-            return redirect('viruses')
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'virus'})
-
+def ligandbatch_new(request, model_name):
+    forms_dict = {"initial":{"produced_by":request.user}}
+    return new_view(request,model_name,**forms_dict)
 
 @login_required
-def antibody_edit(request, sid):
-
-    instance = get_object_or_404(Antibody, sid=sid)
-    form = AntibodyForm(instance=instance)
-
+def delete_view(request, model_name, pk):
+    Model = apps.get_model("flutype", model_name)
+    instance = get_object_or_404(Model, pk=pk)
     if request.method == 'POST':
-        form = AntibodyForm(request.POST, instance=instance)
-        if form.is_valid():
-            form.save()
-            return redirect('antibodies')
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'antibody'})
-
-
-@login_required
-def peptide_delete(request, sid):
-    peptide = get_object_or_404(Peptide, sid=sid)
-    if request.method == 'POST':
-        peptide.delete()
-        return redirect('peptides')
-    return render(request, 'flutype/delete.html', {'peptide': peptide, 'type': 'peptide'})
-
-
-@login_required
-def virus_delete(request, sid):
-    virus = get_object_or_404(Virus, sid=sid)
-    if request.method == 'POST':
-        virus.delete()
-        return redirect('viruses')
-    return render(request, 'flutype/delete.html', {'virus': virus, 'type': 'virus'})
-
-
-@login_required
-def antibody_delete(request, sid):
-    antibody = get_object_or_404(Antibody, sid=sid)
-    if request.method == 'POST':
-        antibody.delete()
-        return redirect('antibodies')
-    return render(request, 'flutype/delete.html', {'antibody': antibody, 'type': 'antibody'})
-
-
-@login_required
-def antibody_batch_delete(request, sid):
-    antibody_batch = get_object_or_404(AntibodyBatch, sid=sid)
-    if request.method == 'POST':
-        antibody_batch.delete()
-        return redirect('antibodybatches')
-    return render(request, 'flutype/delete.html', {'antibody_batch': antibody_batch, 'type': 'antibodyBatch'})
-
-
-@login_required
-def peptide_batch_delete(request, sid):
-    peptide_batch = get_object_or_404(PeptideBatch, sid=sid)
-    if request.method == 'POST':
-        peptide_batch.delete()
-        return redirect('peptidebatches')
-    return render(request, 'flutype/delete.html', {'peptide_batch': peptide_batch, 'type': 'peptideBatch'})
-
-
-@login_required
-def virus_batch_delete(request, sid):
-    virus_batch = get_object_or_404(VirusBatch, sid=sid)
-    if request.method == 'POST':
-        virus_batch.delete()
-        return redirect('virusbatches')
-    return render(request, 'flutype/delete.html', {'virus_batch': virus_batch, 'type': 'virusBatch'})
-
-
-@login_required
-def antibody_batch_edit(request, sid):
-    instance = get_object_or_404(AntibodyBatch, sid=sid)
-    form = AntibodyBatchForm(instance=instance)
-
-    if request.method == 'POST':
-        form = AntibodyBatchForm(request.POST, instance=instance)
-        if form.is_valid():
-            form.save()
-            return redirect('antibodybatches')
-
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'antibodyBatch'})
-
-
-@login_required
-def virus_batch_edit(request, sid):
-    instance = get_object_or_404(VirusBatch, sid=sid)
-    form = VirusBatchForm(instance=instance)
-
-    if request.method == 'POST':
-        form = VirusBatchForm(request.POST, instance=instance)
-        if form.is_valid():
-            form.save()
-            return redirect('virusbatches')
-
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'virusBatch'})
-
-
-@login_required
-def peptide_batch_edit(request, sid):
-    instance = get_object_or_404(PeptideBatch, sid=sid)
-    form = PeptideBatchForm(instance=instance)
-    if request.method == 'POST':
-        form = PeptideBatchForm(request.POST, instance=instance)
-        if form.is_valid():
-            form.save()
-            return redirect('peptidebatches')
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'peptideBatch'})
-
-
-@login_required
-def peptide_batch_new(request):
-    form = PeptideBatchForm(initial={'produced_by': request.user, 'production_date': localtime(now()).date()})
-    if request.method == 'POST':
-        form = PeptideBatchForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('peptidebatches')
-
-    return render(request, 'flutype/create.html', {'form': form, 'type': form.hr_classname})
-
-
-@login_required
-def virus_batch_new(request):
-    form = VirusBatchForm(initial={'produced_by': request.user, 'production_date': localtime(now()).date()})
-    if request.method == 'POST':
-        form = VirusBatchForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('virusbatches')
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'virusBatch'})
-
-
-
-@login_required
-def antibody_batch_new(request):
-    form = AntibodyBatchForm(initial={'produced_by': request.user, 'production_date': localtime(now()).date()}
-                             )
-    if request.method == 'POST':
-        form = AntibodyBatchForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('antibodybatches')
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'antibodyBatch'})
+        return delete_posted_and_redirect(instance)
+    return render(request, 'flutype/delete.html', {'instance':instance})
 
 
 @login_required
@@ -1250,43 +804,6 @@ def steps_view(request):
     }
     return render(request,
                   'flutype/process_steps.html', context)
-
-
-@login_required
-def step_new(request, class_name):
-    form = eval("{}Form()".format(class_name))
-    if request.method == 'POST':
-
-        form = eval("{}Form(request.POST)".format(class_name))
-        if form.is_valid():
-            form.save()
-            return redirect('steps')
-    return render(request, 'flutype/create.html', {'form': form, 'type': 'step', "class": class_name})
-
-
-@login_required
-def step_edit(request, sid):
-    instance = get_object_or_404(Step, sid=sid)
-    instance = instance.get_step_type
-    form = eval("{}Form(instance=instance)".format(instance.__class__.__name__))
-    if request.method == 'POST':
-        form = eval("{}Form(request.POST,instance=instance)".format(instance.__class__.__name__))
-        if form.is_valid():
-            form.save()
-            return redirect('steps')
-
-    return render(request, 'flutype/create.html',
-                      {'form': form, 'type': 'step', 'class': instance.__class__.__name__})
-
-
-@login_required
-def step_delete(request, sid):
-    step = get_object_or_404(Step, sid=sid)
-    if request.method == 'POST':
-        step.delete()
-        return redirect('steps')
-    return render(request, 'flutype/delete.html', {'step': step, 'type': 'step'})
-
 
 @login_required
 def process_new(request):
@@ -1330,9 +847,33 @@ def barplot_data_view(request,measurement_sid, sid):
         a = {}
         a["intensity"] = all_spots.filter(raw_spot__lig_fix_batch__sid=lig).values_list("intensity", flat=True)
         a["lig2"] = all_spots.filter(raw_spot__lig_fix_batch__sid=lig).values_list("raw_spot__lig_mob_batch__sid", flat=True)
-        a["lig1"] = all_spots.filter(raw_spot__lig_fix_batch__sid=lig).values_list("raw_spot__lig_fix_batch__ligand__sid").first()
+        a["lig1"] = lig
         a["lig1_con"] = all_spots.filter(raw_spot__lig_fix_batch__sid=lig).values_list(
             "raw_spot__lig_fix_batch__concentration").first()
+        box_list.append(a)
+    data = {
+        "box_list": box_list,
+        "lig1": lig1,
+    }
+    return Response(data)
+
+@login_required
+@api_view(['GET'])
+def barplot2_data_view(request,measurement_sid, sid):
+    collection = get_object_or_404(RawSpotCollection, sid=measurement_sid)
+    sc = collection.spotcollection_set.get(sid=sid)
+    all_spots = sc.spot_set.all()
+    spot_lig1 = all_spots.values_list("raw_spot__lig_mob_batch__sid", flat=True)
+    lig1 = spot_lig1.distinct()
+    box_list = []
+    print(lig1)
+    for lig in lig1:
+        a = {}
+        a["intensity"] = all_spots.filter(raw_spot__lig_mob_batch__sid=lig).values_list("intensity", flat=True)
+        a["lig2"] = all_spots.filter(raw_spot__lig_mob_batch__sid=lig).values_list("raw_spot__lig_fix_batch__sid", flat=True)
+        a["lig1"] = lig
+        a["lig1_con"] = all_spots.filter(raw_spot__lig_mob_batch__sid=lig).values_list(
+            "raw_spot__lig_mob_batch__concentration").first()
         box_list.append(a)
     data = {
         "box_list": box_list,

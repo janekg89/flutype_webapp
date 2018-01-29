@@ -35,7 +35,8 @@
                     <tr>
                         {% if type == "gal_file" %}  <td></td>{% endif %}
                         {% if request.user.is_superuser %}<td>
-                    <a href="{{ url('virus_batch_edit', args=[virusbatch.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                    <a href="{{ url('edit', args=[virusbatch.__class__.__name__, virusbatch.pk]) }}"><i class="fa fa-fw fa-edit" ></i></a>
+
                 </td>{%  endif %}
                         <td><b>{{ virusbatch.sid }}</b></td>
                         <!-- virus information -->
@@ -73,7 +74,7 @@
                         <td>{{ virusbatch.production_date }}</td>
                         <td>{{ virusbatch.comment }}</td>
                         {% if request.user.is_superuser %}<td class="alert-danger">
-                        <a href="{{ url('virus_batch_delete', args=[virusbatch.sid]) }}"><i class="fa fa-fw fa-trash"></i></a>
+                        <a href="{{ url('delete', args=[virusbatch.__class__.__name__, virusbatch.pk]) }}"><i class="fa fa-fw fa-trash"></i></a>
                      </td>{% endif %}
                     </tr>
                 {% endfor %}

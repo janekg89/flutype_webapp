@@ -7,7 +7,7 @@ from django.utils import timezone
 import datetime
 from .behaviours import Status
 from model_utils.managers import InheritanceManager
-#from guardian.shortcuts import assign_perm
+from guardian.shortcuts import assign_perm
 
 
 
@@ -55,7 +55,7 @@ class LigandManager(PolymorphicManager):
 
 class LigandBatchManager(InheritanceManager):
     def get_or_create(self, *args, **kwargs):
-        if "stock" in kwargs and kwargs["stock"] in [1, True,"1"]:
+        if "stock" in kwargs and kwargs["stock"] in [1, True,"1","True","true"]:
             kwargs["stock"] = True
         else:
             kwargs["stock"] = False
@@ -115,8 +115,9 @@ class StudyManager(models.Manager):
                     test = Status.get_choice(kwargs["meta"]["status"])
 
             this_study, created_s = super(StudyManager, self).get_or_create(*args, **kwargs["meta"])
-            #assign_perm("change_study",this_study.user, this_study)
-            #assign_perm("delete_study", this_study.user, this_study)
+            if bool(this_study.user):
+                assign_perm("change_study",this_study.user, this_study)
+                assign_perm("delete_study", this_study.user, this_study)
 
         if "raw_docs_fpaths" in kwargs:
             for fpath in kwargs["raw_docs_fpaths"]:
@@ -152,9 +153,14 @@ class MeasurementManager(models.Manager):
     def get_or_create(self, *args, **kwargs):
         if "meta" in kwargs:
             print("*** Creating Measurement <{}>***".format(kwargs["meta"]["sid"]))
-
+            if "user" in kwargs["meta"] and isinstance(kwargs["meta"]["user"], basestring):
+                kwargs["meta"]["user"] = get_user_or_none(kwargs["meta"]["user"])
             this_measurement, created = super(MeasurementManager, self).get_or_create(*args, **kwargs["meta"])
+            if bool(this_measurement.user):
+                assign_perm("change_rawspotcollection",this_measurement.user, this_measurement)
+                assign_perm("delete_rawspotcollection", this_measurement.user, this_measurement)
             this_measurement.studies.add(kwargs["study"])
+
 
         if "raw_docs_fpaths" in kwargs:
             for fpath in kwargs["raw_docs_fpaths"]:
@@ -308,6 +314,9 @@ class SpotcollectionManager(models.Manager):
             meta = kwargs["meta"]
             print("*** Creating Result <{}>***".format(kwargs["meta"]["sid"]))
             this_spot_collection, created = super(SpotcollectionManager, self).get_or_create(*args, **meta)
+            if bool(this_spot_collection.raw_spot_collection.user):
+                assign_perm("change_spotcollection", this_spot_collection.raw_spot_collection.user, this_spot_collection)
+                assign_perm("delete_spotcollection", this_spot_collection.raw_spot_collection.user, this_spot_collection)
 
         if "raw_docs_fpaths" in kwargs:
             for fpath in kwargs["raw_docs_fpaths"]:

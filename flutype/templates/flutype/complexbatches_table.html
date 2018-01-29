@@ -23,6 +23,8 @@
                     <th data-sortable="true">produced by</th>
                     <th data-sortable="true">production date</th>
                     <th data-sortable="true">comment</th>
+                    {% if request.user.is_superuser %}<th></th>{%  endif %}
+
                 </tr>
                 </thead>
                 <tbody>
@@ -30,7 +32,7 @@
                     <tr>
                         {% if type == "gal_file" %}  <td></td>{% endif %}
                        {% if request.user.is_superuser %}  <td>
-                    <a href="{{ url('complex_batch_edit', args=[complexbatch.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                    <a href="{{ url('edit', args=[ complexbatch.__class__.__name__, complexbatch.pk]) }}"><i class="fa fa-fw fa-edit"></i></a>
                         </td>{%  endif %}
                         <td><b>{{ complexbatch.sid }}</b></td>
                         <!-- complex information -->
@@ -51,6 +53,9 @@
                         <td>{{ complexbatch.produced_by }}</td>
                         <td>{{ complexbatch.production_date }}</td>
                         <td>{{ complexbatch.comment }}</td>
+                    {% if request.user.is_superuser %}<td class="alert-danger">
+                        <a href="{{ url('delete', args=[ complexbatch.__class__.__name__, complexbatch.pk]) }}"><i class="fa fa-fw fa-trash"></i></a>
+                     </td>{%  endif %}
                     </tr>
                 {% endfor %}
                 </tbody>
