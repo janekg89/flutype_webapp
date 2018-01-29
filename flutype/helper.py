@@ -222,7 +222,7 @@ def read_ligand_batches(ligand_batch):
     model = get_model_by_name(object_capitalized)
     if ligand_batch in ["peptideBatch","antibodyBatch", "complexBatch"]:
         df = read_frame(model.objects.all(), ["sid", "labeling", "concentration","concentration_unit","buffer__sid", "ph","purity", "produced_by__username",
-                                          "production_date", "comment",
+                                          "production_date", "comment","stock",
                                           "ligand__sid"])
         df.replace([np.NaN], [None], inplace=True)
         df['purity'] = list(map(str, df['purity'].values))
@@ -233,7 +233,7 @@ def read_ligand_batches(ligand_batch):
         df = read_frame(model.objects.all(),
                         ["sid", "labeling", "concentration","concentration_unit","buffer__sid", "ph","purity", "produced_by__username",
                                           "production_date", "comment",
-                                          "ligand__sid", "passage_history","active"])
+                                          "ligand__sid", "passage_history","active","stock"])
         df.replace([np.NaN], [None], inplace=True)
         df['active'] = list(map(str, df['active'].values))
         df['passage_history'] = list(map(str, df['passage_history'].values))
@@ -245,7 +245,7 @@ def read_ligand_batches(ligand_batch):
     elif ligand_batch == "bufferBatch":
         df = read_frame(model.objects.all(),
                         ["sid", "buffer__sid", "ph", "produced_by__username",
-                         "production_date", "comment"])
+                         "production_date", "comment","stock"])
         df.replace([np.NaN], [None], inplace=True)
 
     df['buffer__sid'] = list(map(str, df['buffer__sid'].values))

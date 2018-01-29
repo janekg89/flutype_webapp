@@ -35,7 +35,7 @@
                     {% for c in complexes.all() %}
                         <tr>
                            {% if request.user.is_superuser %} <td>
-                    <a href="{{ url('edit', args=[c.__class__.__name__,c.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                    <a href="{{ url('edit', args=[c.__class__.__name__,c.pk]) }}"><i class="fa fa-fw fa-edit"></i></a>
                 </td>{%  endif %}
                             <td><b> {{ c.sid }}</b></td>
                             <td>
@@ -45,7 +45,7 @@
                             </td>
                             <td>{{ c.comment }}</td>
                         {% if request.user.is_superuser %}<td class="alert-danger">
-                    <a href="{{ url('delete', args=[c.__class__.__name__,c.sid]) }}"><i class="fa fa-fw fa-trash"></i></a>
+                    <a href="{{ url('delete', args=[c.__class__.__name__,c.pk]) }}"><i class="fa fa-fw fa-trash"></i></a>
                  </td>{% endif %}
                         </tr>
                     {% endfor %}

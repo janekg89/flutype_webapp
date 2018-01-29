@@ -28,7 +28,7 @@
                     <tr>
                         {% if type == "gal_file" %}  <td></td>{% endif %}
                         {% if request.user.is_superuser %}<td>
-                            <a href="{{ url('edit', args=[bufferbatch.__class__.__name__,bufferbatch.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                            <a href="{{ url('edit', args=[bufferbatch.__class__.__name__,bufferbatch.pk]) }}"><i class="fa fa-fw fa-edit"></i></a>
                         </td>{% endif %}
                         <td><b>{{ bufferbatch.sid }}</b></td>
 
@@ -48,7 +48,7 @@
                         <td>{{ bufferbatch.production_date }}</td>
                         <td>{{ bufferbatch.comment }}</td>
                     {% if request.user.is_superuser %}<td class="alert-danger">
-                        <a href="{{ url('delete', args=[bufferbatch.__class__.__name__,bufferbatch.sid]) }}"><i class="fa fa-fw fa-trash"></i></a>
+                        <a href="{{ url('delete', args=[bufferbatch.__class__.__name__,bufferbatch.pk]) }}"><i class="fa fa-fw fa-trash"></i></a>
                      </td>{%  endif %}
                     </tr>
                 {% endfor %}
