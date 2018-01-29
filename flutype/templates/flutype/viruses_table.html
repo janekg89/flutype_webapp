@@ -25,7 +25,7 @@
         {% for virus in viruses %}
             <tr>
                 {% if request.user.is_superuser %}<td>
-                    <a href="{{ url('virus_edit', args=[virus.sid]) }}"><i class="fa fa-fw fa-edit"></i></a>
+                    <a href="{{ url('edit', args=[virus.__class__.__name__, virus.pk]) }}"><i class="fa fa-fw fa-edit"></i></a>
                 </td>{% endif %}
                 <td><b>{{ virus.sid }}</b></td>
                 <td>
@@ -41,7 +41,7 @@
                 <td>{{ virus.strain }}</td>
                 <td>{{ virus.comment }}</td>
                 {% if request.user.is_superuser %}<td class="alert-danger">
-                    <a href="{{ url('virus_delete', args=[virus.sid]) }}"><i class="fa fa-fw fa-trash"></i></a>
+                    <a href="{{ url('delete', args=[virus.__class__.__name__, virus.pk]) }}"><i class="fa fa-fw fa-trash"></i></a>
                  </td>{% endif %}
             </tr>
         {% endfor %}

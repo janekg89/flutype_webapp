@@ -1,4 +1,7 @@
-sid	buffer	ph	produced_by	production_date	comment
-Buffer001	NaHCO3/Na2CO3	9.6	ssaenger	2017-07-19	
-Wasser					
-Puffer					
+sid	buffer	ph	produced_by	production_date	comment	stock
+Buffer001	NaHCO3/Na2CO3	9.6	ssaenger	2017-07-19		True
+Wasser						True
+Puffer						True
+Coating Buffer 1	Coating Buffer		ssaenger		Buffer for virus dilution experiments.	True
+*Buffer001-1.0*	NaHCO3/Na2CO3	9.6	ssaenger	2017-07-19		False
+*Coating Buffer 1-1.0*	Coating Buffer		ssaenger		Buffer for virus dilution experiments.	False

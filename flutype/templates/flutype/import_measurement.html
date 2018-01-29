@@ -1,29 +1,29 @@
 {% extends "flutype/base.html" %}
 {% block content %}
 <div class="standard">
+
 <div class="stepwizard ">
     <div class="stepwizard-row setup-panel">
         <div class="stepwizard-step">
             <a href="#step-1" type="button" class="btn btn-primary btn-circle">1</a>
-            <p>Measurement</p>
+            <p class="step1">Measurement</p>
         </div>
-
        <div class="stepwizard-step">
             <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled">2</a>
-            <p>Process</p>
+            <p class="step2">Process</p>
         </div>
 
         <div class="stepwizard-step">
             <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled">3</a>
-            <p>Ligands </p>
+            <p class="step3">Ligand Batches </p>
         </div>
         <div class="stepwizard-step">
             <a href="#step-4" type="button" class="btn btn-default btn-circle" disabled="disabled">4</a>
-            <p>Analyts </p>
+            <p class="step4">Analyt Batches </p>
         </div>
         <div class="stepwizard-step">
             <a href="#step-5" type="button" class="btn btn-default btn-circle" disabled="disabled">5</a>
-            <p>Intensities </p>
+            <p class="step5">Intensities </p>
         </div>
     </div>
 </div>
@@ -32,20 +32,18 @@
 
   <!-- General measurement information -->
     <div class="row setup-content" id="step-1">
-      <div class="col-xs-12 ">
-        <div class="col-md-12">
           <h3> Measurement</h3>
           {% with mf =measurement_form %}
                 <div class="form-group">
-                    <label class="control-label">Sid</label>
+                    <label class="control-label ">Sid</label>
                     {{ mf.sid }}
                 </div>
                 <div class="form-group">
-                    <label class="control-label">Batch Sid</label>
+                    <label class="control-label ">Batch Sid</label>
                     {{ mf.batch_sid }}
                 </div>
               <div class="form-group">
-                    <label class="control-label"> User </label>
+                    <label class="control-label "> User </label>
                     {{ mf.user }}
               </div>
 
@@ -69,62 +67,51 @@
                     <div >{{ mf.comment }} </div>
               </div>
           {% endwith %}
-          <button class="btn btn-primary nextBtn btn-lg pull-right" id="submit_measurement" type="button">Next</button>
-        </div>
-      </div>
+          <button class="btn btn-primary nextBtn  pull-right" id="submit_measurement" type="button">Next</button>
+           <a href="javascript:history.back()" class="btn btn-default  margin-right pull-right" type="button">Cancel</a>
+
     </div>
 
-    <div class="row setup-content" id="step-2">
-      <div class="col-xs-12 ">
-        <div class="col-md-12 ">
-          <h3> Process</h3>
-          <div class="form-group col-md-offset-5">
-            <button class="btn btn-default del" title ="select a row you want to delete before clicking the button" type="button">delete</button>
-            <div id="process"></div></div>
-            <button class="btn btn-primary prevBtn btn-lg pull-left" type="button">Previous</button>
-            <button class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
-        </div>
-      </div>
+    <div class="setup-content" id="step-2">
+        <h3> Process</h3>
+            <div id="process" class="margin-bottum"></div>
+        <div class="margin-top">
+            <button class="btn btn-default del margin margin-left margin-top" title ="select a row you want to delete before clicking the button" type="button">Delete Row</button>
+            <button class="btn btn-primary prevBtn  pull-left" type="button">Previous</button>
+            <button class="btn btn-primary nextBtn margin- pull-right" type="button">Next</button>
+            <a href="javascript:history.back()" class="btn btn-default pull-right margin-right" type="button">Cancel</a>
+         </div>
+
     </div>
 
     <div class="row setup-content" id="step-3">
-
-      <div class="col-xs-12 ">
-        <div class="col-md-12">
-          <h3> Ligands</h3>
-            <div class="align-items-center">
-                <div  class="inline-text" id="microwell_plate_ligands"></div>
-            </div>
-           <div id="microwell_plate_ligands"></div>
-          <button class="btn btn-primary prevBtn btn-lg pull-left" type="button">Previous</button>
-          <button class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
-        </div>
-      </div>
+        <h3> Ligand Batches</h3>
+        <div id="microwell_plate_ligands" class="margin-bottum microwell-plate"></div>
+        <button class="btn btn-primary prevBtn  pull-left" type="button">Previous</button>
+        <button class="btn btn-primary nextBtn  pull-right" type="button">Next</button>
+        <a href="javascript:history.back()" class="btn btn-default pull-right margin-right" type="button">Cancel</a>
     </div>
-    <div class="row setup-content" id="step-4">
-      <div class="col-xs-12 ">
-        <div class="col-md-12">
-          <h3> Analyts</h3>
-            <div class="center" id="microwell_plate_analyts"></div>
 
-          <button class="btn btn-primary prevBtn btn-lg pull-left" type="button">Previous</button>
-          <button class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
-        </div>
-      </div>
+
+    <div class="row setup-content" id="step-4">
+
+        <h3> Analyt Batches</h3>
+        <div class="margin-bottum microwell-plate" id="microwell_plate_analyts"></div>
+        <button class="btn btn-primary prevBtn  pull-left" type="button">Previous</button>
+        <button class="btn btn-primary nextBtn  pull-right" type="button">Next</button>
+        <a href="javascript:history.back()" class="btn btn-default pull-right margin-right" type="button">Cancel</a>
+
     </div>
     <div class="row setup-content" id="step-5">
-      <div class="col-xs-12">
-        <div class="col-md-12">
-          <h3> Results</h3>
-          <div class="flex_item" id="microwell_plate_results"></div>
-          <div id="submit_report"></div>
-            <div class="col-md-12">
-                <button class="btn btn-primary prevBtn btn-lg pull-left" type="button">Previous</button>
-                <button class="btn btn-success btn-lg pull-right submitBtn" type="button">Submit</button>
-            </div>
-          </div>
-      </div>
+        <h3> Results</h3>
+        <div class="microwell-plate" id="microwell_plate_results"></div>
+        <div id="submit_report"></div>
+        <button class="btn btn-primary prevBtn  pull-left" type="button">Previous</button>
+        <button class="btn btn-success  pull-right submitBtn" type="button">Submit</button>
+        <a href="javascript:history.back()" class="btn btn-default pull-right margin-right" type="button">Cancel</a>
+
     </div>
+
   </form>
 
 </div>
@@ -139,6 +126,7 @@ $(document).ready(function () {
   var navListItems = $('div.setup-panel div a'),
       allWells = $('.setup-content'),
       allNextBtn = $('.nextBtn'),
+      allCancelBtn = $('.cancelBtn'),
       allPrevBtn = $('.prevBtn'),
       submitBtn = $('.submitBtn');
 
@@ -157,6 +145,10 @@ $(document).ready(function () {
           $target.show();
           $target.find('input:eq(0)').focus();
       }
+  });
+
+  allNextBtn.click(function(){
+
   });
 
   allPrevBtn.click(function(){
@@ -325,11 +317,26 @@ function validateData(curInputs_serialized, nextStepWizard){
 
 
 
-        ligands_table_setup = function ligands_table_setup(setup_data){
+        ligands_table_setup = function ligands_table_setup(setup_data, typeB){
+            var renderer , batch;
+            if(typeB == "Ligand"){
+                 renderer = LigandbatchesRenderer;
+                    batch = "Ligand Batch";
+
+            }
+            if(typeB == "Analyte"){
+                renderer = AnalyteBatchesRenderer;
+                batch = "Analyte Batch";
+
+
+            }
             return{
+
+      fixedRowsTop: 2,
+      fixedColumnsRight: 2,
       data: getData(setup_data),
       undo: true,
-      colHeaders: ["A", "B", "C","D" ,"E", "F", "G","H" ,"I","J","K","L","","Concentration","Ligand Batch",""],
+      colHeaders: ["A", "B", "C","D" ,"E", "F", "G","H" ,"I","J","K","L","","Concentration",batch,""],
       afterChange: function (changes, source) {
             if(!changes) {
       	        return;
@@ -343,10 +350,9 @@ function validateData(curInputs_serialized, nextStepWizard){
              if (newVal==""){
                  return
              }
-            console.log(letterValue(col));
 
             // conditional on ligandbatch row/col
-            if (col === 'ligand batch')  {
+            if (col === batch)  {
                 hot.setDataAtCell(row, 0,newVal);
                 hot.setDataAtCell(row, 1,newVal);
                 hot.setDataAtCell(row, 2,newVal);
@@ -460,8 +466,7 @@ function validateData(curInputs_serialized, nextStepWizard){
 
           },
           {
-                data:"ligand batch",
-
+                data: batch,
             type: 'autocomplete',
             source: ligands_sids,
             strict: true
@@ -476,11 +481,8 @@ function validateData(curInputs_serialized, nextStepWizard){
 
         ],
 
-      rowHeaders: ["1", "2", "3","4" ,"5", "6", "7","8" ,"","Concentration", "Ligand Batch",""],
-        //mergeCells: [
-        //  {row: 1, col: 14, rowspan: 10, colspan: 1},
-        //  {row: 8, col: 0, rowspan: 1, colspan: 13}
-        //],
+      rowHeaders: ["1", "2", "3","4" ,"5", "6", "7","8" ,"","Concentration", batch,""],
+
         allowEmpty: true,
         allowInsertRow:false,
         maxCols:16,
@@ -493,20 +495,26 @@ function validateData(curInputs_serialized, nextStepWizard){
         var visualColIndex = this.instance.toVisualColumn(col);
 
         if (visualRowIndex === 9 || visualColIndex === 13) {
+            cellProperties.renderer = renderer;
             if (visualRowIndex === 9 && visualColIndex === 13){
             cellProperties.type = 'dropdown';
             cellProperties.source = {{ concentration_units|tojson }};
             cellProperties.strict = true
-        }
-
-        else {
-            //cellProperties.editor = 'numeric';
-            cellProperties.validator = 'numeric';
-            cellProperties.type = 'text';
-            //cellProperties.roundFloat = 2;
             }
 
+            else {
+                //cellProperties.editor = 'numeric';
+                cellProperties.validator = 'numeric';
+                cellProperties.type = 'text';
+                //cellProperties.roundFloat = 2;
+                }
+
         }
+        if (visualRowIndex === 10 || visualColIndex === 14){
+            cellProperties.renderer = renderer;
+
+            }
+
         var disabled_rows = [8,11],
             disabled_cols = [12,15];
 
@@ -525,6 +533,7 @@ function validateData(curInputs_serialized, nextStepWizard){
      data: [[]],
      colHeaders: ["step", "user","start date","start time","intensities","comment"],
      rowHeaders: true,
+     stretchH:'all',
      minRows:1,
      maxCols:6,
      minCols:6,
@@ -601,12 +610,11 @@ function validateData(curInputs_serialized, nextStepWizard){
     });
 
 
-
-    var hot_process = new Handsontable(process,setup_process);
-    var hot_ligand = new Handsontable(microwell_ligands,ligands_table_setup(d_microwell_plate));
-    var hot_analyt = new Handsontable(microwell_analyts,ligands_table_setup(d_microwell_plate_2));
-    var hot_result = new Handsontable(microwell_results,{
+      var hot_ligand = new Handsontable(microwell_ligands,ligands_table_setup(d_microwell_plate, "Ligand"));
+      var hot_analyt = new Handsontable(microwell_analyts,ligands_table_setup(d_microwell_plate_2,"Analyte"));
+      var hot_result = new Handsontable(microwell_results,{
             data:[[]],
+            stretchH:'all',
             minRows:8,
             minCols:12,
             maxCols:12,
@@ -617,15 +625,23 @@ function validateData(curInputs_serialized, nextStepWizard){
                 var cellProperties = {};
                 var visualRowIndex = this.instance.toVisualRow(row);
                 var visualColIndex = this.instance.toVisualColumn(col);
+                cellProperties.renderer = IntensityRenderer;
                 cellProperties.editor = 'numeric';
                 cellProperties.validator = 'numeric';
                 //cellProperties.type = 'numeric';
                 return cellProperties;
 
+
             }
 
     } );
+    var hot_process = new Handsontable(process,setup_process);
 
-    function firstRowRenderer(instance, td, row, col, prop, value, cellProperties) { Handsontable.renderers.TextRenderer.apply(this, arguments); td.style.background = '#dcdcdc'; };
+
+    function firstRowRenderer(instance, td, row, col, prop, value, cellProperties) { Handsontable.renderers.TextRenderer.apply(this, arguments); td.style.background = '#dcdcdc'};
+    function LigandbatchesRenderer(instance, td, row, col, prop, value, cellProperties) { Handsontable.renderers.TextRenderer.apply(this, arguments); td.style.background = '#76c471';td.style.color = "#ffffff" };
+    function AnalyteBatchesRenderer(instance, td, row, col, prop, value, cellProperties) { Handsontable.renderers.TextRenderer.apply(this, arguments); td.style.background = '#7CA8CF';td.style.color = "#ffffff" };
+    function IntensityRenderer(instance, td, row, col, prop, value, cellProperties) { Handsontable.renderers.TextRenderer.apply(this, arguments); td.style.background = '#c49c71';td.style.color = "#ffffff" };
+
 </script>
 {% endblock %}

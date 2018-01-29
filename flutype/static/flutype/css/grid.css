@@ -71,6 +71,9 @@ body {
 
     .d {display:block;
        grid-area:table;
+       align-content: stretch;
+        width: 1200px;
+
     }
 
 
@@ -138,6 +141,4 @@ input#planning.active {
     background-color: #ff4444
 }
 
-
-.handsontable th { background: #dcdcdc !important; }
 

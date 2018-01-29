@@ -14,6 +14,7 @@ from .models import Peptide, PeptideBatch, Virus, VirusBatch, Antibody, Antibody
 from django_measurement.forms import MeasurementField
 from django.forms.utils import ErrorList
 from .helper import camel_case_split
+from django.utils.timezone import localtime, now
 
 class OrderedModelMultipleChoiceField(forms.ModelMultipleChoiceField):
     def clean(self, value):
@@ -38,7 +39,7 @@ class URLRedirectBaseForm(BaseForm):
         return self.Meta.model.url()
 
 
-class MeasurementForm(BaseForm):
+class MeasurementForm(URLRedirectBaseForm):
     class Meta:
         model = RawSpotCollection
         fields = ["sid",'batch_sid','user','measurement_type','functionalization','manufacturer',"comment"]
@@ -51,6 +52,9 @@ class MeasurementForm(BaseForm):
             'functionalization': forms.Select(attrs={'class': 'form-control'}),
             'comment': forms.Textarea(attrs={'class': 'form-control'}),
         }
+
+
+
 
 class RawDocForm(BaseForm):
     class Meta:
@@ -80,8 +84,9 @@ class StudyForm(URLRedirectBaseForm):
             'status': forms.Select(attrs={'class': 'form-control'}),
             'comment': forms.Textarea(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
-            #'date': forms.TextInput(attrs={'data-provide': 'datepicker'}),
         }
+
+
 
 
 class PeptideForm(URLRedirectBaseForm):
@@ -122,18 +127,30 @@ class AntibodyForm(URLRedirectBaseForm):
         model = Antibody
         fields = ['sid', 'target', 'name', 'link_db', 'comment']
 
+########################################################################################################################
+# Configuration for Batch Forms
+PRODUCTION_DATE = forms.DateField(initial=localtime(now()).date(),widget=forms.TextInput(attrs=
+    {
+        'data-provide': 'datepicker'
+    }))
+
+BATCH_FIELDS = ['sid', 'ligand', 'concentration', 'concentration_unit', 'buffer', 'ph', 'purity',
+                'produced_by', 'production_date', 'comment','stock']
+########################################################################################################################
 
 class BufferBatchForm(URLRedirectBaseForm):
+    stock = forms.BooleanField(initial=True, widget=forms.HiddenInput())
+    production_date = PRODUCTION_DATE
     class Meta:
         model = BufferBatch
         fields = ['sid', 'buffer', 'ph', 'produced_by', 'production_date', 'comment']
 
 
-BATCH_FIELDS = ['sid', 'ligand', 'concentration', 'concentration_unit', 'buffer', 'ph', 'purity',
-                'produced_by', 'production_date', 'comment']
 
 
 class FormCleanMixin(URLRedirectBaseForm):
+    stock = forms.BooleanField(initial=True, widget=forms.HiddenInput())
+    production_date = PRODUCTION_DATE
 
     def clean(self):
         if self.cleaned_data.get('concentration') and not self.cleaned_data.get('concentration_unit'):
@@ -183,7 +200,7 @@ class VirusBatchForm(FormCleanMixin):
 
     class Meta:
         model = VirusBatch
-        fields = BATCH_FIELDS
+        fields = BATCH_FIELDS +['passage_history','active']
 
 
 class AntibodyBatchForm(FormCleanMixin):
