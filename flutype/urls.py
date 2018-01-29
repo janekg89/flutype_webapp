@@ -24,6 +24,8 @@ urlpatterns = [
     url(r'^measurement_ligands/(?P<sid>.*)/$', views.measurement_ligands_view, name='measurement_ligands'),
     url(r'^m/(?P<measurement_sid>.*)/result/(?P<sid>.*)/$', views.measurement_result_view, name='qspotcollectionview'),
     url(r'^m/(?P<measurement_sid>.*)/result/(?P<sid>.*)/data$', views.barplot_data_view, name='barplot_plotly1'),
+    url(r'^m/(?P<measurement_sid>.*)/result/(?P<sid>.*)/data2$', views.barplot2_data_view, name='barplot_plotly2'),
+
     url(r'^m/(?P<measurement_sid>.*)/result/(?P<sid>.*)/barplot_p$', views.highcharts_view, name='heatmap_highchart1'),
     url(r'^uploadfile_measurement/(?P<sid>.*)/$', views.upload_file_measurement, name='upload_file_measurement'),
 

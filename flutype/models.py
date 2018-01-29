@@ -730,6 +730,7 @@ class RawSpotCollection(Measurement):
         lig1.fillna(value="", inplace=True)
         return lig1
 
+
     def pivot_ligand2(self):
         try:
             data = read_frame(self.rawspot_set.all(), fieldnames=["row", "column", "lig_mob_batch__ligand__virus__subtype"])

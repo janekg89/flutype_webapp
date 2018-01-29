@@ -52,4 +52,26 @@
     min-height:80px;
 }
 
+.step1{
+    background-color: #c47196;
+}
+.step2{
+    background-color: #c3c471;
+}
+.step3{
+    background-color: #76c471;
+}
 
+.step4 {
+    background-color: #7ca8cf
+;
+}
+
+.step5 {
+    background-color: #c49c71;
+}
+
+.multi-collapse{
+    height: 1000px;
+    width: 1200px;
+}

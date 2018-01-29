@@ -71,6 +71,9 @@ body {
 
     .d {display:block;
        grid-area:table;
+       align-content: stretch;
+        width: 1200px;
+
     }
 
 
