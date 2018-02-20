@@ -303,6 +303,11 @@ def create_spots(**kwargs):
         std = read_gal_file(kwargs["std"])
         list_std = std["Name"].values
         spots["std"]=[float(i) for i in list_std]
+    if "circle_quality" in kwargs:
+        circle_quality = read_gal_file(kwargs["circle_quality"])
+        list_circle_quality = circle_quality["Name"].values
+        spots["circle_quality"] = [float(i) for i in list_circle_quality]
+
 
     for k, spot in spots.iterrows():
         this_spot,_ = Spot.objects.get_or_create(raw_spot = spot["raw_spot"],
@@ -310,13 +315,14 @@ def create_spots(**kwargs):
 
 
         if "std" in kwargs:
-            this_spot.intensity = spot["intensity"]
             this_spot.std = spot["std"]
-            this_spot.save()
 
-        else:
-            this_spot.intensity = spot["intensity"]
-            this_spot.save()
+        if "circle_quality" in kwargs:
+            this_spot.circle_quality = spot["circle_quality"]
+
+
+        this_spot.intensity = spot["intensity"]
+        this_spot.save()
 
 
 def get_unique_galfile(type, **kwargs):
