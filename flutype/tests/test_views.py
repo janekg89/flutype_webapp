@@ -15,6 +15,7 @@ from flutype.data_management.master import Master, BASEPATH, Study
 import os
 
 class ViewTestCaseNoDataLogOut(TestCase):
+
     @classmethod
     def setUpTestData(cls):
         create_users(user_defs=user_defs)
