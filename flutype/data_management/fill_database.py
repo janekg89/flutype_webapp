@@ -66,7 +66,7 @@ class DatabaseDJ(object):
 
 
 if __name__ == "__main__":
-    MASTERPATH = os.path.join(BASEPATH, "master_neu")
+    MASTERPATH = os.path.join(BASEPATH, "master_2018_03_02")
 
     ma = Master(MASTERPATH)
     DatabaseDJ(ma).update_db()
