@@ -79,6 +79,7 @@ class GalType(DjangoChoices):
     std = ChoiceItem("std")
     intensity = ChoiceItem("intensity")
     ligand_batch = ChoiceItem("ligand_batch")
+    circle_quality =ChoiceItem("circle_quality")
 
 class ManufacturerModel(DjangoChoices):
     """ Manufacturer type """
@@ -588,6 +589,7 @@ class ProcessStep(Userable, Commentable, Hashable, models.Model):
 
     def __str__(self):
         return str(self.process.sid + "-" + self.step.sid + "-" + str(self.index))
+
 
 
 ########################################
