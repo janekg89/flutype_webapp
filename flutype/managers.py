@@ -285,6 +285,20 @@ class GalFileManager(models.Manager):
                 return this_gal, True
             else:
                 return this_gal, False
+        if "circle_quality" in kwargs and kwargs["circle_quality"] is not None:
+            kwargs["path"] = kwargs["circle_quality"]
+            this_gal, max_name = get_unique_galfile("circle_quality", **kwargs)
+            if this_gal is None:
+                sid = "circle_quality_{:03}".format(max_name + 1)
+                meta = {"sid": sid, "type":"circle_quality"}
+                this_gal, _ = super(GalFileManager, self).get_or_create(**meta)
+                f = read_gal_file_to_temporaray_file(kwargs["path"])
+                this_gal.file.save("{}.txt".format(this_gal.sid), File(f))
+                f.close()
+
+                return this_gal, True
+            else:
+                return this_gal, False
 
 
         if "intensities" in kwargs and kwargs["intensities"] is not None:
@@ -344,7 +358,11 @@ class SpotcollectionManager(models.Manager):
                 this_spot_collection.std_gal = object_gal_file
                 this_spot_collection.save()
 
-
+            if "circle_quality" in kwargs:
+                circle_quality_dic = {"circle_quality": kwargs["circle_quality"]}
+                object_gal_file, _ = GalFile.objects.get_or_create(**circle_quality_dic)
+                this_spot_collection.std_gal = object_gal_file
+                this_spot_collection.save()
 
         return this_spot_collection, created
 
