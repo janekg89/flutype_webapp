@@ -1,0 +1,6 @@
+step	index	user	start	comment	image	intensities
+S03	0					
+W004	3					
+I01	4					
+W004	7					
+SC001	8			Wavelength: 635 Intensity: 600 Gain:100	180124_N21_Pan_100 600_635_635.jpg	intensity.tsv
