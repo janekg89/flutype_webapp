@@ -79,6 +79,7 @@ class GalType(DjangoChoices):
     std = ChoiceItem("std")
     intensity = ChoiceItem("intensity")
     ligand_batch = ChoiceItem("ligand_batch")
+    circle_quality =ChoiceItem("circle_quality")
 
 class ManufacturerModel(DjangoChoices):
     """ Manufacturer type """
@@ -241,6 +242,8 @@ class Batch(Sidable, Commentable, models.Model):
     def __str__(self):
         return self.sid
 
+    def __repr__(self):
+        return self.sid
 
 class LigandBatch(Batch):
     """ Generic batch of a given ligand.
@@ -251,10 +254,6 @@ class LigandBatch(Batch):
 
     class Meta:
         verbose_name_plural = "ligand batches"
-
-
-
-
 
 
 class VirusBatch(LigandBatch):
@@ -589,6 +588,7 @@ class ProcessStep(Userable, Commentable, Hashable, models.Model):
         return str(self.process.sid + "-" + self.step.sid + "-" + str(self.index))
 
 
+
 ########################################
 # Study
 ########################################
@@ -756,9 +756,11 @@ class RawSpot(models.Model):
     raw_spot_collection = models.ForeignKey(RawSpotCollection)
     lig_fix_batch = models.ForeignKey(LigandBatch, related_name="lig_fix_batch", null=True, blank=True)
     lig_mob_batch = models.ForeignKey(LigandBatch, related_name="lig_mob_batch", null=True, blank=True)
+    circle_quality =  models.FloatField(null=True, blank=True)
     column = models.IntegerField()
     row = models.IntegerField()
     objects = RawSpotManager()
+    #to do Block
 
     class Meta:
         unique_together = ('column', 'row', 'raw_spot_collection')
@@ -807,6 +809,8 @@ class Spot(models.Model):
     raw_spot = models.ForeignKey(RawSpot)
     intensity = models.FloatField(null=True, blank=True)
     std = models.FloatField(null=True, blank=True)
+    circle_quality = models.FloatField(null=True, blank=True)
+
     spot_collection = models.ForeignKey(SpotCollection)
 
     class Meta:

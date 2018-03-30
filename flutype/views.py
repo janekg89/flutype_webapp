@@ -670,9 +670,10 @@ def buffer_batch_view(request):
 
 
 @login_required
-def study_edit(request,sid):
-    instance = get_object_or_404(Study, sid=sid)
+def study_edit(request,pk):
+    instance = get_object_or_404(Study, pk=pk)
     perm = request.user.has_perm('change_study',instance)
+    print(perm)
     if not perm:
         return HttpResponseForbidden()
 

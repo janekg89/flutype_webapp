@@ -28,7 +28,7 @@
             <tr>
                 <td><a href="{{ url("study", args=[s.sid]) }}"> {{ s.sid }} </a>
                     {% if request.user.has_perm('change_study', s) %}
-                        <a title="edit Study" href="{{ url('edit', args=[s.__class__.__name__, s.pk]) }}"><i  class="fa fa-fw fa-edit text-warning"></i></a>
+                        <a title="edit Study" href="{{ url('study_edit', args=[s.pk]) }}"><i  class="fa fa-fw fa-edit text-warning"></i></a>
                         <a title="delete Study" href="{{ url('delete', args=[s.__class__.__name__, s.pk]) }}"><i  class="fa fa-fw fa-trash text-danger"></i></a>
                     {% endif %}
                 </td>
