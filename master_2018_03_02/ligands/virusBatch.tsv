@@ -1,0 +1,7 @@
+sid	labeling	concentration	concentration_unit	buffer	ph	purity	produced_by	production_date	comment	ligand	passage_history	active	stock
+A/Beijing/32/1992(H3N2)-2017-07-05							ssaenger	2017-07-05	Titer 1.24E8 pfu/ml (plaque test). EGG ! FIX THIS. FIX THE CONCENTRATION UNITS.	A/Beijing/32/1992(H3N2)	Egg		True
+A/Brisbane/10/2007(H3N2)-2017-07-05							ssaenger	2017-07-05	EGG !. Set the field. FIX THE CONCENTRATION UNITS.	A/Brisbane/10/2007(H3N2)	Egg		True
+A/Aichi/2/68(H3N2)-X31-2017-05-02							ssaenger	2017-05-02	EGG ! 4.63E8 [pfu/ml] FIX THE CONCENTRATION UNITS. ADD EGG & UZ VARIANTS OF BATCH.	A/Aichi/2/68(H3N2)-X31	Egg		True
+A/California/7/2009(H1N1)-2018-03-20							ssaenger		Eggs infected with PBS. Used as negative control (Mock). Allantois fluid (containing proteins from egg).	A/California/7/2009(H1N1)	Egg		True
+A/Brisbaine/59/2007(H1N1)-2018-03-20							ssaenger			A/Brisbaine/59/2007(H1N1)	Egg		True
+A/Hong Kong/4801/2014(H3N2)-2018-03-20							ssaenger			A/Hong Kong/4801/2014(H3N2)	Egg		True

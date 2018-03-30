@@ -297,12 +297,18 @@ def create_spots(**kwargs):
     Spot = apps.get_model("flutype","Spot")
     intensities = read_gal_file(kwargs["intensities"])
     spots =pd.DataFrame(intensities["Name"].values, columns=["intensity"])
+
     spots["raw_spot"] = kwargs["raw_spot"]
     spots["spot_collection"] = kwargs["spot_collection"]
+
     if "std" in kwargs:
         std = read_gal_file(kwargs["std"])
-        list_std = std["Name"].values
-        spots["std"]=[float(i) for i in list_std]
+        spots["std"] = std["Name"].values
+
+
+    if "circle_quality" in kwargs:
+        circle_quality = read_gal_file(kwargs["circle_quality"])
+        spots["circle_quality"] = circle_quality["Name"].values
 
     for k, spot in spots.iterrows():
         this_spot,_ = Spot.objects.get_or_create(raw_spot = spot["raw_spot"],
@@ -310,13 +316,15 @@ def create_spots(**kwargs):
 
 
         if "std" in kwargs:
-            this_spot.intensity = spot["intensity"]
             this_spot.std = spot["std"]
             this_spot.save()
 
-        else:
-            this_spot.intensity = spot["intensity"]
+        if "circle_quality" in kwargs:
+            this_spot.circle_quality = spot["circle_quality"]
             this_spot.save()
+
+        this_spot.intensity = spot["intensity"]
+        this_spot.save()
 
 
 def get_unique_galfile(type, **kwargs):
@@ -359,6 +367,7 @@ def read_gal_file(fpath):
         this_gal = pd.read_csv(fpath, sep='\t', index_col = 0,  dtype=str)
         this_gal = rows_and_cols_to_gal_file(this_gal)
         this_gal.replace([np.NaN], [None], inplace=True)
+
 
     return this_gal
 

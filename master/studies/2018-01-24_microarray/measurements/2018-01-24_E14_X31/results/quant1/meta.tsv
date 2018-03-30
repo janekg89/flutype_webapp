@@ -1,0 +1,3 @@
+comment	spotdetection with read_spot_intensities1.1 from 20.2.18
+processing_type	Fluorescence reader of microwell plate
+intensity_file	intensity.tsv
