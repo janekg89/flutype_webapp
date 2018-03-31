@@ -1,4 +1,12 @@
 sid	labeling	concentration	concentration_unit	buffer	ph	purity	produced_by	production_date	comment	stock	ligand
+LF-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	LF
+LF-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	LF
+LF-0.05	Dye634	0.05	Stock 1	Natriumhydrogencarbonat			Bay			False	LF
+LF-0.1	Dye634	0.1	Stock 1	Natriumhydrogencarbonat			Bay			False	LF
+LF-0.01	Dye634	0.01	Stock 1	Natriumhydrogencarbonat			Bay			False	LF
+LF-0.001	Dye634	1	Stock 1	Natriumhydrogencarbonat			Bay			False	LF
+LF-0.0001	Dye634	0.0001	Stock 1	Natriumhydrogencarbonat			Bay			False	LF
+LF-0.5	Dye634	0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	LF
 LF	Dye634	1	Stock 1	Natriumhydrogencarbonat			Bay			True	LF
 P001		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P001
 P002		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P002
@@ -138,3 +146,33 @@ P134		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P134
 P135		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P135
 P136		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P136
 Nenad		1	Stock 1	Natriumhydrogencarbonat			Bay			True	Nenad
+P010-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P010
+P010-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P010
+P010-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P010
+P011-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P011
+P011-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P011
+P011-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P011
+P012-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P012
+P012-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P012
+P012-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P012
+P013-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P013
+P013-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P013
+P013-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P013
+P014-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P014
+P014-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P014
+P014-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P014
+P001-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P001
+P001-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P001
+P001-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P001
+P049-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P049
+P049-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P049
+P049-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P049
+P050-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P050
+P050-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P050
+P050-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P050
+P052-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P052
+P052-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P052
+P052-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P052
+P061-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P061
+P061-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P061
+P061-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P061

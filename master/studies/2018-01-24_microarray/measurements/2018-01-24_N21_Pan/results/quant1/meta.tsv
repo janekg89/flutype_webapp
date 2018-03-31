@@ -1,3 +1,5 @@
-comment	spotdetection with read_spot_intensities1.1 from 20.2.18
-processing_type	Fluorescence reader of microwell plate
+circle_quality	circle_quality.tsv
 intensity_file	intensity.tsv
+processing_type	Fluorescence reader of microwell plate (mean on best fitfing circle of spot)
+std	std.tsv
+comment	spotdetection with spot2intensity.py from 2018-03-31 .
