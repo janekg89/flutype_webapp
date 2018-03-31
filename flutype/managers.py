@@ -246,7 +246,7 @@ class ProcessManager(models.Manager):
                 with open(image_fpath, "rb") as f:
                     this_process_step.hash = md5(f)
                     this_process_step.save()
-                    this_process_step.image.save(step["image"],File(f))
+                    this_process_step.image.save(md5(f)+step["image"],File(f))
 
         return this_process, created
 
