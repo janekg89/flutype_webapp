@@ -273,6 +273,7 @@ def get_or_create_raw_spots(**kwargs):
 
 
     spots = pd.merge(lig_fix,lig_mob,how='outer',on=['Row', 'Column'])
+
     spots.replace([np.NaN], [None], inplace=True)
 
     spots.rename(columns={"Name":"lig_mob_batch", "Row":"row","Column":"column"}, inplace=True)
@@ -362,11 +363,12 @@ def read_gal_file(fpath):
         this_gal.replace(["No"], [None], inplace=True)
 
 
-
     except:
         this_gal = pd.read_csv(fpath, sep='\t', index_col = 0,  dtype=str)
         this_gal = rows_and_cols_to_gal_file(this_gal)
         this_gal.replace([np.NaN], [None], inplace=True)
+        #this_gal.replace(["NO"], [None], inplace=True)
+        #this_gal.replace(["No"], [None], inplace=True)
 
 
     return this_gal
