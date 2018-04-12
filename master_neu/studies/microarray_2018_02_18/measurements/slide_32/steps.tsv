@@ -1,0 +1,7 @@
+	step	index	user	start	comment	image	intensities
+0	S03	0					
+1	SC001	1				b_im.tiff	
+2	W004	2					
+3	I01	3					
+4	W004	4					
+5	SC001	5				a_im.tiff	

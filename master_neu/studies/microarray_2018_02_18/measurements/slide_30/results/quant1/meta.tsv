@@ -1,0 +1,3 @@
+comment	spotdetection with spot2intensity.py from 2018-03-20 .
+intensity_file	intensity.tsv
+processing_type	Fluorescence reader of microwell plate (mean on best fitfing circle of spot)

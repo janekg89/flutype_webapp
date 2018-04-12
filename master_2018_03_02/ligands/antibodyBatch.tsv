@@ -1,0 +1,18 @@
+sid	labeling	concentration	concentration_unit	buffer	ph	purity	produced_by	production_date	comment	stock	ligand
+AK025		0.25								False	A001
+AK050		0.5								False	A001
+AK100		1								True	A001
+1.0_Ak_28666		1								True	Ak_28666
+0.5_Ak_28666		0.5								False	Ak_28666
+0.25_Ak_28666		0.25								False	Ak_28666
+1.0_AK_28667		1								True	AK_28667
+0.5_AK_28667		0.5								False	AK_28667
+0.25_AK_28667		0.25								False	AK_28667
+1.0_AK_28665		1								True	AK_28665
+0.5_AK_28665		0.5								False	AK_28665
+0.25_AK_28665		0.25								False	AK_28665
+rtdj				Natriumhydrogencarbonat	1		janekg89	2018-01-25		False	A001
+rt7							janekg89	2017-06-03		True	AK_28665
+AK_X31_3125										True	AK_3125
+AK_Cal_28666										True	Ak_28666
+AK_Cal_28667										True	AK_28667
