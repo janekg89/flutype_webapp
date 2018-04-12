@@ -1,3 +1,0 @@
-intensity_file	intensity.tsv
-processing_type	Fluorescence reader of microwell plate (sum over square on grid )
-comment	spotdetection with spot2intensity.py from 2018-03-31 after spotting.
