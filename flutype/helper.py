@@ -426,6 +426,7 @@ def get_ligand_or_none(ligand):
     if ligand is None:
             ligand = None
     else:
+        #print(ligand)
         ligand = Ligand.objects.get(sid__iexact=ligand)
 
 
