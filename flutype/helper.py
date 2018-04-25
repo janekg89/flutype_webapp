@@ -4,6 +4,7 @@ from django.core.files.storage import FileSystemStorage
 from flutype_webapp.settings import MEDIA_ROOT
 from django.contrib.auth.models import User
 from django_pandas.io import read_frame
+from django.db import transaction
 import os
 import hashlib
 from django.apps import apps
@@ -263,30 +264,37 @@ def read_ligand_batches(ligand_batch):
     return df
 
 
-
 def get_or_create_raw_spots(**kwargs):
-    raw_spots = []
     RawSpot = apps.get_model("flutype","RawSpot")
+    LigandBatch = apps.get_model("flutype","LigandBatch")
+
     lig_mob = read_gal_file(kwargs["lig_mob_path"])
     lig_fix = read_gal_file(kwargs["lig_fix_path"])
     lig_fix.rename(columns={"Name":"lig_fix_batch"}, inplace=True)
-
-
     spots = pd.merge(lig_fix,lig_mob,how='outer',on=['Row', 'Column'])
-
     spots.replace([np.NaN], [None], inplace=True)
-
     spots.rename(columns={"Name":"lig_mob_batch", "Row":"row","Column":"column"}, inplace=True)
     spots = spots[["row","column","lig_mob_batch","lig_fix_batch"]]
 
+    spots["lig_mob_batch"]= spots["lig_mob_batch"].apply(lambda x: x if x == None else LigandBatch.objects.get_subclass(sid=x))
+    spots["lig_fix_batch"]= spots["lig_fix_batch"].apply(lambda x: x if x == None else LigandBatch.objects.get_subclass(sid=x))
+
+
     #spots["lig_mob_batch"]= lig_mob["Name"].values
 
-    created = False
     spots["raw_spot_collection"]=kwargs["raw_spot_collection"]
-    for k, spot in spots.iterrows():
-        raw_spot, created = RawSpot.objects.get_or_create(**spot)
-        raw_spots.append(raw_spot)
-    return raw_spots, created
+    spots_dict = spots.to_dict('records')
+    spots_instances = [RawSpot(**record) for record in spots_dict]
+
+    #created = False
+    #raw_spots = []
+    #for k, spot in spots.iterrows():
+    #    raw_spot, created = RawSpot.objects.get_or_create(**spot)
+    #    raw_spots.append(raw_spot)
+    with transaction.atomic():
+      spo =  RawSpot.objects.bulk_create(spots_instances)
+    #spo = [s.pk for s in spots_instances]
+    return spo#, created
 
 
 def  filter_for_class(list,class_name):
@@ -297,7 +305,9 @@ def  filter_for_class(list,class_name):
 def create_spots(**kwargs):
     Spot = apps.get_model("flutype","Spot")
     intensities = read_gal_file(kwargs["intensities"])
-    spots =pd.DataFrame(intensities["Name"].values, columns=["intensity"])
+    print(intensities)
+    spots = pd.DataFrame(intensities["Name"].values, columns=["intensity"])
+
 
     spots["raw_spot"] = kwargs["raw_spot"]
     spots["spot_collection"] = kwargs["spot_collection"]
@@ -311,21 +321,26 @@ def create_spots(**kwargs):
         circle_quality = read_gal_file(kwargs["circle_quality"])
         spots["circle_quality"] = circle_quality["Name"].values
 
-    for k, spot in spots.iterrows():
-        this_spot,_ = Spot.objects.get_or_create(raw_spot = spot["raw_spot"],
-                                                spot_collection = spot["spot_collection"])
+    spots_dict = spots.to_dict('records')
+    spots_instances = [Spot(**record) for record in spots_dict]
+    Spot.objects.bulk_create(spots_instances)
 
 
-        if "std" in kwargs:
-            this_spot.std = spot["std"]
-            this_spot.save()
+    #for k, spot in spots.iterrows():
+    #    this_spot,_ = Spot.objects.get_or_create(raw_spot = spot["raw_spot"],
+    #                                            spot_collection = spot["spot_collection"])
 
-        if "circle_quality" in kwargs:
-            this_spot.circle_quality = spot["circle_quality"]
-            this_spot.save()
 
-        this_spot.intensity = spot["intensity"]
-        this_spot.save()
+    #    if "std" in kwargs:
+     #       this_spot.std = spot["std"]
+    #        this_spot.save()
+
+     #   if "circle_quality" in kwargs:
+    #        this_spot.circle_quality = spot["circle_quality"]
+    #        this_spot.save()
+
+    #    this_spot.intensity = spot["intensity"]
+    #    this_spot.save()
 
 
 def get_unique_galfile(type, **kwargs):
@@ -426,6 +441,7 @@ def get_ligand_or_none(ligand):
     if ligand is None:
             ligand = None
     else:
+        #print(ligand)
         ligand = Ligand.objects.get(sid__iexact=ligand)
 
 
@@ -470,6 +486,7 @@ def get_or_create_object_from_dic(object_n, **kwargs):
 
     object_capitalized = object_n.capitalize()
     model = get_model_by_name(object_capitalized)
+    print(kwargs)
     object, created = model.objects.get_or_create(**kwargs)
 
     return object, created
