@@ -47,6 +47,7 @@ class DatabaseDJ(object):
         buffer = self.ma.read_buffer()
 
 
+
         self.update_ligands_or_batches(ligands)
         self.update_ligands_or_batches(complex)
         self.update_ligands_or_batches(buffer)

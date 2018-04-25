@@ -151,7 +151,7 @@ class Virus(Ligand):
     link_db = models.URLField(blank=True, null=True)
     subtype = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     isolation_country = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
-    collection_date = models.IntegerField( choices=YEAR_CHOICES,blank=True, null=True)
+    collection_date = models.IntegerField( choices=YEAR_CHOICES, blank=True, null=True)
     strain = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     objects = LigandManager()
 
