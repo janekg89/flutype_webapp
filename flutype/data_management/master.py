@@ -59,7 +59,10 @@ class Master(BaseAll):
 
         for ligand in self.ligands:
             path_ligand = os.path.join(self.path_ligands, "{}.tsv".format(ligand))
+
             dic_ligands[ligand] = read_and_dropnan(path_ligand)
+
+
 
         return dic_ligands
 

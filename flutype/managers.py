@@ -22,12 +22,14 @@ import os
 
 try:
    unicode = unicode
+
 except NameError:
    # 'unicode' is undefined, must be Python 3
    str = str
    unicode = str
    bytes = bytes
    basestring = (str,bytes)
+
 else:
    # 'unicode' exists, must be Python 2
    str = str
@@ -43,11 +45,12 @@ class LigandManager(PolymorphicManager):
             dic_ligand_batches[batch] = self.to_df()
 
     def to_df(self):
-        df = read_frame(self.all())
+        return read_frame(self.all())
 
     def get_or_create(self, *args, **kwargs):
         if "collection_date" in kwargs and isinstance(kwargs['collection_date'], basestring):
             kwargs['collection_date'] = int(kwargs['collection_date'])
+            print(kwargs['collection_date'])
         object, created = super(LigandManager, self).get_or_create(*args, **kwargs)
         return object, created
 
@@ -177,7 +180,7 @@ class MeasurementManager(models.Manager):
             this_measurement.lig_fix =lig_fix
             this_measurement.save()
             kwargs["raw_spot_collection"]=this_measurement
-            kwargs["raw_spots"] , _ = get_or_create_raw_spots(**kwargs)
+            kwargs["raw_spots"] = get_or_create_raw_spots(**kwargs)
 
             for raw_spot in kwargs["raw_spots"]:
                 try:

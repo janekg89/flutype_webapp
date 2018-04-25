@@ -22,3 +22,10 @@ ghostdriver.log
 node_modules/
 htmlcov/
 .coverage
+master
+master_test
+master_2018_03_02
+master_2018_03_21
+master_neu
+master_uncomplete
+master_2018_03_02

@@ -1,0 +1,18 @@
+sid	method	temperature	comment	duration	substance
+I01	Im KS nach Abdeckung mit Klebefolie				
+I03	Air displacement pipette 50 micro liter	37	elisa: incubation of  antibody 50 muliter		1:1000 Antibody H1N1 Goat Serotec IAV
+I04	Air displacement pipette 50 micro liter	37	elisa: incubation of  antibody 50 muliter		1:1000 Antibody H1N1 Maus Abcam IAV
+I05	Air displacement pipette 50 micro liter	37	elisa: incubation of  antibody 50 muliter		1:1000 Antibody GA2B Maus Serotec M1
+I06	Air displacement pipette 50 micro liter	37	elisa: incubation of  antibody 50 muliter		1:1000 Antibody Maus Acris NP
+I07	Air displacement pipette 50 micro liter	37	elisa: incubation of  antibody 50 muliter		1:1000 Antibody GeneTex Rabbit NP
+I08	Air displacement pipette 50 micro liter	37	elisa: incubation of  antibody 50 muliter		1:1000  Antibody Serotec Maus NP
+I09	Air displacement pipette 50 micro liter	37	elisa: incubation of  antibody 50 muliter		1:1000 Antibody WHO Maus NP
+I10	Air displacement pipette 50 micro liter	37	elisa: incubation of  antibody 50 muliter		1:1000 Antibody EVL Maus NP
+I11	substrate incubation TMB		elisa: substrate, 50 muliter		
+I12	stopping  H2SO4 50 muliter		elisa stopping 1M H2SO4 50 muliter		
+I13	1:1000 2.AK Rabbit-Anti-Maus HRP (Dako) 		elisa: 2. antibody for maus		
+I14	 1:1000 2.AK Swine-Anti-Rabbit HRP (Dako)		elisa: 2. antibody for rabbit		
+I15	1:1000 2.AK Rabbit-Anti-Goat HRP (Dako)		elisa: 2. antibody for goat		
+I02	Air displacement pipette 50 micro liter	37		00:01:00:00	1:1000 2.AK Rabbit-Anti-Goat HRP (Dako)
+I016	Air displacement pipette 50 micro liter 		Substrate Incubation	00:01:00:00	TMB
+I017	Air displacement pipette 50 micro liter 		Stopping Substance Incubation		H2SO4
