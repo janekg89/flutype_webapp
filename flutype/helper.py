@@ -305,7 +305,6 @@ def  filter_for_class(list,class_name):
 def create_spots(**kwargs):
     Spot = apps.get_model("flutype","Spot")
     intensities = read_gal_file(kwargs["intensities"])
-    print(intensities)
     spots = pd.DataFrame(intensities["Name"].values, columns=["intensity"])
 
 
@@ -486,7 +485,6 @@ def get_or_create_object_from_dic(object_n, **kwargs):
 
     object_capitalized = object_n.capitalize()
     model = get_model_by_name(object_capitalized)
-    print(kwargs)
     object, created = model.objects.get_or_create(**kwargs)
 
     return object, created
