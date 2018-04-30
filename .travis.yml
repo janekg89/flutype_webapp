@@ -17,6 +17,7 @@ install:
   - pip install coveralls
 before_script:
   - python manage.py collectstatic
+  - psql -c "CREATE USER flutype_user WITH PASSWORD 'flutype_test';" -U postgres
   - psql -c "CREATE DATABASE flutype;" -U flutype_user
 script:
 - coverage run --source='.' manage.py test flutype --exclude-tag=local
