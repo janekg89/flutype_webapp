@@ -20,6 +20,7 @@ before_script:
   - psql -U postgres -c "CREATE USER flutype_user WITH CREATEUSER PASSWORD 'flutype_test';"
   - psql -U postgres -c "ALTER USER flutype_user CREATEDB;"
   #- psql -U postgres -c "CREATE DATABASE flutype_test;"
+  - ./manage.py makemigrations myappname
 
 
 script:
