@@ -1,0 +1,4 @@
+sid	method	temperature	comment	substance	duration
+B01	3/MP*PBST	37	"duration is 1 hour
+"		00:00:60:00
+B02	Air displacement pipette 100 micro liter	37		MB PBST	00:01:00:00
