@@ -275,7 +275,6 @@ def get_or_create_raw_spots(**kwargs):
     spots.replace([np.NaN], [None], inplace=True)
     spots.rename(columns={"Name":"lig_mob_batch", "Row":"row","Column":"column"}, inplace=True)
     spots = spots[["row","column","lig_mob_batch","lig_fix_batch"]]
-
     spots["lig_mob_batch"]= spots["lig_mob_batch"].apply(lambda x: x if x == None else LigandBatch.objects.get_subclass(sid=x))
     spots["lig_fix_batch"]= spots["lig_fix_batch"].apply(lambda x: x if x == None else LigandBatch.objects.get_subclass(sid=x))
 
@@ -441,6 +440,7 @@ def get_ligand_or_none(ligand):
             ligand = None
     else:
         #print(ligand)
+
         ligand = Ligand.objects.get(sid__iexact=ligand)
 
 
