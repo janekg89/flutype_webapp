@@ -50,7 +50,6 @@ class LigandManager(PolymorphicManager):
     def get_or_create(self, *args, **kwargs):
         if "collection_date" in kwargs and isinstance(kwargs['collection_date'], basestring):
             kwargs['collection_date'] = int(kwargs['collection_date'])
-            print(kwargs['collection_date'])
         object, created = super(LigandManager, self).get_or_create(*args, **kwargs)
         return object, created
 
@@ -249,7 +248,7 @@ class ProcessManager(models.Manager):
                 with open(image_fpath, "rb") as f:
                     this_process_step.hash = md5(f)
                     this_process_step.save()
-                    this_process_step.image.save(md5(f)+step["image"],File(f))
+                    this_process_step.image.save(this_process_step.hash+step["image"],File(f))
 
         return this_process, created
 
