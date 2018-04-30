@@ -284,7 +284,7 @@ class ViewTestCaseOneCollectionLogedIn(TransactionTestCase):
         response = self.c.post('/processes/', {})
         status = response.status_code
         self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "170929-tutorial-microarray-1")
+        self.assertContains(response, "170929-tutorial-elisa-1")
 
     def test_process_view_200(self):
         sid = Process.objects.last().sid

@@ -24,7 +24,7 @@ class DatabaseDJTestCase(TransactionTestCase):
 
 
     def test_update_ligands(self):
-        Ligand_count = {"Antibody":4, "Complex":1, "Virus":19, "Peptide":151}
+        Ligand_count = {"Antibody":5, "Complex":1, "Virus":19, "Peptide":151}
         #read ligands from master
         ligands = self.ma.read_ligands()
         complex = self.ma.read_complex()
@@ -42,7 +42,7 @@ class DatabaseDJTestCase(TransactionTestCase):
 
 
     def test_update_batches(self):
-        Ligand_batch_count = {"AntibodyBatch":15,"BufferBatch":6, "ComplexBatch":1, "VirusBatch":172, "PeptideBatch":242}
+        Ligand_batch_count = {"AntibodyBatch":15,"BufferBatch":6, "ComplexBatch":1, "VirusBatch":172, "PeptideBatch":315}
 
         ligands = self.ma.read_ligands()
         complex = self.ma.read_complex()

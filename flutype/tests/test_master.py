@@ -32,12 +32,11 @@ class MasterTestCase(TransactionTestCase):
         self.assertEqual(st.Master.study_sids,{'tutorial_2017_09_29'})
         self.assertEqual(st.raw_docs_fnames,{'170929-tutorial.tar.gz','test_file_1.txt'})
         self.assertEqual(st.measurement_sids, {'170929-tutorial-elisa-1',
-                                               '170929-tutorial-microwell-1',
-                                               '170929-tutorial-microarray-1'})
+                                               '170929-tutorial-microwell-1'})
         self.assertEqual(set(st.meta.keys()),{'comment', 'user','description','date','hidden','status'})
         self.assertEqual(set(st.read_measurements().keys()),{'170929-tutorial-elisa-1',
                                                              '170929-tutorial-microwell-1',
-                                                             '170929-tutorial-microarray-1'})
+                                                            })
 
 
 
