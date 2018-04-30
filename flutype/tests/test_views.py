@@ -198,11 +198,11 @@ class ViewTestCaseOneCollectionLogedIn(TransactionTestCase):
     def setUp(self):
         create_users(user_defs=user_defs)
 
-        MASTERPATH = os.path.join(BASEPATH, "master")
-        study_path = os.path.join(BASEPATH, "master/studies/170509-microwell")
+        MASTERPATH = os.path.join(BASEPATH, "master_test")
+        study_path = os.path.join(BASEPATH, "master_test/studies/tutorial_2017_09_29")
         self.ma = Master(MASTERPATH)
         study = Study(study_path).read()
-        study_dic = {"170509-microwell": study}
+        study_dic = {"tutorial_2017_09_29": study}
         self.db = DatabaseDJ(self.ma)
         ligands = self.ma.read_ligands()
         complex =  self.ma.read_complex()
@@ -284,7 +284,7 @@ class ViewTestCaseOneCollectionLogedIn(TransactionTestCase):
         response = self.c.post('/processes/', {})
         status = response.status_code
         self.assertEqual(status, 200, "view 200")
-        self.assertContains(response, "170509-00")
+        self.assertContains(response, "170929-tutorial-microarray-1")
 
     def test_process_view_200(self):
         sid = Process.objects.last().sid

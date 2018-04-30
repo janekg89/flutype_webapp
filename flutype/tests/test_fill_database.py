@@ -24,7 +24,7 @@ class DatabaseDJTestCase(TransactionTestCase):
 
 
     def test_update_ligands(self):
-        Ligand_count = {"Antibody":4, "Complex":1, "Virus":10, "Peptide":66}
+        Ligand_count = {"Antibody":4, "Complex":1, "Virus":19, "Peptide":151}
         #read ligands from master
         ligands = self.ma.read_ligands()
         complex = self.ma.read_complex()
@@ -42,7 +42,7 @@ class DatabaseDJTestCase(TransactionTestCase):
 
 
     def test_update_batches(self):
-        Ligand_batch_count = {"AntibodyBatch":14,"BufferBatch":6, "ComplexBatch":1, "VirusBatch":154, "PeptideBatch":242}
+        Ligand_batch_count = {"AntibodyBatch":15,"BufferBatch":6, "ComplexBatch":1, "VirusBatch":172, "PeptideBatch":242}
 
         ligands = self.ma.read_ligands()
         complex = self.ma.read_complex()
@@ -115,6 +115,7 @@ class DatabaseDJTestCase(TransactionTestCase):
         complex = self.ma.read_complex()
         buffer = self.ma.read_buffer()
 
+
         self.db.update_ligands_or_batches(ligands)
         self.db.update_ligands_or_batches(complex)
         self.db.update_ligands_or_batches(buffer)
@@ -124,7 +125,9 @@ class DatabaseDJTestCase(TransactionTestCase):
         ligands1 = self.ma.ligands
         for ligand in ligands1:
             df = cap_and_read(ligand)
-            self.assertTrue(ligands[ligand].equals(df))
+
+
+            self.assertTrue(ligands[ligand].equals(df.reindex(columns=ligands[ligand].columns)))
         self.assertTrue(complex["complex"].equals(read_complex()))
         self.assertTrue(buffer["buffer"].equals(read_buffer()))
 
@@ -143,11 +146,10 @@ class DatabaseDJTestCase(TransactionTestCase):
 
         for ligand_batch in ligand_batches.keys():
             df = read_ligand_batches(ligand_batch)
-
             self.assertTrue(ligand_batches[ligand_batch]["sid"].equals(df["sid"]))
             self.assertTrue(ligand_batches[ligand_batch]["comment"].equals(df["comment"]))
             self.assertTrue(ligand_batches[ligand_batch]["buffer"].equals(df["buffer"]))
-            self.assertTrue(ligand_batches[ligand_batch]["produced_by"].equals(df["produced_by"]))
+            self.assertTrue(ligand_batches[ligand_batch]["produced_by"].str.lower().equals(df["produced_by"].str.lower()))
             self.assertTrue(ligand_batches[ligand_batch]["ph"].equals(df["ph"]))
             self.assertTrue(ligand_batches[ligand_batch]["production_date"].equals(df["production_date"]))
             self.assertEqual(len(ligand_batches[ligand_batch]),len(df))

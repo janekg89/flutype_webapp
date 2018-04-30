@@ -12,11 +12,11 @@ class ChangeStudyTestCase(TransactionTestCase):
     @classmethod
     def setUp(self):
         create_users(user_defs=user_defs)
-        MASTERPATH = os.path.join(BASEPATH, "master")
-        study_path = os.path.join(BASEPATH, "master/studies/170509-microwell")
+        MASTERPATH = os.path.join(BASEPATH, "master_test")
+        study_path = os.path.join(BASEPATH, "master_test/studies/tutorial_2017_09_29")
         self.ma = Master(MASTERPATH)
         study = Study(study_path).read()
-        study_dic = {"170509-microwell": study}
+        study_dic = {"tutorial_2017_09_29": study}
         self.db = DatabaseDJ(self.ma)
         ligands = self.ma.read_ligands()
         complex = self.ma.read_complex()
@@ -38,7 +38,7 @@ class ChangeStudyTestCase(TransactionTestCase):
         create_users(user_defs=None, delete_all=True)
 
     def test_permission_allowed(self):
-        url  = redirect('study',sid="170509-microwell")
+        url  = redirect('study',sid="tutorial_2017_09_29")
         response = self.c.get(url, {})
         print(response)
 
