@@ -9,8 +9,9 @@
         data-show-columns="true"
         data-toolbar="#toolbar"
         class="table table-striped">
+    {% with prosteps = collection.processstep_set.all() %}
 
-    {% with prosteps = process.processstep_set.filter(raw_spot_collection=process.rawspotcollection_set.first())%}
+
         <thead>
         <tr>
             <th data-sortable="true">step</th>
