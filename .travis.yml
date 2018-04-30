@@ -13,7 +13,8 @@ install:
   - pip install -r requirements.txt
   - pip install coveralls
 before_script:
-  python manage.py collectstatic
+  - python manage.py collectstatic
+  - psql -c "CREATE DATABASE flutype with owner flutype_user;" -U postgres
 script:
 - coverage run --source='.' manage.py test flutype --exclude-tag=local
 after_success:
