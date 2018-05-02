@@ -26,7 +26,6 @@ MASTERPATH = os.path.join(BASEPATH, "master")
 class BaseAll(object):
     def __init__(self, path):
         self.path = os.path.join(BASEPATH,path)
-        print(path)
 
 
 class Master(BaseAll):
