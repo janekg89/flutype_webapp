@@ -26,6 +26,7 @@ MASTERPATH = os.path.join(BASEPATH, "master")
 class BaseAll(object):
     def __init__(self, path):
         self.path = os.path.join(BASEPATH,path)
+        print(path)
 
 
 class Master(BaseAll):
@@ -59,10 +60,7 @@ class Master(BaseAll):
 
         for ligand in self.ligands:
             path_ligand = os.path.join(self.path_ligands, "{}.tsv".format(ligand))
-
             dic_ligands[ligand] = read_and_dropnan(path_ligand)
-
-
 
         return dic_ligands
 
@@ -111,9 +109,9 @@ class Master(BaseAll):
 
     def read(self):
         dic_master = {"studies":self.read_studies(),
-                  "ligands":self.read_ligands(),
-                  "ligand_batches":self.read_ligand_batches(),
-                  "steps":self.read_steps()}
+                      "ligands":self.read_ligands(),
+                      "ligand_batches":self.read_ligand_batches(),
+                      "steps":self.read_steps()}
         return dic_master
 
 
