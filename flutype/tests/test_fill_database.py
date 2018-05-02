@@ -107,7 +107,7 @@ class DatabaseDJTestCase(TransactionTestCase):
         spot_collections = SpotCollection.objects.all()
 
         self.assertEqual(studies.count(), 1)
-        self.assertEqual(raw_spot_collections.count(), 3)
+        self.assertEqual(raw_spot_collections.count(), 2)
         self.assertEqual(spot_collections.count(), 4)
 
     def test_read_ligand(self):

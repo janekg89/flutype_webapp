@@ -1,6 +1,7 @@
 {% import 'flutype/macros.html' as macros %}
 {% if process %}
 {% if process.is_step_in_process() %}
+
 <table id="process"
         data-toggle="table"
         data-pagination="true"
@@ -9,8 +10,11 @@
         data-show-columns="true"
         data-toolbar="#toolbar"
         class="table table-striped">
-    {% with prosteps = collection.processstep_set.all() %}
-
+    {% if collection %}
+        {% set  prosteps = collection.processstep_set.all() %}
+    {% else %}
+        {% set prosteps =  process.processstep_set.filter(raw_spot_collection=process.rawspotcollection_set.first())%}
+    {%  endif %}
 
         <thead>
         <tr>
@@ -71,7 +75,6 @@
             </tr>
         {% endfor %}
         </tbody>
-    {% endwith %}
 </table>
 {% else %}
     No process steps exist for process:{{ process.sid }}.
