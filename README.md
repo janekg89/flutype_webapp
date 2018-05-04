@@ -88,6 +88,11 @@ mkvirtualenv flutype_webapp
 (flutype_webapp) pip install -r requirements.txt
 (flutype_webapp) python manage.py runserver
 ```
+Necessary to create core database with
+```
+create_db.sh
+```
+
 
 To fill the database with test data run the following script.
 This applies all migrations and writes the database content.
