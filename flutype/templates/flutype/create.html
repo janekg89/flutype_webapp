@@ -1,80 +1,27 @@
 {% extends "flutype/base.html" %}
+{% import 'flutype/macros.html' as macros %}
 {% block content %}
     <div class="standard">
 
-    <h1>
-    <!-- ligand and ligand batches -->
-    {% if type == "antibody" %}
-        <i class="fa fa-fw fa-hand-spock-o"></i> Antibody
-    {% elif type == "antibody_batch"  %}
-        <i class="fa fa-fw fa-hand-spock-o"></i> Antibody Batch <i class="fa fa-fw fa-flask"></i>
-    {% elif type == "buffer" %}
-        <i class="fa fa-fw fa-circle-o-notch"></i> Buffer
-    {% elif type == "peptide" %}
-        <i class="fa fa-fw fa-server"></i>Peptide
-    {% elif type == "peptide_batch"  %}
-        <i class="fa fa-fw fa-server"></i> Peptide Batch <i class="fa fa-fw fa-flask"></i>
-
-    {% elif type == "virus" %}
-        <i class="fa fa-fw fa-asterisk"></i> Virus
-    {% elif type == "virus_batch"  %}
-        <i class="fa fa-fw fa-asterisk"></i> Virus Batch <i class="fa fa-fw fa-flask"></i>
-
-    {% elif type == "complex" %}
-        Complex
-    {% elif type == "complex_batch" %}
-        Complex Batch <i class="fa fa-fw fa-flask"></i>
-
-
+     <!-- Ligands and Ligand Batches -->
+    <h1>{{ macros.ligand_type(form.hr_classname)}}
     <!-- Steps and process -->
-    {% elif type == "step"  %}
-        {% if class %}
-            {{ class }}
-        {% else %}
-            <i class="fa fa-fw fa-paw"></i> Step
-        {% endif %}
-    {% elif type == "process"  %}
-        <i class="fa fa-fw fa-magic"></i> Process
-    {% endif %}
-    </h1>
+   {{ macros.step_name_type(form.hr_classname)}}
+    {{ macros.study_type(form.hr_classname)}}</h1>
+
 
       <form method="post" class="post-form">
           <table id="edit">
               <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-
        {{ form.as_table() }}
            </table>
                   <span style="float:left;">
-
-              <button class="btn btn-default btn-success">Save Changes</button>
+                        <button class="btn btn-default btn-success">Save Changes</button>
                   </span>
       </form>
-     {% if type == "buffer" %}
-       <form action={{url('buffers')}}>
-    {% elif type == "peptide" %}
-       <form action={{url('peptides')}}>
-    {% elif type == "complex" %}
-       <form action={{url('complexes')}}>
-    {% elif type == "complex_batch" %}
-       <form action={{url('complexbatches')}}>
-    {% elif type == "virus"  %}
-       <form action={{url('viruses')}}>
-    {% elif type == "antibody"  %}
-       <form action={{url('antibodies')}}>
-    {% elif type == "peptide_batch"  %}
-       <form action={{url('peptidebatches')}}>
-    {% elif type == "antibody_batch"  %}
-       <form action={{url('antibodybatches')}}>
-    {% elif type == "virus_batch"  %}
-       <form action={{url('virusbatches')}}>
-    {% elif type == "step"  %}
-       <form action={{url('steps')}}>
-    {% elif type == "process"  %}
-        {{url('processes')}}>
-    {% endif %}
-
-    <span style="float:left;">
-    <button class="btn btn-default btn-danger">Cancel</button>
+      <form action={{url(form.url_redirect)}}>
+        <span style="float:left;">
+            <button class="btn btn-default btn-danger">Cancel</button>
         </span>
 
     </form>

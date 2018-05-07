@@ -9,7 +9,7 @@ from flutype.data_management.fill_users import create_users, user_defs
 from django.apps import apps
 from django.test import tag
 from flutype.helper import  read_ligands ,read_complex, read_ligand_batches, get_model_by_name, read_steps, read_buffer \
-    ,get_duration_or_none, duration_to_string
+    ,get_duration_or_none, duration_to_string, cap_and_read
 from django_pandas.io import read_frame
 
 
@@ -24,7 +24,7 @@ class DatabaseDJTestCase(TransactionTestCase):
 
 
     def test_update_ligands(self):
-        Ligand_count = {"Antibody":4, "Complex":1, "Virus":7, "Peptide":66}
+        Ligand_count = {"Antibody":5, "Complex":1, "Virus":19, "Peptide":151}
         #read ligands from master
         ligands = self.ma.read_ligands()
         complex = self.ma.read_complex()
@@ -42,7 +42,7 @@ class DatabaseDJTestCase(TransactionTestCase):
 
 
     def test_update_batches(self):
-        Ligand_batch_count = {"AntibodyBatch":12,"BufferBatch":3, "ComplexBatch":1, "VirusBatch":66, "PeptideBatch":242}
+        Ligand_batch_count = {"AntibodyBatch":15,"BufferBatch":6, "ComplexBatch":1, "VirusBatch":172, "PeptideBatch":315}
 
         ligands = self.ma.read_ligands()
         complex = self.ma.read_complex()
@@ -107,13 +107,14 @@ class DatabaseDJTestCase(TransactionTestCase):
         spot_collections = SpotCollection.objects.all()
 
         self.assertEqual(studies.count(), 1)
-        self.assertEqual(raw_spot_collections.count(), 3)
+        self.assertEqual(raw_spot_collections.count(), 2)
         self.assertEqual(spot_collections.count(), 4)
 
     def test_read_ligand(self):
         ligands = self.ma.read_ligands()
         complex = self.ma.read_complex()
         buffer = self.ma.read_buffer()
+
 
         self.db.update_ligands_or_batches(ligands)
         self.db.update_ligands_or_batches(complex)
@@ -123,11 +124,11 @@ class DatabaseDJTestCase(TransactionTestCase):
 
         ligands1 = self.ma.ligands
         for ligand in ligands1:
-            df = read_ligands(ligand)
-            self.assertTrue(ligands[ligand].equals(df))
+            df = cap_and_read(ligand)
+
+
+            self.assertTrue(ligands[ligand].equals(df.reindex(columns=ligands[ligand].columns)))
         self.assertTrue(complex["complex"].equals(read_complex()))
-        print(read_buffer())
-        print(buffer["buffer"])
         self.assertTrue(buffer["buffer"].equals(read_buffer()))
 
 
@@ -145,11 +146,10 @@ class DatabaseDJTestCase(TransactionTestCase):
 
         for ligand_batch in ligand_batches.keys():
             df = read_ligand_batches(ligand_batch)
-
             self.assertTrue(ligand_batches[ligand_batch]["sid"].equals(df["sid"]))
             self.assertTrue(ligand_batches[ligand_batch]["comment"].equals(df["comment"]))
             self.assertTrue(ligand_batches[ligand_batch]["buffer"].equals(df["buffer"]))
-            self.assertTrue(ligand_batches[ligand_batch]["produced_by"].equals(df["produced_by"]))
+            self.assertTrue(ligand_batches[ligand_batch]["produced_by"].str.lower().equals(df["produced_by"].str.lower()))
             self.assertTrue(ligand_batches[ligand_batch]["ph"].equals(df["ph"]))
             self.assertTrue(ligand_batches[ligand_batch]["production_date"].equals(df["production_date"]))
             self.assertEqual(len(ligand_batches[ligand_batch]),len(df))

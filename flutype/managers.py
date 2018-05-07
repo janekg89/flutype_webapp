@@ -6,14 +6,15 @@ from django_pandas.io import read_frame
 from django.utils import timezone
 import datetime
 from .behaviours import Status
-
-
+from model_utils.managers import InheritanceManager
+from guardian.shortcuts import assign_perm
 
 
 
 from flutype.helper import get_ligand_or_none, get_buffer_or_none,get_user_or_none, get_duration_or_none,\
-     unique_ordering, read_tsv_table, get_unique_galfile,\
-     create_spots, get_or_create_raw_spots, md5, read_gal_file, read_gal_file_to_temporaray_file
+    unique_ordering, read_tsv_table, get_unique_galfile,\
+    create_spots, get_or_create_raw_spots, md5, read_gal_file, read_gal_file_to_temporaray_file, clean_step_table,\
+    nan_to_none_in_pdtable
 
 from polymorphic.manager import PolymorphicManager
 import os
@@ -21,12 +22,14 @@ import os
 
 try:
    unicode = unicode
+
 except NameError:
    # 'unicode' is undefined, must be Python 3
    str = str
    unicode = str
    bytes = bytes
    basestring = (str,bytes)
+
 else:
    # 'unicode' exists, must be Python 2
    str = str
@@ -42,7 +45,7 @@ class LigandManager(PolymorphicManager):
             dic_ligand_batches[batch] = self.to_df()
 
     def to_df(self):
-        df = read_frame(self.all())
+        return read_frame(self.all())
 
     def get_or_create(self, *args, **kwargs):
         if "collection_date" in kwargs and isinstance(kwargs['collection_date'], basestring):
@@ -52,8 +55,12 @@ class LigandManager(PolymorphicManager):
 
 
 
-class LigandBatchManager(models.Manager):
+class LigandBatchManager(InheritanceManager):
     def get_or_create(self, *args, **kwargs):
+        if "stock" in kwargs and kwargs["stock"] in [1, True,"1","True","true"]:
+            kwargs["stock"] = True
+        else:
+            kwargs["stock"] = False
         if "buffer" in kwargs and isinstance(kwargs['buffer'], basestring):
             kwargs['buffer'] =  get_buffer_or_none(kwargs['buffer'])
         if "ligand" in kwargs and isinstance(kwargs['ligand'], basestring):
@@ -72,6 +79,8 @@ class LigandBatchManager(models.Manager):
     def to_df(self):
         df = read_frame(self.all())
         return df
+
+
 
 
 class ComplexManager(PolymorphicManager):
@@ -108,6 +117,9 @@ class StudyManager(models.Manager):
                     test = Status.get_choice(kwargs["meta"]["status"])
 
             this_study, created_s = super(StudyManager, self).get_or_create(*args, **kwargs["meta"])
+            if bool(this_study.user):
+                assign_perm("change_study",this_study.user, this_study)
+                assign_perm("delete_study", this_study.user, this_study)
 
         if "raw_docs_fpaths" in kwargs:
             for fpath in kwargs["raw_docs_fpaths"]:
@@ -143,9 +155,14 @@ class MeasurementManager(models.Manager):
     def get_or_create(self, *args, **kwargs):
         if "meta" in kwargs:
             print("*** Creating Measurement <{}>***".format(kwargs["meta"]["sid"]))
-
+            if "user" in kwargs["meta"] and isinstance(kwargs["meta"]["user"], basestring):
+                kwargs["meta"]["user"] = get_user_or_none(kwargs["meta"]["user"])
             this_measurement, created = super(MeasurementManager, self).get_or_create(*args, **kwargs["meta"])
+            if bool(this_measurement.user):
+                assign_perm("change_rawspotcollection",this_measurement.user, this_measurement)
+                assign_perm("delete_rawspotcollection", this_measurement.user, this_measurement)
             this_measurement.studies.add(kwargs["study"])
+
 
         if "raw_docs_fpaths" in kwargs:
             for fpath in kwargs["raw_docs_fpaths"]:
@@ -162,7 +179,7 @@ class MeasurementManager(models.Manager):
             this_measurement.lig_fix =lig_fix
             this_measurement.save()
             kwargs["raw_spot_collection"]=this_measurement
-            kwargs["raw_spots"] , _ = get_or_create_raw_spots(**kwargs)
+            kwargs["raw_spots"] = get_or_create_raw_spots(**kwargs)
 
             for raw_spot in kwargs["raw_spots"]:
                 try:
@@ -170,10 +187,6 @@ class MeasurementManager(models.Manager):
                     this_measurement.ligands1.add(raw_spot.lig_fix_batch.ligand)
                 except:
                     pass
-
-
-
-
 
         if "steps_path" in kwargs:
             if kwargs["steps_path"]!= None:
@@ -198,9 +211,11 @@ class ProcessManager(models.Manager):
 
     def get_or_create(self,*args,**kwargs):
 
-        intensity_path = kwargs["steps_path"]
-        steps = read_tsv_table(intensity_path)
-        sid= unique_ordering(steps)
+        steps_path = kwargs["steps_path"]
+        steps = read_tsv_table(steps_path)
+        steps = clean_step_table(steps)
+        steps = nan_to_none_in_pdtable(steps)
+        sid = unique_ordering(steps)
         this_process, created = super(ProcessManager, self).get_or_create(sid=sid)
         steps["start"]=steps["start"].str.replace('.', '-')
         for _ , step in steps.iterrows():
@@ -221,7 +236,7 @@ class ProcessManager(models.Manager):
                                                                       user = get_user_or_none(step["user"])
                                                                       )
             if step["intensities"] is not None:
-                intensity_fpath = os.path.join(os.path.dirname(intensity_path),step["intensities"])
+                intensity_fpath = os.path.join(os.path.dirname(steps_path),step["intensities"])
                 intensities_path_dic = {"intensities" :intensity_fpath}
                 GalFile = apps.get_model("flutype", "GalFile")
                 this_gal_file, _ = GalFile.objects.get_or_create(**intensities_path_dic)
@@ -229,11 +244,11 @@ class ProcessManager(models.Manager):
                 this_process_step.save()
 
             if step["image"] is not None:
-                image_fpath = os.path.join(os.path.dirname(intensity_path),step["image"])
+                image_fpath = os.path.join(os.path.dirname(steps_path),step["image"])
                 with open(image_fpath, "rb") as f:
                     this_process_step.hash = md5(f)
                     this_process_step.save()
-                    this_process_step.image.save(step["image"],File(f))
+                    this_process_step.image.save(this_process_step.hash+step["image"],File(f))
 
         return this_process, created
 
@@ -272,6 +287,20 @@ class GalFileManager(models.Manager):
                 return this_gal, True
             else:
                 return this_gal, False
+        if "circle_quality" in kwargs and kwargs["circle_quality"] is not None:
+            kwargs["path"] = kwargs["circle_quality"]
+            this_gal, max_name = get_unique_galfile("circle_quality", **kwargs)
+            if this_gal is None:
+                sid = "circle_quality_{:03}".format(max_name + 1)
+                meta = {"sid": sid, "type":"circle_quality"}
+                this_gal, _ = super(GalFileManager, self).get_or_create(**meta)
+                f = read_gal_file_to_temporaray_file(kwargs["path"])
+                this_gal.file.save("{}.txt".format(this_gal.sid), File(f))
+                f.close()
+
+                return this_gal, True
+            else:
+                return this_gal, False
 
 
         if "intensities" in kwargs and kwargs["intensities"] is not None:
@@ -301,6 +330,9 @@ class SpotcollectionManager(models.Manager):
             meta = kwargs["meta"]
             print("*** Creating Result <{}>***".format(kwargs["meta"]["sid"]))
             this_spot_collection, created = super(SpotcollectionManager, self).get_or_create(*args, **meta)
+            if bool(this_spot_collection.raw_spot_collection.user):
+                assign_perm("change_spotcollection", this_spot_collection.raw_spot_collection.user, this_spot_collection)
+                assign_perm("delete_spotcollection", this_spot_collection.raw_spot_collection.user, this_spot_collection)
 
         if "raw_docs_fpaths" in kwargs:
             for fpath in kwargs["raw_docs_fpaths"]:
@@ -328,7 +360,11 @@ class SpotcollectionManager(models.Manager):
                 this_spot_collection.std_gal = object_gal_file
                 this_spot_collection.save()
 
-
+            if "circle_quality" in kwargs:
+                circle_quality_dic = {"circle_quality": kwargs["circle_quality"]}
+                object_gal_file, _ = GalFile.objects.get_or_create(**circle_quality_dic)
+                this_spot_collection.std_gal = object_gal_file
+                this_spot_collection.save()
 
         return this_spot_collection, created
 
@@ -338,13 +374,13 @@ class RawSpotManager(models.Manager):
 
         if "lig_fix_batch" in kwargs and isinstance(kwargs['lig_fix_batch'], basestring):
             LigandBatch = apps.get_model("flutype","LigandBatch")
-            ligand_object = LigandBatch.objects.get(sid=kwargs['lig_fix_batch'])
+            ligand_object = LigandBatch.objects.get_subclass(sid=kwargs['lig_fix_batch'])
             kwargs["lig_fix_batch"] = ligand_object
 
 
         if "lig_mob_batch" in kwargs and isinstance(kwargs['lig_mob_batch'], basestring):
             LigandBatch = apps.get_model("flutype","LigandBatch")
-            ligand_object = LigandBatch.objects.get(sid=kwargs["lig_mob_batch"])
+            ligand_object = LigandBatch.objects.get_subclass(sid=kwargs["lig_mob_batch"])
             kwargs["lig_mob_batch"] = ligand_object
 
         object, created = super(RawSpotManager, self).get_or_create(**kwargs)

@@ -1,8 +1,20 @@
 sid	comment	tax_id	link_db	subtype	isolation_country	collection_date	strain
-387139		387139		H3N2	Japan	1968	A/Aichi/2/68 
-1316510		1316510		H1N1	USA	2009	A/California/7/2009
-382786		382786		H7N1	Germany	1934	A/FPV/Rostock/1934
-518981		518981		H3N2	USA	2004	A/New York/55/2004
-392809		392809		H3N2	Australia	1975	A/Victoria/3/75
-381513		381513		H3N2	Panama	1999	A/Panama/2007/1999
-Unknown							
+V-Unknown							
+PBS-Mock	Negative control.						
+A/California/7/2009(H1N1)		1316510		H1N1	USA	2009	A/California/7/2009
+A/FPV/Rostock/1934(H7N1)		382786		H7N1	Germany	1934	A/FPV/Rostock/1934
+A/New York/55/2004(H3N2)		518981		H3N2	USA	2004	A/New York/55/2004
+A/Victoria/3/75(H3N2)		392809		H3N2	Australia	1975	A/Victoria/3/75
+A/Panama/2007/1999(H3N2)		381513		H3N2	Panama	1999	A/Panama/2007/1999
+A/Aichi/2/68(H3N2)-X31	This is HA NA from Aichi, backbone is from A/Puerto-Rico/8/1934.	387139		H3N2	Japan	1968	A/Aichi/2/68 
+A/Brisbane/10/2007(H3N2)	Not existing in NCBI taxonomy.			H3N2	Australia	2007	A/Brisbane/10/2007
+A/Beijing/32/1992(H3N2)		380950		H3N2	China	1992	A/Beijing/32/1992
+A/Brisbaine/59/2007(H1N1)		504904		H1N1	USA	2007	A/Brisbaine/59/2007
+A/Hong Kong/4801/2014(H3N2)				H3N2	Japan	2014	A/Hong Kong/4801/2014
+A/Victoria/361/2011(H3N2)		1268360		H3N2	Australia	2011	A/Victoria/361/2011
+A/Switzerland/9715293/2013(H3N2)				H3N2			A/Switzerland/9715293/2013
+A/Texas/50/2012(H3N2)		1321009		H3N2	USA	2012	A/Texas/50/2012
+A/Perth/16/2009(H3N2)		654811		H3N2	Australia	2009	A/Perth/16/2009
+Mi45							
+VicAlla							
+VicZelle							

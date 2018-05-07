@@ -29,6 +29,10 @@ ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', 'localhost', 'flutype.de', 'www.flutype
 # SECURITY WARNING: don't run create users with default password in production !
 DEFAULT_USER_PASSWORD = 'flutype_db'
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend', # this is default
+    'guardian.backends.ObjectPermissionBackend',
+)
 
 # Application definition
 INSTALLED_APPS = [
@@ -43,6 +47,7 @@ INSTALLED_APPS = [
     'polymorphic',
     'imagekit',
     'rest_framework',
+    'guardian',
     'dbbackup',  # django-dbbackup
     ]
 
@@ -96,22 +101,22 @@ WSGI_APPLICATION = 'flutype_webapp.wsgi.application'
 
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'media/db.sqlite3'),
-    },
-
     # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'flutype',
-    #     'USER': 'flutype_user',
-    #     'HOST': 'localhost',
-    #     'PASSWORD': 'flutype_test',
-    #     'PORT': 5432,
-    #     'TEST':{
-    #         'NAME': 'test_flutype',
-    #     },
-    # }
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'media/db.sqlite3'),
+    # },
+
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'flutype',
+        'USER': 'flutype_user',
+        'HOST': 'localhost',
+        'PASSWORD': 'flutype_test',
+        'PORT': 5432,
+        'TEST':{
+            'NAME': 'test_flutype',
+        },
+    }
 }
 
 # Password validation

@@ -1,243 +1,316 @@
-sid	labeling	concentration	concentration_unit	buffer	ph	purity	produced_by	production_date	comment	ligand
-L001		0.1		Natriumhydrogencarbonat	8.5			2017-05-09		P012
-L002		1.0		Natriumhydrogencarbonat	8.5					P001
-L003		1.0		Natriumhydrogencarbonat	8.5					P008
-L004		1.0		Natriumhydrogencarbonat	8.5					P009
-L005		1.0		Natriumhydrogencarbonat	8.5					P010
-L006		1.0		Natriumhydrogencarbonat	8.5					P011
-L007		0.07		Natriumhydrogencarbonat	8.5					P013
-P1										P1
-P3										P3
-P4										P4
-P5										P5
-P6										P6
-P7										P7
-P8										P8
-P10										P10
-P13										P13
-DYE025		0.25								Dye001
-DYE050		0.5								Dye001
-DYE100		1.0								Dye001
-NEN025		0.25								P013
-NEN050		0.5								P013
-NEN100		1.0								P013
-FEU025		0.25								P012
-FEU050		0.5								P012
-FEU100		1.0								P012
-KLOS025		0.25								P030
-KLOS050		0.5								P030
-KLOS100		1.0								P030
-KLOA025		0.25								P031
-KLOA050		0.5								P031
-KLOA100		1.0								P031
-P6025		0.25								P001
-P6050		0.5								P001
-P6100		1.0								P001
-P7025		0.25								P008
-P7050		0.5								P008
-P7100		1.0								P008
-P8025		0.25								P009
-P8050		0.5								P009
-P8100		1.0								P008
-P9025		0.25								P010
-P9050		0.5								P010
-P9100		1.0								P010
-P10025		0.25								P014
-P10050		0.5								P014
-P10100		1.0								P014
-P11025		0.25								P011
-P11050		0.5								P011
-P11100		1.0								P011
-P12025		0.25								P015
-P12050		0.5								P015
-P12100		1.0								P015
-P13025		0.25								P016
-P13050		0.5								P016
-P13100		1.0								P016
-P14025		0.25								P017
-P14050		0.5								P017
-P14100		1.0								P017
-P16025		0.25								P019
-P16050		0.5								P019
-P16100		1.0								P019
-P032-1:50		50.0		Natriumhydrogencarbonat	8.5					P032
-P012-2		2.0		Natriumhydrogencarbonat	8.5					P012
-P012-1		1.0		Natriumhydrogencarbonat	8.5					P012
-P012-05		0.5		Natriumhydrogencarbonat	8.5					P012
-P012-025		0.25		Natriumhydrogencarbonat	8.5					P012
-P012-0125		0.125		Natriumhydrogencarbonat	8.5					P012
-P012-00625		0.0625		Natriumhydrogencarbonat	8.5					P012
-P012-00313		0.0313		Natriumhydrogencarbonat	8.5					P012
-P012-00156		0.0156		Natriumhydrogencarbonat	8.5					P012
-P019-2		2.0		Natriumhydrogencarbonat	8.5					P019
-P019-1		1.0		Natriumhydrogencarbonat	8.5					P019
-P019-05		0.5		Natriumhydrogencarbonat	8.5					P019
-P019-025		0.25		Natriumhydrogencarbonat	8.5					P019
-P019-0125		0.125		Natriumhydrogencarbonat	8.5					P019
-P019-00625		0.0625		Natriumhydrogencarbonat	8.5					P019
-P019-00313		0.0313		Natriumhydrogencarbonat	8.5					P019
-P019-00156		0.0156		Natriumhydrogencarbonat	8.5					P019
-P011-2		2.0		Natriumhydrogencarbonat	8.5					P011
-P011-1		1.0		Natriumhydrogencarbonat	8.5					P011
-P011-05		0.5		Natriumhydrogencarbonat	8.5					P011
-P011-025		0.25		Natriumhydrogencarbonat	8.5					P011
-P011-0125		0.125		Natriumhydrogencarbonat	8.5					P011
-P011-00625		0.0625		Natriumhydrogencarbonat	8.5					P011
-P011-00313		0.0313		Natriumhydrogencarbonat	8.5					P011
-P011-00156		0.0156		Natriumhydrogencarbonat	8.5					P011
-P001-2		2.0		Natriumhydrogencarbonat	8.5					P001
-P001-1		1.0		Natriumhydrogencarbonat	8.5					P001
-P001-05		0.5		Natriumhydrogencarbonat	8.5					P001
-P001-025		0.25		Natriumhydrogencarbonat	8.5					P001
-P001-0125		0.125		Natriumhydrogencarbonat	8.5					P001
-P001-00625		0.0625		Natriumhydrogencarbonat	8.5					P001
-P001-00313		0.0313		Natriumhydrogencarbonat	8.5					P001
-P001-00156		0.0156		Natriumhydrogencarbonat	8.5					P001
-P008-2		2.0		Natriumhydrogencarbonat	8.5					P008
-P008-1		1.0		Natriumhydrogencarbonat	8.5					P008
-P008-05		0.5		Natriumhydrogencarbonat	8.5					P008
-P008-025		0.25		Natriumhydrogencarbonat	8.5					P008
-P008-0125		0.125		Natriumhydrogencarbonat	8.5					P008
-P008-00625		0.0625		Natriumhydrogencarbonat	8.5					P008
-P008-00313		0.0313		Natriumhydrogencarbonat	8.5					P008
-P008-00156		0.0156		Natriumhydrogencarbonat	8.5					P008
-P009-2		2.0		Natriumhydrogencarbonat	8.5					P009
-P009-1		1.0		Natriumhydrogencarbonat	8.5					P009
-P009-05		0.5		Natriumhydrogencarbonat	8.5					P009
-P009-025		0.25		Natriumhydrogencarbonat	8.5					P009
-P009-0125		0.125		Natriumhydrogencarbonat	8.5					P009
-P009-00625		0.0625		Natriumhydrogencarbonat	8.5					P009
-P009-00313		0.0313		Natriumhydrogencarbonat	8.5					P009
-P009-00156		0.0156		Natriumhydrogencarbonat	8.5					P009
-P010-2		2.0		Natriumhydrogencarbonat	8.5					P010
-P010-1		1.0		Natriumhydrogencarbonat	8.5					P010
-P010-05		0.5		Natriumhydrogencarbonat	8.5					P010
-P010-025		0.25		Natriumhydrogencarbonat	8.5					P010
-P010-0125		0.125		Natriumhydrogencarbonat	8.5					P010
-P010-00625		0.0625		Natriumhydrogencarbonat	8.5					P010
-P010-00313		0.0313		Natriumhydrogencarbonat	8.5					P010
-P010-00156		0.0156		Natriumhydrogencarbonat	8.5					P010
-P013-100		0.1		Natriumhydrogencarbonat	8.5					P013
-P013-050		0.05		Natriumhydrogencarbonat	8.5					P013
-P013-025		0.025		Natriumhydrogencarbonat	8.5					P013
-P013-0125		0.0125		Natriumhydrogencarbonat	8.5					P013
-P013-00625		0.00625		Natriumhydrogencarbonat	8.5					P013
-P013-00313		0.00313		Natriumhydrogencarbonat	8.5					P013
-P013-00156		0.00156		Natriumhydrogencarbonat	8.5					P013
-P013-00078		0.00078		Natriumhydrogencarbonat	8.5					P013
-1.0_pep6		1.0								P001
-0.5_pep6		0.5								P001
-0.25_pep6		0.25								P001
-1.0_pep7		1.0								pep7
-0.5_pep7		0.5								pep7
-0.25_pep7		0.25								pep7
-1.0_pep8		1.0								pep8
-0.5_pep8		0.5								pep8
-0.25_pep8		0.25								pep8
-1.0_pep9		1.0								pep9
-0.5_pep9		0.5								pep9
-0.25_pep9		0.25								pep9
-1.0_pep10		1.0								P014
-0.5_pep10		0.5								P014
-0.25_pep10		0.25								P014
-1.0_pep11		1.0								pep11
-0.5_pep11		0.5								pep11
-0.25_pep11		0.25								pep11
-1.0_pep12		1.0								P015
-0.5_pep12		0.5								P015
-0.25_pep12		0.25								P015
-1.0_pep13		1.0								P016
-0.5_pep13		0.5								P016
-0.25_pep13		0.25								P016
-1.0_pep14		1.0								P017
-0.5_pep14		0.5								P017
-0.25_pep14		0.25								P017
-1.0_pep16		1.0								P019
-0.5_pep16		0.5								P019
-0.25_pep16		0.25								P019
-1.0_pep37		1.0								pep37
-0.5_pep37		0.5								pep37
-0.25_pep37		0.25								pep37
-1.0_pep39		1.0								pep39
-0.5_pep39		0.5								pep39
-0.25_pep39		0.25								pep39
-1.0_pep40		1.0								pep40
-0.5_pep40		0.5								pep40
-0.25_pep40		0.25								pep40
-1.0_pep41		1.0								pep41
-0.5_pep41		0.5								pep41
-0.25_pep41		0.25								pep41
-1.0_pep43		1.0								pep43
-0.5_pep43		0.5								pep43
-0.25_pep43		0.25								pep43
-1.0_pep44		1.0								pep44
-0.5_pep44		0.5								pep44
-0.25_pep44		0.25								pep44
-1.0_pep45		1.0								pep45
-0.5_pep45		0.5								pep45
-0.25_pep45		0.25								pep45
-1.0_pep46		1.0								pep46
-0.5_pep46		0.5								pep46
-0.25_pep46		0.25								pep46
-1.0_pep47		1.0								pep47
-0.5_pep47		0.5								pep47
-0.25_pep47		0.25								pep47
-1.0_pep48		1.0								pep48
-0.5_pep48		0.5								pep48
-0.25_pep48		0.25								pep48
-1.0_pep49		1.0								pep49
-0.5_pep49		0.5								pep49
-0.25_pep49		0.25								pep49
-1.0_pep50		1.0								pep50
-0.5_pep50		0.5								pep50
-0.25_pep50		0.25								pep50
-1.0_pep52		1.0								pep52
-0.5_pep52		0.5								pep52
-0.25_pep52		0.25								pep52
-1.0_pep54		1.0								pep54
-0.5_pep54		0.5								pep54
-0.25_pep54		0.25								pep54
-1.0_pep55		1.0								pep55
-0.5_pep55		0.5								pep55
-0.25_pep55		0.25								pep55
-1.0_pep56		1.0								pep56
-0.5_pep56		0.5								pep56
-0.25_pep56		0.25								pep56
-1.0_pep57		1.0								pep57
-0.5_pep57		0.5								pep57
-0.25_pep57		0.25								pep57
-1.0_pep58		1.0								pep58
-0.5_pep58		0.5								pep58
-0.25_pep58		0.25								pep58
-1.0_pep59		1.0								pep59
-0.5_pep59		0.5								pep59
-0.25_pep59		0.25								pep59
-1.0_pep60		1.0								pep60
-0.5_pep60		0.5								pep60
-0.25_pep60		0.25								pep60
-1.0_pep61		1.0								pep61
-0.5_pep61		0.5								pep61
-0.25_pep61		0.25								pep61
-1.0_pep63		1.0								pep63
-0.5_pep63		0.5								pep63
-0.25_pep63		0.25								pep63
-1.0_Kloe_Amid		1.0								P031
-0.5_Kloe_Amid		0.5								P031
-0.25_Kloe_Amid		0.25								P031
-1.0_pep_Nenad		1.0								P013
-0.5_pep_Nenad		0.5								P013
-0.25_pep_Nenad		0.25								P013
-1.0_Leuchtefix		1.0								Dye001
-0.5_Leuchtefix		0.5								Dye001
-0.25_Leuchtefix		0.25								Dye001
-1.0_Christian		1.0								Christian
-0.5_Christian		0.5								Christian
-0.25_Christian		0.25								Christian
-Pep44_1		1.0		NaHCO3	8.5					pep44
-Pep42_1		1.0		NaHCO3	8.5					pep42
-Pep41_1		1.0		NaHCO3	8.5					pep41
-Pep39_1		1.0		NaHCO3	8.5					pep39
-P019_1		1.0		NaHCO3	8.5					P019
-Pep7_1		1.0		NaHCO3	8.5					pep7
-Neutra+sl6b_0.1		0.1		NaHCO3	8.5					neutra1
-Fet_0.3		0.3		NaHCO3	8.5					P012
+sid	labeling	concentration	concentration_unit	buffer	ph	purity	produced_by	production_date	comment	stock	ligand
+unknown											P-Unknown
+Unkown1-2017											P-Unknown
+Unkown2-2017											P-Unknown
+LF-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	LF
+LF-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	LF
+LF-0.05	Dye634	0.05	Stock 1	Natriumhydrogencarbonat			Bay			False	LF
+LF-0.1	Dye634	0.1	Stock 1	Natriumhydrogencarbonat			Bay			False	LF
+LF-0.01	Dye634	0.01	Stock 1	Natriumhydrogencarbonat			Bay			False	LF
+LF-0.001	Dye634	1	Stock 1	Natriumhydrogencarbonat			Bay			False	LF
+LF-0.0001	Dye634	0.0001	Stock 1	Natriumhydrogencarbonat			Bay			False	LF
+LF-0.5	Dye634	0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	LF
+LF	Dye634	1	Stock 1	Natriumhydrogencarbonat			Bay			True	LF
+P001		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P001
+P002		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P002
+P003		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P003
+P004		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P004
+P005		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P005
+P006		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P006
+P007		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P007
+P008		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P008
+P009		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P009
+P010		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P010
+P011		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P011
+P012		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P012
+P013		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P013
+P014		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P014
+P015		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P015
+P016		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P016
+P017		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P017
+P018		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P018
+P019		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P019
+P020		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P020
+P021		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P021
+P022		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P022
+P023		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P023
+P024		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P024
+P025		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P025
+P026		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P026
+P027		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P027
+P028		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P028
+P029		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P029
+P030		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P030
+P031		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P031
+P032		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P032
+P033		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P033
+P034		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P034
+P035		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P035
+P036		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P036
+P037		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P037
+P038		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P038
+P039		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P039
+P040		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P040
+P041		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P041
+P042		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P042
+P043		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P043
+P044		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P044
+P045.3		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P045.3
+P046		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P046
+P047		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P047
+P048		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P048
+P049		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P049
+P050		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P050
+P051		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P051
+P052		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P052
+P053		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P053
+P054		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P054
+P055		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P055
+P056		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P056
+P057		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P057
+P058		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P058
+P059		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P059
+P060		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P060
+P061		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P061
+P062		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P062
+P063		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P063
+P064		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P064
+P065		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P065
+P066		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P066
+P067		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P067
+P068		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P068
+P069		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P069
+P070		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P070
+P071		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P071
+P072		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P072
+P073		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P073
+P074		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P074
+P075		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P075
+P076		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P076
+P077		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P077
+P078		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P078
+P079		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P079
+P080		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P080
+P081		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P081
+P082		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P082
+P083		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P083
+P084		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P084
+P085		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P085
+P086		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P086
+P087		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P087
+P088		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P088
+P089		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P089
+P090		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P090
+P091		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P091
+P092		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P092
+P093		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P093
+P094		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P094
+P095		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P095
+P096		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P096
+P097		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P097
+P098		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P098
+P099		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P099
+P100		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P100
+P101		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P101
+P102		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P102
+P103		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P103
+P104		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P104
+P105		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P105
+P106		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P106
+P107		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P107
+P108		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P108
+P109		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P109
+P110		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P110
+P111		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P111
+P112		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P112
+P113		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P113
+P114		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P114
+P115		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P115
+P116		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P116
+P117		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P117
+P118		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P118
+P119		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P119
+P120		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P120
+P121		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P121
+P122		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P122
+P123		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P123
+P124		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P124
+P125		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P125
+P126		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P126
+P127		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P127
+P128		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P128
+P129		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P129
+P130		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P130
+P131.1		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P131.1
+P131.2		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P131.2
+P132		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P132
+P133		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P133
+P134		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P134
+P135		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P135
+P136		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P136
+Nenad		1	Stock 1	Natriumhydrogencarbonat			Bay			True	Nenad
+P006-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P006
+P006-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P006
+P006-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P006
+P006-0.125		0.125	Stock 1	Natriumhydrogencarbonat			Bay			False	P006
+P006-0.0625		0.0625	Stock 1	Natriumhydrogencarbonat			Bay			False	P006
+P006-0.0313		0.0313	Stock 1	Natriumhydrogencarbonat			Bay			False	P006
+P006-2017										False	P006
+P006-0.0156		0.0156	Stock 1	Natriumhydrogencarbonat			Bay			False	P006
+P007-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P007
+P007-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P007
+P007-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P007
+P008-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P008
+P008-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P008
+P008-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P008
+P008-0.125		0.125	Stock 1	Natriumhydrogencarbonat			Bay			False	P008
+P008-0.0625		0.0625	Stock 1	Natriumhydrogencarbonat			Bay			False	P008
+P008-0.0313		0.0313	Stock 1	Natriumhydrogencarbonat			Bay			False	P008
+P008-0.0156		0.0156	Stock 1	Natriumhydrogencarbonat			Bay			False	P008
+P008-2017		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P008
+P009-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P009
+P009-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P009
+P009-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P009
+P009-0.125		0.125	Stock 1	Natriumhydrogencarbonat			Bay			False	P009
+P009-0.0625		0.0625	Stock 1	Natriumhydrogencarbonat			Bay			False	P009
+P009-0.0313		0.0313	Stock 1	Natriumhydrogencarbonat			Bay			False	P009
+P009-0.0156		0.0156	Stock 1	Natriumhydrogencarbonat			Bay			False	P009
+P010-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P010
+P010-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P010
+P010-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P010
+P011-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P011
+P011-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P011
+P011-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P011
+P012-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P012
+P012-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P012
+P012-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P012
+P013-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P013
+P013-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P013
+P013-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P013
+P014-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P014
+P014-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P014
+P014-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P014
+P016-2		2	Stock 1	Natriumhydrogencarbonat			Bay			False	P016
+P016-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P016
+P016-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P016
+P016-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P016
+P016-0.125		0.125	Stock 1	Natriumhydrogencarbonat			Bay			False	P016
+P016-0.0625		0.0625	Stock 1	Natriumhydrogencarbonat			Bay			False	P016
+P016-0.0313		0.0313	Stock 1	Natriumhydrogencarbonat			Bay			False	P016
+P016-0.0156		0.0156	Stock 1	Natriumhydrogencarbonat			Bay			False	P016
+P019-1		1	Stock 1	Natriumhydrogencarbonat			Bay			True	P019
+P030-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P030
+P030-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P030
+P030-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P030
+P032-0.02		0.02	Stock 1	Natriumhydrogencarbonat			Bay			False	P032
+P032-2		2	Stock 1	Natriumhydrogencarbonat			Bay			False	P032
+P032-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P032
+P032-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P032
+P032-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P032
+P032-0.125		0.125	Stock 1	Natriumhydrogencarbonat			Bay			False	P032
+P032-0.0625		0.0625	Stock 1	Natriumhydrogencarbonat			Bay			False	P032
+P032-0.0313		0.0313	Stock 1	Natriumhydrogencarbonat			Bay			False	P032
+P032-0.0156		0.0156	Stock 1	Natriumhydrogencarbonat			Bay			False	P032
+P032-0.3		0.3	Stock 1	Natriumhydrogencarbonat			Bay			False	P032
+P032-2017										False	P032
+unknown1-2		2	Stock 1	Natriumhydrogencarbonat			Bay			False	P-Unknown
+unknown1-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P-Unknown
+unknown1-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P-Unknown
+unknown1-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P-Unknown
+unknown1-0.125		0.125	Stock 1	Natriumhydrogencarbonat			Bay			False	P-Unknown
+unknown1-0.0625		0.0625	Stock 1	Natriumhydrogencarbonat			Bay			False	P-Unknown
+unknown1-0.0313		0.0313	Stock 1	Natriumhydrogencarbonat			Bay			False	P-Unknown
+unknown1-0.0156		0.0156	Stock 1	Natriumhydrogencarbonat			Bay			False	P-Unknown
+P037-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P037
+P037-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P037
+P037-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P037
+P039-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P039
+P039-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P039
+P039-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P039
+P040-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P040
+P040-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P040
+P040-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P040
+P041-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P041
+P041-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P041
+P041-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P041
+P042-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P042
+P043-1		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P043
+P043-0.5		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P043
+P043-0.25		2	Stock 1	Natriumhydrogencarbonat			Bay			False	P043
+P044-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P044
+P044-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P044
+P044-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P044
+P045-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P045.3
+P045-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P045.3
+P045-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P045.3
+P046-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P046
+P046-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P046
+P046-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P046
+P047-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P047
+P047-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P047
+P047-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P047
+P048-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P048
+P048-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P048
+P048-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P048
+P049-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P049
+P049-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P049
+P049-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P049
+P050-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P050
+P050-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P050
+P050-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P050
+P052-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P052
+P052-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P052
+P052-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P052
+P054-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P054
+P054-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P054
+P054-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P054
+P055-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P055
+P055-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P055
+P055-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P055
+P056-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P056
+P056-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P056
+P056-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P056
+P057-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P057
+P057-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P057
+P057-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P057
+P058-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P058
+P058-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P058
+P058-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P058
+P059-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P059
+P059-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P059
+P059-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P059
+P060-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P060
+P060-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P060
+P060-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P060
+P061-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P061
+P061-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P061
+P061-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P061
+P063-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P063
+P063-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P063
+P063-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P063
+P031-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	P031
+P031-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	P031
+P031-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	P031
+Nenad-1		1	Stock 1	Natriumhydrogencarbonat			Bay			False	Nenad
+Nenad-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	Nenad
+Nenad-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	Nenad
+Nenad-2017										False	Nenad
+Christian-1.0		1	Stock 1	Natriumhydrogencarbonat			Bay			True	Christian
+Christian-0.5		0.5	Stock 1	Natriumhydrogencarbonat			Bay			False	Christian
+Christian-0.25		0.25	Stock 1	Natriumhydrogencarbonat			Bay			False	Christian
+Neutra+Sl6b-0.1		0.1	Stock 1	Natriumhydrogencarbonat			Bay			True	Neutravidin
+P1										True	P1
+P3										True	P3
+P4										True	P4
+P5										True	P5
+P6										True	P6
+P7										True	P7
+P8										True	P8
+P10										True	P10
+P13										True	P13
+P012-2017		0.1		Natriumhydrogencarbonat	8.5			2017-05-09		False	P012
+P001-2017		1		Natriumhydrogencarbonat	8.5					False	P001
+P009-2017		1		Natriumhydrogencarbonat	8.5					True	P009
+P010-2017		1		Natriumhydrogencarbonat	8.5					True	P010
+P011-2017		1		Natriumhydrogencarbonat	8.5					True	P011
+P013-2017		0.07		Natriumhydrogencarbonat	8.5					False	P013

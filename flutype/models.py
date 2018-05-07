@@ -79,10 +79,13 @@ class GalType(DjangoChoices):
     std = ChoiceItem("std")
     intensity = ChoiceItem("intensity")
     ligand_batch = ChoiceItem("ligand_batch")
+    circle_quality =ChoiceItem("circle_quality")
 
 class ManufacturerModel(DjangoChoices):
     """ Manufacturer type """
     polyan = ChoiceItem("PolyAn")
+    ThermoF96Maxisorp = ChoiceItem("Thermo F96 Maxisorp")
+
 
 class ProcessingType(DjangoChoices):
     substract_buffer = ChoiceItem("substract_buffer")
@@ -92,8 +95,21 @@ class Buffer(Sidable, Commentable, models.Model):
     """ Buffer model """
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
 
+
+
     def __str__(self):
         return self.sid
+
+    @classmethod
+    def url(cls):
+
+
+        return "buffers"
+
+    @classmethod
+    def get_form(cls):
+        from .forms import BufferForm
+        return BufferForm
 
 
 ########################################
@@ -119,6 +135,15 @@ class Peptide(Ligand):
     name = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     objects = LigandManager()
 
+    @classmethod
+    def url(cls):
+        return "peptides"
+
+    @classmethod
+    def get_form(cls):
+        from .forms import PeptideForm
+        return PeptideForm
+
 
 class Virus(Ligand):
     """ Virus ligand. """
@@ -126,12 +151,21 @@ class Virus(Ligand):
     link_db = models.URLField(blank=True, null=True)
     subtype = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     isolation_country = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
-    collection_date = models.IntegerField( choices=YEAR_CHOICES,blank=True, null=True)
+    collection_date = models.IntegerField( choices=YEAR_CHOICES, blank=True, null=True)
     strain = models.CharField(max_length=CHAR_MAX_LENGTH, blank=True, null=True)
     objects = LigandManager()
 
     class Meta:
         verbose_name_plural = "viruses"
+
+    @classmethod
+    def url(cls):
+        return "viruses"
+
+    @classmethod
+    def get_form(cls):
+        from .forms import VirusForm
+        return VirusForm
 
 class Antibody(Ligand):
     """ Antibody ligand. """
@@ -143,6 +177,15 @@ class Antibody(Ligand):
     class Meta:
         verbose_name_plural = "antibodies"
 
+    @classmethod
+    def url(cls):
+        return "antibodies"
+
+    @classmethod
+    def get_form(cls):
+        from .forms import AntibodyForm
+        return AntibodyForm
+
 
 class Complex(Ligand):
     """ Complex ligand. """
@@ -151,6 +194,16 @@ class Complex(Ligand):
 
     class Meta:
         verbose_name_plural = "complexes"
+
+
+    @classmethod
+    def url(cls):
+        return "complexes"
+
+    @classmethod
+    def get_form(cls):
+        from .forms import ComplexForm
+        return ComplexForm
 
     @property
     def ligands_str(self):
@@ -180,6 +233,7 @@ class Batch(Sidable, Commentable, models.Model):
     buffer = models.ForeignKey(Buffer, blank=True, null=True)
     produced_by = models.ForeignKey(User, blank=True, null=True)
     production_date = models.DateField(blank=True, null=True)
+    stock = models.BooleanField(default=False)
 
     class Meta:
         abstract = True
@@ -188,6 +242,8 @@ class Batch(Sidable, Commentable, models.Model):
     def __str__(self):
         return self.sid
 
+    def __repr__(self):
+        return self.sid
 
 class LigandBatch(Batch):
     """ Generic batch of a given ligand.
@@ -209,6 +265,15 @@ class VirusBatch(LigandBatch):
     class Meta:
         verbose_name_plural = "virus batches"
 
+    @classmethod
+    def url(cls):
+        return "virusbatches"
+
+    @classmethod
+    def get_form(cls):
+        from .forms import VirusBatchForm
+        return VirusBatchForm
+
 
 class PeptideBatch(LigandBatch):
     """ Peptide batch model. """
@@ -217,6 +282,14 @@ class PeptideBatch(LigandBatch):
     class Meta:
         verbose_name_plural = "peptide batches"
 
+    @classmethod
+    def url(cls):
+        return "peptidebatches"
+
+    @classmethod
+    def get_form(cls):
+        from .forms import PeptideBatchForm
+        return PeptideBatchForm
 
 class AntibodyBatch(LigandBatch):
     """ Antibody batch model. """
@@ -225,6 +298,14 @@ class AntibodyBatch(LigandBatch):
     class Meta:
         verbose_name_plural = "antibody batches"
 
+    @classmethod
+    def url(cls):
+        return "antibodybatches"
+
+    @classmethod
+    def get_form(cls):
+        from .forms import AntibodyBatchForm
+        return AntibodyBatchForm
 
 class ComplexBatch(LigandBatch):
     """ Complex batch model. """
@@ -232,6 +313,15 @@ class ComplexBatch(LigandBatch):
 
     class Meta:
         verbose_name_plural = "complex batches"
+
+    @classmethod
+    def url(cls):
+        return "complexbatches"
+
+    @classmethod
+    def get_form(cls):
+        from .forms import ComplexBatchForm
+        return ComplexBatchForm
 
 
 class BufferBatch(LigandBatch):
@@ -241,7 +331,14 @@ class BufferBatch(LigandBatch):
     class Meta:
         verbose_name_plural = "buffer batches"
 
+    @classmethod
+    def url(cls):
+        return "bufferbatches"
 
+    @classmethod
+    def get_form(cls):
+        from .forms import BufferBatchForm
+        return BufferBatchForm
 
 
 ########################################
@@ -314,6 +411,11 @@ class Step(Sidable, Commentable, models.Model):
         subclass_object = Step.objects.get_subclass(id=self.id)
         return subclass_object
 
+    @classmethod
+    def url(cls):
+        return "steps"
+
+
     def __str__(self):
         return self.sid
 
@@ -324,6 +426,11 @@ class Washing(Step):
     duration = models.DurationField(null=True, blank=True)
     objects = StepManager()
 
+    @classmethod
+    def get_form(cls):
+        from .forms import WashingForm
+        return WashingForm
+
 
 class Blocking(Step):
     """ Blocking step. """
@@ -331,10 +438,20 @@ class Blocking(Step):
     duration = models.DurationField(null=True, blank=True)
     objects = StepManager()
 
+    @classmethod
+    def get_form(cls):
+        from .forms import BlockingForm
+        return BlockingForm
+
 
 class Scanning(Step):
     """ Scanning step. """
     objects = StepManager()
+
+    @classmethod
+    def get_form(cls):
+        from .forms import ScanningForm
+        return ScanningForm
 
 
 class Drying(Step):
@@ -343,10 +460,20 @@ class Drying(Step):
     duration = models.DurationField(null=True, blank=True)
     objects = StepManager()
 
+    @classmethod
+    def get_form(cls):
+        from .forms import DryingForm
+        return DryingForm
+
 
 class Spotting(Step):
     """ Spotting method and media related to spotting. """
     objects = StepManager()
+
+    @classmethod
+    def get_form(cls):
+        from .forms import SpottingForm
+        return SpottingForm
 
 
 class Incubating(Step):
@@ -355,18 +482,32 @@ class Incubating(Step):
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     objects = StepManager()
 
+    @classmethod
+    def get_form(cls):
+        from .forms import IncubatingForm
+        return IncubatingForm
+
 # FIXME: rename to IncubatingAnalyte
 class IncubatingAnalyt(Step):
     """ Incubating analyte step. """
     duration = models.DurationField(null=True, blank=True)
     objects = StepManager()
 
+    @classmethod
+    def get_form(cls):
+        from .forms import IncubatingAnalytForm
+        return IncubatingAnalytForm
 
 class Quenching(Step):
     """ Quenching step. """
     duration = models.DurationField(null=True, blank=True)
     substance = models.CharField(max_length=CHAR_MAX_LENGTH, null=True, blank=True)
     objects = StepManager()
+
+    @classmethod
+    def get_form(cls):
+        from .forms import QuenchingForm
+        return QuenchingForm
 
 
 class Process(Sidable, models.Model):
@@ -447,6 +588,7 @@ class ProcessStep(Userable, Commentable, Hashable, models.Model):
         return str(self.process.sid + "-" + self.step.sid + "-" + str(self.index))
 
 
+
 ########################################
 # Study
 ########################################
@@ -460,9 +602,20 @@ class Study(Commentable, Sidable, Dateable, Userable, Statusable, FileAttachable
     class Meta:
         verbose_name_plural = "studies"
 
+    @classmethod
+    def url(cls):
+        return "index"
+
+    @classmethod
+    def get_form(cls):
+        from .forms import StudyForm
+        return StudyForm
+
     def users(self):
         user_ids = self.rawspotcollection_set.values_list("processstep__user", flat="True").distinct()
         return User.objects.filter(id__in=user_ids)
+
+
 
 
 ########################################
@@ -557,6 +710,11 @@ class RawSpotCollection(Measurement):
     def peptides2(self):
         return self.ligands2.instance_of(Peptide)
 
+    @classmethod
+    def url(cls, *args):
+        url = 'measurements'
+        return url
+
     def is_spot_collection(self):
         result = True
         if self.spotcollection_set.all().count() == 0:
@@ -568,6 +726,7 @@ class RawSpotCollection(Measurement):
         lig1 = data.pivot(index="row", columns="column", values="lig_fix_batch__ligand__sid")
         lig1.fillna(value="", inplace=True)
         return lig1
+
 
     def pivot_ligand2(self):
         try:
@@ -597,9 +756,11 @@ class RawSpot(models.Model):
     raw_spot_collection = models.ForeignKey(RawSpotCollection)
     lig_fix_batch = models.ForeignKey(LigandBatch, related_name="lig_fix_batch", null=True, blank=True)
     lig_mob_batch = models.ForeignKey(LigandBatch, related_name="lig_mob_batch", null=True, blank=True)
+    circle_quality =  models.FloatField(null=True, blank=True)
     column = models.IntegerField()
     row = models.IntegerField()
     objects = RawSpotManager()
+    #to do Block
 
     class Meta:
         unique_together = ('column', 'row', 'raw_spot_collection')
@@ -648,6 +809,8 @@ class Spot(models.Model):
     raw_spot = models.ForeignKey(RawSpot)
     intensity = models.FloatField(null=True, blank=True)
     std = models.FloatField(null=True, blank=True)
+    circle_quality = models.FloatField(null=True, blank=True)
+
     spot_collection = models.ForeignKey(SpotCollection)
 
     class Meta:

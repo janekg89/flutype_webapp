@@ -9,6 +9,7 @@
             Studies
             {% if type == "my" %}(<i class="fa fa-fw fa-user"></i> {{ request.user }}){% endif %}
         </h1>
+        <a href="{{ url('study_new') }}" title="Import Study" class="btn btn-default"> <i class="fa fa-download" aria-hidden="true"></i></a>
         {% with studies_table_id="studies" %}
         {% include "flutype/studies_table.html" %}
         {% endwith %}
@@ -18,7 +19,6 @@
 {% endblock %}
 
 {% block javascript %}
-
 
 
 {% endblock %}

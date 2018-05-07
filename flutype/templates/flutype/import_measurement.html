@@ -1,0 +1,647 @@
+{% extends "flutype/base.html" %}
+{% block content %}
+<div class="standard">
+
+<div class="stepwizard ">
+    <div class="stepwizard-row setup-panel">
+        <div class="stepwizard-step">
+            <a href="#step-1" type="button" class="btn btn-primary btn-circle">1</a>
+            <p class="step1">Measurement</p>
+        </div>
+       <div class="stepwizard-step">
+            <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled">2</a>
+            <p class="step2">Process</p>
+        </div>
+
+        <div class="stepwizard-step">
+            <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled">3</a>
+            <p class="step3">Ligand Batches </p>
+        </div>
+        <div class="stepwizard-step">
+            <a href="#step-4" type="button" class="btn btn-default btn-circle" disabled="disabled">4</a>
+            <p class="step4">Analyt Batches </p>
+        </div>
+        <div class="stepwizard-step">
+            <a href="#step-5" type="button" class="btn btn-default btn-circle" disabled="disabled">5</a>
+            <p class="step5">Intensities </p>
+        </div>
+    </div>
+</div>
+
+  <form role="form" action="" method="post">
+
+  <!-- General measurement information -->
+    <div class="row setup-content" id="step-1">
+          <h3> Measurement</h3>
+          {% with mf =measurement_form %}
+                <div class="form-group">
+                    <label class="control-label ">Sid</label>
+                    {{ mf.sid }}
+                </div>
+                <div class="form-group">
+                    <label class="control-label ">Batch Sid</label>
+                    {{ mf.batch_sid }}
+                </div>
+              <div class="form-group">
+                    <label class="control-label "> User </label>
+                    {{ mf.user }}
+              </div>
+
+              <div class="form-group">
+                    <label class="control-label"> Measurement Type </label>
+                    {{ mf.measurement_type }}
+              </div>
+
+              <div class="form-group">
+                    <label class="control-label"> Functionalization </label>
+                    {{ mf.functionalization }}
+              </div>
+
+              <div class="form-group">
+                    <label class="control-label"> Manufacturer </label>
+                    {{ mf.manufacturer }}
+              </div>
+
+               <div class="form-group">
+                    <label class="control-label"> Comment </label>
+                    <div >{{ mf.comment }} </div>
+              </div>
+          {% endwith %}
+          <button class="btn btn-primary nextBtn  pull-right" id="submit_measurement" type="button">Next</button>
+           <a href="javascript:history.back()" class="btn btn-default  margin-right pull-right" type="button">Cancel</a>
+
+    </div>
+
+    <div class="setup-content" id="step-2">
+        <h3> Process</h3>
+            <div id="process" class="margin-bottum"></div>
+        <div class="margin-top">
+            <button class="btn btn-default del margin margin-left margin-top" title ="select a row you want to delete before clicking the button" type="button">Delete Row</button>
+            <button class="btn btn-primary prevBtn  pull-left" type="button">Previous</button>
+            <button class="btn btn-primary nextBtn margin- pull-right" type="button">Next</button>
+            <a href="javascript:history.back()" class="btn btn-default pull-right margin-right" type="button">Cancel</a>
+         </div>
+
+    </div>
+
+    <div class="row setup-content" id="step-3">
+        <h3> Ligand Batches</h3>
+        <div id="microwell_plate_ligands" class="margin-bottum microwell-plate"></div>
+        <button class="btn btn-primary prevBtn  pull-left" type="button">Previous</button>
+        <button class="btn btn-primary nextBtn  pull-right" type="button">Next</button>
+        <a href="javascript:history.back()" class="btn btn-default pull-right margin-right" type="button">Cancel</a>
+    </div>
+
+
+    <div class="row setup-content" id="step-4">
+
+        <h3> Analyt Batches</h3>
+        <div class="margin-bottum microwell-plate" id="microwell_plate_analyts"></div>
+        <button class="btn btn-primary prevBtn  pull-left" type="button">Previous</button>
+        <button class="btn btn-primary nextBtn  pull-right" type="button">Next</button>
+        <a href="javascript:history.back()" class="btn btn-default pull-right margin-right" type="button">Cancel</a>
+
+    </div>
+    <div class="row setup-content" id="step-5">
+        <h3> Results</h3>
+        <div class="microwell-plate" id="microwell_plate_results"></div>
+        <div id="submit_report"></div>
+        <button class="btn btn-primary prevBtn  pull-left" type="button">Previous</button>
+        <button class="btn btn-success  pull-right submitBtn" type="button">Submit</button>
+        <a href="javascript:history.back()" class="btn btn-default pull-right margin-right" type="button">Cancel</a>
+
+    </div>
+
+  </form>
+
+</div>
+{% endblock %}
+{% block javascript %}
+
+<script>
+$(document).ready(function () {
+    var comment = document.getElementById('id_comment');
+    comment.setAttribute("class", "form-control");
+
+  var navListItems = $('div.setup-panel div a'),
+      allWells = $('.setup-content'),
+      allNextBtn = $('.nextBtn'),
+      allCancelBtn = $('.cancelBtn'),
+      allPrevBtn = $('.prevBtn'),
+      submitBtn = $('.submitBtn');
+
+
+  allWells.hide();
+
+  navListItems.click(function (e) {
+      e.preventDefault();
+      var $target = $($(this).attr('href')),
+              $item = $(this);
+
+      if (!$item.hasClass('disabled')) {
+          navListItems.removeClass('btn-primary').addClass('btn-default');
+          $item.addClass('btn-primary');
+          allWells.hide();
+          $target.show();
+          $target.find('input:eq(0)').focus();
+      }
+  });
+
+  allNextBtn.click(function(){
+
+  });
+
+  allPrevBtn.click(function(){
+      var curStep = $(this).closest(".setup-content"),
+          curStepBtn = curStep.attr("id"),
+          prevStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().prev().children("a");
+          prevStepWizard.removeAttr('disabled').trigger('click');
+  });
+
+  allNextBtn.click(function(){
+      var curStep = $(this).closest(".setup-content"),
+          curStepBtn = curStep.attr("id"),
+          nextStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().next().children("a"),
+          ///////////////////////////////////
+          // for Measurement step
+
+          curInputs = curStep.find("#id_sid," +
+              "#id_batch_sid,#id_user," +
+              "#id_functionalization," +
+              "#id_manufacturer," +
+              "#id_comment," +
+              "#id_measurement_type");
+      $(".form-group").removeClass("has-error");
+      $(".help-block").remove();
+      console.log(hot_process.getData());
+      if (curInputs.length){
+                validateData(curInputs.serializeJSON(),nextStepWizard);
+      }
+      ///////////////////////////////////////////
+      // for Ligands
+      else{
+          nextStepWizard.trigger('click');
+      }
+
+  });
+  submitBtn.click(function(){
+                curInputs = $("#id_sid," +
+              "#id_batch_sid,#id_user," +
+              "#id_functionalization," +
+              "#id_manufacturer," +
+              "#id_comment," +
+              "#id_measurement_type");
+      var data = {
+          "measurement":curInputs.serializeJSON(),
+          "ligands": hot_ligand.getData(),
+          "analyts" : hot_analyt.getData(),
+          "intensities" : hot_result.getData(),
+          "process" : hot_process.getData()};
+
+      data = JSON.stringify(data);
+      $("#submit_report").removeClass( "alert-success alert-danger" ).addClass("alert alert-info");
+      $('#submit_report').html('<i class="fa fa-spinner fa-spin fa-5x"></i> The measurement is uploading to the database. This can take some seconds.');
+      validateData(data,"submit");
+   });
+
+  $('div.setup-panel div a.btn-primary').trigger('click');
+});
+
+var csrftoken = Cookies.get('csrftoken');
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings, nextStepWizard) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+
+
+        }
+    }
+});
+
+function validateData(curInputs_serialized, nextStepWizard){
+        return $.ajax({
+            type: 'POST',
+            data:curInputs_serialized,
+            success: function (data) {
+                // if data is not valid
+                if (data.is_error) {
+                    if (nextStepWizard == "submit"){
+                        $("#submit_report").removeClass( "alert-info alert-success" ).addClass("alert-danger");
+                        $("#submit_report").text(data.msg);
+                        return false
+                         }
+                    for (var error in data.errors){
+                        var errorInput = $('#id_'+error);
+                        errorInput.closest(".form-group").addClass("has-error");
+                        errorInput.closest(".form-group").append('<span class="help-block">'+data.errors[error]+'</span>')
+                    }
+                    return false
+                }
+                else{
+                    if (nextStepWizard == "submit"){
+                        $("#submit_report").removeClass( "alert-info alert-danger" ).addClass("alert-success");
+                        $('#submit_report').html('The measurement has been successfully uploaded. Follow <a href="../../../measurement/'+data.rsc_sid+'" target="_blank"> this link </a> to the measurement.');
+                        //window.open( "../../../measurement/"+data.rsc_sid, '_blank')
+
+                    }
+                    else{
+                        nextStepWizard.removeAttr('disabled').trigger('click');
+                    }
+                }},
+
+            error: function(data) {
+                console.log(data.status + ": " + data.responseText);
+                $("#submit_report").removeClass( "alert-info alert-success" ).addClass("alert-danger");
+                $("#submit_report").text("Sorry, something went wrong during the upload! Please check if all" +
+                    " fields are filled out correctly and try again!");
+                return false
+            }
+
+        });
+    }
+
+</script>
+<script>
+    var d_microwell_plate = [
+      ["", "", "","" ,"", "", "","" ,"","","","","","","",""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""],
+        [""],
+    ];
+    var d_microwell_plate_2 = [
+      ["", "", "","" ,"", "", "","" ,"","","","","","","","",""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""],
+      [""],
+    ];
+    function getData(data){
+        return data
+
+    }
+    function letterValue(str){
+        var anum={ a: 0, b: 1, c:2, d: 3, e: 4, f: 5, g: 6, h: 7, i: 8, j: 9, k: 10, l: 11};
+        return anum[str] ;
+    }
+    var microwell_analyts = document.getElementById('microwell_plate_analyts'),
+        microwell_ligands = document.getElementById('microwell_plate_ligands'),
+        microwell_results = document.getElementById('microwell_plate_results'),
+        process = document.getElementById('process'),
+
+
+        ligands_sids = {{ ligands_sid|tojson }},
+        steps_sids = {{ steps_sid|tojson }},
+        scanning_sids = {{ scanning_sid|tojson }},
+        usernames = {{ user_names|tojson }},
+
+
+
+        ligands_table_setup = function ligands_table_setup(setup_data, typeB){
+            var renderer , batch;
+            if(typeB == "Ligand"){
+                 renderer = LigandbatchesRenderer;
+                    batch = "Ligand Batch";
+
+            }
+            if(typeB == "Analyte"){
+                renderer = AnalyteBatchesRenderer;
+                batch = "Analyte Batch";
+
+
+            }
+            return{
+
+      fixedRowsTop: 2,
+      fixedColumnsRight: 2,
+      data: getData(setup_data),
+      undo: true,
+      colHeaders: ["A", "B", "C","D" ,"E", "F", "G","H" ,"I","J","K","L","","Concentration",batch,""],
+      afterChange: function (changes, source) {
+            if(!changes) {
+      	        return;
+            }
+            var hot = this;
+            $.each(changes, function(index, element) {
+            var row = element[0];
+            var col = element[1];
+            var oldVal = element[2];
+            var newVal = element[3];
+             if (newVal==""){
+                 return
+             }
+
+            // conditional on ligandbatch row/col
+            if (col === batch)  {
+                hot.setDataAtCell(row, 0,newVal);
+                hot.setDataAtCell(row, 1,newVal);
+                hot.setDataAtCell(row, 2,newVal);
+                hot.setDataAtCell(row, 3,newVal);
+                hot.setDataAtCell(row, 4,newVal);
+                hot.setDataAtCell(row, 5,newVal);
+                hot.setDataAtCell(row, 6,newVal);
+                hot.setDataAtCell(row, 7,newVal);
+                hot.setDataAtCell(row, 8,newVal);
+                hot.setDataAtCell(row, 9,newVal);
+                hot.setDataAtCell(row, 10,newVal);
+                hot.setDataAtCell(row, 11,newVal);
+            }
+            if (row === 10) {
+                hot.setDataAtCell( 0, letterValue(col) ,newVal);
+                hot.setDataAtCell( 1, letterValue(col) ,newVal);
+                hot.setDataAtCell( 2, letterValue(col) ,newVal);
+                hot.setDataAtCell( 3, letterValue(col) ,newVal);
+                hot.setDataAtCell( 4, letterValue(col) ,newVal);
+                hot.setDataAtCell( 5, letterValue(col) ,newVal);
+                hot.setDataAtCell( 6, letterValue(col) ,newVal);
+                hot.setDataAtCell( 7, letterValue(col) ,newVal);
+            }
+
+
+        });
+      }
+        ,
+      columns: [
+           {
+               data:"a",
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+            {
+                data:"b",
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+            {
+                data:"c",
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+            {
+                data:"d",
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+            {
+                data:"e",
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+            {
+                data:"f",
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+              {
+                  data:"g",
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+              {
+                  data:"h",
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+              {
+                  data:"i",
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+              {
+                  data:"j",
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+              {
+                  data:"k",
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+            {
+                data:"l",
+
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+          },
+              {     data:"",
+                  readOnly: true
+
+          },
+              {
+                data:"concentration",
+                editor: 'numeric',
+                validator: 'numeric'
+
+          },
+          {
+                data: batch,
+            type: 'autocomplete',
+            source: ligands_sids,
+            strict: true
+
+          },
+
+           {     data:"",
+                  readOnly: true
+
+          },
+
+
+        ],
+
+      rowHeaders: ["1", "2", "3","4" ,"5", "6", "7","8" ,"","Concentration", batch,""],
+
+        allowEmpty: true,
+        allowInsertRow:false,
+        maxCols:16,
+        maxRows:12,
+        allowInsertColumn: false,
+
+        cells: function (row, col, prop) {
+        var cellProperties = {};
+        var visualRowIndex = this.instance.toVisualRow(row);
+        var visualColIndex = this.instance.toVisualColumn(col);
+
+        if (visualRowIndex === 9 || visualColIndex === 13) {
+            cellProperties.renderer = renderer;
+            if (visualRowIndex === 9 && visualColIndex === 13){
+            cellProperties.type = 'dropdown';
+            cellProperties.source = {{ concentration_units|tojson }};
+            cellProperties.strict = true
+            }
+
+            else {
+                //cellProperties.editor = 'numeric';
+                cellProperties.validator = 'numeric';
+                cellProperties.type = 'text';
+                //cellProperties.roundFloat = 2;
+                }
+
+        }
+        if (visualRowIndex === 10 || visualColIndex === 14){
+            cellProperties.renderer = renderer;
+
+            }
+
+        var disabled_rows = [8,11],
+            disabled_cols = [12,15];
+
+        if (disabled_rows.indexOf(visualRowIndex) >= 0 || disabled_cols.indexOf(visualColIndex) >= 0
+            || (visualRowIndex == 10 && [13,14].indexOf(visualColIndex) >=0) || visualRowIndex == 9 && visualColIndex == 14) {
+            cellProperties.renderer = firstRowRenderer;
+            cellProperties.readOnly = true;
+        }
+
+
+
+        return cellProperties;
+    }
+    };};
+    var setup_process = {
+     data: [[]],
+     colHeaders: ["step", "user","start date","start time","intensities","comment"],
+     rowHeaders: true,
+     stretchH:'all',
+     minRows:1,
+     maxCols:6,
+     minCols:6,
+     outsideClickDeselects: false,
+     cells: function (row, col, prop) {
+                var cellProperties = {};
+                var visualRowIndex = this.instance.toVisualRow(row);
+                var visualColIndex = this.instance.toVisualColumn(col);
+                if (col === 0) {
+                    cellProperties.type = 'autocomplete';
+                    cellProperties.source = steps_sids;
+                    cellProperties.strict = true
+                }
+                if (col === 1){
+                    cellProperties.type = 'autocomplete';
+                    cellProperties.source = usernames;
+                    cellProperties.strict = true
+                }
+                 if (col === 2){
+                    cellProperties.type = 'date';
+                    cellProperties.validator = 'date';
+                    cellProperties.dateFormat ='YYYY.MM.DD';
+                    cellProperties.correctFormat= true
+
+                }
+                if (col === 3){
+                    cellProperties.type = 'time';
+                    cellProperties.validator = 'time';
+                    cellProperties.timeFormat = 'H:mm';
+                    cellProperties.correctFormat= true
+
+                }
+
+                if (col === 4){
+                    cellProperties.type = 'checkbox'
+                }
+
+                return cellProperties;
+
+    },
+    afterChange: function (changes, source) {
+            if(!changes) {
+      	        return;
+            }
+            var hot = this;
+            $.each(changes, function(index, element) {
+            var row = element[0];
+            var col = element[1];
+            var oldVal = element[2];
+            var newVal = element[3];
+
+            if (col === 0)  {
+                if (scanning_sids.indexOf(hot.getDataAtCell(row,0)) >= 0){
+                    hot.setCellMeta(row, 4, 'readOnly' , false);
+                }
+                else{
+                    hot.setCellMeta(row, 4, 'readOnly' , true);
+                }
+            }
+        });
+      }
+
+    };
+    var del = document.querySelector('.del');
+    del.addEventListener('click', function(){
+        var sel = hot_process.getSelected();
+          if(sel[0] === sel[2] && sel[1] === 0 && sel[3] === hot_process.countCols() - 1){
+            hot_process.alter('remove_row', sel[0], 1);
+            //delete row
+          } else {
+            //
+          }
+
+    });
+
+
+      var hot_ligand = new Handsontable(microwell_ligands,ligands_table_setup(d_microwell_plate, "Ligand"));
+      var hot_analyt = new Handsontable(microwell_analyts,ligands_table_setup(d_microwell_plate_2,"Analyte"));
+      var hot_result = new Handsontable(microwell_results,{
+            data:[[]],
+            stretchH:'all',
+            minRows:8,
+            minCols:12,
+            maxCols:12,
+            maxRows:8,
+            rowHeaders: ["1", "2", "3","4" ,"5", "6", "7","8"],
+            colHeaders: ["A", "B", "C","D" ,"E", "F", "G","H" ,"I","J","K","L"],
+            cells: function (row, col, prop) {
+                var cellProperties = {};
+                var visualRowIndex = this.instance.toVisualRow(row);
+                var visualColIndex = this.instance.toVisualColumn(col);
+                cellProperties.renderer = IntensityRenderer;
+                cellProperties.editor = 'numeric';
+                cellProperties.validator = 'numeric';
+                //cellProperties.type = 'numeric';
+                return cellProperties;
+
+
+            }
+
+    } );
+    var hot_process = new Handsontable(process,setup_process);
+
+
+    function firstRowRenderer(instance, td, row, col, prop, value, cellProperties) { Handsontable.renderers.TextRenderer.apply(this, arguments); td.style.background = '#dcdcdc'};
+    function LigandbatchesRenderer(instance, td, row, col, prop, value, cellProperties) { Handsontable.renderers.TextRenderer.apply(this, arguments); td.style.background = '#76c471';td.style.color = "#ffffff" };
+    function AnalyteBatchesRenderer(instance, td, row, col, prop, value, cellProperties) { Handsontable.renderers.TextRenderer.apply(this, arguments); td.style.background = '#7CA8CF';td.style.color = "#ffffff" };
+    function IntensityRenderer(instance, td, row, col, prop, value, cellProperties) { Handsontable.renderers.TextRenderer.apply(this, arguments); td.style.background = '#c49c71';td.style.color = "#ffffff" };
+
+</script>
+{% endblock %}

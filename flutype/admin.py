@@ -6,10 +6,21 @@ from __future__ import unicode_literals
 from django.contrib import admin
 from .models import Peptide, PeptideBatch, Virus, VirusBatch, Antibody, AntibodyBatch, Complex, ComplexBatch, \
     ProcessStep, Step, Spotting, Washing, Drying, Quenching, Blocking, Scanning, Incubating, \
-    Process, GalFile, Measurement, RawSpotCollection, RawSpot, SpotCollection, Spot, \
+    Process, GalFile, Measurement, RawSpotCollection, RawSpot, SpotCollection, Spot, Study, \
     Buffer, BufferBatch
 from .forms import ProcessAdminForm
 
+
+
+@admin.register(Study)
+class StudyAdmin(admin.ModelAdmin):
+    fields = ('sid', 'comment')
+    list_display = ('sid',  'comment')
+
+@admin.register(RawSpotCollection)
+class RawSpotCollectionAdmin(admin.ModelAdmin):
+    fields = ('sid', 'comment')
+    list_display = ('sid',  'comment')
 
 ################################
 # Ligands

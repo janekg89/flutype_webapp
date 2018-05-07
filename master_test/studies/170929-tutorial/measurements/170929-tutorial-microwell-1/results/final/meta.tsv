@@ -1,4 +1,0 @@
-comment	intensities resulting from last scanning. No processing of data.
-processing_type	Fluorescence Intensity Reader 1.23
-intensity_file	intensity.tsv
-std	std.tsv

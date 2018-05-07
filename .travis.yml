@@ -1,10 +1,12 @@
 language: python
 cache: pip
 python:
-  - "2.7"
   - "3.5"
   - "3.6"
 sudo: required
+services:
+ - postgresql
+
 
 branches:
   only:
@@ -14,7 +16,16 @@ install:
   - pip install -r requirements.txt
   - pip install coveralls
 before_script:
-  python manage.py collectstatic
+  - python manage.py collectstatic
+  - psql -U postgres -c "CREATE USER flutype_user WITH CREATEUSER PASSWORD 'flutype_test';"
+  - psql -U postgres -c "ALTER USER flutype_user CREATEDB;"
+  - psql -U postgres -c "CREATE DATABASE flutype;"
+  # clean setup
+  - python manage.py makemigrations
+  - python manage.py makemigrations flutype
+  - python manage.py migrate
+
+
 script:
 - coverage run --source='.' manage.py test flutype --exclude-tag=local
 after_success:

@@ -23,7 +23,7 @@ import django
 django.setup()
 
 from flutype.data_management.master import LIGAND_BATCHES, LIGANDS, STEPS, MASTERPATH, Master, BASEPATH
-from flutype.helper import read_complex, read_ligands, read_ligand_batches ,read_steps, read_buffer
+from flutype.helper import read_complex, read_ligands, read_ligand_batches ,read_steps, read_buffer, cap_and_read
 
 
 ###############################################
@@ -41,7 +41,7 @@ def write_all_ligands(master_path):
     ma.write_ligands({"buffer":read_buffer()})
 
     for ligand in LIGANDS:
-        ma.write_ligands({ligand:read_ligands(ligand)})
+        ma.write_ligands({ligand:cap_and_read(ligand)})
 
 def write_all_ligand_batches(master_path):
     ma = Master(master_path)

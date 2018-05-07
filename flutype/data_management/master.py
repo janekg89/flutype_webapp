@@ -13,7 +13,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flutype_webapp.settings")
 import django
 django.setup()
 
-from flutype.helper import read_tsv_diconary , read_tsv_table, write_tsv_table
+from flutype.helper import read_tsv_diconary , read_and_dropnan, write_tsv_table
 
 ###############################################
 
@@ -25,7 +25,7 @@ MASTERPATH = os.path.join(BASEPATH, "master")
 
 class BaseAll(object):
     def __init__(self, path):
-        self.path = path
+        self.path = os.path.join(BASEPATH,path)
 
 
 class Master(BaseAll):
@@ -50,7 +50,7 @@ class Master(BaseAll):
 
         for ligand_batch in self.ligand_batches:
             path_ligand_batch = os.path.join(self.path_ligands, "{}.tsv".format(ligand_batch))
-            dic_ligand_batches[ligand_batch] =  read_tsv_table(path_ligand_batch)
+            dic_ligand_batches[ligand_batch] =  read_and_dropnan(path_ligand_batch)
 
         return dic_ligand_batches
 
@@ -59,7 +59,7 @@ class Master(BaseAll):
 
         for ligand in self.ligands:
             path_ligand = os.path.join(self.path_ligands, "{}.tsv".format(ligand))
-            dic_ligands[ligand] = read_tsv_table(path_ligand)
+            dic_ligands[ligand] = read_and_dropnan(path_ligand)
 
         return dic_ligands
 
@@ -80,13 +80,13 @@ class Master(BaseAll):
     def read_complex(self):
         complex_dic = {}
         path_complex = os.path.join(self.path_ligands, "complex.tsv")
-        complex_dic["complex"]= read_tsv_table(path_complex)
+        complex_dic["complex"]= read_and_dropnan(path_complex)
         return complex_dic
 
     def read_buffer(self):
         buffer_dic = {}
         path_buffer = os.path.join(self.path_ligands, "buffer.tsv")
-        buffer_dic["buffer"]= read_tsv_table(path_buffer)
+        buffer_dic["buffer"]= read_and_dropnan(path_buffer)
         return buffer_dic
 
     def read_steps(self):
@@ -94,7 +94,7 @@ class Master(BaseAll):
         dic_steps = {}
         for step in self.steps:
             path_step = os.path.join(self.path_process_steps,"{}.tsv".format(step))
-            dic_steps[step]= read_tsv_table(path_step)
+            dic_steps[step]= read_and_dropnan(path_step)
         return dic_steps
 
     def read_studies(self):
@@ -108,9 +108,9 @@ class Master(BaseAll):
 
     def read(self):
         dic_master = {"studies":self.read_studies(),
-                  "ligands":self.read_ligands(),
-                  "ligand_batches":self.read_ligand_batches(),
-                  "steps":self.read_steps()}
+                      "ligands":self.read_ligands(),
+                      "ligand_batches":self.read_ligand_batches(),
+                      "steps":self.read_steps()}
         return dic_master
 
 
@@ -243,9 +243,6 @@ class MeasurementResult(Base):
         self.path_intensity = os.path.join(self.path, self.meta["intensity_file"])
         self.path_std = os.path.join(self.path )
 
-
-
-
     def read(self):
         dic_results = {}
         del self.meta["intensity_file"]
@@ -253,15 +250,16 @@ class MeasurementResult(Base):
             dic_results["std"]=os.path.join(self.path, self.meta["std"])
             del self.meta["std"]
 
+        if "circle_quality" in self.meta and self.meta["circle_quality"] is not None:
+            dic_results["circle_quality"]=os.path.join(self.path, self.meta["circle_quality"])
+            del self.meta["circle_quality"]
+
         dic_results["meta"] =self.get_meta()
         dic_results["intensities"]= self.path_intensity
         try:
             dic_results["raw_docs_fpaths"]= self.raw_docs_fpaths
         except:
             pass
-
-
-
 
         return dic_results
 

@@ -47,6 +47,7 @@ class DatabaseDJ(object):
         buffer = self.ma.read_buffer()
 
 
+
         self.update_ligands_or_batches(ligands)
         self.update_ligands_or_batches(complex)
         self.update_ligands_or_batches(buffer)
@@ -61,17 +62,16 @@ class DatabaseDJ(object):
         studies = self.ma.read_studies()
         self.update_studies(studies)
 
-
-
-
-
 if __name__ == "__main__":
-    MASTERPATH = os.path.join(BASEPATH, "master")
+
+    try: 
+        MASTERPATH = os.environ['FLUTYPE_MASTER']
+    except KeyError:
+        # path to the data
+        # MASTERPATH = os.path.join(BASEPATH, "master_2018_04_27")
+        # MASTERPATH = os.path.join(BASEPATH, "master_test")
+        MASTERPATH = "/home/mkoenig/Downloads/flutype/master_2018_04_27"
 
     ma = Master(MASTERPATH)
     DatabaseDJ(ma).update_db()
-
-
-
-
 

@@ -14,7 +14,6 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls.static import static
-
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib.auth import views as auth_views
@@ -24,6 +23,7 @@ from django.views.generic import RedirectView
 
 
 urlpatterns = [
+    url('^', include('django.contrib.auth.urls')),
     url(r'^', include('flutype.urls')),
     url(r'^$', RedirectView.as_view(pattern_name='index', permanent=False)),
     url(r'^login/$', auth_views.login, name='login'),
