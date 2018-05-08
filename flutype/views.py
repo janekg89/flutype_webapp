@@ -352,7 +352,6 @@ def measurement_ligands_view(request, sid):
 
     mobile_ligandbatch_pks = collection.rawspot_set.values_list('lig_mob_batch', flat=True).distinct()
     mobile_ligandbatches = LigandBatch.objects.filter(pk__in=mobile_ligandbatch_pks).select_subclasses()
-    print(mobile_ligandbatches)
     #mobile_lig_batch = {ligand_batch_type:filter_for_class(mobile_ligandbatches,ligand_batch_type) for ligand_batch_type in ligandbatch_types}
 
 
@@ -585,8 +584,10 @@ def tutorial_tree_view(request):
 
 @login_required
 def peptide_batch_view(request):
-    peptide_batches = PeptideBatch.objects.filter(stock=True)
+    peptide_batches_all = PeptideBatch.objects.all()
+    peptide_batches = peptide_batches_all.filter(stock=True)
     context = {
+        'peptide_batches_all': peptide_batches_all,
         'peptide_batches': peptide_batches,
     }
     return render(request,
@@ -604,8 +605,10 @@ def peptide_view(request):
 
 @login_required
 def virus_batch_view(request):
-    virus_batches = VirusBatch.objects.filter(stock=True)
+    virus_batches_all = VirusBatch.objects.all()
+    virus_batches = virus_batches_all.filter(stock=True)
     context = {
+        'virus_batches_all':virus_batches_all,
         'virus_batches': virus_batches,
     }
     return render(request,
@@ -614,8 +617,10 @@ def virus_batch_view(request):
 
 @login_required
 def antibody_batch_view(request):
-    antibody_batches = AntibodyBatch.objects.filter(stock=True)
+    antibody_batches_all = AntibodyBatch.objects.all()
+    antibody_batches = antibody_batches_all.filter(stock=True)
     context = {
+        'antibody_batches_all':antibody_batches_all,
         'antibody_batches': antibody_batches,
     }
     return render(request,
@@ -657,9 +662,10 @@ def buffer_view(request):
 
 @login_required
 def buffer_batch_view(request):
-    buffer_batches = BufferBatch.objects.filter(stock=True)
+    buffer_batches_all = BufferBatch.objects.all()
+    buffer_batches = buffer_batches_all.filter(stock=True)
     context = {
-
+        'buffer_batches_all':buffer_batches_all,
         'buffer_batches': buffer_batches,
     }
     return render(request,
