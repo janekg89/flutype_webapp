@@ -135,22 +135,27 @@ PRODUCTION_DATE = forms.DateField(initial=localtime(now()).date(),widget=forms.T
     }))
 
 BATCH_FIELDS = ['sid', 'ligand', 'concentration', 'concentration_unit', 'buffer', 'ph', 'purity',
-                'produced_by', 'production_date', 'comment','stock']
+                'produced_by', 'production_date', 'comment',"stock"]
 ########################################################################################################################
 
 class BufferBatchForm(URLRedirectBaseForm):
-    stock = forms.BooleanField(initial=True, widget=forms.HiddenInput())
+    stock = forms.BooleanField(initial=True)#, widget=forms.HiddenInput())
     production_date = PRODUCTION_DATE
     class Meta:
         model = BufferBatch
-        fields = ['sid', 'buffer', 'ph', 'produced_by', 'production_date', 'comment']
+        fields = ['sid', 'buffer', 'ph', 'produced_by', 'production_date', 'comment','stock']
 
 
 
 
 class FormCleanMixin(URLRedirectBaseForm):
-    stock = forms.BooleanField(initial=True, widget=forms.HiddenInput())
+    stock = forms.BooleanField(initial=True)#, widget=forms.HiddenInput())
     production_date = PRODUCTION_DATE
+    def __init__(self, *args, **kwargs):
+        super(FormCleanMixin, self).__init__( *args, **kwargs)
+        self.fields['stock'].help_text = "if disabled, this ligand batch will not be shown in the its list." \
+                                         " However, the sid still can be used in the gal files."
+
 
     def clean(self):
         if self.cleaned_data.get('concentration') and not self.cleaned_data.get('concentration_unit'):

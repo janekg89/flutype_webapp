@@ -2,19 +2,26 @@
 {% block content %}
     <div class="standard">
         <h1><i class="fa fa-fw fa-hand-spock-o"></i> Antibody Batches
-        {% if type == "fixed" %}
-            (Fixed)
-        {% elif type == "mobile" %}
-            (Mobile)
-        {% endif %}
+
         <i class="fa fa-fw fa-flask"></i>
         <a href="{{ url('new_ligandbatch', args=["AntibodyBatch"])  }}" class="btn btn-default" title="Add new antibody batch">
         <span class="fa fa-plus-circle fa-3x text-success"></span></a>
         </h1>
+        <button type="button" class="btn btn-info" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="table-1 table-2"> show hidden </button>
+
 
         {% with id_antibodybatches_table = "batches" %}
+            <div  class=" row collapse in multi-collapse" id="table-1">
             {% include "flutype/antibodybatches_table.html" %}
+            </div>
+
+            <div class=" row collapse multi-collapse" id="table-2">
+                    {% with antibody_batches = antibody_batches_all %}
+                        {% include "flutype/antibodybatches_table.html" %}
+                    {% endwith %}
+               </div>
         {% endwith %}
     </div>
+
 {% endblock %}
 

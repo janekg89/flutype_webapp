@@ -9,7 +9,16 @@
         </h1>
 
         {% with id_bufferbatches_table = "batches" %}
-            {% include "flutype/bufferbatches_table.html" %}
+            <button type="button" class="btn btn-info" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="table-1 table-2"> show hidden </button>
+
+            <div  class=" row collapse in multi-collapse" id="table-1">
+                    {% include "flutype/bufferbatches_table.html" %}
+               </div>
+               <div class=" row collapse multi-collapse" id="table-2">
+                    {% with buffer_batches = buffer_batches_all %}
+                        {% include "flutype/bufferbatches_table.html" %}
+                    {% endwith %}
+               </div>
         {% endwith %}
 
     </div>

@@ -7,8 +7,16 @@
         <a href="{{ url('new_ligandbatch', args=["VirusBatch"]) }}" class="btn btn-default" title="Add new virus batch">
         <span class="fa fa-plus-circle fa-3x text-success"></span></a>
         </h1>
+        <button type="button" class="btn btn-info" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="table-1 table-2"> show hidden </button>
         {% with id_virusbatches_table = "batches" %}
-            {% include "flutype/virusbatches_table.html" %}
+            <div  class=" row collapse in multi-collapse" id="table-1">
+                    {% include "flutype/virusbatches_table.html" %}
+               </div>
+               <div class=" row collapse multi-collapse" id="table-2">
+                    {% with virus_batches = virus_batches_all %}
+                    {% include "flutype/virusbatches_table.html" %}
+                    {% endwith %}
+               </div>
         {% endwith %}
 
 
