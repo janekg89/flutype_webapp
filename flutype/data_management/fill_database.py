@@ -68,9 +68,9 @@ if __name__ == "__main__":
         MASTERPATH = os.environ['FLUTYPE_MASTER']
     except KeyError:
         # path to the data
-        # MASTERPATH = os.path.join(BASEPATH, "master_2018_04_27")
+        MASTERPATH = os.path.join(BASEPATH, "master_2018_04_27")
         # MASTERPATH = os.path.join(BASEPATH, "master_test")
-        MASTERPATH = "/home/mkoenig/Downloads/flutype/master_2018_04_27"
+        #MASTERPATH = "/home/mkoenig/Downloads/flutype/master_2018_04_27"
 
     ma = Master(MASTERPATH)
     DatabaseDJ(ma).update_db()

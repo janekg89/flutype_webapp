@@ -276,6 +276,10 @@ def get_or_create_raw_spots(**kwargs):
     spots.rename(columns={"Name":"lig_mob_batch", "Row":"row","Column":"column"}, inplace=True)
     spots = spots[["row","column","lig_mob_batch","lig_fix_batch"]]
     spots["lig_mob_batch"]= spots["lig_mob_batch"].apply(lambda x: x if x == None else LigandBatch.objects.get_subclass(sid=x))
+    #for k,spot in spots.iterrows():
+    #    if spot["lig_fix_batch"] is not None:
+    #        print(spot["lig_fix_batch"])
+    #        LigandBatch.objects.get_subclass(sid=spot["lig_fix_batch"])
     spots["lig_fix_batch"]= spots["lig_fix_batch"].apply(lambda x: x if x == None else LigandBatch.objects.get_subclass(sid=x))
 
 
