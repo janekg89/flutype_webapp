@@ -13,7 +13,7 @@ from guardian.shortcuts import assign_perm
 
 from flutype.helper import get_ligand_or_none, get_buffer_or_none,get_user_or_none, get_duration_or_none,\
     unique_ordering, read_tsv_table, get_unique_galfile,\
-    create_spots, get_or_create_raw_spots, md5, read_gal_file, read_gal_file_to_temporaray_file, clean_step_table,\
+    create_spots, get_or_create_raw_spots, md5, meta_gal_file,read_gal_file, read_gal_file_to_temporary_file, clean_step_table,\
     nan_to_none_in_pdtable
 
 from polymorphic.manager import PolymorphicManager
@@ -54,7 +54,6 @@ class LigandManager(PolymorphicManager):
         return object, created
 
 
-
 class LigandBatchManager(InheritanceManager):
     def get_or_create(self, *args, **kwargs):
         if "stock" in kwargs and kwargs["stock"] in [1, True,"1","True","true"]:
@@ -80,8 +79,8 @@ class LigandBatchManager(InheritanceManager):
         df = read_frame(self.all())
         return df
 
-
-
+#class CircleManager(models.Manager):
+#   def create
 
 class ComplexManager(PolymorphicManager):
     def get_or_create(self, *args, **kwargs):
@@ -146,13 +145,14 @@ class RawDocManager(models.Manager):
                 raw_doc_dic["hash"] = md5(f)
                 raw_doc, created = super(RawDocManager,self).get_or_create(**raw_doc_dic)
                 raw_doc.file.save(os.path.basename(raw_doc_dic["sid"]), f)
-
         return raw_doc, created
+
 
 
 
 class MeasurementManager(models.Manager):
     def get_or_create(self, *args, **kwargs):
+
         if "meta" in kwargs:
             print("*** Creating Measurement <{}>***".format(kwargs["meta"]["sid"]))
             if "user" in kwargs["meta"] and isinstance(kwargs["meta"]["user"], basestring):
@@ -172,10 +172,10 @@ class MeasurementManager(models.Manager):
 
         if "lig_mob_path" in kwargs:
             Galfile = apps.get_model("flutype", model_name="Galfile")
-            lig_mob, created_m = Galfile.objects.get_or_create(lig_path=kwargs["lig_mob_path"])
+            lig_mob = Galfile.objects.get_or_create(lig_path=kwargs["lig_mob_path"])
             this_measurement.lig_mob = lig_mob
             this_measurement.save()
-            lig_fix, created_l = Galfile.objects.get_or_create(lig_path=kwargs["lig_fix_path"])
+            lig_fix  = Galfile.objects.get_or_create(lig_path=kwargs["lig_fix_path"])
             this_measurement.lig_fix =lig_fix
             this_measurement.save()
             kwargs["raw_spot_collection"]=this_measurement
@@ -239,8 +239,8 @@ class ProcessManager(models.Manager):
                 intensity_fpath = os.path.join(os.path.dirname(steps_path),step["intensities"])
                 intensities_path_dic = {"intensities" :intensity_fpath}
                 GalFile = apps.get_model("flutype", "GalFile")
-                this_gal_file, _ = GalFile.objects.get_or_create(**intensities_path_dic)
-                this_process_step.intensities =this_gal_file
+                this_gal_file = GalFile.objects.get_or_create(**intensities_path_dic)
+                this_process_step.intensities = this_gal_file
                 this_process_step.save()
 
             if step["image"] is not None:
@@ -252,76 +252,58 @@ class ProcessManager(models.Manager):
 
         return this_process, created
 
-
-
-
 class GalFileManager(models.Manager):
 
     def get_or_create(self,*args, **kwargs):
 
         if "lig_path" in kwargs:
-            kwargs["path"]= kwargs["lig_path"]
-            this_gal, max_name = get_unique_galfile( "ligand_batch", **kwargs)
-            if this_gal is None:
-                sid = "ligand_batch_{:03}".format(max_name + 1)
-                meta = {"sid":sid, "type":"ligand_batch"}
-                this_gal, _ = super(GalFileManager, self).get_or_create(**meta)
-                f = read_gal_file_to_temporaray_file(kwargs["path"])
-                this_gal.file.save("{}.txt".format(this_gal.sid), File(f))
-                f.close()
-                return this_gal, True
-            else:
-                return this_gal, False
+            f = read_gal_file_to_temporary_file(kwargs["lig_path"])
+            meta = meta_gal_file(type ="ligand_batch",file_src=kwargs["lig_path"])
+            this_gal, _ = super(GalFileManager, self).get_or_create(**meta)
+            this_gal.file.save("{}.txt".format(this_gal.sid), File(f))
+            f.close()
+            return this_gal
 
         if "std" in kwargs and kwargs["std"] is not None:
-            kwargs["path"] = kwargs["std"]
-            this_gal, max_name = get_unique_galfile("std", **kwargs)
-            if this_gal is None:
-                sid = "std_{:03}".format(max_name + 1)
-                meta = {"sid": sid, "type":"std"}
-                this_gal, _ = super(GalFileManager, self).get_or_create(**meta)
-                f = read_gal_file_to_temporaray_file(kwargs["path"])
-                this_gal.file.save("{}.txt".format(this_gal.sid), File(f))
-                f.close()
+            f = read_gal_file_to_temporary_file(kwargs["std"])
+            meta = meta_gal_file(type="std", file_src=kwargs["std"])
+            this_gal, _ = super(GalFileManager, self).get_or_create(**meta)
+            this_gal.file.save("{}.txt".format(this_gal.sid), File(f))
+            f.close()
+            return this_gal
 
-                return this_gal, True
-            else:
-                return this_gal, False
         if "circle_quality" in kwargs and kwargs["circle_quality"] is not None:
-            kwargs["path"] = kwargs["circle_quality"]
-            this_gal, max_name = get_unique_galfile("circle_quality", **kwargs)
-            if this_gal is None:
-                sid = "circle_quality_{:03}".format(max_name + 1)
-                meta = {"sid": sid, "type":"circle_quality"}
-                this_gal, _ = super(GalFileManager, self).get_or_create(**meta)
-                f = read_gal_file_to_temporaray_file(kwargs["path"])
-                this_gal.file.save("{}.txt".format(this_gal.sid), File(f))
-                f.close()
 
-                return this_gal, True
-            else:
-                return this_gal, False
+            f = read_gal_file_to_temporary_file(kwargs["circle_quality"])
+            meta = meta_gal_file(type="circle_quality", file_src=kwargs["circle_quality"])
+            this_gal, _ = super(GalFileManager, self).get_or_create(**meta)
+            this_gal.file.save("{}.txt".format(this_gal.sid), File(f))
+            f.close()
+            return this_gal
 
+        if "circle" in kwargs and kwargs["circle"] is not None:
+            f = read_gal_file_to_temporary_file(kwargs["circle"])
+            meta = meta_gal_file(type="circle", file_src=kwargs["circle"])
+            this_gal, _ = super(GalFileManager, self).get_or_create(**meta)
+            this_gal.file.save("{}.txt".format(this_gal.sid), File(f))
+            f.close()
+            return this_gal
+
+        if "square" in kwargs and kwargs["square"] is not None:
+            meta = meta_gal_file(type="square", file_src=kwargs["square"])
+            f = read_gal_file_to_temporary_file(kwargs["square"])
+            this_gal, _ = super(GalFileManager, self).get_or_create(**meta)
+            this_gal.file.save("{}.txt".format(this_gal.sid), File(f))
+            f.close()
+            return this_gal
 
         if "intensities" in kwargs and kwargs["intensities"] is not None:
-            kwargs["path"]= kwargs["intensities"]
-
-            this_gal, max_name = get_unique_galfile("intensity", **kwargs)
-            if this_gal is None:
-                sid = "intensity_{:03}".format(max_name + 1)
-                meta = {"sid": sid, "type":"intensity"}
-                this_gal, _ = super(GalFileManager, self).get_or_create(**meta)
-                f = read_gal_file_to_temporaray_file(kwargs["path"])
-                this_gal.file.save("{}.txt".format(this_gal.sid), File(f))
-                f.close()
-
-                return this_gal, True
-            else:
-                return this_gal, False
-
-
-
-
+            f = read_gal_file_to_temporary_file(kwargs["intensities"])
+            meta = meta_gal_file(type="intensities", file_src=kwargs["intensities"])
+            this_gal, _ = super(GalFileManager, self).get_or_create(**meta)
+            this_gal.file.save("{}.txt".format(this_gal.sid), File(f))
+            f.close()
+            return this_gal
 
 class SpotcollectionManager(models.Manager):
     def get_or_create(self, *args, **kwargs):
@@ -329,6 +311,7 @@ class SpotcollectionManager(models.Manager):
         if "meta" in kwargs:
             meta = kwargs["meta"]
             print("*** Creating Result <{}>***".format(kwargs["meta"]["sid"]))
+            print(meta)
             this_spot_collection, created = super(SpotcollectionManager, self).get_or_create(*args, **meta)
             if bool(this_spot_collection.raw_spot_collection.user):
                 assign_perm("change_spotcollection", this_spot_collection.raw_spot_collection.user, this_spot_collection)
@@ -342,28 +325,40 @@ class SpotcollectionManager(models.Manager):
                 this_spot_collection.files.add(raw_doc)
 
 
-
         if "intensities" in kwargs:
             kwargs["spot_collection"]=this_spot_collection
             create_spots(**kwargs)
-
             GalFile = apps.get_model("flutype", "GalFile")
 
             intensity_dic = {"intensities": kwargs["intensities"]}
-            object_gal_file, _ = GalFile.objects.get_or_create(**intensity_dic)
+            object_gal_file = GalFile.objects.get_or_create(**intensity_dic)
             this_spot_collection.int_gal = object_gal_file
             this_spot_collection.save()
 
+
+
             if "std" in kwargs:
                 std_dic = {"std": kwargs["std"]}
-                object_gal_file, _ = GalFile.objects.get_or_create(**std_dic)
+                object_gal_file = GalFile.objects.get_or_create(**std_dic)
                 this_spot_collection.std_gal = object_gal_file
                 this_spot_collection.save()
 
             if "circle_quality" in kwargs:
                 circle_quality_dic = {"circle_quality": kwargs["circle_quality"]}
-                object_gal_file, _ = GalFile.objects.get_or_create(**circle_quality_dic)
-                this_spot_collection.std_gal = object_gal_file
+                object_gal_file = GalFile.objects.get_or_create(**circle_quality_dic)
+                this_spot_collection.circle_q_gal = object_gal_file
+                this_spot_collection.save()
+
+            if "circle" in kwargs:
+                circle_dic = {"circle": kwargs["circle"]}
+                object_gal_file = GalFile.objects.get_or_create(**circle_dic)
+                this_spot_collection.circle_gal = object_gal_file
+                this_spot_collection.save()
+
+            if "square" in kwargs:
+                square_dic = {"square": kwargs["square"]}
+                object_gal_file = GalFile.objects.get_or_create(**square_dic)
+                this_spot_collection.square_gal = object_gal_file
                 this_spot_collection.save()
 
         return this_spot_collection, created

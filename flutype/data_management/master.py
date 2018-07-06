@@ -241,7 +241,7 @@ class MeasurementResult(Base):
         Base.__init__(self,path)
         self.Measurement = Measurement(os.path.join(self.path, "../.."))
         self.path_intensity = os.path.join(self.path, self.meta["intensity_file"])
-        self.path_std = os.path.join(self.path )
+        #self.path_std = os.path.join(self.path )
 
     def read(self):
         dic_results = {}
@@ -253,6 +253,14 @@ class MeasurementResult(Base):
         if "circle_quality" in self.meta and self.meta["circle_quality"] is not None:
             dic_results["circle_quality"]=os.path.join(self.path, self.meta["circle_quality"])
             del self.meta["circle_quality"]
+
+        if "circle" in self.meta and self.meta["circle"] is not None:
+            dic_results["circle"]=os.path.join(self.path, self.meta["circle"])
+            del self.meta["circle"]
+
+        if "square" in self.meta and self.meta["square"] is not None:
+            dic_results["square"]=os.path.join(self.path, self.meta["square"])
+            del self.meta["square"]
 
         dic_results["meta"] =self.get_meta()
         dic_results["intensities"]= self.path_intensity

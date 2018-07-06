@@ -13,6 +13,7 @@ import re
 import tempfile
 import sys
 import io
+import ast
 import numpy as np
 import pandas as pd
 
@@ -70,7 +71,6 @@ def auto_get_or_create_ligand_batches(browser_input):
             ligandbatch["ligandbatch_stock"].save()
 
     return ligand_batches
-
 
 def outer_product(df1, df2):
     x = list(map(float,df1.values))
@@ -304,6 +304,10 @@ def  filter_for_class(list,class_name):
     Class = apps.get_model("flutype",class_name)
     return [x for x in list if isinstance(x, Class)]
 
+def string_to_model(string, model):
+    Instance = apps.get_model("flutype", model)
+    inst, _ = Instance.objects.get_or_create(**ast.literal_eval(string))
+    return inst
 
 def create_spots(**kwargs):
     Spot = apps.get_model("flutype","Spot")
@@ -314,16 +318,25 @@ def create_spots(**kwargs):
     spots["raw_spot"] = kwargs["raw_spot"]
     spots["spot_collection"] = kwargs["spot_collection"]
 
+
     if "std" in kwargs:
         std = read_gal_file(kwargs["std"])
         spots["std"] = std["Name"].values
-
 
     if "circle_quality" in kwargs:
         circle_quality = read_gal_file(kwargs["circle_quality"])
         spots["circle_quality"] = circle_quality["Name"].values
 
+    if "circle" in kwargs:
+        circle = read_gal_file(kwargs["circle"])
+        spots["circle"] = circle["Name"].apply(string_to_model,args=("Circle",)).values
+
+    if "square" in kwargs:
+        square = read_gal_file(kwargs["square"])
+        spots["square"] = square["Name"].apply(string_to_model,args=("Square",)).values
+
     spots_dict = spots.to_dict('records')
+
     spots_instances = [Spot(**record) for record in spots_dict]
     Spot.objects.bulk_create(spots_instances)
 
@@ -345,6 +358,18 @@ def create_spots(**kwargs):
     #    this_spot.save()
 
 
+def meta_gal_file(type,file_src):
+    hash_md =  md5sum(file_src)
+    meta = {"type":type,"hash":hash_md,"sid":type + hash_md[:10]}
+    return meta
+
+def md5sum(src, length=io.DEFAULT_BUFFER_SIZE):
+    md5 = hashlib.md5()
+    with io.open(src, mode="rb") as fd:
+        for chunk in iter(lambda: fd.read(length), b''):
+            md5.update(chunk)
+    return md5.hexdigest()
+
 def get_unique_galfile(type, **kwargs):
 
     GalFile = apps.get_model("flutype", model_name="GalFile")
@@ -355,6 +380,7 @@ def get_unique_galfile(type, **kwargs):
         result = re.search(type + '_(.*)', gal_file.sid)
         if int(result.group(1)) > max_name:
             max_name = int(result.group(1))
+
         #checks if equal
         df_gal = read_gal_file(gal_file.file.path)
         if df_gal.equals(this_gal):
@@ -362,14 +388,6 @@ def get_unique_galfile(type, **kwargs):
             return gal_file, max_name
 
     return None, max_name
-
-def get_or_create_galfile(ligand_batches):
-    gal_file = ligand_batches[['Row', 'Column', 'sid']]
-    gal_file.rename(columns={"sid": "Name"}, inplace=True)
-    with tempfile.NamedTemporaryFile() as temp:
-        GalFile = apps.get_model("flutype", model_name="GalFile")
-        this_galfile, created = GalFile.objects.get_or_create(lig_path=temp.name)
-    return  this_galfile, created
 
 
 def read_gal_file(fpath):
@@ -390,7 +408,7 @@ def read_gal_file(fpath):
 
     return this_gal
 
-def read_gal_file_to_temporaray_file(fpath):
+def read_gal_file_to_temporary_file(fpath):
 
     python_version = sys.version_info.major
     if python_version == 3:

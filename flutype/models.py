@@ -80,6 +80,10 @@ class GalType(DjangoChoices):
     intensity = ChoiceItem("intensity")
     ligand_batch = ChoiceItem("ligand_batch")
     circle_quality =ChoiceItem("circle_quality")
+    circle =ChoiceItem("circle")
+    square =ChoiceItem("square")
+
+
 
 class ManufacturerModel(DjangoChoices):
     """ Manufacturer type """
@@ -344,7 +348,8 @@ class BufferBatch(LigandBatch):
 ########################################
 # Gal files
 ########################################
-class GalFile(Sidable, models.Model):
+class GalFile(Sidable,Hashable, models.Model):
+    name = models.CharField(max_length=CHAR_MAX_LENGTH)
     type = models.CharField(max_length=CHAR_MAX_LENGTH, choices=GalType.choices)
     file = models.FileField(upload_to="gal_file", null=True, blank=True, storage=OverwriteStorage())
     rows_in_tray = models.IntegerField(null=True,blank=True)
@@ -353,6 +358,7 @@ class GalFile(Sidable, models.Model):
     horizontal_trays = models.IntegerField(null=True,blank=True)
     identical_trays = models.NullBooleanField(blank=True, null=True)
     ligand_batches = models.ManyToManyField(LigandBatch, blank=True)
+
 
 
     objects = GalFileManager()
@@ -778,6 +784,13 @@ class SpotCollection(Commentable, FileAttachable, models.Model):
     raw_spot_collection = models.ForeignKey(RawSpotCollection)
     std_gal = models.ForeignKey(GalFile,null=True, blank=True,related_name="std_gal")
     int_gal = models.ForeignKey(GalFile,null=True, blank=True,related_name="int_gal")
+    square_gal = models.ForeignKey(GalFile,null=True, blank=True,related_name="square_gal")
+    circle_gal = models.ForeignKey(GalFile,null=True, blank=True,related_name="circle_gal")
+    circle_q_gal = models.ForeignKey(GalFile,null=True, blank=True,related_name="circle_q_gal")
+    image = models.ImageField(upload_to="image", null=True, blank=True, storage=OverwriteStorage())
+
+
+
 
     processing_type = models.CharField(max_length=CHAR_MAX_LENGTH,
                                        choices=ProcessingType.choices,
@@ -804,12 +817,27 @@ class SpotCollection(Commentable, FileAttachable, models.Model):
         unique_together = ('raw_spot_collection', 'sid')
 
 
+class Circle(models.Model):
+    x = models.FloatField()
+    y = models.FloatField()
+    radius = models.FloatField()
+
+class Square(models.Model):
+    x_left = models.FloatField()
+    y_left = models.FloatField()
+    x_right = models.FloatField()
+    y_right = models.FloatField()
+
+
 class Spot(models.Model):
     """ Spot model. """
-    raw_spot = models.ForeignKey(RawSpot)
     intensity = models.FloatField(null=True, blank=True)
     std = models.FloatField(null=True, blank=True)
     circle_quality = models.FloatField(null=True, blank=True)
+
+    raw_spot = models.ForeignKey(RawSpot)
+    circle = models.ForeignKey(Circle,null=True, blank=True)
+    square = models.ForeignKey(Square,null=True, blank=True)
 
     spot_collection = models.ForeignKey(SpotCollection)
 
@@ -819,3 +847,4 @@ class Spot(models.Model):
     def __str__(self):
         # FIXME: create via a join of the parts
         return str("column:"+str(self.raw_spot.column)+"-"+"row:"+str(self.raw_spot.row)+"-"+"intensity:"+str(self.intensity))
+
