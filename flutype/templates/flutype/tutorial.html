@@ -425,7 +425,7 @@
                 otherwise search for the virus <a href="https://www.ncbi.nlm.nih.gov/taxonomy">here</a> and
                 provide the taxonomy id and relevant additional pieces of information for the virus, displayed
                 in the table underneath. Virus data is general data and once provided,
-                it can be used in any measurement. <a href="{{ url('virus_new') }}"> New viruses</a> and
+                it can be used in any measurement. <a href="{{ url('new', args=["Virus"]) }}"> New viruses</a> and
                 in general ligands can be created by clicking on the green plus symbol in each ligands table.
             </p>
 
@@ -2827,11 +2827,11 @@
             <p>
                 Again, ligands have to be defined before using them in a measurement.
                 This procedure is always the same. If you want to add new ligands again click on the green plus
-                symbol or follow the <a href="{{ url('peptide_new') }}"> link </a>. Remember the sids have to be
+                symbol or follow the <a href="{{ url('new', args=["Peptide"]) }}"> link </a>. Remember the sids have to be
                 unique. The same applies to the peptide batches. Relevant peptide batches for this example
                 are also already defined <a href="{{ url('peptidebatches') }}"> here </a>.
                 If you want to add new ligand batches again click on the green plus symbole or follow the
-                <a href="{{ url('peptide_batch_new') }}"> link </a>. This time, I will not show the tables
+                <a href="{{ url('new_ligandbatch', args=["PeptideBatch"]) }}"> link </a>. This time, I will not show the tables
                 of new ligands and ligand batches. You can check for your self that all ligand batches referenced
                 in the galfile are indeed present in the database.
                 The microarrays were spotted with the industry spotter with 5200 spots.
@@ -2844,7 +2844,7 @@
                 Most of the process information is similar to the microwell example. The biggest difference is that
                 several images are made during the scanning of the microarray plate. Again, we have to define new steps
                 if not yet present in the database. Therefore, have a look at the
-                existing process steps <a href="{{ url('peptide_batch_new') }}"> here </a> or click on process and
+                existing process steps <a href="{{ url('new_ligandbatch', args=["PeptideBatch"]) }}"> here </a> or click on process and
                 than on process steps in the navigation menu. Create a new step by clicking the green plus symbol.
                 In the following, steps performed during this measurement are shown.
             </p>
@@ -2878,8 +2878,8 @@
                     <td> Genepix</td>
                     <td></td>
                     <td></td>
-                    <td><i class="fa fa-ban text-danger" aria-hidden="true"></td>
-                    <td><i class="fa fa-ban text-danger" aria-hidden="true"></td>
+                    <td><i class="fa fa-ban text-danger" aria-hidden="true"> </i></td>
+                    <td><i class="fa fa-ban text-danger" aria-hidden="true"> </i></td>
                 </tr>
                 <tr>
                     <td><i class="fa fa-shower" aria-hidden="true"> </i> Washing</td>
