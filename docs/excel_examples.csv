@@ -1,0 +1,97 @@
+ID	Block	Row	Column	Name										1	2	3	4	5	6	7	8	9	10	11	12
+1	1	1	1	1.0_pep49									A	Pan_RKI_1	Pan_RKI_0.5	Pan_RKI_0.25	Pan_RKI_0.125	Pan_RKI_0.0625	Pan_RKI_0.03125	Pan_RKI_0.015625	Pan_RKI_0.0078125	Pan_RKI_0.00390625	Pan_RKI_0.001953125	Pan_RKI_0.0009765625	Pan_RKI_0.00048828125
+2	1	1	2	1.0_pep50									B	Pan_RKI_1	Pan_RKI_0.5	Pan_RKI_0.25	Pan_RKI_0.125	Pan_RKI_0.0625	Pan_RKI_0.03125	Pan_RKI_0.015625	Pan_RKI_0.0078125	Pan_RKI_0.00390625	Pan_RKI_0.001953125	Pan_RKI_0.0009765625	Pan_RKI_0.00048828125
+3	1	1	3	1.0_pep51									C	X31_RKI_1	X31_RKI_0.5	X31_RKI_0.25	X31_RKI_0.125	X31_RKI_0.0625	X31_RKI_0.03125	X31_RKI_0.015625	X31_RKI_0.0078125	X31_RKI_0.00390625	X31_RKI_0.001953125	X31_RKI_0.0009765625	X31_RKI_0.00048828125
+4	1	1	4	1.0_pep52									D	X31_RKI_1	X31_RKI_0.5	X31_RKI_0.25	X31_RKI_0.125	X31_RKI_0.0625	X31_RKI_0.03125	X31_RKI_0.015625	X31_RKI_0.0078125	X31_RKI_0.00390625	X31_RKI_0.001953125	X31_RKI_0.0009765625	X31_RKI_0.00048828125
+5	1	1	5	1.0_pep53									E	Call_RKI_1	Call_RKI_0.5	Call_RKI_0.25	Call_RKI_0.125	Call_RKI_0.0625	Call_RKI_0.03125	Call_RKI_0.015625	Call_RKI_0.0078125	Call_RKI_0.00390625	Call_RKI_0.001953125	Call_RKI_0.0009765625	Call_RKI_0.00048828125
+6	1	1	6	1.0_pep54									F	Call_RKI_1	Call_RKI_0.5	Call_RKI_0.25	Call_RKI_0.125	Call_RKI_0.0625	Call_RKI_0.03125	Call_RKI_0.015625	Call_RKI_0.0078125	Call_RKI_0.00390625	Call_RKI_0.001953125	Call_RKI_0.0009765625	Call_RKI_0.00048828125
+7	1	1	7	0.5_pep49									G	No	No	No	No	No	No	No	No	No	No	No	No
+8	1	1	8	0.5_pep50									H	Buffer-001	Buffer-001	Buffer-001	Buffer-001	Buffer-001	Buffer-001	Buffer-001	Buffer-001	Buffer-001	Buffer-001	Buffer-001	Buffer-001
+9	1	1	9	0.5_pep51																					
+10	1	1	10	0.5_pep52																					
+11	1	1	11	0.5_pep53										1	2	3	4	5	6	7	8	9	10	11	12
+12	1	1	12	0.5_pep54									A	1.0_pep49	1.0_pep50	1.0_pep51	1.0_pep52	1.0_pep53	1.0_pep54	0.5_pep49	0.5_pep50	0.5_pep51	0.5_pep52	0.5_pep53	0.5_pep54
+13	1	2	1	0.25_pep49									B	0.25_pep49	0.25_pep50	0.25_pep51	0.25_pep52	0.25_pep53	0.25_pep54	1.0_pep49	1.0_pep50	1.0_pep51	1.0_pep52	1.0_pep53	1.0_pep54
+14	1	2	2	0.25_pep50									C	0.5_pep49	0.5_pep50	0.5_pep51	0.5_pep52	0.5_pep53	0.5_pep54	0.25_pep49	0.25_pep50	0.25_pep51	0.25_pep52	0.25_pep53	0.25_pep54
+15	1	2	3	0.25_pep51									D	1.0_pep49	1.0_pep50	1.0_pep51	1.0_pep52	1.0_pep53	1.0_pep54	0.5_pep49	0.5_pep50	0.5_pep51	0.5_pep52	0.5_pep53	0.5_pep54
+16	1	2	4	0.25_pep52									E	0.25_pep49	0.25_pep50	0.25_pep51	0.25_pep52	0.25_pep53	0.25_pep54	1.0_pep49	1.0_pep50	1.0_pep51	1.0_pep52	1.0_pep53	1.0_pep54
+17	1	2	5	0.25_pep53									F	0.5_pep49	0.5_pep50	0.5_pep51	0.5_pep52	0.5_pep53	0.5_pep54	0.25_pep49	0.25_pep50	0.25_pep51	0.25_pep52	0.25_pep53	0.25_pep54
+18	1	2	6	0.25_pep54									G	No	No	No	No	No	No	Buffer-001	Buffer-001	Buffer-001	Buffer-001	Buffer-001	Buffer-001
+19	1	2	7	1.0_pep49									H	No	No	No	No	No	No	Buffer-001	Buffer-001	Buffer-001	Buffer-001	Buffer-001	Buffer-001
+20	1	2	8	1.0_pep50																					
+21	1	2	9	1.0_pep51																					
+22	1	2	10	1.0_pep52																					
+23	1	2	11	1.0_pep53										1	2	3	4	5	6	7	8	9	10	11	12
+24	1	2	12	1.0_pep54									A	No	No	Buffer-001	Buffer-001	X31-001	X31-001	X31-001	X31-001	X31-001	X31-001	X31-001	X31-001
+25	1	3	1	0.5_pep49									B	No	No	Buffer-001	Buffer-001	X31-002	X31-002	X31-002	X31-002	X31-002	X31-002	X31-002	X31-002
+26	1	3	2	0.5_pep50									C	No	No	Buffer-001	Buffer-001	CAL-001	CAL-001	CAL-001	CAL-001	CAL-001	CAL-001	CAL-001	CAL-001
+27	1	3	3	0.5_pep51									D	No	No	Buffer-001	Buffer-001	Pan_RKI_1	Pan_RKI_1	Pan_RKI_1	Pan_RKI_1	Pan_RKI_1	Pan_RKI_1	Pan_RKI_1	Pan_RKI_1
+28	1	3	4	0.5_pep52									E	No	No	Buffer-001	Buffer-001	Pan_RKI_0.5	Pan_RKI_0.5	Pan_RKI_0.5	Pan_RKI_0.5	Pan_RKI_0.5	Pan_RKI_0.5	Pan_RKI_0.5	Pan_RKI_0.5
+29	1	3	5	0.5_pep53									F	No	No	Buffer-001	Buffer-001	Pan_RKI_0.25	Pan_RKI_0.25	Pan_RKI_0.25	Pan_RKI_0.25	Pan_RKI_0.25	Pan_RKI_0.25	Pan_RKI_0.25	Pan_RKI_0.25
+30	1	3	6	0.5_pep54									G	No	No	Buffer-001	Buffer-001	Pan_RKI_0.125	Pan_RKI_0.125	Pan_RKI_0.125	Pan_RKI_0.125	Pan_RKI_0.125	Pan_RKI_0.125	Pan_RKI_0.125	Pan_RKI_0.125
+31	1	3	7	0.25_pep49									H	No	No	Buffer-001	Buffer-001	Buffer-001	Buffer-001	Buffer-001	Buffer-001	Buffer-001	Buffer-001	Buffer-001	Buffer-001
+32	1	3	8	0.25_pep50																					
+33	1	3	9	0.25_pep51										1	2	3	4	5	6	7	8	9	10	11	12
+34	1	3	10	0.25_pep52									A	No	No	No	No	No	No	No	No	No	No	No	No
+35	1	3	11	0.25_pep53									B	No	No	No	No	No	No	No	No	No	No	No	No
+36	1	3	12	0.25_pep54									C	No	No	No	No	No	No	No	No	No	No	No	No
+37	1	4	1	1.0_pep49									D	No	No	No	No	No	No	No	No	No	No	No	No
+38	1	4	2	1.0_pep50									E	No	No	No	No	No	No	No	No	No	No	No	No
+39	1	4	3	1.0_pep51									F	No	No	No	No	No	No	No	No	No	No	No	No
+40	1	4	4	1.0_pep52									G	No	No	No	No	No	No	No	No	No	No	No	No
+41	1	4	5	1.0_pep53									H	No	No	No	No	No	No	No	No	No	No	No	No
+42	1	4	6	1.0_pep54																					
+43	1	4	7	0.5_pep49																					
+44	1	4	8	0.5_pep50																					
+45	1	4	9	0.5_pep51																					
+46	1	4	10	0.5_pep52																					
+47	1	4	11	0.5_pep53									sid	labeling	concentration	buffer	ph	purity	produced_by	production_date	comment	ligand	passage_history	active	
+48	1	4	12	0.5_pep54									Pan_RKI_1		1	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	381513	Egg	TRUE	
+49	1	5	1	0.25_pep49									Pan_RKI_0.5		0.5	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	381513	Egg	TRUE	
+50	1	5	2	0.25_pep50									Pan_RKI_0.25		0.25	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	381513	Egg	TRUE	
+51	1	5	3	0.25_pep51									Pan_RKI_0.125		0.125	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	381513	Egg	TRUE	
+52	1	5	4	0.25_pep52									Pan_RKI_0.0625		0.0625	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	381513	Egg	TRUE	
+53	1	5	5	0.25_pep53									Pan_RKI_0.03125		0.03125	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	381513	Egg	TRUE	
+54	1	5	6	0.25_pep54									Pan_RKI_0.015625		0.015625	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	381513	Egg	TRUE	
+55	1	5	7	1.0_pep49									Pan_RKI_0.0078125		0.0078125	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	381513	Egg	TRUE	
+56	1	5	8	1.0_pep50									Pan_RKI_0.00390625		0.00390625	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	381513	Egg	TRUE	
+57	1	5	9	1.0_pep51									Pan_RKI_0.001953125		0.001953125	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	381513	Egg	TRUE	
+58	1	5	10	1.0_pep52									Pan_RKI_0.0009765625		0.0009765625	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	381513	Egg	TRUE	
+59	1	5	11	1.0_pep53									Pan_RKI_0.00048828125		0.0004882813	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	381513	Egg	TRUE	
+60	1	5	12	1.0_pep54									X31_RKI_1		1	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	387139	Egg	TRUE	
+61	1	6	1	0.5_pep49									X31_RKI_0.5		0.5	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	387139	Egg	TRUE	
+62	1	6	2	0.5_pep50									X31_RKI_0.25		0.25	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	387139	Egg	TRUE	
+63	1	6	3	0.5_pep51									X31_RKI_0.125		0.125	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	387139	Egg	TRUE	
+64	1	6	4	0.5_pep52									X31_RKI_0.0625		0.0625	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	387139	Egg	TRUE	
+65	1	6	5	0.5_pep53									X31_RKI_0.03125		0.03125	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	387139	Egg	TRUE	
+66	1	6	6	0.5_pep54									X31_RKI_0.015625		0.015625	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	387139	Egg	TRUE	
+67	1	6	7	0.25_pep49									X31_RKI_0.0078125		0.0078125	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	387139	Egg	TRUE	
+68	1	6	8	0.25_pep50									X31_RKI_0.00390625		0.00390625	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	387139	Egg	TRUE	
+69	1	6	9	0.25_pep51									X31_RKI_0.001953125		0.001953125	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	387139	Egg	TRUE	
+70	1	6	10	0.25_pep52									X31_RKI_0.0009765625		0.0009765625	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	387139	Egg	TRUE	
+71	1	6	11	0.25_pep53									X31_RKI_0.00048828125		0.0004882813	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	387139	Egg	TRUE	
+72	1	6	12	0.25_pep54									Call_RKI_1		1	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	1316510	Egg	TRUE	
+73	1	7	1	1.0_pep49									Call_RKI_0.5		0.5	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	1316510	Egg	TRUE	
+74	1	7	2	1.0_pep50									Call_RKI_0.25		0.25	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	1316510	Egg	TRUE	
+75	1	7	3	1.0_pep51									Call_RKI_0.125		0.125	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	1316510	Egg	TRUE	
+76	1	7	4	1.0_pep52									Call_RKI_0.0625		0.0625	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	1316510	Egg	TRUE	
+77	1	7	5	1.0_pep53									Call_RKI_0.03125		0.03125	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	1316510	Egg	TRUE	
+78	1	7	6	1.0_pep54									Call_RKI_0.015625		0.015625	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	1316510	Egg	TRUE	
+79	1	7	7	0.5_pep49									Call_RKI_0.0078125		0.0078125	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	1316510	Egg	TRUE	
+80	1	7	8	0.5_pep50									Call_RKI_0.00390625		0.00390625	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	1316510	Egg	TRUE	
+81	1	7	9	0.5_pep51									Call_RKI_0.001953125		0.001953125	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	1316510	Egg	TRUE	
+82	1	7	10	0.5_pep52									Call_RKI_0.0009765625		0.0009765625	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	1316510	Egg	TRUE	
+83	1	7	11	0.5_pep53									Call_RKI_0.00048828125		0.0004882813	100mM NaHCO3/Na2CO3 	9.6				Virus concentration dependence measurements at RKI	1316510	Egg	TRUE	
+84	1	7	12	0.5_pep54																					
+85	1	8	1	0.25_pep49																					
+86	1	8	2	0.25_pep50																					
+87	1	8	3	0.25_pep51																					
+88	1	8	4	0.25_pep52																					
+89	1	8	5	0.25_pep53																					
+90	1	8	6	0.25_pep54																					
+91	1	8	7	Buffer-001																					
+92	1	8	8	Buffer-001																					
+93	1	8	9	Buffer-001																					
+94	1	8	10	Buffer-001																					
+95	1	8	11	Buffer-001																					
+96	1	8	12	Buffer-001																					

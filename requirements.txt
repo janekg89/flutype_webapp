@@ -9,7 +9,7 @@ django-measurement>=2.4.0
 djangorestframework>=3.8.2
 django-debug-toolbar>=1.9.1
 django-dbbackup>=3.2.0
-django-guardian>=1.4.9
+django-guardian==1.4.9
 psycopg2-binary>=2.7.4
 jinja2>=2.10
 gunicorn>=19.7.1
