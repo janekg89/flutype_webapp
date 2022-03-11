@@ -23,7 +23,7 @@ pyexcel>=0.5.8
 pyexcel-ods>=0.5.2
 opencv-python>=3.3.0.12
 
-Pillow==4.1.1
+Pillow==9.0.1
 
 # testing
 selenium==2.53.6
