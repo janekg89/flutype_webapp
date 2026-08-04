@@ -1,4 +1,4 @@
-django<2.0
+django==6.0.8
 django-pandas>=0.5.1
 django-choices>=1.6.0
 
